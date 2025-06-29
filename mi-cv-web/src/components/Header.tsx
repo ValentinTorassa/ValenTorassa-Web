@@ -49,7 +49,8 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="w-8 h-8 bg-dark-700 rounded-full flex items-center justify-center shadow-md">
+            <div className="w-8 aspect-square bg-dark-700 rounded-full flex items-center justify-center shadow-md">
+
               <span className="text-white text-sm">🐧</span>
             </div>
             <div>
@@ -66,18 +67,23 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-2">
-            {socialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`p-2 rounded-lg bg-dark-800/50 border border-dark-700 transition-all duration-300 ${link.color} hover:bg-dark-800 hover:border-cyber-500/30 hover:scale-110`}
-              >
-                <link.icon className="w-4 h-4" />
-              </a>
-            ))}
-          </div>
+  {socialLinks.map((link) => {
+    // Ocultar YouTube y Bento en mobile
+    const isHiddenOnMobile = ['YouTube', 'Bento'].includes(link.name);
+    return (
+      <a
+        key={link.name}
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`p-2 rounded-lg bg-dark-800/50 border border-dark-700 transition-all duration-300 ${link.color} hover:bg-dark-800 hover:border-cyber-500/30 hover:scale-110 ${isHiddenOnMobile ? 'hidden md:inline-flex' : ''}`}
+      >
+        <link.icon className="w-4 h-4" />
+      </a>
+    );
+  })}
+</div>
+
         </div>
       </div>
     </motion.header>
