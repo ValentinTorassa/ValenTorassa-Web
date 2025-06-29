@@ -10,7 +10,7 @@ const Experience = () => {
       location: 'Rosario, Argentina',
       icon: Shield,
       color: 'from-primary-500 to-primary-600',
-      description: 'Estructura de área de ciberseguridad, protección de datos sensibles, cumplimiento ISO/SOC y seguridad en AWS.',
+      description: 'Startup argentina de inteligencia artificial. Responsable de estructurar el área de ciberseguridad, proteger datos sensibles corporativos, garantizar el cumplimiento de normativas ISO/SOC y fortalecer la seguridad en entornos AWS.',
       technologies: ['ISO/IEC 27001', 'SOC 2', 'AWS Security', 'Data Protection', 'Compliance'],
       logo: 'https://i.imgur.com/zwCL4Rl.png'
     },

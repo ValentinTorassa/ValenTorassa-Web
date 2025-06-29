@@ -5,9 +5,9 @@ const Research = () => {
     {
       id: 1,
       title: 'Dockerización de Servidores SCADA: Ciberseguridad Industrial',
-      event: 'WICC 2024',
+      event: 'WICC 2025',
       date: 'abr. 2025',
-      institution: 'Universidad Nacional de Cuyo',
+      institution: 'Workshop de Investigadores en Ciencias de la Computación',
       description: 'Investigación sobre la aplicación de contenedores Docker en entornos SCADA para mejorar la seguridad industrial.',
       highlight: 'Certificado autor WICC',
       link: '#'

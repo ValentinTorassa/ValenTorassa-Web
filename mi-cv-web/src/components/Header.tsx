@@ -5,25 +5,25 @@ const Header = () => {
   const socialLinks = [
     {
       name: 'GitHub',
-      url: 'https://github.com/valentin-torassa',
+      url: 'https://github.com/ValentinTorassa',
       icon: Github,
       color: 'hover:text-gray-300'
     },
     {
       name: 'LinkedIn',
-      url: 'https://linkedin.com/in/valentin-torassa',
+      url: 'https://www.linkedin.com/in/valetorassa/',
       icon: Linkedin,
       color: 'hover:text-cyber-400'
     },
     {
       name: 'Email',
-      url: 'mailto:valentin.torassa@example.com',
+      url: 'mailto:valentintorassacolombero@gmail.com',
       icon: Mail,
       color: 'hover:text-primary-400'
     },
     {
       name: 'YouTube',
-      url: 'https://www.youtube.com/@valentin-torassa',
+      url: 'https://www.youtube.com/@vtcodingbyte',
       icon: Youtube,
       color: 'hover:text-red-500'
     },

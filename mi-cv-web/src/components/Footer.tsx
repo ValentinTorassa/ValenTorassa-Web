@@ -13,7 +13,7 @@ const Footer = () => {
 
           <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-6 mb-8">
             <a
-              href="https://github.com/valentin-torassa"
+              href="https://github.com/ValentinTorassa"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 bg-dark-800/50 border border-dark-700 rounded-lg hover:bg-dark-800 hover:border-cyber-500/30 transition-all duration-300"
@@ -33,7 +33,7 @@ const Footer = () => {
             </a>
 
             <a
-              href="https://www.youtube.com/@valentin-torassa"
+              href="https://www.youtube.com/@vtcodingbyte"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 bg-red-700/80 border border-red-600 rounded-lg hover:bg-red-800 hover:border-red-400 transition-all duration-300"

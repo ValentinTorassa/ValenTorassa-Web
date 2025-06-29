@@ -5,19 +5,19 @@ const Hero = () => {
   const socialLinks = [
     {
       name: 'GitHub',
-      url: 'https://github.com/valentin-torassa',
+      url: 'https://github.com/ValentinTorassa',
       icon: Github,
       color: 'hover:text-gray-300'
     },
     {
       name: 'LinkedIn',
-      url: 'https://linkedin.com/in/valentin-torassa',
+      url: 'https://www.linkedin.com/in/valetorassa/',
       icon: Linkedin,
       color: 'hover:text-cyber-400'
     },
     {
       name: 'Email',
-      url: 'mailto:valentin.torassa@example.com',
+      url: 'mailto:valentintorassacolombero@gmail.com',
       icon: Mail,
       color: 'hover:text-primary-400'
     }
@@ -57,8 +57,8 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
         >
           {/* Name */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            <span className="bg-gradient-to-r from-primary-400 via-cyber-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+            <span className="bg-gradient-to-r from-primary-400 via-cyber-400 to-primary-400 bg-clip-text text-transparent">
               Valentín
             </span>
             <br />
@@ -66,10 +66,11 @@ const Hero = () => {
               Torassa
             </span>
             <br />
-            <span className="bg-gradient-to-r from-purple-400 via-cyber-400 to-primary-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary-400 via-cyber-400 to-primary-400 bg-clip-text text-transparent">
               Colombero
             </span>
           </h1>
+
 
           {/* Subtitle */}
           <motion.p 

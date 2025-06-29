@@ -16,21 +16,21 @@ const Teaching = () => {
                   <GraduationCap className="w-8 h-8 text-white" />
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-white mb-2">Ayudante de Cátedra</h3>
-                <p className="text-cyber-400 font-medium mb-3">Sistemas Operativos y Redes – UAI</p>
-                
+                <p className="text-cyber-400 font-medium mb-3">Sistemas Operativos – UAI</p>
+
                 <p className="text-gray-300 leading-relaxed mb-4">
-                  Apoyo en la enseñanza de conceptos fundamentales de sistemas operativos y redes, 
-                  facilitando el aprendizaje práctico de los estudiantes y contribuyendo al desarrollo 
-                  de habilidades técnicas en el área de sistemas.
+                  Acompaño a estudiantes en la comprensión práctica de los sistemas operativos, 
+                  explorando desde conceptos básicos hasta planificación de procesos y manejo de recursos. 
+                  También colaboré anteriormente en Arquitectura de Computadoras II.
                 </p>
 
                 <div className="flex flex-wrap gap-3">
                   <span className="badge badge-primary">Docencia</span>
                   <span className="badge badge-cyber">Sistemas Operativos</span>
-                  <span className="badge badge-primary">Redes</span>
+                  <span className="badge badge-primary">Arquitectura de Computadoras</span>
                   <span className="badge badge-cyber">UAI</span>
                   <span className="badge badge-primary">Enseñanza</span>
                 </div>

@@ -10,6 +10,7 @@ import Research from './components/Research';
 import TechnologyBadges from './components/TechnologyBadges';
 import PersonalSkills from './components/PersonalSkills';
 import Footer from './components/Footer';
+import ComplementaryCourses from './components/ComplementaryCourses';
 
 function App() {
   return (
@@ -35,7 +36,8 @@ function App() {
           <Teaching />
           <Research />
           <TechnologyBadges />
-          <PersonalSkills />
+          <ComplementaryCourses />
+          <PersonalSkills />  
         </main>
 
         <Footer />

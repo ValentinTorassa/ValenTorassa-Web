@@ -4,7 +4,7 @@ const Certifications = () => {
       id: 1,
       name: 'HCIA Datacom',
       issuer: 'Huawei Talents',
-      year: '2024',
+      year: '2025',
       status: 'Completado',
       logo: 'https://www.centex-sarawak.my/wp-content/uploads/2023/02/logo-hcia.png',
       description: 'Certificación en redes de datos Huawei'
@@ -13,7 +13,7 @@ const Certifications = () => {
       id: 2,
       name: 'Formación avanzada en AWS',
       issuer: 'AWS',
-      year: '2024',
+      year: '2025',
       status: 'En curso',
       logo: 'https://miro.medium.com/v2/resize:fit:512/0*P7dmdm5OCZaMEPOG',
       description: 'Especialización en servicios cloud de Amazon Web Services'
@@ -22,7 +22,7 @@ const Certifications = () => {
       id: 3,
       name: 'CISSP',
       issuer: 'ISC²',
-      year: '2024',
+      year: '2025',
       status: 'En preparación',
       logo: 'https://images.squarespace-cdn.com/content/v1/511d6cd9e4b04b471a7bdd63/1548690014962-U1OBGUPJTPBHPBTA33EF/certified-information-systems-security-professional-cissp.png',
       description: 'Certified Information Systems Security Professional'
@@ -31,7 +31,7 @@ const Certifications = () => {
       id: 4,
       name: 'FCE – Cambridge English',
       issuer: 'Cambridge',
-      year: '2024',
+      year: '2025',
       status: 'En preparación',
       logo: 'https://theenglishexamcentre.com/wp-content/uploads/2024/12/preparacion-first-FCE-madrid.png',
       description: 'First Certificate in English'
@@ -67,7 +67,7 @@ const Certifications = () => {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="section-title text-center">Certificaciones y Cursos</h2>
+        <h2 className="section-title text-center">Certificaciones</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {certifications.map((cert) => (
