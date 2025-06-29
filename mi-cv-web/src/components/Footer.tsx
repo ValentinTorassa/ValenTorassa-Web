@@ -1,4 +1,4 @@
-import { Github, Heart, Download } from 'lucide-react';
+import { Github, Heart, Download, Youtube, Link } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -15,7 +15,7 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-6 mb-8">
             <a
               href="https://github.com/valentin-torassa"
               target="_blank"
@@ -34,6 +34,26 @@ const Footer = () => {
             >
               <Download className="w-5 h-5" />
               <span>Descargar CV PDF</span>
+            </a>
+
+            <a
+              href="https://www.youtube.com/@valentin-torassa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-6 py-3 bg-red-700/80 border border-red-600 rounded-lg hover:bg-red-800 hover:border-red-400 transition-all duration-300"
+            >
+              <Youtube className="w-5 h-5" />
+              <span>Canal de YouTube</span>
+            </a>
+
+            <a
+              href="https://bento.me/valentintorassa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-6 py-3 bg-green-700/80 border border-green-600 rounded-lg hover:bg-green-800 hover:border-green-400 transition-all duration-300"
+            >
+              <Link className="w-5 h-5" />
+              <span>Mi Bento</span>
             </a>
           </div>
 

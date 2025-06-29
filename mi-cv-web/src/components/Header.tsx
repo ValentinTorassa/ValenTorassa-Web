@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail, Youtube, Link } from 'lucide-react';
 
 const Header = () => {
   const socialLinks = [
@@ -20,6 +20,18 @@ const Header = () => {
       url: 'mailto:valentin.torassa@example.com',
       icon: Mail,
       color: 'hover:text-primary-400'
+    },
+    {
+      name: 'YouTube',
+      url: 'https://www.youtube.com/@valentin-torassa',
+      icon: Youtube,
+      color: 'hover:text-red-500'
+    },
+    {
+      name: 'Bento',
+      url: 'https://bento.me/valentintorassa',
+      icon: Link,
+      color: 'hover:text-green-400'
     }
   ];
 
@@ -32,7 +44,6 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Logo/Name */}
           <motion.div 
             className="flex items-center gap-3"
             whileHover={{ scale: 1.05 }}
@@ -47,7 +58,6 @@ const Header = () => {
             </div>
           </motion.div>
 
-          {/* Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <a href="#experience" className="text-gray-300 hover:text-cyber-400 transition-colors">Experiencia</a>
             <a href="#education" className="text-gray-300 hover:text-cyber-400 transition-colors">Formación</a>
@@ -55,7 +65,6 @@ const Header = () => {
             <a href="#research" className="text-gray-300 hover:text-cyber-400 transition-colors">Investigación</a>
           </nav>
 
-          {/* Social Links */}
           <div className="flex items-center gap-2">
             {socialLinks.map((link, index) => (
               <motion.a
