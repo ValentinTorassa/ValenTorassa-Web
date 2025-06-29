@@ -66,21 +66,16 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-2">
-            {socialLinks.map((link, index) => (
-              <motion.a
+            {socialLinks.map((link) => (
+              <a
                 key={link.name}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`p-2 rounded-lg bg-dark-800/50 border border-dark-700 transition-all duration-300 ${link.color} hover:bg-dark-800 hover:border-cyber-500/30 hover:scale-110`}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2.2 + index * 0.1, duration: 0.5 }}
               >
                 <link.icon className="w-4 h-4" />
-              </motion.a>
+              </a>
             ))}
           </div>
         </div>
