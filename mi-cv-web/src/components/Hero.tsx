@@ -87,8 +87,11 @@ const Hero = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            SysAdmin & Network Specialist
+            <span className="text-primary-400">Linux</span>,{' '}
+            <span className="text-cyber-400">Networks</span> &{' '}
+            <span className="text-purple-400">Cloud</span> Security Engineer
           </motion.p>
+
 
           {/* Location */}
           <motion.div 
