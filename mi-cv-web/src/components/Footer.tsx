@@ -6,12 +6,8 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
-            <h3 className="text-2xl font-bold gradient-text mb-4">
-              Construyendo el futuro digital de forma segura
-            </h3>
             <p className="text-gray-400 text-lg leading-relaxed">
-              "La seguridad no es un producto, sino un proceso. Es más que proteger sistemas, 
-              es proteger personas y sus datos en un mundo cada vez más conectado."
+            Me apasiona la tecnología y quiero dejar una pequeña contribución a este mundo digital.
             </p>
           </div>
 
