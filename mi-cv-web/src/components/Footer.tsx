@@ -23,7 +23,7 @@ const Footer = () => {
             </a>
 
             <a
-              href="https://drive.google.com/file/d/11s_EI3rDkT16IMA6nflnHo9OdPyAyHwR/view?usp=drive_link"
+              href="https://drive.google.com/file/d/1qb8bo1bCCYx-ca85gqXBeV7wN5Sn5wBI/view?usp=drive_link"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-cyber-500 rounded-lg hover:from-primary-600 hover:to-cyber-600 transition-all duration-300"
