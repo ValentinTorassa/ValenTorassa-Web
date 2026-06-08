@@ -6,7 +6,7 @@
   --bg: #080910;
   --bg-raised: #0d111b;
   --surface: #121722;
-  --surface-soft: rgba(18, 23, 34, 0.72);
+  --surface-soft: rgba(11, 15, 22, 0.78);
   --line: rgba(142, 156, 189, 0.18);
   --line-strong: rgba(84, 230, 214, 0.34);
   --text: #f4f7fb;
@@ -226,9 +226,9 @@ img {
   max-width: calc(100% - 4px);
   padding: 8px 14px;
   overflow-wrap: anywhere;
-  border: 1px solid var(--line-strong);
+  border: 1px solid rgba(84, 230, 214, 0.24);
   border-radius: 999px;
-  background: rgba(84, 230, 214, 0.08);
+  background: rgba(11, 15, 22, 0.82);
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.78rem;
@@ -467,7 +467,7 @@ p {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 18px;
+  gap: 10px;
   width: min(100%, 680px);
   margin-top: 22px;
   color: var(--muted);
@@ -479,6 +479,10 @@ p {
   display: inline-flex;
   align-items: baseline;
   gap: 7px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 9, 16, 0.42);
 }
 
 .hero-stats strong {
@@ -583,23 +587,31 @@ p {
 }
 
 .statement {
-  display: flex;
-  align-items: flex-start;
+  display: block;
   min-height: 100%;
   padding: 28px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(84, 230, 214, 0.2);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(139, 124, 255, 0.11), transparent 42%),
+    linear-gradient(180deg, rgba(84, 230, 214, 0.06), transparent 42%),
     var(--surface-soft);
+}
+
+.statement::before {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--accent-2);
+  content: '$ cat profile.md';
+  font-family: var(--mono);
+  font-size: 0.82rem;
 }
 
 .statement p {
   margin: 0;
   color: var(--text);
-  font-family: var(--display);
-  font-size: 1.4rem;
-  line-height: 1.28;
+  font-family: var(--body);
+  font-size: 1.08rem;
+  line-height: 1.62;
 }
 
 .fact-list {
@@ -618,16 +630,22 @@ p {
 
 .fact-card > span {
   flex: none;
-  color: var(--accent-3);
+  min-width: 42px;
+  color: var(--accent-2);
   font-family: var(--mono);
   font-size: 0.78rem;
 }
 
+.fact-card > span::before {
+  content: './';
+  color: var(--faint);
+}
+
 .fact-card h3 {
   margin-bottom: 4px;
-  font-family: var(--display);
+  font-family: var(--mono);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .fact-card p {
@@ -805,9 +823,9 @@ p {
 }
 
 .skill-card:hover {
-  border-color: var(--line-strong);
+  border-color: rgba(84, 230, 214, 0.28);
   background: rgba(18, 23, 34, 0.9);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .contact-section {
@@ -860,7 +878,7 @@ p {
   }
 
   .statement p {
-    font-size: 1.75rem;
+    font-size: 1.14rem;
   }
 
   .timeline-item {
@@ -916,7 +934,9 @@ p {
 
   .status-pill,
   .hero-role {
+    width: calc(100vw - 72px);
     max-width: 320px;
+    overflow-wrap: anywhere;
   }
 
   .portrait-wrap {
@@ -930,7 +950,7 @@ p {
   }
 
   .terminal-card {
-    width: calc(100% - 24px);
+    width: calc(100vw - 96px);
   }
 
   .section,

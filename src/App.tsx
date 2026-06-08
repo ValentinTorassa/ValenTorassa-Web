@@ -18,7 +18,7 @@ const navItems = [
   { label: 'Perfil', href: '#profile' },
   { label: 'Experiencia', href: '#experience' },
   { label: 'Stack', href: '#stack' },
-  { label: 'Investigacion', href: '#research' },
+  { label: 'Reconocimiento', href: '#research' },
   { label: 'Contacto', href: '#contact' },
 ];
 
@@ -35,150 +35,150 @@ const socialLinks = [
   },
   {
     name: 'YouTube',
-    href: 'https://www.youtube.com/@vtcodingbyte',
+    href: 'https://www.youtube.com/@vtcibersecurity',
     icon: Youtube,
   },
   {
     name: 'Email',
-    href: 'mailto:valentintorassacolombero@gmail.com',
+    href: 'mailto:valentin.torassa.colombero@gmail.com',
     icon: Mail,
   },
 ];
 
 const terminalLines = [
-  { prompt: '$', command: 'whoami', output: 'Valentin Torassa Colombero' },
+  { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
   {
     prompt: '$',
-    command: 'cat ./current-role.txt',
-    output: 'AWS security, ISO 27001, SOC 2',
+    command: 'cat ./teramot.txt',
+    output: 'Aleph backend, AWS security, SOC 2 / ISO',
   },
   {
     prompt: '$',
-    command: 'stack --core',
-    output: 'Linux, cloud, backend, research',
+    command: 'grep -i focus ./stack.log',
+    output: 'Go, AWS, OAuth 2.1, OIDC, MCP, Linux',
   },
   {
     prompt: '$',
-    command: 'contact --location',
-    output: 'Rosario, Argentina · remoto-friendly',
+    command: 'certs --active',
+    output: 'CompTIA Security+, AWS CCP, LFCA',
   },
 ];
 
 const stats = [
-  { value: '3+', label: 'roles activos' },
-  { value: '5', label: 'investigaciones' },
-  { value: '4', label: 'certificaciones' },
-  { value: 'UAI', label: 'sistemas' },
+  { value: '25K+', label: 'VT Security' },
+  { value: '3', label: 'certificaciones' },
+  { value: 'SOC 2', label: 'audit readiness' },
+  { value: 'Go/AWS', label: 'backend platform' },
 ];
 
 const facts = [
   {
-    key: 'now',
-    title: 'Cybersecurity & Compliance Analyst',
-    text: 'Teramot · seguridad cloud, datos sensibles, ISO/IEC 27001 y SOC 2.',
+    key: 'sec',
+    title: 'Cloud security & compliance',
+    text: 'Lidero estrategia tecnica de ciberseguridad y compliance en Teramot, integrando controles SOC 2 e ISO/IEC 27001 en infraestructura y producto.',
   },
   {
-    key: 'dev',
-    title: 'Software builder',
-    text: 'Backend, .NET, React, TypeScript, PostgreSQL y automatizacion aplicada.',
+    key: 'arch',
+    title: 'Arquitectura backend en Go',
+    text: 'Arquitecto principal de Aleph, plataforma backend que expone datos empresariales seguros para agentes de IA: archivos, bases de datos y APIs.',
   },
   {
-    key: 'edu',
-    title: 'Ingenieria en Sistemas',
-    text: 'UAI · Rosario · carrera en curso con base tecnica y academica.',
+    key: 'ops',
+    title: 'Security operations con contexto real',
+    text: 'AWS ECS/Fargate, IAM, SSO, CloudTrail, GuardDuty, OIDC en GitHub Actions, secretos, remediacion e instrumentacion con OpenTelemetry.',
   },
 ];
 
 const experiences = [
   {
+    role: 'Cybersecurity Engineer & Software Engineer',
+    company: 'Teramot',
+    period: 'nov. 2025 - actualidad',
+    description:
+      'Liderazgo tecnico de ciberseguridad y compliance en una startup de IA. Arquitectura principal de Aleph, backend Go para acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
+    tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
+  },
+  {
     role: 'Cybersecurity & Compliance Analyst',
     company: 'Teramot',
-    period: 'jun. 2025 - actualidad',
+    period: 'jun. 2025 - nov. 2025',
     description:
-      'Estructuracion del area de ciberseguridad, proteccion de datos sensibles, cumplimiento ISO/SOC y fortalecimiento de seguridad en AWS.',
-    tags: ['ISO/IEC 27001', 'SOC 2', 'AWS Security', 'Compliance', 'Data Protection'],
+      'Estructuracion del area de seguridad, automatizacion de controles, evidencia de auditoria y hardening de infraestructura AWS para datos sensibles usados por agentes de IA.',
+    tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
   },
   {
     role: 'Analista de Ciberseguridad',
     company: 'Consulting IT',
-    period: 'sept. 2024 - jul. 2025',
+    period: 'ago. 2024 - jul. 2025',
     description:
-      'Operacion de seguridad, hardening, redes hibridas, Sophos Central, Avast Business y monitoreo con Nagios.',
-    tags: ['SOC', 'Hardening', 'Sophos', 'Networking', 'Nagios'],
+      'Estrategia de seguridad para clientes outsourcing, arquitectura de red segura, hardening, automatizacion y operacion SOC con Sophos Central, Avast Business y Nagios.',
+    tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
   },
   {
-    role: 'Cofundador y Developer .NET',
-    company: 'FVM Systems',
-    period: 'jul. 2024 - actualidad',
+    role: 'Ayudante de Catedra, Arquitectura de Computadoras II',
+    company: 'Universidad Abierta Interamericana',
+    period: 'sept. 2024 - jun. 2025',
     description:
-      'Desarrollo de soluciones empresariales, arquitectura de software y producto de trazabilidad para procesos productivos.',
-    tags: ['.NET', 'C#', 'Architecture', 'PostgreSQL', 'Software Factory'],
+      'Acompanamiento academico en arquitectura de procesadores, jerarquia de memoria, I/O y conceptos de sistemas de bajo nivel.',
+    tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
   },
 ];
 
 const education = [
   {
-    title: 'Ingenieria en Sistemas',
+    title: 'Ingenieria en Sistemas Informaticos',
     place: 'Universidad Abierta Interamericana',
-    period: '2022 - 2026',
-    status: 'En curso',
+    period: 'abr. 2022 - dic. 2026',
+    status: 'Ultimo ano',
   },
   {
-    title: 'Analista en Sistemas',
+    title: 'Analista de Sistemas Informaticos',
     place: 'Universidad Abierta Interamericana',
-    period: '2022 - dic. 2024',
-    status: 'Completado',
-  },
-  {
-    title: 'Tecnico Electromecanico',
-    place: 'EETP No. 292',
-    period: '2018 - 2022',
-    status: 'Completado',
+    period: 'abr. 2022 - dic. 2024',
+    status: 'GPA 9.25 / 10',
   },
 ];
 
 const certifications = [
-  'HCIA Datacom - Huawei Talents',
-  'Formacion avanzada en AWS',
-  'CISSP - en preparacion',
-  'FCE Cambridge English - en preparacion',
+  'CompTIA Security+ (SY0-701) - vigente hasta feb. 2029',
+  'AWS Certified Cloud Practitioner (CLF-C02) - vigente hasta jul. 2028',
+  'LFCA - Linux Foundation Certified IT Associate - vigente hasta abr. 2028',
 ];
 
 const stackGroups = [
   {
-    title: 'Ciberseguridad',
-    text: 'Hardening, SIEM, alertas, compliance y gestion de controles.',
-    tags: ['ISO 27001', 'SOC 2', 'SIEM', 'Hardening', 'Data Protection'],
+    title: 'Cloud security',
+    text: 'Seguridad e infraestructura AWS para workloads de producto, datos sensibles y despliegues auditables.',
+    tags: ['ECS/Fargate', 'IAM', 'SSO Admin', 'Secrets Manager', 'CloudTrail', 'GuardDuty', 'VPC', 'Terraform'],
   },
   {
-    title: 'Cloud',
-    text: 'AWS para seguridad, redes, identidad, servicios gestionados e infraestructura.',
-    tags: ['IAM', 'VPC', 'EC2', 'Config', 'Cloud Security', 'Docker'],
+    title: 'Compliance engineering',
+    text: 'Controles implementados en sistemas, evidencia, poblaciones de auditoria y remediacion tecnica.',
+    tags: ['SOC 2 Type II', 'ISO/IEC 27001', 'ISMS/SGSI', 'Audit Evidence', 'OIDC', 'Secrets Handling'],
   },
   {
-    title: 'Redes & Linux',
-    text: 'Administracion, troubleshooting, VPNs y operacion de sistemas reales.',
-    tags: ['Linux', 'Bash', 'Huawei', 'MikroTik', 'WireGuard', 'Networking'],
+    title: 'Backend architecture',
+    text: 'Servicios Go para APIs, eventos, autenticacion, observabilidad y contratos compartidos con frontend.',
+    tags: ['Go', 'chi', 'AWS SDK v2', 'NATS', 'pgx', 'Atlas', 'JWT/JWKS', 'OpenAPI'],
   },
   {
-    title: 'Desarrollo',
-    text: 'APIs, UI, bases de datos y automatizacion para productos internos.',
-    tags: ['C#', 'ASP.NET Core', 'React', 'TypeScript', 'PostgreSQL', 'Docker'],
+    title: 'Systems & networks',
+    text: 'Administracion Linux, redes, VPNs, firewalls, monitoreo y troubleshooting operativo.',
+    tags: ['Linux', 'TCP/IP', 'WireGuard', 'MikroTik', 'Sophos', 'Nagios', 'Docker'],
   },
 ];
 
 const research = [
-  'Dockerizacion de Servidores SCADA: Ciberseguridad Industrial - WICC 2025',
-  'Reverse Shell para Pruebas de Penetracion - CACIC 2024',
-  'Botnets: Estado del Arte y Taxonomia - JAIIO 53',
-  'Monolitos vs Microservicios en Arquitectura de Software - JAIIO 53',
-  'Seguridad en Redes WiFi: Deteccion y Expulsion de Intrusos - WICC 2024',
+  'Expositor Distinguido en Seguridad Informatica - CACIC 2024, por reverse shells para pruebas de penetracion.',
+  'Mejor Exposicion - SACS / 53 JAIIO 2024, por investigacion sobre botnets y taxonomia de amenazas.',
+  'Speaker en Vincular Inteligente 2026 - Seguridad con IA: monitoreo inteligente y respuesta temprana.',
+  'Speaker en CyberSecTuc Meetup #3 - La realidad de un Ingeniero en Ciberseguridad.',
 ];
 
 const courses = [
-  'Ayudante de Catedra en Sistemas Operativos - UAI',
-  'Colaboracion previa en Arquitectura de Computadoras II',
-  'Contenido tecnico en ciberseguridad, Linux, cloud y carrera IT',
+  'VT Security - canal tecnico en espanol sobre ciberseguridad, Linux y software engineering, 25K+ suscriptores.',
+  'Proyecto Prometeo - biblioteca digital open source con React, Node.js, TypeScript, TailwindCSS y PostgreSQL.',
+  'VT-IDE-Project - configuracion publica AI-first para Zed, MCP servers, Claude Code y workflows de desarrollo.',
 ];
 
 const reveal = {
@@ -223,15 +223,10 @@ function App() {
 
       <main>
         <section className="hero" id="top">
-          <motion.div
-            className="hero-inner"
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          >
+          <div className="hero-inner">
             <div className="status-pill">
               <span className="status-dot" />
-              Disponible para proyectos
+              Teramot · cloud security, backend and AI agents
             </div>
 
             <div className="portrait-wrap">
@@ -247,13 +242,13 @@ function App() {
             <h1>Valentin Torassa Colombero</h1>
 
             <p className="hero-role">
-              Cybersecurity & Compliance · Cloud · Backend
+              Cybersecurity Engineer · Backend Engineer · Cloud Security
             </p>
 
             <TerminalCard title="vt@security:~/career" lines={terminalLines} />
 
             <div className="hero-actions">
-              <a className="btn btn-primary" href="mailto:valentintorassacolombero@gmail.com">
+              <a className="btn btn-primary" href="mailto:valentin.torassa.colombero@gmail.com">
                 <Mail aria-hidden="true" />
                 Contactar
               </a>
@@ -277,15 +272,15 @@ function App() {
               ))}
             </div>
 
-          </motion.div>
+          </div>
         </section>
 
         <div className="strip" aria-hidden="true">
           <div className="strip-track">
-            {['LINUX', 'AWS', 'COMPLIANCE', 'BACKEND', 'NETWORKING', 'RESEARCH', 'AUTOMATION'].map((item) => (
+            {['GO BACKEND', 'SOC 2', 'ISO 27001', 'MCP/OAUTH', 'AWS SECURITY', 'LINUX', 'VT SECURITY'].map((item) => (
               <span key={item}>{item}</span>
             ))}
-            {['LINUX', 'AWS', 'COMPLIANCE', 'BACKEND', 'NETWORKING', 'RESEARCH', 'AUTOMATION'].map((item) => (
+            {['GO BACKEND', 'SOC 2', 'ISO 27001', 'MCP/OAUTH', 'AWS SECURITY', 'LINUX', 'VT SECURITY'].map((item) => (
               <span key={`${item}-copy`}>{item}</span>
             ))}
           </div>
@@ -294,19 +289,19 @@ function App() {
         <section className="section" id="profile">
           <div className="section-head">
             <span className="eyebrow">// perfil</span>
-            <h2>Construyo, opero y aseguro sistemas reales.</h2>
+            <h2>Seguridad aplicada a infraestructura, backend y agentes de IA.</h2>
             <p>
-              Perfil hibrido entre ciberseguridad, compliance, cloud, redes y desarrollo. La base es
-              entender la infraestructura por debajo antes de automatizarla, defenderla o explicarla.
+              No separo seguridad de ingenieria: diseno plataformas, opero infraestructura cloud y traduzco
+              controles de compliance en decisiones tecnicas verificables.
             </p>
           </div>
 
           <div className="profile-grid">
             <motion.div className="statement" {...reveal}>
               <p>
-                Trabajo sobre controles, datos sensibles, hardening y arquitectura cloud, pero tambien
-                construyo software. Esa mezcla permite conectar riesgo, producto e infraestructura sin
-                perder el detalle tecnico.
+                Mi foco actual esta en proteger datos empresariales que consumen agentes de IA, construir
+                backend en Go para acceso seguro a fuentes de datos y mantener AWS, identidad, auditoria y
+                observabilidad como parte del producto, no como una capa decorativa.
               </p>
             </motion.div>
 
@@ -392,8 +387,8 @@ function App() {
         <section className="section section-raised" id="stack">
           <div className="section-head">
             <span className="eyebrow">// stack</span>
-            <h2>Herramientas que uso en serio</h2>
-            <p>Sin barras de progreso: tecnologias y practicas aplicadas en trabajo, proyectos y research.</p>
+            <h2>Stack operativo</h2>
+            <p>Tecnologias y practicas presentes en producto, seguridad cloud, auditorias y sistemas reales.</p>
           </div>
 
           <div className="skill-grid">
@@ -410,14 +405,14 @@ function App() {
         <section className="section split-section" id="research">
           <div className="section-head compact">
             <span className="eyebrow">// research & docencia</span>
-            <h2>Investigar, documentar y enseñar</h2>
+            <h2>Reconocimiento, charlas y proyectos publicos</h2>
           </div>
 
           <div className="split-grid">
             <motion.div className="panel" {...reveal}>
               <div className="panel-title">
                 <BookOpen aria-hidden="true" />
-                <h3>Investigaciones</h3>
+                <h3>Reconocimiento y speaking</h3>
               </div>
               <ul className="clean-list">
                 {research.map((item) => (
@@ -429,7 +424,7 @@ function App() {
             <motion.div className="panel" {...reveal}>
               <div className="panel-title">
                 <BriefcaseBusiness aria-hidden="true" />
-                <h3>Docencia y contenido</h3>
+                <h3>Proyectos y contenido</h3>
               </div>
               <ul className="clean-list">
                 {courses.map((item) => (
@@ -442,13 +437,13 @@ function App() {
 
         <section className="contact-section" id="contact">
           <Terminal aria-hidden="true" />
-          <h2>Listo para conversar sobre seguridad, cloud o backend.</h2>
+          <h2>Contacto profesional.</h2>
           <p>
-            Rosario, Argentina · disponible para proyectos remotos, colaboraciones tecnicas y roles
-            donde la seguridad tenga impacto real.
+            Rosario, Argentina · conversaciones tecnicas sobre cloud security, backend, compliance,
+            agentes de IA, Linux y arquitectura de sistemas.
           </p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="mailto:valentintorassacolombero@gmail.com">
+            <a className="btn btn-primary" href="mailto:valentin.torassa.colombero@gmail.com">
               <Mail aria-hidden="true" />
               Email
             </a>
