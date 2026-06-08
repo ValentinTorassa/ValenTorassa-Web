@@ -289,19 +289,20 @@ function App() {
         <section className="section" id="profile">
           <div className="section-head">
             <span className="eyebrow">// perfil</span>
-            <h2>Seguridad aplicada a infraestructura, backend y agentes de IA.</h2>
+            <h2>Entiendo sistemas desde abajo y los llevo a produccion.</h2>
             <p>
-              No separo seguridad de ingenieria: diseno plataformas, opero infraestructura cloud y traduzco
-              controles de compliance en decisiones tecnicas verificables.
+              Mi perfil cruza ciberseguridad, backend, cloud, Linux, redes y compliance. Me interesa
+              saber como funciona la plataforma completa: identidad, datos, permisos, auditoria,
+              observabilidad y operacion.
             </p>
           </div>
 
           <div className="profile-grid">
             <motion.div className="statement" {...reveal}>
               <p>
-                Mi foco actual esta en proteger datos empresariales que consumen agentes de IA, construir
-                backend en Go para acceso seguro a fuentes de datos y mantener AWS, identidad, auditoria y
-                observabilidad como parte del producto, no como una capa decorativa.
+                En Teramot trabajo sobre esa interseccion: construyo backend en Go para Aleph, aseguro
+                infraestructura AWS, bajo controles SOC 2 / ISO 27001 a implementaciones reales y pienso la
+                seguridad como parte del producto, no como un checklist separado.
               </p>
             </motion.div>
 
