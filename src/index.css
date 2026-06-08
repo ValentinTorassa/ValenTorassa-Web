@@ -215,12 +215,24 @@ img {
   place-items: center;
 }
 
+.hero::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+  background:
+    radial-gradient(circle at 50% 49%, rgba(8, 9, 16, 0.58) 0 20rem, rgba(8, 9, 16, 0.14) 32rem, transparent 48rem),
+    linear-gradient(90deg, rgba(8, 9, 16, 0.1), transparent 18%, transparent 82%, rgba(8, 9, 16, 0.1));
+}
+
 .hero-scene {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.92;
+  filter: saturate(1.42) contrast(1.28) drop-shadow(0 0 12px rgba(84, 230, 214, 0.22));
   mix-blend-mode: screen;
 }
 
@@ -1230,7 +1242,8 @@ p {
   }
 
   .hero-scene {
-    opacity: 0.54;
+    opacity: 0.76;
+    filter: saturate(1.35) contrast(1.22) drop-shadow(0 0 9px rgba(84, 230, 214, 0.2));
   }
 
   .hero-inner {

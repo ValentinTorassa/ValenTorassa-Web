@@ -580,7 +580,8 @@ function HeroScene() {
     });
 
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.35));
     container.appendChild(renderer.domElement);
 
     const topology = new THREE.Group();
@@ -591,43 +592,79 @@ function HeroScene() {
     const teal = new THREE.LineBasicMaterial({
       color: 0x54e6d6,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.36,
     });
     const cyan = new THREE.LineBasicMaterial({
       color: 0x54e6d6,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.5,
     });
     const linkMaterial = new THREE.LineBasicMaterial({
       color: 0x54e6d6,
       transparent: true,
-      opacity: 0.14,
+      opacity: 0.22,
     });
     const violet = new THREE.LineBasicMaterial({
       color: 0x8b7cff,
       transparent: true,
-      opacity: 0.26,
+      opacity: 0.46,
     });
     const amber = new THREE.LineBasicMaterial({
       color: 0xf0b45b,
       transparent: true,
-      opacity: 0.22,
+      opacity: 0.4,
     });
-    disposables.push(teal, cyan, linkMaterial, violet, amber);
+    const vertexMaterial = new THREE.PointsMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.62,
+      size: 0.032,
+      sizeAttenuation: true,
+    });
+    disposables.push(teal, cyan, linkMaterial, violet, amber, vertexMaterial);
 
-    const grid = new THREE.GridHelper(16, 36, 0x54e6d6, 0x1c2436);
+    const grid = new THREE.GridHelper(18, 52, 0x54e6d6, 0x243352);
     grid.position.y = -2.65;
     grid.position.z = -1.2;
     grid.rotation.x = 0.12;
     const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
     gridMaterials.forEach((material) => {
       material.transparent = true;
-      material.opacity = 0.23;
+      material.opacity = 0.34;
       disposables.push(material);
     });
     topology.add(grid);
 
-    const coreGeometry = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.15, 1));
+    const vertexPositions = new Float32Array(126);
+    for (let index = 0; index < vertexPositions.length; index += 3) {
+      const seed = index + 1;
+      const side = seed % 2 === 0 ? -1 : 1;
+      vertexPositions[index] = side * (2.25 + ((Math.sin(seed * 14.1) + 1) * 1.55));
+      vertexPositions[index + 1] = -1.75 + ((Math.sin(seed * 9.7) + 1) * 2.15);
+      vertexPositions[index + 2] = -2.4 - ((Math.sin(seed * 5.3) + 1) * 1.45);
+    }
+    const vertexGeometry = new THREE.BufferGeometry();
+    vertexGeometry.setAttribute('position', new THREE.BufferAttribute(vertexPositions, 3));
+    const vertexField = new THREE.Points(vertexGeometry, vertexMaterial);
+    topology.add(vertexField);
+    disposables.push(vertexGeometry);
+
+    const terrainGeometry = new THREE.PlaneGeometry(9.8, 3.2, 14, 5);
+    const terrainPosition = terrainGeometry.attributes.position;
+    for (let index = 0; index < terrainPosition.count; index += 1) {
+      const x = terrainPosition.getX(index);
+      const y = terrainPosition.getY(index);
+      terrainPosition.setZ(index, Math.sin(x * 1.6 + y * 2.2) * 0.12);
+    }
+    terrainPosition.needsUpdate = true;
+    const terrainEdges = new THREE.EdgesGeometry(terrainGeometry);
+    const terrain = new THREE.LineSegments(terrainEdges, linkMaterial);
+    terrain.position.set(0, -2.3, -2.85);
+    terrain.rotation.x = -Math.PI / 2.7;
+    topology.add(terrain);
+    disposables.push(terrainGeometry, terrainEdges);
+
+    const coreGeometry = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.28, 1));
     const core = new THREE.LineSegments(coreGeometry, violet);
     core.position.set(4.05, -0.15, -2.25);
     topology.add(core);
@@ -692,16 +729,24 @@ function HeroScene() {
       topology.scale.setScalar(width < 700 ? 0.76 : 1);
     };
 
+    const pointerTarget = { x: 0, y: 0 };
+    const handlePointerMove = (event: PointerEvent) => {
+      pointerTarget.y = ((event.clientX / window.innerWidth) - 0.5) * 0.12;
+      pointerTarget.x = ((event.clientY / window.innerHeight) - 0.5) * -0.055;
+    };
+
     let frame = 0;
     const clock = new THREE.Clock();
     const render = () => {
       const elapsed = clock.getElapsedTime();
-      topology.rotation.y = Math.sin(elapsed * 0.16) * 0.08;
-      topology.rotation.x = Math.sin(elapsed * 0.11) * 0.018;
+      topology.rotation.y += (Math.sin(elapsed * 0.16) * 0.08 + pointerTarget.y - topology.rotation.y) * 0.045;
+      topology.rotation.x += (Math.sin(elapsed * 0.11) * 0.018 + pointerTarget.x - topology.rotation.x) * 0.045;
       core.rotation.x = elapsed * 0.18;
       core.rotation.y = elapsed * 0.25;
       ring.rotation.z = elapsed * 0.09;
       ring.rotation.y = 0.3 + Math.sin(elapsed * 0.22) * 0.18;
+      vertexField.rotation.y = Math.sin(elapsed * 0.08) * 0.04;
+      terrain.position.y = -2.3 + Math.sin(elapsed * 0.42) * 0.025;
       scanLine.position.y = -2.25 + ((elapsed * 0.38) % 4.2);
       scanMaterial.opacity = 0.16 + Math.sin(elapsed * 2.2) * 0.07;
       cubes.forEach((cube, index) => {
@@ -718,9 +763,11 @@ function HeroScene() {
     resize();
     render();
     window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', handlePointerMove);
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', handlePointerMove);
       window.cancelAnimationFrame(frame);
       disposables.forEach((item) => item.dispose());
       renderer.dispose();
