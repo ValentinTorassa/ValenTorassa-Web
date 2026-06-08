@@ -4,6 +4,7 @@ import {
   BriefcaseBusiness,
   Calendar,
   Github,
+  Globe,
   GraduationCap,
   Linkedin,
   Link as LinkIcon,
@@ -13,6 +14,10 @@ import {
   Youtube,
 } from 'lucide-react';
 import portrait from './assets/portrait-dark.png';
+import awsLogo from './assets/certs/aws.svg';
+import comptiaLogo from './assets/certs/comptia.svg';
+import huaweiLogo from './assets/certs/huawei.svg';
+import linuxFoundationLogo from './assets/certs/linuxfoundation.svg';
 import vtMark from './assets/vt-mark.png';
 
 const navItems = [
@@ -47,6 +52,11 @@ const socialLinks = [
   {
     name: 'Website',
     href: 'https://valentorassa.com',
+    icon: Globe,
+  },
+  {
+    name: 'Bento',
+    href: 'https://bento.me/valentintorassa',
     icon: LinkIcon,
   },
 ];
@@ -68,13 +78,6 @@ const terminalLines = [
     command: 'certs --active',
     output: 'CompTIA Security+, AWS CCP, LFCA',
   },
-];
-
-const stats = [
-  { value: '25K+', label: 'VT Security' },
-  { value: '3', label: 'certificaciones' },
-  { value: 'SOC 2', label: 'audit readiness' },
-  { value: 'Go/AWS', label: 'backend platform' },
 ];
 
 const facts = [
@@ -146,9 +149,34 @@ const education = [
 ];
 
 const certifications = [
-  'CompTIA Security+ (SY0-701) - vigente hasta feb. 2029',
-  'AWS Certified Cloud Practitioner (CLF-C02) - vigente hasta jul. 2028',
-  'LFCA - Linux Foundation Certified IT Associate - vigente hasta abr. 2028',
+  {
+    name: 'CompTIA Security+',
+    detail: 'SY0-701 · vigente hasta feb. 2029',
+    focus: 'Security operations, risk, architecture and incident response fundamentals.',
+    logo: comptiaLogo,
+    tone: 'security',
+  },
+  {
+    name: 'AWS Certified Cloud Practitioner',
+    detail: 'CLF-C02 · vigente hasta jul. 2028',
+    focus: 'AWS cloud concepts, security, billing, services and shared responsibility.',
+    logo: awsLogo,
+    tone: 'aws',
+  },
+  {
+    name: 'Linux Foundation Certified IT Associate',
+    detail: 'LFCA · vigente hasta abr. 2028',
+    focus: 'Linux, cloud, DevOps, security basics and modern IT systems.',
+    logo: linuxFoundationLogo,
+    tone: 'linux',
+  },
+  {
+    name: 'Huawei HCIA Datacom',
+    detail: 'Huawei Certified ICT Associate · Datacom',
+    focus: 'Routing, switching, IP networks and enterprise connectivity foundations.',
+    logo: huaweiLogo,
+    tone: 'huawei',
+  },
 ];
 
 const stackGroups = [
@@ -156,21 +184,25 @@ const stackGroups = [
     title: 'Cloud security',
     text: 'Seguridad e infraestructura AWS para workloads de producto, datos sensibles y despliegues auditables.',
     tags: ['ECS/Fargate', 'IAM', 'SSO Admin', 'Secrets Manager', 'CloudTrail', 'GuardDuty', 'VPC', 'Terraform'],
+    tone: 'cloud',
   },
   {
     title: 'Compliance engineering',
     text: 'Controles implementados en sistemas, evidencia, poblaciones de auditoria y remediacion tecnica.',
     tags: ['SOC 2 Type II', 'ISO/IEC 27001', 'ISMS/SGSI', 'Audit Evidence', 'OIDC', 'Secrets Handling'],
+    tone: 'compliance',
   },
   {
     title: 'Backend architecture',
     text: 'Servicios Go para APIs, eventos, autenticacion, observabilidad y contratos compartidos con frontend.',
     tags: ['Go', 'chi', 'AWS SDK v2', 'NATS', 'pgx', 'Atlas', 'JWT/JWKS', 'OpenAPI'],
+    tone: 'backend',
   },
   {
     title: 'Systems & networks',
     text: 'Administracion Linux, redes, VPNs, firewalls, monitoreo y troubleshooting operativo.',
     tags: ['Linux', 'TCP/IP', 'WireGuard', 'MikroTik', 'Sophos', 'Nagios', 'Docker'],
+    tone: 'systems',
   },
 ];
 
@@ -269,12 +301,12 @@ function App() {
               </a>
             </div>
 
-            <div className="hero-stats" aria-label="Resumen de CV">
-              {stats.map((stat) => (
-                <span key={stat.label}>
-                  <strong>{stat.value}</strong>
-                  {stat.label}
-                </span>
+            <div className="hero-socials" aria-label="Redes y contacto">
+              {socialLinks.map((link) => (
+                <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer">
+                  <link.icon aria-hidden="true" />
+                  <span>{link.name}</span>
+                </a>
               ))}
             </div>
 
@@ -382,11 +414,20 @@ function App() {
                 <ShieldCheck aria-hidden="true" />
                 <h3>Certificaciones</h3>
               </div>
-              <ul className="clean-list">
-                {certifications.map((item) => (
-                  <li key={item}>{item}</li>
+              <div className="cert-grid">
+                {certifications.map((cert) => (
+                  <article className={`cert-card cert-${cert.tone}`} key={cert.name}>
+                    <span className="cert-logo">
+                      <img src={cert.logo} alt="" />
+                    </span>
+                    <div>
+                      <h4>{cert.name}</h4>
+                      <strong>{cert.detail}</strong>
+                      <p>{cert.focus}</p>
+                    </div>
+                  </article>
                 ))}
-              </ul>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -400,10 +441,10 @@ function App() {
 
           <div className="skill-grid">
             {stackGroups.map((group) => (
-              <motion.article className="skill-card" key={group.title} {...reveal}>
+              <motion.article className={`skill-card tone-${group.tone}`} key={group.title} {...reveal}>
                 <h3>{group.title}</h3>
                 <p>{group.text}</p>
-                <TagList tags={group.tags} />
+                <TagList tags={group.tags} variant="colorful" />
               </motion.article>
             ))}
           </div>
@@ -499,9 +540,9 @@ function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }
   );
 }
 
-function TagList({ tags }: { tags: string[] }) {
+function TagList({ tags, variant }: { tags: string[]; variant?: 'colorful' }) {
   return (
-    <div className="tag-list">
+    <div className={`tag-list${variant ? ` ${variant}` : ''}`}>
       {tags.map((tag) => (
         <span key={tag}>{tag}</span>
       ))}
