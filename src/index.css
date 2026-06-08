@@ -319,8 +319,8 @@ img {
 
 .portrait-wrap {
   position: relative;
-  width: 162px;
-  height: 162px;
+  width: 172px;
+  height: 172px;
   margin-top: 18px;
 }
 
@@ -349,11 +349,13 @@ img {
   border: 1px solid var(--line-strong);
   border-radius: 50%;
   object-fit: cover;
-  object-position: 50% 12%;
+  object-position: 50% 24%;
   box-shadow:
     0 28px 68px -34px rgba(0, 0, 0, 0.9),
     0 0 0 7px rgba(139, 124, 255, 0.08),
     0 0 42px -18px rgba(84, 230, 214, 0.76);
+  transform: scale(1.09);
+  transform-origin: 50% 32%;
 }
 
 .portrait-mark {
@@ -1375,8 +1377,8 @@ p {
   }
 
   .portrait-wrap {
-    width: 148px;
-    height: 148px;
+    width: 156px;
+    height: 156px;
   }
 
   .portrait-mark {
