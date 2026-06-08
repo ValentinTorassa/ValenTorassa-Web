@@ -117,7 +117,7 @@ const facts = [
   },
   {
     key: 'ops',
-    title: 'Security operations con contexto real',
+    title: 'Security operations & cloud hardening',
     text: 'AWS ECS/Fargate, IAM, SSO, CloudTrail, GuardDuty, OIDC en GitHub Actions, secretos, remediacion e instrumentacion con OpenTelemetry.',
   },
 ];
@@ -479,7 +479,7 @@ function App() {
           <div className="section-head">
             <span className="eyebrow">// stack</span>
             <h2>Stack operativo</h2>
-            <p>Tecnologias y practicas presentes en producto, seguridad cloud, auditorias y sistemas reales.</p>
+            <p>Tecnologias y practicas presentes en producto, seguridad cloud, auditorias y operacion en produccion.</p>
           </div>
 
           <div className="skill-grid">
