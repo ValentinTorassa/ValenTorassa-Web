@@ -163,12 +163,12 @@ img {
   display: inline-flex;
   flex: none;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .social-actions a {
   display: inline-grid;
-  width: 36px;
+  width: 34px;
   aspect-ratio: 1;
   place-items: center;
   border: 1px solid var(--line);
@@ -246,9 +246,9 @@ img {
 
 .portrait-wrap {
   position: relative;
-  width: 142px;
-  height: 142px;
-  margin-top: 22px;
+  width: 172px;
+  height: 172px;
+  margin-top: 24px;
 }
 
 .portrait {
@@ -257,7 +257,7 @@ img {
   border: 1px solid var(--line-strong);
   border-radius: 50%;
   object-fit: cover;
-  object-position: 50% 18%;
+  object-position: 50% 12%;
   box-shadow:
     0 28px 68px -34px rgba(0, 0, 0, 0.9),
     0 0 0 7px rgba(139, 124, 255, 0.08);
@@ -265,10 +265,10 @@ img {
 
 .portrait-mark {
   position: absolute;
-  right: -2px;
-  bottom: 3px;
-  width: 40px;
-  height: 40px;
+  right: 1px;
+  bottom: 8px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #000;
@@ -907,20 +907,33 @@ p {
 
 @media (max-width: 520px) {
   .topbar {
-    width: calc(100% - 20px);
+    right: 10px;
+    left: 10px;
+    width: auto;
     margin-top: 10px;
+    margin-right: 0;
+    margin-left: 0;
+    gap: 10px;
   }
 
   .brand span {
-    max-width: 130px;
-  }
-
-  .social-actions a:nth-child(3) {
     display: none;
   }
 
   .social-actions {
-    display: none;
+    display: inline-flex;
+    gap: 4px;
+    transform: translateX(-78px);
+  }
+
+  .social-actions a {
+    width: 28px;
+    border-radius: 7px;
+  }
+
+  .social-actions svg {
+    width: 15px;
+    height: 15px;
   }
 
   .hero {
@@ -940,8 +953,13 @@ p {
   }
 
   .portrait-wrap {
-    width: 124px;
-    height: 124px;
+    width: 148px;
+    height: 148px;
+  }
+
+  .portrait-mark {
+    width: 38px;
+    height: 38px;
   }
 
   .terminal-body {

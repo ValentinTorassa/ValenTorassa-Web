@@ -6,6 +6,7 @@ import {
   Github,
   GraduationCap,
   Linkedin,
+  Link as LinkIcon,
   Mail,
   ShieldCheck,
   Terminal,
@@ -42,6 +43,11 @@ const socialLinks = [
     name: 'Email',
     href: 'mailto:valentin.torassa.colombero@gmail.com',
     icon: Mail,
+  },
+  {
+    name: 'Website',
+    href: 'https://valentorassa.com',
+    icon: LinkIcon,
   },
 ];
 
@@ -206,7 +212,7 @@ function App() {
         </nav>
 
         <div className="social-actions">
-          {socialLinks.slice(0, 3).map((link) => (
+          {socialLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
