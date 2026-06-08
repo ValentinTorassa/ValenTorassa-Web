@@ -621,7 +621,43 @@ function HeroScene() {
       size: 0.032,
       sizeAttenuation: true,
     });
-    disposables.push(teal, cyan, linkMaterial, violet, amber, vertexMaterial);
+    const surfaceMaterial = new THREE.MeshBasicMaterial({
+      color: 0x8b7cff,
+      transparent: true,
+      opacity: 0.08,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    });
+    const packetMaterial = new THREE.MeshBasicMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false,
+    });
+    const packetAltMaterial = new THREE.MeshBasicMaterial({
+      color: 0xf0b45b,
+      transparent: true,
+      opacity: 0.82,
+      depthWrite: false,
+    });
+    const nodeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.78,
+      depthWrite: false,
+    });
+    disposables.push(
+      teal,
+      cyan,
+      linkMaterial,
+      violet,
+      amber,
+      vertexMaterial,
+      surfaceMaterial,
+      packetMaterial,
+      packetAltMaterial,
+      nodeMaterial,
+    );
 
     const grid = new THREE.GridHelper(18, 52, 0x54e6d6, 0x243352);
     grid.position.y = -2.65;
@@ -670,12 +706,25 @@ function HeroScene() {
     topology.add(core);
     disposables.push(coreGeometry);
 
+    const coreSurfaceGeometry = new THREE.IcosahedronGeometry(1.26, 1);
+    const coreSurface = new THREE.Mesh(coreSurfaceGeometry, surfaceMaterial);
+    coreSurface.position.copy(core.position);
+    topology.add(coreSurface);
+    disposables.push(coreSurfaceGeometry);
+
     const ringGeometry = new THREE.EdgesGeometry(new THREE.TorusGeometry(1.65, 0.012, 8, 96));
     const ring = new THREE.LineSegments(ringGeometry, cyan);
     ring.position.set(-4.15, -0.35, -2.35);
     ring.rotation.set(1.2, 0.3, 0.35);
     topology.add(ring);
     disposables.push(ringGeometry);
+
+    const orbitGeometry = new THREE.EdgesGeometry(new THREE.TorusGeometry(1.92, 0.012, 6, 72));
+    const orbit = new THREE.LineSegments(orbitGeometry, amber);
+    orbit.position.copy(ring.position);
+    orbit.rotation.set(0.75, -0.12, -0.58);
+    topology.add(orbit);
+    disposables.push(orbitGeometry);
 
     const scanGeometry = new THREE.PlaneGeometry(8.8, 0.018);
     const scanMaterial = new THREE.MeshBasicMaterial({
@@ -706,18 +755,54 @@ function HeroScene() {
       disposables.push(geometry);
     });
 
-    const linkPositions = new Float32Array([
-      -4.35, -0.65, -1.8, -2.65, 0.95, -2.6,
-      -2.65, 0.95, -2.6, 0.0, -0.42, -2.25,
-      0.0, -0.42, -2.25, 2.35, 1.18, -3.15,
-      0.0, -0.42, -2.25, 4.2, -1.08, -2.45,
-      -4.35, -0.65, -1.8, 4.2, -1.08, -2.45,
-    ]);
+    const linkSegments = [
+      { from: [-4.35, -0.65, -1.8], to: [-2.65, 0.95, -2.6] },
+      { from: [-2.65, 0.95, -2.6], to: [0.0, -0.42, -2.25] },
+      { from: [0.0, -0.42, -2.25], to: [2.35, 1.18, -3.15] },
+      { from: [0.0, -0.42, -2.25], to: [4.2, -1.08, -2.45] },
+      { from: [-4.35, -0.65, -1.8], to: [4.2, -1.08, -2.45] },
+      { from: [-4.15, -0.35, -2.35], to: [4.05, -0.15, -2.25] },
+    ] as const;
+    const linkPositions = new Float32Array(
+      linkSegments.flatMap((segment) => [...segment.from, ...segment.to]),
+    );
     const linkGeometry = new THREE.BufferGeometry();
     linkGeometry.setAttribute('position', new THREE.BufferAttribute(linkPositions, 3));
     const links = new THREE.LineSegments(linkGeometry, linkMaterial);
     topology.add(links);
     disposables.push(linkGeometry);
+
+    const packetGeometry = new THREE.OctahedronGeometry(0.055, 0);
+    const packets = linkSegments.map((segment, index) => {
+      const packet = new THREE.Mesh(packetGeometry, index % 2 === 0 ? packetMaterial : packetAltMaterial);
+      topology.add(packet);
+
+      return {
+        mesh: packet,
+        from: new THREE.Vector3(segment.from[0], segment.from[1], segment.from[2]),
+        to: new THREE.Vector3(segment.to[0], segment.to[1], segment.to[2]),
+        offset: index / linkSegments.length,
+      };
+    });
+    disposables.push(packetGeometry);
+
+    const nodeGeometry = new THREE.OctahedronGeometry(0.075, 0);
+    const nodePositions = [
+      [-4.35, -0.65, -1.8],
+      [-2.65, 0.95, -2.6],
+      [0.0, -0.42, -2.25],
+      [2.35, 1.18, -3.15],
+      [4.2, -1.08, -2.45],
+      [-4.15, -0.35, -2.35],
+      [4.05, -0.15, -2.25],
+    ] as const;
+    const nodes = nodePositions.map((position) => {
+      const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+      node.position.set(position[0], position[1], position[2]);
+      topology.add(node);
+      return node;
+    });
+    disposables.push(nodeGeometry);
 
     const resize = () => {
       const width = container.clientWidth;
@@ -743,12 +828,24 @@ function HeroScene() {
       topology.rotation.x += (Math.sin(elapsed * 0.11) * 0.018 + pointerTarget.x - topology.rotation.x) * 0.045;
       core.rotation.x = elapsed * 0.18;
       core.rotation.y = elapsed * 0.25;
+      coreSurface.rotation.copy(core.rotation);
       ring.rotation.z = elapsed * 0.09;
       ring.rotation.y = 0.3 + Math.sin(elapsed * 0.22) * 0.18;
+      orbit.rotation.x = 0.75 + Math.sin(elapsed * 0.18) * 0.12;
+      orbit.rotation.z = -0.58 - elapsed * 0.08;
       vertexField.rotation.y = Math.sin(elapsed * 0.08) * 0.04;
       terrain.position.y = -2.3 + Math.sin(elapsed * 0.42) * 0.025;
       scanLine.position.y = -2.25 + ((elapsed * 0.38) % 4.2);
       scanMaterial.opacity = 0.16 + Math.sin(elapsed * 2.2) * 0.07;
+      packets.forEach((packet, index) => {
+        const progress = (elapsed * (0.08 + index * 0.008) + packet.offset) % 1;
+        packet.mesh.position.lerpVectors(packet.from, packet.to, progress);
+        packet.mesh.rotation.set(elapsed * 0.8, elapsed * 1.1 + index, elapsed * 0.55);
+        packet.mesh.scale.setScalar(0.72 + Math.sin((progress + elapsed) * Math.PI * 2) * 0.18);
+      });
+      nodes.forEach((node, index) => {
+        node.scale.setScalar(0.75 + Math.sin(elapsed * 1.7 + index * 0.9) * 0.18);
+      });
       cubes.forEach((cube, index) => {
         cube.rotation.x = Math.sin(elapsed * 0.18 + index) * 0.08;
         cube.rotation.y = elapsed * (0.05 + index * 0.012);

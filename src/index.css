@@ -215,6 +215,25 @@ img {
   place-items: center;
 }
 
+.hero::before {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(84, 230, 214, 0.08) 45%,
+    rgba(139, 124, 255, 0.075) 50%,
+    transparent 63%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.74;
+  transform: translateX(-36%);
+  animation: hero-light-sweep 10s ease-in-out infinite;
+}
+
 .hero::after {
   position: absolute;
   inset: 0;
@@ -232,7 +251,7 @@ img {
   z-index: 0;
   pointer-events: none;
   opacity: 0.92;
-  filter: saturate(1.42) contrast(1.28) drop-shadow(0 0 12px rgba(84, 230, 214, 0.22));
+  filter: saturate(1.58) contrast(1.36) drop-shadow(0 0 16px rgba(84, 230, 214, 0.27));
   mix-blend-mode: screen;
 }
 
@@ -251,6 +270,7 @@ img {
   max-width: 760px;
   min-width: 0;
   text-align: center;
+  animation: hero-settle 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .status-pill {
@@ -332,7 +352,8 @@ img {
   object-position: 50% 12%;
   box-shadow:
     0 28px 68px -34px rgba(0, 0, 0, 0.9),
-    0 0 0 7px rgba(139, 124, 255, 0.08);
+    0 0 0 7px rgba(139, 124, 255, 0.08),
+    0 0 42px -18px rgba(84, 230, 214, 0.76);
 }
 
 .portrait-mark {
@@ -392,6 +413,9 @@ p {
   font-weight: 700;
   line-height: 0.98;
   letter-spacing: 0;
+  text-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.92),
+    0 0 30px rgba(84, 230, 214, 0.08);
 }
 
 .hero-role {
@@ -410,9 +434,17 @@ p {
   overflow: hidden;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
-  background: color-mix(in srgb, #05070b 84%, var(--surface));
-  box-shadow: 0 28px 80px -42px rgba(0, 0, 0, 0.96);
+  background:
+    linear-gradient(180deg, rgba(84, 230, 214, 0.045), transparent 42%),
+    linear-gradient(135deg, rgba(139, 124, 255, 0.08), transparent 58%),
+    color-mix(in srgb, #05070b 88%, var(--surface));
+  box-shadow:
+    0 32px 90px -44px rgba(0, 0, 0, 0.98),
+    0 0 0 1px rgba(84, 230, 214, 0.08),
+    0 0 44px -30px rgba(84, 230, 214, 0.9);
+  backdrop-filter: blur(14px);
   text-align: left;
+  animation: terminal-float 8s ease-in-out infinite;
 }
 
 .terminal-card::before {
@@ -426,6 +458,18 @@ p {
   opacity: 0.55;
   transform: translateY(-12px);
   animation: terminal-scan 4.8s ease-in-out infinite;
+}
+
+.terminal-card::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+  background:
+    linear-gradient(90deg, rgba(84, 230, 214, 0.06), transparent 18%, transparent 82%, rgba(139, 124, 255, 0.06)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 8px);
+  opacity: 0.5;
 }
 
 .terminal-bar {
@@ -567,6 +611,7 @@ p {
 }
 
 .hero-socials a {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -578,11 +623,27 @@ p {
   background:
     linear-gradient(135deg, rgba(84, 230, 214, 0.08), rgba(139, 124, 255, 0.06)),
     rgba(8, 9, 16, 0.42);
+  overflow: hidden;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     transform 0.2s ease,
     background 0.2s ease;
+}
+
+.hero-socials a::before {
+  position: absolute;
+  inset: 0;
+  width: 46%;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transform: translateX(-170%);
+  animation: badge-sheen 7.4s ease-in-out infinite;
+}
+
+.hero-socials a > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-socials a:hover,
@@ -1123,6 +1184,53 @@ p {
   }
 }
 
+@keyframes hero-light-sweep {
+  0%,
+  28% {
+    transform: translateX(-38%);
+  }
+
+  58%,
+  100% {
+    transform: translateX(38%);
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes terminal-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes badge-sheen {
+  0%,
+  58% {
+    transform: translateX(-170%);
+  }
+
+  80%,
+  100% {
+    transform: translateX(270%);
+  }
+}
+
 .contact-section {
   display: grid;
   justify-items: center;
@@ -1241,9 +1349,13 @@ p {
     padding-left: 12px;
   }
 
+  .hero::before {
+    opacity: 0.42;
+  }
+
   .hero-scene {
-    opacity: 0.76;
-    filter: saturate(1.35) contrast(1.22) drop-shadow(0 0 9px rgba(84, 230, 214, 0.2));
+    opacity: 0.82;
+    filter: saturate(1.42) contrast(1.28) drop-shadow(0 0 10px rgba(84, 230, 214, 0.22));
   }
 
   .hero-inner {
