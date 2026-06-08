@@ -191,6 +191,7 @@ img {
 }
 
 .social-actions svg,
+.social-actions img,
 .btn svg,
 .contact-section > svg,
 .panel-title svg,
@@ -199,15 +200,38 @@ img {
   height: 18px;
 }
 
+.social-actions img,
+.hero-socials img {
+  object-fit: contain;
+}
+
 .hero {
   position: relative;
   display: grid;
-  min-height: 92svh;
-  padding: 104px 16px 26px;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: 86px 16px 18px;
   place-items: center;
 }
 
+.hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.7;
+  mix-blend-mode: screen;
+}
+
+.hero-scene canvas {
+  width: 100%;
+  height: 100%;
+}
+
 .hero-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -218,6 +242,7 @@ img {
 }
 
 .status-pill {
+  position: relative;
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
@@ -232,7 +257,23 @@ img {
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.78rem;
+  overflow: hidden;
   text-align: center;
+}
+
+.status-pill::after {
+  position: absolute;
+  inset: 0;
+  width: 34%;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgba(84, 230, 214, 0.18), transparent);
+  transform: translateX(-140%);
+  animation: status-sweep 5.8s ease-in-out infinite;
+}
+
+.status-pill > * {
+  position: relative;
+  z-index: 1;
 }
 
 .status-dot {
@@ -246,9 +287,28 @@ img {
 
 .portrait-wrap {
   position: relative;
-  width: 172px;
-  height: 172px;
-  margin-top: 24px;
+  width: 162px;
+  height: 162px;
+  margin-top: 18px;
+}
+
+.portrait-wrap::before {
+  position: absolute;
+  inset: -10px;
+  z-index: -1;
+  content: '';
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(84, 230, 214, 0.55) 64deg,
+    transparent 118deg,
+    rgba(139, 124, 255, 0.42) 232deg,
+    transparent 296deg
+  );
+  opacity: 0.64;
+  filter: blur(0.2px);
+  animation: portrait-ring 10s linear infinite;
 }
 
 .portrait {
@@ -280,10 +340,10 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin: 22px 0 12px;
+  margin: 16px 0 8px;
   color: var(--accent-2);
   font-family: var(--mono);
-  font-size: 0.88rem;
+  font-size: 0.84rem;
 }
 
 .terminal-kicker span {
@@ -314,7 +374,7 @@ p {
 
 .hero h1 {
   max-width: 12ch;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-family: var(--display);
   font-size: 3rem;
   font-weight: 700;
@@ -324,15 +384,16 @@ p {
 
 .hero-role {
   max-width: 760px;
-  margin: 0 0 26px;
+  margin: 0 0 18px;
   color: var(--muted);
   font-family: var(--mono);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
 .terminal-card {
+  position: relative;
   width: 100%;
-  max-width: 560px;
+  max-width: 540px;
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--line-strong);
@@ -342,16 +403,31 @@ p {
   text-align: left;
 }
 
+.terminal-card::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 0;
+  height: 1px;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgba(84, 230, 214, 0.72), transparent);
+  opacity: 0.55;
+  transform: translateY(-12px);
+  animation: terminal-scan 4.8s ease-in-out infinite;
+}
+
 .terminal-bar {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 7px;
-  min-height: 42px;
-  padding: 10px 14px;
+  min-height: 34px;
+  padding: 8px 13px;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-family: var(--mono);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
 }
 
 .terminal-bar span:last-child {
@@ -365,8 +441,8 @@ p {
 .dot-yellow,
 .dot-green {
   flex: none;
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 }
 
@@ -383,13 +459,15 @@ p {
 }
 
 .terminal-body {
-  padding: 17px 18px 18px;
+  position: relative;
+  z-index: 1;
+  padding: 13px 16px 15px;
   font-family: var(--mono);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 
 .terminal-row + .terminal-row {
-  margin-top: 12px;
+  margin-top: 9px;
 }
 
 .terminal-row div {
@@ -467,19 +545,21 @@ p {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 9px;
+  gap: 7px;
   width: min(100%, 760px);
-  margin-top: 22px;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 16px;
   font-family: var(--mono);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
 }
 
 .hero-socials a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  padding: 6px 11px;
+  gap: 7px;
+  min-height: 31px;
+  padding: 5px 9px;
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--text);
@@ -488,6 +568,7 @@ p {
     rgba(8, 9, 16, 0.42);
   transition:
     border-color 0.2s ease,
+    box-shadow 0.2s ease,
     transform 0.2s ease,
     background 0.2s ease;
 }
@@ -496,12 +577,14 @@ p {
 .hero-socials a:focus-visible {
   border-color: rgba(84, 230, 214, 0.44);
   background: rgba(84, 230, 214, 0.1);
+  box-shadow: 0 12px 34px -24px rgba(84, 230, 214, 0.9);
   transform: translateY(-2px);
 }
 
-.hero-socials svg {
-  width: 16px;
-  height: 16px;
+.hero-socials svg,
+.hero-socials img {
+  width: 15px;
+  height: 15px;
   color: var(--accent-2);
 }
 
@@ -730,6 +813,7 @@ p {
 .tag-list span {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   min-height: 30px;
   padding: 4px 10px;
   border: 1px solid var(--line);
@@ -738,6 +822,16 @@ p {
   background: rgba(8, 9, 16, 0.44);
   font-family: var(--mono);
   font-size: 0.76rem;
+}
+
+.tag-list .tag-logo {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  padding: 2px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.92);
+  object-fit: contain;
 }
 
 .tag-list.colorful span {
@@ -931,6 +1025,8 @@ p {
 
 .skill-card {
   --skill: var(--accent-2);
+  position: relative;
+  overflow: hidden;
   border-color: color-mix(in srgb, var(--skill) 22%, transparent);
   background:
     linear-gradient(160deg, color-mix(in srgb, var(--skill) 10%, transparent), transparent 54%),
@@ -939,6 +1035,21 @@ p {
     transform 0.2s ease,
     border-color 0.2s ease,
     background 0.2s ease;
+}
+
+.skill-card::before {
+  position: absolute;
+  top: 0;
+  right: 18px;
+  left: 18px;
+  height: 1px;
+  content: '';
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--skill) 68%, white), transparent);
+  opacity: 0.28;
+  transform: translateX(-40%);
+  transition:
+    opacity 0.2s ease,
+    transform 0.32s ease;
 }
 
 .tone-cloud {
@@ -963,6 +1074,41 @@ p {
     linear-gradient(160deg, color-mix(in srgb, var(--skill) 16%, transparent), transparent 56%),
     rgba(18, 23, 34, 0.9);
   transform: translateY(-2px);
+}
+
+.skill-card:hover::before {
+  opacity: 0.78;
+  transform: translateX(40%);
+}
+
+@keyframes status-sweep {
+  0%,
+  38% {
+    transform: translateX(-140%);
+  }
+
+  62%,
+  100% {
+    transform: translateX(340%);
+  }
+}
+
+@keyframes portrait-ring {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes terminal-scan {
+  0%,
+  22% {
+    transform: translateY(-12px);
+  }
+
+  68%,
+  100% {
+    transform: translateY(204px);
+  }
 }
 
 .contact-section {
@@ -991,11 +1137,11 @@ p {
 
   .hero h1 {
     max-width: 18ch;
-    font-size: 4rem;
+    font-size: 3.65rem;
   }
 
   .hero-role {
-    font-size: 1rem;
+    font-size: 0.96rem;
   }
 
   .section,
@@ -1034,7 +1180,7 @@ p {
 
 @media (min-width: 1040px) {
   .hero h1 {
-    font-size: 4.8rem;
+    font-size: 4.18rem;
   }
 
   .skill-grid {
@@ -1059,16 +1205,21 @@ p {
 
   .social-actions {
     display: inline-flex;
+    position: absolute;
+    top: 10px;
+    right: auto;
+    left: 96px;
     gap: 4px;
-    transform: translateX(-78px);
+    transform: none;
   }
 
   .social-actions a {
-    width: 28px;
+    width: 27px;
     border-radius: 7px;
   }
 
-  .social-actions svg {
+  .social-actions svg,
+  .social-actions img {
     width: 15px;
     height: 15px;
   }
@@ -1078,14 +1229,23 @@ p {
     padding-left: 12px;
   }
 
+  .hero-scene {
+    opacity: 0.54;
+  }
+
+  .hero-inner {
+    width: 100%;
+    max-width: calc(100vw - 24px);
+  }
+
   .hero h1 {
     font-size: 2.42rem;
   }
 
   .status-pill,
   .hero-role {
-    width: calc(100vw - 72px);
-    max-width: 320px;
+    width: min(100%, calc(100vw - 48px));
+    max-width: 318px;
     overflow-wrap: anywhere;
   }
 
@@ -1105,7 +1265,17 @@ p {
   }
 
   .terminal-card {
-    width: calc(100vw - 96px);
+    width: 100%;
+    max-width: calc(100vw - 48px);
+  }
+
+  .hero-socials {
+    width: 100%;
+    max-width: calc(100vw - 48px);
+  }
+
+  .hero-socials a {
+    flex: 0 1 auto;
   }
 
   .section,

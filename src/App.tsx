@@ -1,23 +1,38 @@
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import * as THREE from 'three';
 import {
   BookOpen,
   BriefcaseBusiness,
   Calendar,
   Github,
-  Globe,
   GraduationCap,
   Linkedin,
-  Link as LinkIcon,
   Mail,
   ShieldCheck,
   Terminal,
   Youtube,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import portrait from './assets/portrait-dark.png';
 import awsLogo from './assets/certs/aws.svg';
 import comptiaLogo from './assets/certs/comptia.svg';
 import huaweiLogo from './assets/certs/huawei.svg';
 import linuxFoundationLogo from './assets/certs/linuxfoundation.svg';
+import instagramLogo from './assets/socials/instagram.svg';
+import tiktokLogo from './assets/socials/tiktok.svg';
+import xLogo from './assets/socials/x.svg';
+import dockerLogo from './assets/stack/docker.svg';
+import goLogo from './assets/stack/go.svg';
+import jwtLogo from './assets/stack/jwt.svg';
+import linuxLogo from './assets/stack/linux.svg';
+import mikrotikLogo from './assets/stack/mikrotik.svg';
+import natsLogo from './assets/stack/nats.svg';
+import openApiLogo from './assets/stack/openapi.svg';
+import openIdLogo from './assets/stack/openid.svg';
+import postgresqlLogo from './assets/stack/postgresql.svg';
+import terraformLogo from './assets/stack/terraform.svg';
+import wireguardLogo from './assets/stack/wireguard.svg';
 import vtMark from './assets/vt-mark.png';
 
 const navItems = [
@@ -28,7 +43,12 @@ const navItems = [
   { label: 'Contacto', href: '#contact' },
 ];
 
-const socialLinks = [
+type SocialLink = {
+  name: string;
+  href: string;
+} & ({ icon: LucideIcon; logo?: never } | { logo: string; icon?: never });
+
+const socialLinks: SocialLink[] = [
   {
     name: 'GitHub',
     href: 'https://github.com/ValentinTorassa',
@@ -45,29 +65,33 @@ const socialLinks = [
     icon: Youtube,
   },
   {
+    name: 'TikTok',
+    href: 'https://tiktok.com/@vtsecurity',
+    logo: tiktokLogo,
+  },
+  {
+    name: 'Instagram',
+    href: 'https://instagram.com/vtsecurity',
+    logo: instagramLogo,
+  },
+  {
+    name: 'X',
+    href: 'https://x.com/ValenSecurity',
+    logo: xLogo,
+  },
+  {
     name: 'Email',
     href: 'mailto:valentin.torassa.colombero@gmail.com',
     icon: Mail,
   },
-  {
-    name: 'Website',
-    href: 'https://valentorassa.com',
-    icon: Globe,
-  },
-  {
-    name: 'Bento',
-    href: 'https://bento.me/valentintorassa',
-    icon: LinkIcon,
-  },
 ];
+
+const headerSocialLinks = socialLinks.filter((link) =>
+  ['YouTube', 'TikTok', 'Instagram', 'X'].includes(link.name),
+);
 
 const terminalLines = [
   { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
-  {
-    prompt: '$',
-    command: 'cat ./teramot.txt',
-    output: 'Aleph backend, AWS security, SOC 2 / ISO',
-  },
   {
     prompt: '$',
     command: 'grep -i focus ./stack.log',
@@ -183,25 +207,58 @@ const stackGroups = [
   {
     title: 'Cloud security',
     text: 'Seguridad e infraestructura AWS para workloads de producto, datos sensibles y despliegues auditables.',
-    tags: ['ECS/Fargate', 'IAM', 'SSO Admin', 'Secrets Manager', 'CloudTrail', 'GuardDuty', 'VPC', 'Terraform'],
+    tags: [
+      { label: 'ECS/Fargate', logo: awsLogo },
+      { label: 'IAM', logo: awsLogo },
+      { label: 'SSO Admin', logo: awsLogo },
+      { label: 'Secrets Manager', logo: awsLogo },
+      { label: 'CloudTrail', logo: awsLogo },
+      { label: 'GuardDuty', logo: awsLogo },
+      { label: 'VPC', logo: awsLogo },
+      { label: 'Terraform', logo: terraformLogo },
+    ],
     tone: 'cloud',
   },
   {
     title: 'Compliance engineering',
     text: 'Controles implementados en sistemas, evidencia, poblaciones de auditoria y remediacion tecnica.',
-    tags: ['SOC 2 Type II', 'ISO/IEC 27001', 'ISMS/SGSI', 'Audit Evidence', 'OIDC', 'Secrets Handling'],
+    tags: [
+      'SOC 2 Type II',
+      'ISO/IEC 27001',
+      'ISMS/SGSI',
+      'Audit Evidence',
+      { label: 'OIDC', logo: openIdLogo },
+      { label: 'Secrets Handling', logo: awsLogo },
+    ],
     tone: 'compliance',
   },
   {
     title: 'Backend architecture',
     text: 'Servicios Go para APIs, eventos, autenticacion, observabilidad y contratos compartidos con frontend.',
-    tags: ['Go', 'chi', 'AWS SDK v2', 'NATS', 'pgx', 'Atlas', 'JWT/JWKS', 'OpenAPI'],
+    tags: [
+      { label: 'Go', logo: goLogo },
+      { label: 'chi', logo: goLogo },
+      { label: 'AWS SDK v2', logo: awsLogo },
+      { label: 'NATS', logo: natsLogo },
+      { label: 'pgx', logo: postgresqlLogo },
+      'Atlas',
+      { label: 'JWT/JWKS', logo: jwtLogo },
+      { label: 'OpenAPI', logo: openApiLogo },
+    ],
     tone: 'backend',
   },
   {
     title: 'Systems & networks',
     text: 'Administracion Linux, redes, VPNs, firewalls, monitoreo y troubleshooting operativo.',
-    tags: ['Linux', 'TCP/IP', 'WireGuard', 'MikroTik', 'Sophos', 'Nagios', 'Docker'],
+    tags: [
+      { label: 'Linux', logo: linuxLogo },
+      'TCP/IP',
+      { label: 'WireGuard', logo: wireguardLogo },
+      { label: 'MikroTik', logo: mikrotikLogo },
+      'Sophos',
+      'Nagios',
+      { label: 'Docker', logo: dockerLogo },
+    ],
     tone: 'systems',
   },
 ];
@@ -244,7 +301,7 @@ function App() {
         </nav>
 
         <div className="social-actions">
-          {socialLinks.map((link) => (
+          {headerSocialLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
@@ -253,7 +310,7 @@ function App() {
               aria-label={link.name}
               title={link.name}
             >
-              <link.icon aria-hidden="true" />
+              <SocialIcon link={link} />
             </a>
           ))}
         </div>
@@ -261,6 +318,7 @@ function App() {
 
       <main>
         <section className="hero" id="top">
+          <HeroScene />
           <div className="hero-inner">
             <div className="status-pill">
               <span className="status-dot" />
@@ -285,26 +343,10 @@ function App() {
 
             <TerminalCard title="vt@security:~/career" lines={terminalLines} />
 
-            <div className="hero-actions">
-              <a className="btn btn-primary" href="mailto:valentin.torassa.colombero@gmail.com">
-                <Mail aria-hidden="true" />
-                Contactar
-              </a>
-              <a
-                className="btn btn-secondary"
-                href="https://www.linkedin.com/in/valetorassa/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Linkedin aria-hidden="true" />
-                LinkedIn
-              </a>
-            </div>
-
             <div className="hero-socials" aria-label="Redes y contacto">
               {socialLinks.map((link) => (
                 <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer">
-                  <link.icon aria-hidden="true" />
+                  <SocialIcon link={link} />
                   <span>{link.name}</span>
                 </a>
               ))}
@@ -327,20 +369,21 @@ function App() {
         <section className="section" id="profile">
           <div className="section-head">
             <span className="eyebrow">// perfil</span>
-            <h2>Entiendo sistemas desde abajo y los llevo a produccion.</h2>
+            <h2>Arquitectura de software, backend, cloud security y compliance tecnico.</h2>
             <p>
-              Mi perfil cruza ciberseguridad, backend, cloud, Linux, redes y compliance. Me interesa
-              saber como funciona la plataforma completa: identidad, datos, permisos, auditoria,
-              observabilidad y operacion.
+              Combino experiencia en arquitectura de software, desarrollo backend, seguridad cloud,
+              Linux, redes y compliance para construir y operar sistemas con criterios de seguridad
+              desde el diseno. Trabajo especialmente sobre identidad, permisos, datos sensibles,
+              auditoria, observabilidad, infraestructura y confiabilidad operativa.
             </p>
           </div>
 
           <div className="profile-grid">
             <motion.div className="statement" {...reveal}>
               <p>
-                En Teramot trabajo sobre esa interseccion: construyo backend en Go para Aleph, aseguro
-                infraestructura AWS, bajo controles SOC 2 / ISO 27001 a implementaciones reales y pienso la
-                seguridad como parte del producto, no como un checklist separado.
+                En Teramot desarrollo backend en Go para Aleph, trabajo sobre arquitectura y seguridad
+                en AWS, y llevo requisitos SOC 2 e ISO/IEC 27001 a implementaciones tecnicas
+                verificables.
               </p>
             </motion.div>
 
@@ -517,6 +560,177 @@ type TerminalLine = {
   output: string;
 };
 
+function HeroScene() {
+  const mountRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = mountRef.current;
+
+    if (!container) {
+      return undefined;
+    }
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
+    container.appendChild(renderer.domElement);
+
+    const topology = new THREE.Group();
+    topology.position.set(0, -0.42, -0.35);
+    scene.add(topology);
+
+    const disposables: Array<{ dispose: () => void }> = [];
+    const teal = new THREE.LineBasicMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.2,
+    });
+    const cyan = new THREE.LineBasicMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.28,
+    });
+    const linkMaterial = new THREE.LineBasicMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.14,
+    });
+    const violet = new THREE.LineBasicMaterial({
+      color: 0x8b7cff,
+      transparent: true,
+      opacity: 0.26,
+    });
+    const amber = new THREE.LineBasicMaterial({
+      color: 0xf0b45b,
+      transparent: true,
+      opacity: 0.22,
+    });
+    disposables.push(teal, cyan, linkMaterial, violet, amber);
+
+    const grid = new THREE.GridHelper(16, 36, 0x54e6d6, 0x1c2436);
+    grid.position.y = -2.65;
+    grid.position.z = -1.2;
+    grid.rotation.x = 0.12;
+    const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
+    gridMaterials.forEach((material) => {
+      material.transparent = true;
+      material.opacity = 0.23;
+      disposables.push(material);
+    });
+    topology.add(grid);
+
+    const coreGeometry = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.15, 1));
+    const core = new THREE.LineSegments(coreGeometry, violet);
+    core.position.set(4.05, -0.15, -2.25);
+    topology.add(core);
+    disposables.push(coreGeometry);
+
+    const ringGeometry = new THREE.EdgesGeometry(new THREE.TorusGeometry(1.65, 0.012, 8, 96));
+    const ring = new THREE.LineSegments(ringGeometry, cyan);
+    ring.position.set(-4.15, -0.35, -2.35);
+    ring.rotation.set(1.2, 0.3, 0.35);
+    topology.add(ring);
+    disposables.push(ringGeometry);
+
+    const scanGeometry = new THREE.PlaneGeometry(8.8, 0.018);
+    const scanMaterial = new THREE.MeshBasicMaterial({
+      color: 0x54e6d6,
+      transparent: true,
+      opacity: 0.3,
+      depthWrite: false,
+    });
+    const scanLine = new THREE.Mesh(scanGeometry, scanMaterial);
+    scanLine.position.set(0, -1.85, -2.8);
+    topology.add(scanLine);
+    disposables.push(scanGeometry, scanMaterial);
+
+    const cubeSpecs = [
+      { position: [-4.35, -0.65, -1.8], scale: [1.15, 0.8, 0.75], material: teal },
+      { position: [-2.65, 0.95, -2.6], scale: [0.75, 0.75, 0.75], material: amber },
+      { position: [4.2, -1.08, -2.45], scale: [1.2, 0.72, 0.95], material: teal },
+      { position: [2.35, 1.18, -3.15], scale: [0.82, 0.82, 0.82], material: amber },
+    ] as const;
+
+    const cubes: THREE.LineSegments[] = [];
+    cubeSpecs.forEach((spec) => {
+      const geometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(spec.scale[0], spec.scale[1], spec.scale[2]));
+      const cube = new THREE.LineSegments(geometry, spec.material);
+      cube.position.set(spec.position[0], spec.position[1], spec.position[2]);
+      topology.add(cube);
+      cubes.push(cube);
+      disposables.push(geometry);
+    });
+
+    const linkPositions = new Float32Array([
+      -4.35, -0.65, -1.8, -2.65, 0.95, -2.6,
+      -2.65, 0.95, -2.6, 0.0, -0.42, -2.25,
+      0.0, -0.42, -2.25, 2.35, 1.18, -3.15,
+      0.0, -0.42, -2.25, 4.2, -1.08, -2.45,
+      -4.35, -0.65, -1.8, 4.2, -1.08, -2.45,
+    ]);
+    const linkGeometry = new THREE.BufferGeometry();
+    linkGeometry.setAttribute('position', new THREE.BufferAttribute(linkPositions, 3));
+    const links = new THREE.LineSegments(linkGeometry, linkMaterial);
+    topology.add(links);
+    disposables.push(linkGeometry);
+
+    const resize = () => {
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.position.set(0, width < 700 ? 0.15 : 0.3, width < 700 ? 8.6 : 7.2);
+      camera.updateProjectionMatrix();
+      topology.scale.setScalar(width < 700 ? 0.76 : 1);
+    };
+
+    let frame = 0;
+    const clock = new THREE.Clock();
+    const render = () => {
+      const elapsed = clock.getElapsedTime();
+      topology.rotation.y = Math.sin(elapsed * 0.16) * 0.08;
+      topology.rotation.x = Math.sin(elapsed * 0.11) * 0.018;
+      core.rotation.x = elapsed * 0.18;
+      core.rotation.y = elapsed * 0.25;
+      ring.rotation.z = elapsed * 0.09;
+      ring.rotation.y = 0.3 + Math.sin(elapsed * 0.22) * 0.18;
+      scanLine.position.y = -2.25 + ((elapsed * 0.38) % 4.2);
+      scanMaterial.opacity = 0.16 + Math.sin(elapsed * 2.2) * 0.07;
+      cubes.forEach((cube, index) => {
+        cube.rotation.x = Math.sin(elapsed * 0.18 + index) * 0.08;
+        cube.rotation.y = elapsed * (0.05 + index * 0.012);
+      });
+      renderer.render(scene, camera);
+
+      if (!prefersReducedMotion) {
+        frame = window.requestAnimationFrame(render);
+      }
+    };
+
+    resize();
+    render();
+    window.addEventListener('resize', resize);
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.cancelAnimationFrame(frame);
+      disposables.forEach((item) => item.dispose());
+      renderer.dispose();
+      renderer.domElement.remove();
+    };
+  }, []);
+
+  return <div className="hero-scene" ref={mountRef} aria-hidden="true" />;
+}
+
 function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }) {
   return (
     <div className="terminal-card">
@@ -540,12 +754,34 @@ function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }
   );
 }
 
-function TagList({ tags, variant }: { tags: string[]; variant?: 'colorful' }) {
+function SocialIcon({ link }: { link: SocialLink }) {
+  if (link.logo) {
+    return <img src={link.logo} alt="" aria-hidden="true" />;
+  }
+
+  if (link.icon) {
+    const Icon = link.icon;
+    return <Icon aria-hidden="true" />;
+  }
+
+  return null;
+}
+
+type StackTag = string | { label: string; logo?: string };
+
+function TagList({ tags, variant }: { tags: StackTag[]; variant?: 'colorful' }) {
   return (
     <div className={`tag-list${variant ? ` ${variant}` : ''}`}>
-      {tags.map((tag) => (
-        <span key={tag}>{tag}</span>
-      ))}
+      {tags.map((tag) => {
+        const item = typeof tag === 'string' ? { label: tag } : tag;
+
+        return (
+          <span key={item.label}>
+            {item.logo ? <img className="tag-logo" src={item.logo} alt="" aria-hidden="true" /> : null}
+            {item.label}
+          </span>
+        );
+      })}
     </div>
   );
 }
