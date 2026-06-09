@@ -295,18 +295,6 @@ const recognitions = [
 
 const githubRepos = [
   {
-    name: 'podman-watchguard',
-    href: 'https://github.com/ValentinTorassa/podman-watchguard',
-    description:
-      'Appliance portable de seguridad e infraestructura en Raspberry Pi Zero: Podman, honeypot SSH, WireGuard/firewall y PKI ligera.',
-    language: 'Python',
-    languageColor: '#3572a5',
-    stars: 0,
-    forks: 0,
-    tags: ['Podman', 'WireGuard', 'honeypot', 'PKI', 'GitOps'],
-    tone: 'security',
-  },
-  {
     name: 'VT-Terminal-Project',
     href: 'https://github.com/ValentinTorassa/VT-Terminal-Project',
     description:
@@ -329,18 +317,6 @@ const githubRepos = [
     forks: 0,
     tags: ['Zed', 'Claude', 'MCP', 'AI workflows', 'macOS'],
     tone: 'ai',
-  },
-  {
-    name: 'Proyecto-Prometeo',
-    href: 'https://github.com/ValentinTorassa/Proyecto-Prometeo',
-    description:
-      'Biblioteca digital open source para subir, descargar y gestionar libros: React, Node.js, Prisma, PostgreSQL y TailwindCSS.',
-    language: 'TypeScript',
-    languageColor: '#3178c6',
-    stars: 4,
-    forks: 0,
-    tags: ['React', 'Node.js', 'Prisma', 'PostgreSQL'],
-    tone: 'product',
   },
   {
     name: 'PhantomLog',
