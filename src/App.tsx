@@ -629,7 +629,7 @@ function App() {
                       </a>
                     </div>
                     <p>{repo.description}</p>
-                    <TagList tags={repo.tags} variant="colorful" />
+                    <TagList tags={repo.tags} />
                     <div className="repo-meta">
                       <span>
                         <Star aria-hidden="true" />

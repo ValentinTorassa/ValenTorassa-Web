@@ -1101,8 +1101,12 @@ p {
 .recognition-panel,
 .github-panel {
   background:
-    linear-gradient(145deg, rgba(84, 230, 214, 0.06), transparent 42%),
-    var(--surface-soft);
+    linear-gradient(145deg, rgba(84, 230, 214, 0.04), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 44%),
+    rgba(5, 7, 11, 0.82);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 28px 80px -56px rgba(0, 0, 0, 0.96);
 }
 
 .recognition-list,
@@ -1116,11 +1120,12 @@ p {
   position: relative;
   overflow: hidden;
   padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--card) 28%, transparent);
+  border: 1px solid rgba(142, 156, 189, 0.24);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--card) 10%, transparent), transparent 68%),
-    rgba(8, 9, 16, 0.48);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 42%),
+    linear-gradient(135deg, rgba(84, 230, 214, 0.045), transparent 70%),
+    rgba(5, 7, 11, 0.72);
 }
 
 .recognition-card::before,
@@ -1131,12 +1136,12 @@ p {
   left: 14px;
   height: 1px;
   content: '';
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card) 70%, white), transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, rgba(84, 230, 214, 0.76), transparent);
+  opacity: 0.58;
 }
 
 .kind-speaker {
-  --card: #8b7cff;
+  --card: #54e6d6;
 }
 
 .kind-research {
@@ -1146,7 +1151,7 @@ p {
 .recognition-card span,
 .repo-kicker,
 .repo-meta {
-  color: color-mix(in srgb, var(--card) 72%, white);
+  color: color-mix(in srgb, var(--accent-2) 64%, white);
   font-family: var(--mono);
   font-size: 0.74rem;
 }
@@ -1164,9 +1169,15 @@ p {
 .recognition-card p,
 .repo-card p {
   margin: 0;
-  color: var(--muted);
+  color: #b4c0d4;
   font-size: 0.88rem;
   line-height: 1.5;
+}
+
+.repo-card .tag-list span {
+  border-color: rgba(142, 156, 189, 0.28);
+  color: #d8e2f1;
+  background: rgba(255, 255, 255, 0.045);
 }
 
 .repo-card {
@@ -1177,22 +1188,31 @@ p {
   min-height: 100%;
   padding: 16px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--card) 28%, transparent);
+  border: 1px solid rgba(142, 156, 189, 0.25);
   border-radius: 8px;
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--card) 16%, transparent), transparent 44%),
-    rgba(8, 9, 16, 0.54);
+    radial-gradient(circle at 100% 0%, rgba(84, 230, 214, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 42%),
+    rgba(5, 7, 11, 0.76);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.018),
+    0 24px 58px -50px rgba(0, 0, 0, 0.96);
   transition:
     border-color 0.2s ease,
+    box-shadow 0.2s ease,
     background 0.2s ease,
     transform 0.2s ease;
 }
 
 .repo-card:hover {
-  border-color: color-mix(in srgb, var(--card) 52%, transparent);
+  border-color: rgba(84, 230, 214, 0.48);
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--card) 22%, transparent), transparent 48%),
-    rgba(13, 17, 27, 0.82);
+    radial-gradient(circle at 100% 0%, rgba(84, 230, 214, 0.13), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 42%),
+    rgba(8, 11, 17, 0.9);
+  box-shadow:
+    inset 0 0 0 1px rgba(84, 230, 214, 0.06),
+    0 28px 62px -46px rgba(0, 0, 0, 1);
   transform: translateY(-2px);
 }
 
@@ -1201,15 +1221,15 @@ p {
 }
 
 .repo-systems {
-  --card: #68d391;
+  --card: #54e6d6;
 }
 
 .repo-ai {
-  --card: #8b7cff;
+  --card: #54e6d6;
 }
 
 .repo-product {
-  --card: #f0b45b;
+  --card: #54e6d6;
 }
 
 .repo-card-head {
@@ -1225,10 +1245,10 @@ p {
   width: 32px;
   aspect-ratio: 1;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--card) 32%, transparent);
+  border: 1px solid rgba(142, 156, 189, 0.25);
   border-radius: 8px;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.035);
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
@@ -1237,8 +1257,8 @@ p {
 
 .repo-card-head a:hover,
 .repo-card-head a:focus-visible {
-  border-color: color-mix(in srgb, var(--card) 64%, white);
-  background: color-mix(in srgb, var(--card) 12%, transparent);
+  border-color: rgba(84, 230, 214, 0.58);
+  background: rgba(84, 230, 214, 0.09);
   transform: translateY(-2px);
 }
 
@@ -1259,7 +1279,7 @@ p {
   width: 9px;
   aspect-ratio: 1;
   border-radius: 50%;
-  box-shadow: 0 0 14px currentColor;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.24);
 }
 
 .repo-meta {
