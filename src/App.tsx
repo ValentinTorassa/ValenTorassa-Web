@@ -3,13 +3,16 @@ import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import {
   BookOpen,
-  BriefcaseBusiness,
   Calendar,
+  Code2,
+  ExternalLink,
+  GitFork,
   Github,
   GraduationCap,
   Linkedin,
   Mail,
   ShieldCheck,
+  Star,
   Terminal,
   Youtube,
 } from 'lucide-react';
@@ -263,17 +266,106 @@ const stackGroups = [
   },
 ];
 
-const research = [
-  'Expositor Distinguido en Seguridad Informatica - CACIC 2024, por reverse shells para pruebas de penetracion.',
-  'Mejor Exposicion - SACS / 53 JAIIO 2024, por investigacion sobre botnets y taxonomia de amenazas.',
-  'Speaker en Vincular Inteligente 2026 - Seguridad con IA: monitoreo inteligente y respuesta temprana.',
-  'Speaker en CyberSecTuc Meetup #3 - La realidad de un Ingeniero en Ciberseguridad.',
+const recognitions = [
+  {
+    event: 'CACIC 2024',
+    title: 'Expositor Distinguido en Seguridad Informatica',
+    detail: 'Reverse shells aplicadas a pruebas de penetracion y analisis ofensivo.',
+    kind: 'research',
+  },
+  {
+    event: 'SACS / 53 JAIIO 2024',
+    title: 'Mejor Exposicion',
+    detail: 'Investigacion sobre botnets, comportamiento distribuido y taxonomia de amenazas.',
+    kind: 'research',
+  },
+  {
+    event: 'Vincular Inteligente 2026',
+    title: 'Seguridad con IA',
+    detail: 'Monitoreo inteligente, respuesta temprana y automatizacion aplicada a defensa.',
+    kind: 'speaker',
+  },
+  {
+    event: 'CyberSecTuc Meetup #3',
+    title: 'La realidad de un Ingeniero en Ciberseguridad',
+    detail: 'Charla sobre carrera, criterio tecnico y trabajo practico en seguridad.',
+    kind: 'speaker',
+  },
 ];
 
-const courses = [
-  'VT Security - canal tecnico en espanol sobre ciberseguridad, Linux y software engineering, 25K+ suscriptores.',
-  'Proyecto Prometeo - biblioteca digital open source con React, Node.js, TypeScript, TailwindCSS y PostgreSQL.',
-  'VT-IDE-Project - configuracion publica AI-first para Zed, MCP servers, Claude Code y workflows de desarrollo.',
+const githubRepos = [
+  {
+    name: 'podman-watchguard',
+    href: 'https://github.com/ValentinTorassa/podman-watchguard',
+    description:
+      'Appliance portable de seguridad e infraestructura en Raspberry Pi Zero: Podman, honeypot SSH, WireGuard/firewall y PKI ligera.',
+    language: 'Python',
+    languageColor: '#3572a5',
+    stars: 0,
+    forks: 0,
+    tags: ['Podman', 'WireGuard', 'honeypot', 'PKI', 'GitOps'],
+    tone: 'security',
+  },
+  {
+    name: 'VT-Terminal-Project',
+    href: 'https://github.com/ValentinTorassa/VT-Terminal-Project',
+    description:
+      'Dotfiles y terminal setup para macOS/Linux: Zsh, Oh My Zsh, Powerlevel10k, Ghostty y herramientas AI shell.',
+    language: 'Shell',
+    languageColor: '#89e051',
+    stars: 14,
+    forks: 0,
+    tags: ['dotfiles', 'terminal', 'zsh', 'Ghostty', 'AI shell'],
+    tone: 'systems',
+  },
+  {
+    name: 'VT-IDE-Project',
+    href: 'https://github.com/ValentinTorassa/VT-IDE-Project',
+    description:
+      'Setup personal de IDE para desarrollo AI-first con Zed, integracion de Claude y workflows de Git asistidos.',
+    language: 'Shell',
+    languageColor: '#89e051',
+    stars: 5,
+    forks: 0,
+    tags: ['Zed', 'Claude', 'MCP', 'AI workflows', 'macOS'],
+    tone: 'ai',
+  },
+  {
+    name: 'Proyecto-Prometeo',
+    href: 'https://github.com/ValentinTorassa/Proyecto-Prometeo',
+    description:
+      'Biblioteca digital open source para subir, descargar y gestionar libros: React, Node.js, Prisma, PostgreSQL y TailwindCSS.',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: 4,
+    forks: 0,
+    tags: ['React', 'Node.js', 'Prisma', 'PostgreSQL'],
+    tone: 'product',
+  },
+  {
+    name: 'PhantomLog',
+    href: 'https://github.com/ValentinTorassa/PhantomLog',
+    description:
+      'Herramienta de rastreo para detectar accesos a archivos o enlaces en simulaciones de phishing y pruebas internas.',
+    language: 'Python',
+    languageColor: '#3572a5',
+    stars: 0,
+    forks: 0,
+    tags: ['tracking', 'phishing simulation', 'security'],
+    tone: 'security',
+  },
+  {
+    name: 'TaskVault',
+    href: 'https://github.com/ValentinTorassa/TaskVault',
+    description:
+      'Checklist self-hosted con tema oscuro, timestamps y foco en privacidad para gestion personal de tareas.',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: 2,
+    forks: 0,
+    tags: ['Node.js', 'Express', 'self-hosted'],
+    tone: 'product',
+  },
 ];
 
 const reveal = {
@@ -496,32 +588,74 @@ function App() {
         <section className="section split-section" id="research">
           <div className="section-head compact">
             <span className="eyebrow">// research & docencia</span>
-            <h2>Reconocimiento, charlas y proyectos publicos</h2>
+            <h2>Reconocimiento, charlas y GitHub publico</h2>
           </div>
 
           <div className="split-grid">
-            <motion.div className="panel" {...reveal}>
+            <motion.div className="panel recognition-panel" {...reveal}>
               <div className="panel-title">
                 <BookOpen aria-hidden="true" />
                 <h3>Reconocimiento y speaking</h3>
               </div>
-              <ul className="clean-list">
-                {research.map((item) => (
-                  <li key={item}>{item}</li>
+              <div className="recognition-list">
+                {recognitions.map((item) => (
+                  <article className={`recognition-card kind-${item.kind}`} key={`${item.event}-${item.title}`}>
+                    <span>{item.event}</span>
+                    <h4>{item.title}</h4>
+                    <p>{item.detail}</p>
+                  </article>
                 ))}
-              </ul>
+              </div>
             </motion.div>
 
-            <motion.div className="panel" {...reveal}>
+            <motion.div className="panel github-panel" {...reveal}>
               <div className="panel-title">
-                <BriefcaseBusiness aria-hidden="true" />
-                <h3>Proyectos y contenido</h3>
+                <Github aria-hidden="true" />
+                <h3>Repositorios destacados</h3>
               </div>
-              <ul className="clean-list">
-                {courses.map((item) => (
-                  <li key={item}>{item}</li>
+              <div className="repo-grid">
+                {githubRepos.map((repo) => (
+                  <article className={`repo-card repo-${repo.tone}`} key={repo.name}>
+                    <div className="repo-card-head">
+                      <div>
+                        <span className="repo-kicker">
+                          <span style={{ backgroundColor: repo.languageColor }} />
+                          {repo.language}
+                        </span>
+                        <h4>{repo.name}</h4>
+                      </div>
+                      <a href={repo.href} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${repo.name}`}>
+                        <ExternalLink aria-hidden="true" />
+                      </a>
+                    </div>
+                    <p>{repo.description}</p>
+                    <TagList tags={repo.tags} variant="colorful" />
+                    <div className="repo-meta">
+                      <span>
+                        <Star aria-hidden="true" />
+                        {repo.stars}
+                      </span>
+                      <span>
+                        <GitFork aria-hidden="true" />
+                        {repo.forks}
+                      </span>
+                      <span>
+                        <Code2 aria-hidden="true" />
+                        GitHub
+                      </span>
+                    </div>
+                  </article>
                 ))}
-              </ul>
+              </div>
+              <a
+                className="github-profile-link"
+                href="https://github.com/ValentinTorassa"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github aria-hidden="true" />
+                Ver perfil completo en GitHub
+              </a>
             </motion.div>
           </div>
         </section>

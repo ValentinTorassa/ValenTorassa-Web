@@ -1098,6 +1098,211 @@ p {
   background: var(--accent-3);
 }
 
+.recognition-panel,
+.github-panel {
+  background:
+    linear-gradient(145deg, rgba(84, 230, 214, 0.06), transparent 42%),
+    var(--surface-soft);
+}
+
+.recognition-list,
+.repo-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.recognition-card {
+  --card: var(--accent-2);
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--card) 28%, transparent);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--card) 10%, transparent), transparent 68%),
+    rgba(8, 9, 16, 0.48);
+}
+
+.recognition-card::before,
+.repo-card::before {
+  position: absolute;
+  top: 0;
+  right: 14px;
+  left: 14px;
+  height: 1px;
+  content: '';
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card) 70%, white), transparent);
+  opacity: 0.5;
+}
+
+.kind-speaker {
+  --card: #8b7cff;
+}
+
+.kind-research {
+  --card: #54e6d6;
+}
+
+.recognition-card span,
+.repo-kicker,
+.repo-meta {
+  color: color-mix(in srgb, var(--card) 72%, white);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+
+.recognition-card h4,
+.repo-card h4 {
+  margin: 5px 0 6px;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.recognition-card p,
+.repo-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.repo-card {
+  --card: var(--accent-2);
+  position: relative;
+  display: grid;
+  gap: 12px;
+  min-height: 100%;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--card) 28%, transparent);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--card) 16%, transparent), transparent 44%),
+    rgba(8, 9, 16, 0.54);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.repo-card:hover {
+  border-color: color-mix(in srgb, var(--card) 52%, transparent);
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--card) 22%, transparent), transparent 48%),
+    rgba(13, 17, 27, 0.82);
+  transform: translateY(-2px);
+}
+
+.repo-security {
+  --card: #54e6d6;
+}
+
+.repo-systems {
+  --card: #68d391;
+}
+
+.repo-ai {
+  --card: #8b7cff;
+}
+
+.repo-product {
+  --card: #f0b45b;
+}
+
+.repo-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.repo-card-head a {
+  display: grid;
+  flex: none;
+  width: 32px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--card) 32%, transparent);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.repo-card-head a:hover,
+.repo-card-head a:focus-visible {
+  border-color: color-mix(in srgb, var(--card) 64%, white);
+  background: color-mix(in srgb, var(--card) 12%, transparent);
+  transform: translateY(-2px);
+}
+
+.repo-card-head svg,
+.repo-meta svg,
+.github-profile-link svg {
+  width: 15px;
+  height: 15px;
+}
+
+.repo-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.repo-kicker span {
+  width: 9px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: 0 0 14px currentColor;
+}
+
+.repo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--faint);
+}
+
+.repo-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.github-profile-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  margin-top: 14px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(18, 23, 34, 0.76);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.github-profile-link:hover,
+.github-profile-link:focus-visible {
+  border-color: var(--line-strong);
+  background: rgba(84, 230, 214, 0.08);
+  transform: translateY(-2px);
+}
+
 .skill-card {
   --skill: var(--accent-2);
   position: relative;
@@ -1307,6 +1512,10 @@ p {
 
   .skill-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .repo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
