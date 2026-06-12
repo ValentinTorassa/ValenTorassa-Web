@@ -135,6 +135,10 @@ img {
   object-fit: cover;
 }
 
+.brand picture {
+  flex: none;
+}
+
 .brand span {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -322,6 +326,12 @@ img {
   width: 172px;
   height: 172px;
   margin-top: 18px;
+}
+
+.portrait-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .portrait-wrap::before {
@@ -693,6 +703,19 @@ p {
   content: '//';
   font-family: var(--mono);
   font-weight: 400;
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @keyframes scroll-x {

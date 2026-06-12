@@ -1,6 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import * as THREE from 'three';
+import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import {
   BookOpen,
   Calendar,
@@ -17,7 +15,13 @@ import {
   Youtube,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import portrait from './assets/portrait-dark.png';
+import portraitAvif256 from './assets/portrait-dark-256.avif';
+import portraitAvif384 from './assets/portrait-dark-384.avif';
+import portraitAvif512 from './assets/portrait-dark-512.avif';
+import portraitWebp256 from './assets/portrait-dark-256.webp';
+import portraitWebp384 from './assets/portrait-dark-384.webp';
+import portraitWebp512 from './assets/portrait-dark-512.webp';
+import portraitFallback from './assets/portrait-dark-384.png';
 import awsLogo from './assets/certs/aws.svg';
 import comptiaLogo from './assets/certs/comptia.svg';
 import huaweiLogo from './assets/certs/huawei.svg';
@@ -36,7 +40,17 @@ import openIdLogo from './assets/stack/openid.svg';
 import postgresqlLogo from './assets/stack/postgresql.svg';
 import terraformLogo from './assets/stack/terraform.svg';
 import wireguardLogo from './assets/stack/wireguard.svg';
-import vtMark from './assets/vt-mark.png';
+import vtMarkAvif96 from './assets/vt-mark-96.avif';
+import vtMarkAvif160 from './assets/vt-mark-160.avif';
+import vtMarkWebp96 from './assets/vt-mark-96.webp';
+import vtMarkWebp160 from './assets/vt-mark-160.webp';
+import vtMarkFallback from './assets/vt-mark-160.png';
+
+const portraitAvifSrcSet = `${portraitAvif256} 256w, ${portraitAvif384} 384w, ${portraitAvif512} 512w`;
+const portraitWebpSrcSet = `${portraitWebp256} 256w, ${portraitWebp384} 384w, ${portraitWebp512} 512w`;
+const portraitSizes = '(max-width: 520px) 156px, 172px';
+const vtMarkAvifSrcSet = `${vtMarkAvif96} 96w, ${vtMarkAvif160} 160w`;
+const vtMarkWebpSrcSet = `${vtMarkWebp96} 96w, ${vtMarkWebp160} 160w`;
 
 const navItems = [
   { label: 'Perfil', href: '#profile' },
@@ -344,19 +358,12 @@ const githubRepos = [
   },
 ];
 
-const reveal = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-80px' },
-  transition: { duration: 0.55 },
-};
-
 function App() {
   return (
     <div className="site-shell">
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Ir al inicio">
-          <img src={vtMark} alt="" />
+          <MarkImage width={34} height={34} sizes="34px" loading="eager" />
           <span>valentorassa</span>
         </a>
 
@@ -394,8 +401,14 @@ function App() {
             </div>
 
             <div className="portrait-wrap">
-              <img className="portrait" src={portrait} alt="Valentin Torassa Colombero" />
-              <img className="portrait-mark" src={vtMark} alt="" />
+              <PortraitImage />
+              <MarkImage
+                className="portrait-mark"
+                width={44}
+                height={44}
+                sizes="(max-width: 520px) 38px, 44px"
+                loading="eager"
+              />
             </div>
 
             <p className="terminal-kicker">
@@ -447,23 +460,23 @@ function App() {
           </div>
 
           <div className="profile-grid">
-            <motion.div className="statement" {...reveal}>
+            <Reveal className="statement">
               <p>
                 En Teramot desarrollo backend en Go para Aleph, trabajo sobre arquitectura y seguridad
                 en AWS, y llevo requisitos SOC 2 e ISO/IEC 27001 a implementaciones tecnicas
                 verificables.
               </p>
-            </motion.div>
+            </Reveal>
 
             <div className="fact-list">
               {facts.map((fact) => (
-                <motion.article key={fact.key} className="fact-card" {...reveal}>
+                <Reveal as="article" key={fact.key} className="fact-card">
                   <span>{fact.key}</span>
                   <div>
                     <h3>{fact.title}</h3>
                     <p>{fact.text}</p>
                   </div>
-                </motion.article>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -477,7 +490,7 @@ function App() {
 
           <div className="timeline">
             {experiences.map((item) => (
-              <motion.article className="timeline-item" key={`${item.company}-${item.role}`} {...reveal}>
+              <Reveal as="article" className="timeline-item" key={`${item.company}-${item.role}`}>
                 <div className="time">
                   <Calendar aria-hidden="true" />
                   <span>{item.period}</span>
@@ -488,7 +501,7 @@ function App() {
                   <p>{item.description}</p>
                   <TagList tags={item.tags} />
                 </div>
-              </motion.article>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -500,7 +513,7 @@ function App() {
           </div>
 
           <div className="split-grid">
-            <motion.div className="panel" {...reveal}>
+            <Reveal className="panel">
               <div className="panel-title">
                 <GraduationCap aria-hidden="true" />
                 <h3>Formacion academica</h3>
@@ -518,9 +531,9 @@ function App() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </Reveal>
 
-            <motion.div className="panel" {...reveal}>
+            <Reveal className="panel">
               <div className="panel-title">
                 <ShieldCheck aria-hidden="true" />
                 <h3>Certificaciones</h3>
@@ -539,7 +552,7 @@ function App() {
                   </article>
                 ))}
               </div>
-            </motion.div>
+            </Reveal>
           </div>
         </section>
 
@@ -552,11 +565,11 @@ function App() {
 
           <div className="skill-grid">
             {stackGroups.map((group) => (
-              <motion.article className={`skill-card tone-${group.tone}`} key={group.title} {...reveal}>
+              <Reveal as="article" className={`skill-card tone-${group.tone}`} key={group.title}>
                 <h3>{group.title}</h3>
                 <p>{group.text}</p>
                 <TagList tags={group.tags} variant="colorful" />
-              </motion.article>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -568,7 +581,7 @@ function App() {
           </div>
 
           <div className="split-grid">
-            <motion.div className="panel recognition-panel" {...reveal}>
+            <Reveal className="panel recognition-panel">
               <div className="panel-title">
                 <BookOpen aria-hidden="true" />
                 <h3>Reconocimiento y speaking</h3>
@@ -582,9 +595,9 @@ function App() {
                   </article>
                 ))}
               </div>
-            </motion.div>
+            </Reveal>
 
-            <motion.div className="panel github-panel" {...reveal}>
+            <Reveal className="panel github-panel">
               <div className="panel-title">
                 <Github aria-hidden="true" />
                 <h3>Repositorios destacados</h3>
@@ -632,7 +645,7 @@ function App() {
                 <Github aria-hidden="true" />
                 Ver perfil completo en GitHub
               </a>
-            </motion.div>
+            </Reveal>
           </div>
         </section>
 
@@ -670,6 +683,104 @@ type TerminalLine = {
   output: string;
 };
 
+type MarkImageProps = {
+  className?: string;
+  width: number;
+  height: number;
+  sizes: string;
+  loading?: 'eager' | 'lazy';
+};
+
+type RevealProps = HTMLAttributes<HTMLElement> & {
+  as?: 'div' | 'article';
+  children: ReactNode;
+};
+
+function PortraitImage() {
+  return (
+    <picture className="portrait-picture">
+      <source type="image/avif" srcSet={portraitAvifSrcSet} sizes={portraitSizes} />
+      <source type="image/webp" srcSet={portraitWebpSrcSet} sizes={portraitSizes} />
+      <img
+        className="portrait"
+        src={portraitFallback}
+        alt="Valentin Torassa Colombero"
+        width={172}
+        height={172}
+        decoding="async"
+        fetchPriority="high"
+      />
+    </picture>
+  );
+}
+
+function MarkImage({ className, width, height, sizes, loading = 'lazy' }: MarkImageProps) {
+  return (
+    <picture>
+      <source type="image/avif" srcSet={vtMarkAvifSrcSet} sizes={sizes} />
+      <source type="image/webp" srcSet={vtMarkWebpSrcSet} sizes={sizes} />
+      <img
+        className={className}
+        src={vtMarkFallback}
+        alt=""
+        width={width}
+        height={height}
+        loading={loading}
+        decoding="async"
+      />
+    </picture>
+  );
+}
+
+function Reveal({ as = 'div', className, children, ...props }: RevealProps) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const revealClassName = ['reveal-item', isVisible ? 'is-visible' : '', className].filter(Boolean).join(' ');
+
+  useEffect(() => {
+    const node = ref.current;
+
+    if (!node) {
+      return undefined;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '0px 0px -80px' },
+    );
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  if (as === 'article') {
+    return (
+      <article ref={ref as Ref<HTMLElement>} className={revealClassName} {...props}>
+        {children}
+      </article>
+    );
+  }
+
+  return (
+    <div ref={ref as Ref<HTMLDivElement>} className={revealClassName} {...(props as HTMLAttributes<HTMLDivElement>)}>
+      {children}
+    </div>
+  );
+}
+
 function HeroScene() {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
@@ -680,6 +791,46 @@ function HeroScene() {
       return undefined;
     }
 
+    let disposeScene: (() => void) | undefined;
+    let isDisposed = false;
+    let idleHandle: number | undefined;
+    let timeoutHandle: ReturnType<typeof globalThis.setTimeout> | undefined;
+
+    const startScene = () => {
+      void import('three').then((THREE) => {
+        if (isDisposed || !container.isConnected) {
+          return;
+        }
+
+        disposeScene = setupHeroScene(THREE, container);
+      });
+    };
+
+    if (typeof window.requestIdleCallback === 'function') {
+      idleHandle = window.requestIdleCallback(startScene, { timeout: 900 });
+    } else {
+      timeoutHandle = globalThis.setTimeout(startScene, 0);
+    }
+
+    return () => {
+      isDisposed = true;
+
+      if (idleHandle !== undefined) {
+        window.cancelIdleCallback(idleHandle);
+      }
+
+      if (timeoutHandle !== undefined) {
+        globalThis.clearTimeout(timeoutHandle);
+      }
+
+      disposeScene?.();
+    };
+  }, []);
+
+  return <div className="hero-scene" ref={mountRef} aria-hidden="true" />;
+}
+
+function setupHeroScene(THREE: typeof import('three'), container: HTMLDivElement) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
@@ -855,7 +1006,7 @@ function HeroScene() {
       { position: [2.35, 1.18, -3.15], scale: [0.82, 0.82, 0.82], material: amber },
     ] as const;
 
-    const cubes: THREE.LineSegments[] = [];
+    const cubes: Array<InstanceType<typeof THREE.LineSegments>> = [];
     cubeSpecs.forEach((spec) => {
       const geometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(spec.scale[0], spec.scale[1], spec.scale[2]));
       const cube = new THREE.LineSegments(geometry, spec.material);
@@ -980,9 +1131,6 @@ function HeroScene() {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, []);
-
-  return <div className="hero-scene" ref={mountRef} aria-hidden="true" />;
 }
 
 function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }) {
