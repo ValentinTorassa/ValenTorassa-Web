@@ -112,12 +112,12 @@ const terminalLines = [
   {
     prompt: '$',
     command: 'grep -i focus ./stack.log',
-    output: 'Go, AWS, OAuth 2.1, OIDC, MCP, Linux',
+    output: 'Go, Cloud Security, Linux, Networking, OAuth/OIDC, MCP, AWS IAM',
   },
   {
     prompt: '$',
     command: 'certs --active',
-    output: 'CompTIA Security+, AWS CCP, LFCA',
+    output: 'CompTIA Security+, AWS CCP, Linux FCA, HCIA Datacom',
   },
 ];
 
@@ -169,7 +169,7 @@ const experiences = [
     company: 'Universidad Abierta Interamericana',
     period: 'sept. 2024 - jun. 2025',
     description:
-      'Acompanamiento academico en arquitectura de procesadores, jerarquia de memoria, I/O y conceptos de sistemas de bajo nivel.',
+      'Acompañamiento academico en arquitectura de procesadores, jerarquia de memoria, I/O y conceptos de sistemas de bajo nivel.',
     tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
   },
 ];
@@ -179,7 +179,7 @@ const education = [
     title: 'Ingenieria en Sistemas Informaticos',
     place: 'Universidad Abierta Interamericana',
     period: 'abr. 2022 - dic. 2026',
-    status: 'Ultimo ano',
+    status: 'Ultimo año',
   },
   {
     title: 'Analista de Sistemas Informaticos',
@@ -454,7 +454,7 @@ function App() {
             <p>
               Combino experiencia en arquitectura de software, desarrollo backend, seguridad cloud,
               Linux, redes y compliance para construir y operar sistemas con criterios de seguridad
-              desde el diseno. Trabajo especialmente sobre identidad, permisos, datos sensibles,
+              desde el diseño. Trabajo especialmente sobre identidad, permisos, datos sensibles,
               auditoria, observabilidad, infraestructura y confiabilidad operativa.
             </p>
           </div>
