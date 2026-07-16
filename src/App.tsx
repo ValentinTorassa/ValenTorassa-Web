@@ -7,14 +7,12 @@ import {
   GitFork,
   Github,
   GraduationCap,
-  Linkedin,
   Mail,
   ShieldCheck,
   Star,
   Terminal,
-  Youtube,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { AR, US } from 'country-flag-icons/react/3x2';
 import portraitAvif256 from './assets/portrait-dark-256.avif';
 import portraitAvif384 from './assets/portrait-dark-384.avif';
 import portraitAvif512 from './assets/portrait-dark-512.avif';
@@ -22,29 +20,19 @@ import portraitWebp256 from './assets/portrait-dark-256.webp';
 import portraitWebp384 from './assets/portrait-dark-384.webp';
 import portraitWebp512 from './assets/portrait-dark-512.webp';
 import portraitFallback from './assets/portrait-dark-384.png';
-import awsLogo from './assets/certs/aws.svg';
-import comptiaLogo from './assets/certs/comptia.svg';
-import huaweiLogo from './assets/certs/huawei.svg';
-import linuxFoundationLogo from './assets/certs/linuxfoundation.svg';
-import instagramLogo from './assets/socials/instagram.svg';
-import tiktokLogo from './assets/socials/tiktok.svg';
-import xLogo from './assets/socials/x.svg';
-import dockerLogo from './assets/stack/docker.svg';
-import goLogo from './assets/stack/go.svg';
-import jwtLogo from './assets/stack/jwt.svg';
-import linuxLogo from './assets/stack/linux.svg';
-import mikrotikLogo from './assets/stack/mikrotik.svg';
-import natsLogo from './assets/stack/nats.svg';
-import openApiLogo from './assets/stack/openapi.svg';
-import openIdLogo from './assets/stack/openid.svg';
-import postgresqlLogo from './assets/stack/postgresql.svg';
-import terraformLogo from './assets/stack/terraform.svg';
-import wireguardLogo from './assets/stack/wireguard.svg';
 import vtMarkAvif96 from './assets/vt-mark-96.avif';
 import vtMarkAvif160 from './assets/vt-mark-160.avif';
 import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
+import {
+  contentByLanguage,
+  headerSocialLinks,
+  socialLinks,
+  type Language,
+  type SocialLink,
+  type StackTag,
+} from './content';
 
 const portraitAvifSrcSet = `${portraitAvif256} 256w, ${portraitAvif384} 384w, ${portraitAvif512} 512w`;
 const portraitWebpSrcSet = `${portraitWebp256} 256w, ${portraitWebp384} 384w, ${portraitWebp512} 512w`;
@@ -52,342 +40,124 @@ const portraitSizes = '(max-width: 520px) 156px, 172px';
 const vtMarkAvifSrcSet = `${vtMarkAvif96} 96w, ${vtMarkAvif160} 160w`;
 const vtMarkWebpSrcSet = `${vtMarkWebp96} 96w, ${vtMarkWebp160} 160w`;
 
-const navItems = [
-  { label: 'Perfil', href: '#profile' },
-  { label: 'Experiencia', href: '#experience' },
-  { label: 'Stack', href: '#stack' },
-  { label: 'Reconocimiento', href: '#research' },
-  { label: 'Contacto', href: '#contact' },
-];
+type LiveRepoStats = Record<string, {
+  stars: number;
+  forks: number;
+  updatedAt: string;
+}>;
 
-type SocialLink = {
-  name: string;
-  href: string;
-} & ({ icon: LucideIcon; logo?: never } | { logo: string; icon?: never });
+function getInitialLanguage(): Language {
+  const savedLanguage = window.localStorage.getItem('vt-language');
 
-const socialLinks: SocialLink[] = [
-  {
-    name: 'GitHub',
-    href: 'https://github.com/ValentinTorassa',
-    icon: Github,
-  },
-  {
-    name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/valetorassa/',
-    icon: Linkedin,
-  },
-  {
-    name: 'YouTube',
-    href: 'https://www.youtube.com/@vtcibersecurity',
-    icon: Youtube,
-  },
-  {
-    name: 'TikTok',
-    href: 'https://tiktok.com/@vtsecurity',
-    logo: tiktokLogo,
-  },
-  {
-    name: 'Instagram',
-    href: 'https://instagram.com/vtsecurity',
-    logo: instagramLogo,
-  },
-  {
-    name: 'X',
-    href: 'https://x.com/ValenSecurity',
-    logo: xLogo,
-  },
-  {
-    name: 'Email',
-    href: 'mailto:valentin.torassa.colombero@gmail.com',
-    icon: Mail,
-  },
-];
+  if (savedLanguage === 'es' || savedLanguage === 'en') {
+    return savedLanguage;
+  }
 
-const headerSocialLinks = socialLinks.filter((link) =>
-  ['YouTube', 'TikTok', 'Instagram', 'X'].includes(link.name),
-);
+  return window.navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en';
+}
 
-const terminalLines = [
-  { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
-  {
-    prompt: '$',
-    command: 'grep -i focus ./stack.log',
-    output: 'Go, Cloud Security, Linux, Networking, OAuth/OIDC, MCP, AWS IAM',
-  },
-  {
-    prompt: '$',
-    command: 'certs --active',
-    output: 'CompTIA Security+, AWS CCP, Linux FCA, HCIA Datacom',
-  },
-];
+function useLiveRepoStats() {
+  const [stats, setStats] = useState<LiveRepoStats>({});
 
-const facts = [
-  {
-    key: 'sec',
-    title: 'Cloud security & compliance',
-    text: 'Lidero estrategia tecnica de ciberseguridad y compliance en Teramot, integrando controles SOC 2 e ISO/IEC 27001 en infraestructura y producto.',
-  },
-  {
-    key: 'arch',
-    title: 'Arquitectura backend en Go',
-    text: 'Arquitecto principal de Aleph, plataforma backend que expone datos empresariales seguros para agentes de IA: archivos, bases de datos y APIs.',
-  },
-  {
-    key: 'ops',
-    title: 'Security operations & cloud hardening',
-    text: 'AWS ECS/Fargate, IAM, SSO, CloudTrail, GuardDuty, OIDC en GitHub Actions, secretos, remediacion e instrumentacion con OpenTelemetry.',
-  },
-];
+  useEffect(() => {
+    const controller = new AbortController();
 
-const experiences = [
-  {
-    role: 'Cybersecurity Engineer & Software Engineer',
-    company: 'Teramot',
-    period: 'nov. 2025 - actualidad',
-    description:
-      'Liderazgo tecnico de ciberseguridad y compliance en una startup de IA. Arquitectura principal de Aleph, backend Go para acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
-    tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
-  },
-  {
-    role: 'Cybersecurity & Compliance Analyst',
-    company: 'Teramot',
-    period: 'jun. 2025 - nov. 2025',
-    description:
-      'Estructuracion del area de seguridad, automatizacion de controles, evidencia de auditoria y hardening de infraestructura AWS para datos sensibles usados por agentes de IA.',
-    tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
-  },
-  {
-    role: 'Analista de Ciberseguridad',
-    company: 'Consulting IT',
-    period: 'ago. 2024 - jul. 2025',
-    description:
-      'Estrategia de seguridad para clientes outsourcing, arquitectura de red segura, hardening, automatizacion y operacion SOC con Sophos Central, Avast Business y Nagios.',
-    tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
-  },
-  {
-    role: 'Ayudante de Catedra, Arquitectura de Computadoras II',
-    company: 'Universidad Abierta Interamericana',
-    period: 'sept. 2024 - jun. 2025',
-    description:
-      'Acompañamiento academico en arquitectura de procesadores, jerarquia de memoria, I/O y conceptos de sistemas de bajo nivel.',
-    tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
-  },
-];
+    fetch('https://api.github.com/users/ValentinTorassa/repos?per_page=100&sort=updated', {
+      signal: controller.signal,
+      headers: { Accept: 'application/vnd.github+json' },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('GitHub metadata unavailable');
+        return response.json() as Promise<Array<{
+          name: string;
+          stargazers_count: number;
+          forks_count: number;
+          updated_at: string;
+        }>>;
+      })
+      .then((repos) => {
+        const nextStats = Object.fromEntries(
+          repos.map((repo) => [
+            repo.name,
+            {
+              stars: repo.stargazers_count,
+              forks: repo.forks_count,
+              updatedAt: repo.updated_at,
+            },
+          ]),
+        );
 
-const education = [
-  {
-    title: 'Ingenieria en Sistemas Informaticos',
-    place: 'Universidad Abierta Interamericana',
-    period: 'abr. 2022 - dic. 2026',
-    status: 'Ultimo año',
-  },
-  {
-    title: 'Analista de Sistemas Informaticos',
-    place: 'Universidad Abierta Interamericana',
-    period: 'abr. 2022 - dic. 2024',
-    status: 'GPA 9.25 / 10',
-  },
-];
+        setStats(nextStats);
+      })
+      .catch(() => {
+        // The page keeps recently verified fallback values when the API is unavailable.
+      });
 
-const certifications = [
-  {
-    name: 'CompTIA Security+',
-    detail: 'SY0-701 · vigente hasta feb. 2029',
-    focus: 'Security operations, risk, architecture and incident response fundamentals.',
-    logo: comptiaLogo,
-    tone: 'security',
-  },
-  {
-    name: 'AWS Certified Cloud Practitioner',
-    detail: 'CLF-C02 · vigente hasta jul. 2028',
-    focus: 'AWS cloud concepts, security, billing, services and shared responsibility.',
-    logo: awsLogo,
-    tone: 'aws',
-  },
-  {
-    name: 'Linux Foundation Certified IT Associate',
-    detail: 'LFCA · vigente hasta abr. 2028',
-    focus: 'Linux, cloud, DevOps, security basics and modern IT systems.',
-    logo: linuxFoundationLogo,
-    tone: 'linux',
-  },
-  {
-    name: 'Huawei HCIA Datacom',
-    detail: 'Huawei Certified ICT Associate · Datacom',
-    focus: 'Routing, switching, IP networks and enterprise connectivity foundations.',
-    logo: huaweiLogo,
-    tone: 'huawei',
-  },
-];
+    return () => controller.abort();
+  }, []);
 
-const stackGroups = [
-  {
-    title: 'Cloud security',
-    text: 'Seguridad e infraestructura AWS para workloads de producto, datos sensibles y despliegues auditables.',
-    tags: [
-      { label: 'ECS/Fargate', logo: awsLogo },
-      { label: 'IAM', logo: awsLogo },
-      { label: 'SSO Admin', logo: awsLogo },
-      { label: 'Secrets Manager', logo: awsLogo },
-      { label: 'CloudTrail', logo: awsLogo },
-      { label: 'GuardDuty', logo: awsLogo },
-      { label: 'VPC', logo: awsLogo },
-      { label: 'Terraform', logo: terraformLogo },
-    ],
-    tone: 'cloud',
-  },
-  {
-    title: 'Compliance engineering',
-    text: 'Controles implementados en sistemas, evidencia, poblaciones de auditoria y remediacion tecnica.',
-    tags: [
-      'SOC 2 Type II',
-      'ISO/IEC 27001',
-      'ISMS/SGSI',
-      'Audit Evidence',
-      { label: 'OIDC', logo: openIdLogo },
-      { label: 'Secrets Handling', logo: awsLogo },
-    ],
-    tone: 'compliance',
-  },
-  {
-    title: 'Backend architecture',
-    text: 'Servicios Go para APIs, eventos, autenticacion, observabilidad y contratos compartidos con frontend.',
-    tags: [
-      { label: 'Go', logo: goLogo },
-      { label: 'chi', logo: goLogo },
-      { label: 'AWS SDK v2', logo: awsLogo },
-      { label: 'NATS', logo: natsLogo },
-      { label: 'pgx', logo: postgresqlLogo },
-      'Atlas',
-      { label: 'JWT/JWKS', logo: jwtLogo },
-      { label: 'OpenAPI', logo: openApiLogo },
-    ],
-    tone: 'backend',
-  },
-  {
-    title: 'Systems & networks',
-    text: 'Administracion Linux, redes, VPNs, firewalls, monitoreo y troubleshooting operativo.',
-    tags: [
-      { label: 'Linux', logo: linuxLogo },
-      'TCP/IP',
-      { label: 'WireGuard', logo: wireguardLogo },
-      { label: 'MikroTik', logo: mikrotikLogo },
-      'Sophos',
-      'Nagios',
-      { label: 'Docker', logo: dockerLogo },
-    ],
-    tone: 'systems',
-  },
-];
-
-const recognitions = [
-  {
-    event: 'CACIC 2024',
-    title: 'Expositor Distinguido en Seguridad Informatica',
-    detail: 'Reverse shells aplicadas a pruebas de penetracion y analisis ofensivo.',
-    kind: 'research',
-  },
-  {
-    event: 'SACS / 53 JAIIO 2024',
-    title: 'Mejor Exposicion',
-    detail: 'Investigacion sobre botnets, comportamiento distribuido y taxonomia de amenazas.',
-    kind: 'research',
-  },
-  {
-    event: 'Vincular Inteligente 2026',
-    title: 'Seguridad con IA',
-    detail: 'Monitoreo inteligente, respuesta temprana y automatizacion aplicada a defensa.',
-    kind: 'speaker',
-  },
-  {
-    event: 'CyberSecTuc Meetup #3',
-    title: 'La realidad de un Ingeniero en Ciberseguridad',
-    detail: 'Charla sobre carrera, criterio tecnico y trabajo practico en seguridad.',
-    kind: 'speaker',
-  },
-];
-
-const githubRepos = [
-  {
-    name: 'VT-Terminal-Project',
-    href: 'https://github.com/ValentinTorassa/VT-Terminal-Project',
-    description:
-      'Dotfiles y terminal setup para macOS/Linux: Zsh, Oh My Zsh, Powerlevel10k, Ghostty y herramientas AI shell.',
-    language: 'Shell',
-    languageColor: '#89e051',
-    stars: 14,
-    forks: 0,
-    tags: ['dotfiles', 'terminal', 'zsh', 'Ghostty', 'AI shell'],
-    tone: 'systems',
-  },
-  {
-    name: 'VT-IDE-Project',
-    href: 'https://github.com/ValentinTorassa/VT-IDE-Project',
-    description:
-      'Setup personal de IDE para desarrollo AI-first con Zed, integracion de Claude y workflows de Git asistidos.',
-    language: 'Shell',
-    languageColor: '#89e051',
-    stars: 5,
-    forks: 0,
-    tags: ['Zed', 'Claude', 'MCP', 'AI workflows', 'macOS'],
-    tone: 'ai',
-  },
-  {
-    name: 'PhantomLog',
-    href: 'https://github.com/ValentinTorassa/PhantomLog',
-    description:
-      'Herramienta de rastreo para detectar accesos a archivos o enlaces en simulaciones de phishing y pruebas internas.',
-    language: 'Python',
-    languageColor: '#3572a5',
-    stars: 0,
-    forks: 0,
-    tags: ['tracking', 'phishing simulation', 'security'],
-    tone: 'security',
-  },
-  {
-    name: 'TaskVault',
-    href: 'https://github.com/ValentinTorassa/TaskVault',
-    description:
-      'Checklist self-hosted con tema oscuro, timestamps y foco en privacidad para gestion personal de tareas.',
-    language: 'JavaScript',
-    languageColor: '#f1e05a',
-    stars: 2,
-    forks: 0,
-    tags: ['Node.js', 'Express', 'self-hosted'],
-    tone: 'product',
-  },
-];
+  return stats;
+}
 
 function App() {
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const liveRepoStats = useLiveRepoStats();
+  const content = contentByLanguage[language];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = content.documentTitle;
+    window.localStorage.setItem('vt-language', language);
+  }, [content.documentTitle, language]);
+
+  const formatUpdatedAt = (date: string) => new Intl.DateTimeFormat(
+    language === 'es' ? 'es-AR' : 'en-US',
+    { day: 'numeric', month: 'short', year: 'numeric' },
+  ).format(new Date(date));
+
   return (
     <div className="site-shell">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="Ir al inicio">
+        <a className="brand" href="#top" aria-label={content.header.homeLabel}>
           <MarkImage width={34} height={34} sizes="34px" loading="eager" />
           <span>valentorassa</span>
         </a>
 
-        <nav className="nav-links" aria-label="Secciones principales">
-          {navItems.map((item) => (
+        <nav className="nav-links" aria-label={content.header.navLabel}>
+          {content.navItems.map((item) => (
             <a key={item.href} href={item.href}>
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="social-actions">
-          {headerSocialLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.name}
-              title={link.name}
-            >
-              <SocialIcon link={link} />
-            </a>
-          ))}
+        <div className="header-actions">
+          <div className="social-actions">
+            {headerSocialLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.name}
+                title={link.name}
+              >
+                <SocialIcon link={link} />
+              </a>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="language-toggle"
+            onClick={() => setLanguage((current) => current === 'es' ? 'en' : 'es')}
+            aria-label={`${content.header.languageLabel}: ${
+              language === 'es' ? content.header.englishLabel : content.header.spanishLabel
+            }`}
+            title={language === 'es' ? content.header.englishLabel : content.header.spanishLabel}
+          >
+            {language === 'es' ? <AR aria-hidden="true" /> : <US aria-hidden="true" />}
+          </button>
         </div>
       </header>
 
@@ -397,7 +167,7 @@ function App() {
           <div className="hero-inner">
             <div className="status-pill">
               <span className="status-dot" />
-              Teramot · cloud security, backend and AI agents
+              {content.status}
             </div>
 
             <div className="portrait-wrap">
@@ -419,12 +189,12 @@ function App() {
             <h1>Valentin Torassa Colombero</h1>
 
             <p className="hero-role">
-              Cybersecurity Engineer · Backend Engineer · Cloud Security
+              {content.heroRole}
             </p>
 
-            <TerminalCard title="vt@security:~/career" lines={terminalLines} />
+            <TerminalCard title="vt@security:~/career" lines={content.terminalLines} />
 
-            <div className="hero-socials" aria-label="Redes y contacto">
+            <div className="hero-socials" aria-label={content.heroSocialLabel}>
               {socialLinks.map((link) => (
                 <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer">
                   <SocialIcon link={link} />
@@ -449,27 +219,18 @@ function App() {
 
         <section className="section" id="profile">
           <div className="section-head">
-            <span className="eyebrow">// perfil</span>
-            <h2>Arquitectura de software, backend, cloud security y compliance tecnico.</h2>
-            <p>
-              Combino experiencia en arquitectura de software, desarrollo backend, seguridad cloud,
-              Linux, redes y compliance para construir y operar sistemas con criterios de seguridad
-              desde el diseño. Trabajo especialmente sobre identidad, permisos, datos sensibles,
-              auditoria, observabilidad, infraestructura y confiabilidad operativa.
-            </p>
+            <span className="eyebrow">{content.profile.eyebrow}</span>
+            <h2>{content.profile.title}</h2>
+            <p>{content.profile.intro}</p>
           </div>
 
           <div className="profile-grid">
             <Reveal className="statement">
-              <p>
-                En Teramot desarrollo backend en Go para Aleph, trabajo sobre arquitectura y seguridad
-                en AWS, y llevo requisitos SOC 2 e ISO/IEC 27001 a implementaciones tecnicas
-                verificables.
-              </p>
+              <p>{content.profile.statement}</p>
             </Reveal>
 
             <div className="fact-list">
-              {facts.map((fact) => (
+              {content.profile.facts.map((fact) => (
                 <Reveal as="article" key={fact.key} className="fact-card">
                   <span>{fact.key}</span>
                   <div>
@@ -484,12 +245,12 @@ function App() {
 
         <section className="section section-raised" id="experience">
           <div className="section-head">
-            <span className="eyebrow">// experiencia</span>
-            <h2>Trayectoria profesional</h2>
+            <span className="eyebrow">{content.experience.eyebrow}</span>
+            <h2>{content.experience.title}</h2>
           </div>
 
           <div className="timeline">
-            {experiences.map((item) => (
+            {content.experience.items.map((item) => (
               <Reveal as="article" className="timeline-item" key={`${item.company}-${item.role}`}>
                 <div className="time">
                   <Calendar aria-hidden="true" />
@@ -508,18 +269,18 @@ function App() {
 
         <section className="section split-section" id="education">
           <div className="section-head compact">
-            <span className="eyebrow">// formacion</span>
-            <h2>Academia y certificaciones</h2>
+            <span className="eyebrow">{content.education.eyebrow}</span>
+            <h2>{content.education.title}</h2>
           </div>
 
           <div className="split-grid">
             <Reveal className="panel">
               <div className="panel-title">
                 <GraduationCap aria-hidden="true" />
-                <h3>Formacion academica</h3>
+                <h3>{content.education.academicTitle}</h3>
               </div>
               <div className="stack-list">
-                {education.map((item) => (
+                {content.education.items.map((item) => (
                   <div className="stack-row" key={item.title}>
                     <div>
                       <strong>{item.title}</strong>
@@ -536,21 +297,25 @@ function App() {
             <Reveal className="panel">
               <div className="panel-title">
                 <ShieldCheck aria-hidden="true" />
-                <h3>Certificaciones</h3>
+                <h3>{content.education.certificationsTitle}</h3>
               </div>
               <div className="cert-grid">
-                {certifications.map((cert) => (
-                  <article className={`cert-card cert-${cert.tone}`} key={cert.name}>
-                    <span className="cert-logo">
-                      <img src={cert.logo} alt="" />
-                    </span>
-                    <div>
-                      <h4>{cert.name}</h4>
-                      <strong>{cert.detail}</strong>
-                      <p>{cert.focus}</p>
-                    </div>
-                  </article>
-                ))}
+                {content.education.certifications.map((cert) => {
+                  const CertIcon = cert.icon;
+
+                  return (
+                    <article className={`cert-card cert-${cert.tone}`} key={cert.name}>
+                      <span className="cert-logo">
+                        <CertIcon aria-hidden="true" />
+                      </span>
+                      <div>
+                        <h4>{cert.name}</h4>
+                        <strong>{cert.detail}</strong>
+                        <p>{cert.focus}</p>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </Reveal>
           </div>
@@ -558,13 +323,13 @@ function App() {
 
         <section className="section section-raised" id="stack">
           <div className="section-head">
-            <span className="eyebrow">// stack</span>
-            <h2>Stack operativo</h2>
-            <p>Tecnologias y practicas presentes en producto, seguridad cloud, auditorias y operacion en produccion.</p>
+            <span className="eyebrow">{content.stack.eyebrow}</span>
+            <h2>{content.stack.title}</h2>
+            <p>{content.stack.intro}</p>
           </div>
 
           <div className="skill-grid">
-            {stackGroups.map((group) => (
+            {content.stack.groups.map((group) => (
               <Reveal as="article" className={`skill-card tone-${group.tone}`} key={group.title}>
                 <h3>{group.title}</h3>
                 <p>{group.text}</p>
@@ -576,22 +341,39 @@ function App() {
 
         <section className="section split-section" id="research">
           <div className="section-head compact">
-            <span className="eyebrow">// research & docencia</span>
-            <h2>Reconocimiento, charlas y GitHub publico</h2>
+            <span className="eyebrow">{content.research.eyebrow}</span>
+            <h2>{content.research.title}</h2>
           </div>
 
-          <div className="split-grid">
+          <div className="research-grid">
             <Reveal className="panel recognition-panel">
               <div className="panel-title">
                 <BookOpen aria-hidden="true" />
-                <h3>Reconocimiento y speaking</h3>
+                <h3>{content.research.speakingTitle}</h3>
               </div>
               <div className="recognition-list">
-                {recognitions.map((item) => (
-                  <article className={`recognition-card kind-${item.kind}`} key={`${item.event}-${item.title}`}>
-                    <span>{item.event}</span>
+                {content.research.recognitions.map((item) => (
+                  <article
+                    className={`recognition-card kind-${item.kind}${item.badge ? ' is-featured' : ''}`}
+                    key={`${item.event}-${item.title}`}
+                  >
+                    <div className="recognition-meta">
+                      <span>{item.event}</span>
+                      {item.badge ? <strong>{item.badge}</strong> : null}
+                    </div>
                     <h4>{item.title}</h4>
                     <p>{item.detail}</p>
+                    {item.href ? (
+                      <a
+                        className="recognition-link"
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {content.research.openTalkLabel}
+                        <ExternalLink aria-hidden="true" />
+                      </a>
+                    ) : null}
                   </article>
                 ))}
               </div>
@@ -600,41 +382,65 @@ function App() {
             <Reveal className="panel github-panel">
               <div className="panel-title">
                 <Github aria-hidden="true" />
-                <h3>Repositorios destacados</h3>
+                <h3>{content.research.repositoriesTitle}</h3>
               </div>
               <div className="repo-grid">
-                {githubRepos.map((repo) => (
-                  <article className={`repo-card repo-${repo.tone}`} key={repo.name}>
-                    <div className="repo-card-head">
-                      <div>
-                        <span className="repo-kicker">
-                          <span style={{ backgroundColor: repo.languageColor }} />
-                          {repo.language}
-                        </span>
-                        <h4>{repo.name}</h4>
+                {content.research.repos.map((repo) => {
+                  const stats = liveRepoStats[repo.name] ?? {
+                    stars: repo.stars,
+                    forks: repo.forks,
+                    updatedAt: repo.updatedAt,
+                  };
+
+                  return (
+                    <article
+                      className={`repo-card repo-${repo.tone}${repo.featured ? ' is-featured' : ''}`}
+                      key={repo.name}
+                    >
+                      {repo.featured ? (
+                        <strong className="repo-featured-label">{content.research.featuredLabel}</strong>
+                      ) : null}
+                      <div className="repo-card-head">
+                        <div>
+                          <span className="repo-kicker">
+                            <span style={{ backgroundColor: repo.languageColor }} />
+                            {repo.language}
+                          </span>
+                          <h4>{repo.name}</h4>
+                        </div>
+                        <a
+                          href={repo.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${content.research.openRepoLabel}: ${repo.name}`}
+                          title={content.research.openRepoLabel}
+                        >
+                          <ExternalLink aria-hidden="true" />
+                        </a>
                       </div>
-                      <a href={repo.href} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${repo.name}`}>
-                        <ExternalLink aria-hidden="true" />
-                      </a>
-                    </div>
-                    <p>{repo.description}</p>
-                    <TagList tags={repo.tags} />
-                    <div className="repo-meta">
-                      <span>
-                        <Star aria-hidden="true" />
-                        {repo.stars}
-                      </span>
-                      <span>
-                        <GitFork aria-hidden="true" />
-                        {repo.forks}
-                      </span>
-                      <span>
-                        <Code2 aria-hidden="true" />
-                        GitHub
-                      </span>
-                    </div>
-                  </article>
-                ))}
+                      <p>{repo.description}</p>
+                      <TagList tags={repo.tags} />
+                      <div className="repo-meta">
+                        <span title={content.research.starsLabel}>
+                          <Star aria-hidden="true" />
+                          {stats.stars}
+                        </span>
+                        <span title={content.research.forksLabel}>
+                          <GitFork aria-hidden="true" />
+                          {stats.forks}
+                        </span>
+                        <span>
+                          <Calendar aria-hidden="true" />
+                          {content.research.updatedLabel} {formatUpdatedAt(stats.updatedAt)}
+                        </span>
+                        <span>
+                          <Code2 aria-hidden="true" />
+                          GitHub
+                        </span>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
               <a
                 className="github-profile-link"
@@ -643,7 +449,7 @@ function App() {
                 rel="noopener noreferrer"
               >
                 <Github aria-hidden="true" />
-                Ver perfil completo en GitHub
+                {content.research.githubProfileLabel}
               </a>
             </Reveal>
           </div>
@@ -651,11 +457,8 @@ function App() {
 
         <section className="contact-section" id="contact">
           <Terminal aria-hidden="true" />
-          <h2>Contacto profesional.</h2>
-          <p>
-            Rosario, Argentina · conversaciones tecnicas sobre cloud security, backend, compliance,
-            agentes de IA, Linux y arquitectura de sistemas.
-          </p>
+          <h2>{content.contact.title}</h2>
+          <p>{content.contact.text}</p>
           <div className="hero-actions">
             <a className="btn btn-primary" href="mailto:valentin.torassa.colombero@gmail.com">
               <Mail aria-hidden="true" />
@@ -1297,19 +1100,9 @@ function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }
 }
 
 function SocialIcon({ link }: { link: SocialLink }) {
-  if (link.logo) {
-    return <img src={link.logo} alt="" aria-hidden="true" />;
-  }
-
-  if (link.icon) {
-    const Icon = link.icon;
-    return <Icon aria-hidden="true" />;
-  }
-
-  return null;
+  const Icon = link.icon;
+  return <Icon aria-hidden="true" />;
 }
-
-type StackTag = string | { label: string; logo?: string };
 
 function TagList({ tags, variant }: { tags: StackTag[]; variant?: 'colorful' }) {
   return (
@@ -1317,9 +1110,11 @@ function TagList({ tags, variant }: { tags: StackTag[]; variant?: 'colorful' }) 
       {tags.map((tag) => {
         const item = typeof tag === 'string' ? { label: tag } : tag;
 
+        const Icon = item.icon;
+
         return (
           <span key={item.label}>
-            {item.logo ? <img className="tag-logo" src={item.logo} alt="" aria-hidden="true" /> : null}
+            {Icon ? <Icon className="tag-logo" aria-hidden="true" /> : null}
             {item.label}
           </span>
         );
