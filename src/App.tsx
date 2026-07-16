@@ -227,6 +227,15 @@ function App() {
           <div className="profile-grid">
             <Reveal className="statement">
               <p>{content.profile.statement}</p>
+              <div className="statement-watermark" aria-hidden="true">
+                <span className="watermark-orbit" />
+                <span className="watermark-trace trace-a" />
+                <span className="watermark-trace trace-b" />
+                <span className="watermark-trace trace-c" />
+                <i className="watermark-node node-a" />
+                <i className="watermark-node node-b" />
+                <i className="watermark-node node-c" />
+              </div>
             </Reveal>
 
             <div className="fact-list">
@@ -257,7 +266,16 @@ function App() {
                   <span>{item.period}</span>
                 </div>
                 <div className="timeline-content">
-                  <p className="company">{item.company}</p>
+                  <div className={`experience-company logo-${item.logoMode}`}>
+                    <span className="experience-logo">
+                      <img
+                        src={item.logo}
+                        alt={item.hideCompanyLabel ? item.company : ''}
+                        aria-hidden={item.hideCompanyLabel ? undefined : 'true'}
+                      />
+                    </span>
+                    {item.hideCompanyLabel ? null : <p className="company">{item.company}</p>}
+                  </div>
                   <h3>{item.role}</h3>
                   <p>{item.description}</p>
                   <TagList tags={item.tags} />

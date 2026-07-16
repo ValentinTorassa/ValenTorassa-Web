@@ -869,8 +869,11 @@ p {
 }
 
 .statement {
+  position: relative;
   display: block;
   min-height: 100%;
+  overflow: hidden;
+  isolation: isolate;
   padding: 30px;
   border: 1px solid rgba(84, 230, 214, 0.2);
   border-radius: 10px;
@@ -880,6 +883,8 @@ p {
 }
 
 .statement::before {
+  position: relative;
+  z-index: 2;
   display: block;
   margin-bottom: 18px;
   color: var(--accent-2);
@@ -889,11 +894,175 @@ p {
 }
 
 .statement p {
+  position: relative;
+  z-index: 2;
   margin: 0;
   color: var(--text);
   font-family: var(--body);
   font-size: 1.08rem;
   line-height: 1.62;
+}
+
+.statement-watermark {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  display: none;
+  height: 48%;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.72;
+  background:
+    radial-gradient(circle at 18% 88%, rgba(84, 230, 214, 0.075), transparent 30%),
+    linear-gradient(to top, rgba(2, 7, 11, 0.3), transparent 68%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+  transition: opacity 0.45s ease;
+}
+
+.statement:hover .statement-watermark {
+  opacity: 0.9;
+}
+
+.statement-watermark::before {
+  position: absolute;
+  right: -8%;
+  bottom: -28%;
+  left: -8%;
+  height: 125%;
+  content: '';
+  background-image:
+    linear-gradient(rgba(84, 230, 214, 0.095) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(84, 230, 214, 0.095) 1px, transparent 1px);
+  background-position: center bottom;
+  background-size: 30px 25px;
+  transform: perspective(260px) rotateX(58deg) scale(1.08);
+  transform-origin: center bottom;
+  animation: watermark-grid 18s linear infinite;
+}
+
+.statement-watermark::after {
+  position: absolute;
+  right: 25px;
+  bottom: 20px;
+  z-index: 4;
+  content: 'VT/SEC';
+  color: rgba(5, 10, 15, 0.82);
+  font-family: var(--mono);
+  font-size: clamp(3.4rem, 6vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 1;
+  opacity: 0.32;
+  text-shadow: 0 0 16px rgba(3, 8, 12, 0.88);
+  -webkit-text-stroke: 1px rgba(114, 242, 226, 0.7);
+}
+
+.watermark-orbit {
+  position: absolute;
+  bottom: 18%;
+  left: 10%;
+  z-index: 1;
+  width: 126px;
+  height: 58px;
+  border: 1px solid rgba(139, 124, 255, 0.22);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 22px rgba(139, 124, 255, 0.025),
+    0 0 24px rgba(84, 230, 214, 0.025);
+  transform: rotate(-13deg);
+}
+
+.watermark-orbit::before {
+  position: absolute;
+  inset: 9px -12px;
+  border: 1px solid rgba(84, 230, 214, 0.15);
+  border-radius: 50%;
+  content: '';
+  transform: rotate(24deg);
+}
+
+.watermark-trace {
+  position: absolute;
+  z-index: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(84, 230, 214, 0.42), transparent);
+  transform-origin: left center;
+}
+
+.watermark-trace::after {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 5px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  content: '';
+  background: #a8fff4;
+  box-shadow:
+    0 0 7px rgba(114, 242, 226, 0.86),
+    0 0 15px rgba(84, 230, 214, 0.42);
+  opacity: 0;
+  animation: watermark-packet 7.5s ease-in-out infinite;
+}
+
+.trace-a {
+  bottom: 43%;
+  left: 8%;
+  width: 37%;
+  transform: rotate(12deg);
+}
+
+.trace-b {
+  left: 17%;
+  bottom: 56%;
+  width: 31%;
+  transform: rotate(-18deg);
+}
+
+.trace-b::after {
+  animation-delay: -2.8s;
+}
+
+.trace-c {
+  bottom: 24%;
+  left: 23%;
+  width: 28%;
+  transform: rotate(-4deg);
+}
+
+.trace-c::after {
+  animation-delay: -5.1s;
+}
+
+.watermark-node {
+  position: absolute;
+  z-index: 2;
+  width: 7px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(114, 242, 226, 0.72);
+  border-radius: 50%;
+  background: rgba(84, 230, 214, 0.2);
+  box-shadow: 0 0 14px rgba(84, 230, 214, 0.34);
+  animation: watermark-node 5.5s ease-in-out infinite;
+}
+
+.node-a {
+  bottom: 40%;
+  left: 18%;
+}
+
+.node-b {
+  left: 45%;
+  bottom: 61%;
+  animation-delay: -1.8s;
+}
+
+.node-c {
+  left: 48%;
+  bottom: 23%;
+  animation-delay: -3.6s;
 }
 
 .fact-list {
@@ -976,8 +1145,47 @@ p {
   max-width: 840px;
 }
 
+.experience-company {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 7px;
+}
+
+.experience-logo {
+  display: grid;
+  flex: none;
+  place-items: center;
+}
+
+.experience-logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
+}
+
+.logo-symbol .experience-logo {
+  width: 36px;
+  height: 31px;
+}
+
+.logo-wordmark .experience-logo {
+  width: 154px;
+  height: 32px;
+  justify-items: start;
+}
+
+.logo-institution .experience-logo {
+  width: 176px;
+  height: 64px;
+  justify-items: start;
+}
+
 .company {
-  margin: 0 0 2px;
+  margin: 0;
   color: var(--accent-2);
   font-family: var(--mono);
   font-size: 0.83rem;
@@ -1625,6 +1833,44 @@ p {
   transform: translateY(-2px);
 }
 
+@keyframes watermark-grid {
+  to {
+    background-position: 30px 25px;
+  }
+}
+
+@keyframes watermark-node {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: scale(0.82);
+  }
+
+  50% {
+    opacity: 0.82;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes watermark-packet {
+  0%,
+  12% {
+    left: 0;
+    opacity: 0;
+  }
+
+  24%,
+  78% {
+    opacity: 0.8;
+  }
+
+  90%,
+  100% {
+    left: calc(100% - 5px);
+    opacity: 0;
+  }
+}
+
 @keyframes status-sweep {
   0%,
   38% {
@@ -1724,6 +1970,10 @@ p {
 @media (min-width: 720px) {
   .nav-links {
     display: inline-flex;
+  }
+
+  .statement-watermark {
+    display: block;
   }
 
   .hero h1 {
@@ -1888,6 +2138,16 @@ p {
   .hero-socials a {
     justify-content: center;
     min-width: 0;
+  }
+
+  .logo-wordmark .experience-logo {
+    width: 142px;
+    height: 29px;
+  }
+
+  .logo-institution .experience-logo {
+    width: 164px;
+    height: 60px;
   }
 
   .section,
