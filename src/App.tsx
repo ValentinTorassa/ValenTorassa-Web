@@ -227,6 +227,15 @@ function App() {
           <div className="profile-grid">
             <Reveal className="statement">
               <p>{content.profile.statement}</p>
+              <div className="statement-watermark" aria-hidden="true">
+                <span className="watermark-orbit" />
+                <span className="watermark-trace trace-a" />
+                <span className="watermark-trace trace-b" />
+                <span className="watermark-trace trace-c" />
+                <i className="watermark-node node-a" />
+                <i className="watermark-node node-b" />
+                <i className="watermark-node node-c" />
+              </div>
             </Reveal>
 
             <div className="fact-list">
