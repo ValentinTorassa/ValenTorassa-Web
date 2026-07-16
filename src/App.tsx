@@ -257,7 +257,16 @@ function App() {
                   <span>{item.period}</span>
                 </div>
                 <div className="timeline-content">
-                  <p className="company">{item.company}</p>
+                  <div className={`experience-company logo-${item.logoMode}`}>
+                    <span className="experience-logo">
+                      <img
+                        src={item.logo}
+                        alt={item.hideCompanyLabel ? item.company : ''}
+                        aria-hidden={item.hideCompanyLabel ? undefined : 'true'}
+                      />
+                    </span>
+                    {item.hideCompanyLabel ? null : <p className="company">{item.company}</p>}
+                  </div>
                   <h3>{item.role}</h3>
                   <p>{item.description}</p>
                   <TagList tags={item.tags} />

@@ -976,8 +976,47 @@ p {
   max-width: 840px;
 }
 
+.experience-company {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 7px;
+}
+
+.experience-logo {
+  display: grid;
+  flex: none;
+  place-items: center;
+}
+
+.experience-logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
+}
+
+.logo-symbol .experience-logo {
+  width: 36px;
+  height: 31px;
+}
+
+.logo-wordmark .experience-logo {
+  width: 154px;
+  height: 32px;
+  justify-items: start;
+}
+
+.logo-institution .experience-logo {
+  width: 176px;
+  height: 64px;
+  justify-items: start;
+}
+
 .company {
-  margin: 0 0 2px;
+  margin: 0;
   color: var(--accent-2);
   font-family: var(--mono);
   font-size: 0.83rem;
@@ -1888,6 +1927,16 @@ p {
   .hero-socials a {
     justify-content: center;
     min-width: 0;
+  }
+
+  .logo-wordmark .experience-logo {
+    width: 142px;
+    height: 29px;
+  }
+
+  .logo-institution .experience-logo {
+    width: 164px;
+    height: 60px;
   }
 
   .section,

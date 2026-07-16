@@ -27,6 +27,9 @@ import {
   SiYoutube,
   SiZedindustries,
 } from 'react-icons/si';
+import consultingItLogo from './assets/companies/consulting-it.png';
+import teramotLogo from './assets/companies/teramot.png';
+import uaiLogo from './assets/companies/uai.png';
 
 export type Language = 'es' | 'en';
 
@@ -85,6 +88,9 @@ type PageContent = {
       period: string;
       description: string;
       tags: StackTag[];
+      logo: string;
+      logoMode: 'symbol' | 'wordmark' | 'institution';
+      hideCompanyLabel?: boolean;
     }>;
   };
   education: {
@@ -435,6 +441,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Liderazgo técnico de ciberseguridad y compliance en una startup de IA. Arquitectura principal de Aleph, un backend en Go para el acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
+          logo: teramotLogo,
+          logoMode: 'symbol',
         },
         {
           role: 'Cybersecurity & Compliance Analyst',
@@ -443,6 +451,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Estructuración del área de seguridad, automatización de controles, evidencia de auditoría y hardening de infraestructura AWS para datos sensibles usados por agentes de IA.',
           tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
+          logo: teramotLogo,
+          logoMode: 'symbol',
         },
         {
           role: 'Analista de Ciberseguridad',
@@ -451,6 +461,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Estrategia de seguridad para clientes de outsourcing, arquitectura de red segura, hardening, automatización y operación SOC con Sophos Central, Avast Business y Nagios.',
           tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
+          logo: consultingItLogo,
+          logoMode: 'wordmark',
+          hideCompanyLabel: true,
         },
         {
           role: 'Ayudante de Cátedra · Arquitectura de Computadoras II',
@@ -459,6 +472,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Acompañamiento académico en arquitectura de procesadores, jerarquía de memoria, I/O y conceptos de sistemas de bajo nivel.',
           tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
+          logo: uaiLogo,
+          logoMode: 'institution',
+          hideCompanyLabel: true,
         },
       ],
     },
@@ -664,6 +680,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Technical cybersecurity and compliance leadership at an AI startup. Principal architecture of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
+          logo: teramotLogo,
+          logoMode: 'symbol',
         },
         {
           role: 'Cybersecurity & Compliance Analyst',
@@ -672,6 +690,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Built the security function, automated controls and audit evidence, and hardened AWS infrastructure for sensitive data used by AI agents.',
           tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
+          logo: teramotLogo,
+          logoMode: 'symbol',
         },
         {
           role: 'Cybersecurity Analyst',
@@ -680,6 +700,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Security strategy for outsourcing clients, secure network architecture, hardening, automation, and SOC operations with Sophos Central, Avast Business, and Nagios.',
           tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
+          logo: consultingItLogo,
+          logoMode: 'wordmark',
+          hideCompanyLabel: true,
         },
         {
           role: 'Teaching Assistant · Computer Architecture II',
@@ -688,6 +711,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
           description:
             'Academic support across processor architecture, memory hierarchies, I/O, and low-level systems concepts.',
           tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
+          logo: uaiLogo,
+          logoMode: 'institution',
+          hideCompanyLabel: true,
         },
       ],
     },
