@@ -101,6 +101,8 @@ function useLiveRepoStats() {
 
 function App() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const [activeSection, setActiveSection] = useState('');
+  const [scrollProgress, setScrollProgress] = useState(0);
   const liveRepoStats = useLiveRepoStats();
   const content = contentByLanguage[language];
 
@@ -109,6 +111,53 @@ function App() {
     document.title = content.documentTitle;
     window.localStorage.setItem('vt-language', language);
   }, [content.documentTitle, language]);
+
+  useEffect(() => {
+    const sectionIds = content.navItems.map((item) => item.href.slice(1));
+    let animationFrame: number | undefined;
+
+    const updateNavigation = () => {
+      animationFrame = undefined;
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const nextProgress = scrollableHeight > 0
+        ? Math.min(Math.max(window.scrollY / scrollableHeight, 0), 1)
+        : 0;
+      const marker = window.scrollY + window.innerHeight * 0.34;
+      let nextSection = '';
+
+      sectionIds.forEach((sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section && section.offsetTop <= marker) nextSection = sectionId;
+      });
+
+      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) {
+        nextSection = sectionIds.at(-1) ?? nextSection;
+      }
+
+      setScrollProgress(nextProgress);
+      setActiveSection((current) => current === nextSection ? current : nextSection);
+    };
+
+    const scheduleUpdate = () => {
+      if (animationFrame === undefined) {
+        animationFrame = window.requestAnimationFrame(updateNavigation);
+      }
+    };
+
+    updateNavigation();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+
+    const bodyResizeObserver = new ResizeObserver(scheduleUpdate);
+    bodyResizeObserver.observe(document.body);
+
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      bodyResizeObserver.disconnect();
+      if (animationFrame !== undefined) window.cancelAnimationFrame(animationFrame);
+    };
+  }, [content.navItems]);
 
   const formatUpdatedAt = (date: string) => new Intl.DateTimeFormat(
     language === 'es' ? 'es-AR' : 'en-US',
@@ -124,11 +173,21 @@ function App() {
         </a>
 
         <nav className="nav-links" aria-label={content.header.navLabel}>
-          {content.navItems.map((item) => (
-            <a key={item.href} href={item.href}>
-              {item.label}
-            </a>
-          ))}
+          {content.navItems.map((item) => {
+            const sectionId = item.href.slice(1);
+            const isActive = activeSection === sectionId;
+
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={isActive ? 'is-active' : undefined}
+                aria-current={isActive ? 'location' : undefined}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="header-actions">
@@ -159,6 +218,10 @@ function App() {
             {language === 'es' ? <AR aria-hidden="true" /> : <US aria-hidden="true" />}
           </button>
         </div>
+
+        <span className="scroll-progress" aria-hidden="true">
+          <span style={{ transform: `scaleX(${scrollProgress})` }} />
+        </span>
       </header>
 
       <main>
