@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { useCallback, useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import {
+  ArrowUp,
   BookOpen,
   Calendar,
   Check,
+  ChevronRight,
   Clock3,
   Code2,
   Copy,
@@ -11,9 +13,11 @@ import {
   Github,
   GraduationCap,
   Mail,
+  Menu,
   ShieldCheck,
   Star,
   Terminal,
+  X,
 } from 'lucide-react';
 import { AR, US } from 'country-flag-icons/react/3x2';
 import portraitAvif256 from './assets/portrait-dark-256.avif';
@@ -32,6 +36,7 @@ import {
   contentByLanguage,
   headerSocialLinks,
   socialLinks,
+  type FeaturedRepo,
   type Language,
   type SocialLink,
   type StackTag,
@@ -51,6 +56,7 @@ type LiveRepoStats = Record<string, {
 
 const contactEmail = 'valentin.torassa.colombero@gmail.com';
 const canonicalBaseUrl = 'https://valentorassa.com/';
+const footerSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
 
 function setMetaContent(selector: string, content: string) {
   document.querySelector<HTMLMetaElement>(selector)?.setAttribute('content', content);
@@ -118,11 +124,18 @@ function useLiveRepoStats() {
 function App() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
   const [activeSection, setActiveSection] = useState('');
+  const [activeExperienceIndex, setActiveExperienceIndex] = useState(-1);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [emailCopied, setEmailCopied] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedRepoName, setSelectedRepoName] = useState<string | null>(null);
   const copyResetTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const projectTriggerRef = useRef<HTMLButtonElement | null>(null);
   const liveRepoStats = useLiveRepoStats();
   const content = contentByLanguage[language];
+  const selectedRepo = content.research.repos.find((repo) => repo.name === selectedRepoName) ?? null;
+  const closeProjectDrawer = useCallback(() => setSelectedRepoName(null), []);
 
   useEffect(() => {
     const canonicalUrl = `${canonicalBaseUrl}?lang=${language}`;
@@ -147,6 +160,30 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileMenuOpen(false);
+    };
+    const closeOutside = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setMobileMenuOpen(false);
+    };
+    const closeOnDesktop = () => {
+      if (window.matchMedia('(min-width: 720px)').matches) setMobileMenuOpen(false);
+    };
+
+    document.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('pointerdown', closeOutside);
+    window.addEventListener('resize', closeOnDesktop);
+
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('pointerdown', closeOutside);
+      window.removeEventListener('resize', closeOnDesktop);
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
     const sectionIds = content.navItems.map((item) => item.href.slice(1));
     let animationFrame: number | undefined;
 
@@ -166,6 +203,28 @@ function App() {
 
       if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) {
         nextSection = sectionIds.at(-1) ?? nextSection;
+      }
+
+      const timeline = document.querySelector<HTMLElement>('#experience .timeline');
+
+      if (timeline) {
+        const timelineRect = timeline.getBoundingClientRect();
+        const timelineMarker = window.innerHeight * 0.56;
+        const timelineProgress = Math.min(
+          Math.max((timelineMarker - timelineRect.top) / Math.max(timelineRect.height, 1), 0),
+          1,
+        );
+        const items = [...timeline.querySelectorAll<HTMLElement>('.timeline-item')];
+        let nextExperienceIndex = -1;
+
+        items.forEach((item, index) => {
+          if (item.getBoundingClientRect().top <= timelineMarker) nextExperienceIndex = index;
+        });
+
+        timeline.style.setProperty('--timeline-progress', timelineProgress.toString());
+        setActiveExperienceIndex((current) => (
+          current === nextExperienceIndex ? current : nextExperienceIndex
+        ));
       }
 
       setScrollProgress(nextProgress);
@@ -232,7 +291,7 @@ function App() {
 
   return (
     <div className="site-shell">
-      <header className="topbar">
+      <header className="topbar" ref={headerRef}>
         <a className="brand" href="#top" aria-label={`valentorassa — ${content.header.homeLabel}`}>
           <MarkImage width={34} height={34} sizes="34px" loading="eager" />
           <span>valentorassa</span>
@@ -275,7 +334,10 @@ function App() {
           <button
             type="button"
             className="language-toggle"
-            onClick={() => setLanguage((current) => current === 'es' ? 'en' : 'es')}
+            onClick={() => {
+              setLanguage((current) => current === 'es' ? 'en' : 'es');
+              setMobileMenuOpen(false);
+            }}
             aria-label={`${content.header.languageLabel}: ${
               language === 'es' ? content.header.englishLabel : content.header.spanishLabel
             }`}
@@ -283,7 +345,47 @@ function App() {
           >
             {language === 'es' ? <AR aria-hidden="true" /> : <US aria-hidden="true" />}
           </button>
+
+          <button
+            type="button"
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen((current) => !current)}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            aria-label={mobileMenuOpen ? content.header.closeMenuLabel : content.header.menuLabel}
+          >
+            {mobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+          </button>
         </div>
+
+        {mobileMenuOpen ? (
+          <div className="mobile-nav-panel" id="mobile-navigation">
+            <nav aria-label={content.header.navLabel}>
+              {content.navItems.map((item, index) => {
+                const sectionId = item.href.slice(1);
+                const isActive = activeSection === sectionId;
+
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={isActive ? 'is-active' : undefined}
+                    aria-current={isActive ? 'location' : undefined}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span>0{index + 1}</span>
+                    <strong>{item.label}</strong>
+                    <ChevronRight aria-hidden="true" />
+                  </a>
+                );
+              })}
+            </nav>
+            <div className="mobile-nav-meta">
+              <span><i aria-hidden="true" />{content.footer.location}</span>
+              <span>{content.footer.tagline}</span>
+            </div>
+          </div>
+        ) : null}
 
         <span className="scroll-progress" aria-hidden="true">
           <span style={{ transform: `scaleX(${scrollProgress})` }} />
@@ -388,9 +490,16 @@ function App() {
           </div>
 
           <div className="timeline">
-            {content.experience.items.map((item) => (
+            {content.experience.items.map((item, index) => (
               <Reveal as="article" className="timeline-item" key={`${item.company}-${item.role}`}>
-                <span className="timeline-node" aria-hidden="true" />
+                <span
+                  className={[
+                    'timeline-node',
+                    index < activeExperienceIndex ? 'is-complete' : '',
+                    index === activeExperienceIndex ? 'is-active' : '',
+                  ].filter(Boolean).join(' ')}
+                  aria-hidden="true"
+                />
                 <div className="time">
                   <Calendar aria-hidden="true" />
                   <span>{item.period}</span>
@@ -636,6 +745,19 @@ function App() {
                             GitHub
                           </span>
                         </div>
+                        {repo.featured ? null : (
+                          <button
+                            className="repo-details-trigger"
+                            type="button"
+                            onClick={(event) => {
+                              projectTriggerRef.current = event.currentTarget;
+                              setSelectedRepoName(repo.name);
+                            }}
+                          >
+                            <span>{content.research.projectDetailsLabel}</span>
+                            <ChevronRight aria-hidden="true" />
+                          </button>
+                        )}
                       </div>
                     </article>
                   );
@@ -691,6 +813,183 @@ function App() {
           </div>
         </section>
       </main>
+
+      <footer className="site-footer">
+        <div className="footer-shell">
+          <div className="footer-main">
+            <a className="footer-brand" href="#top" aria-label={`valentorassa — ${content.header.homeLabel}`}>
+              <MarkImage width={30} height={30} sizes="30px" />
+              <span>
+                <strong>valentorassa</strong>
+                <small>{content.footer.tagline}</small>
+              </span>
+            </a>
+
+            <nav className="footer-socials" aria-label={content.footer.socialLabel}>
+              {footerSocialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.name}
+                  title={link.name}
+                >
+                  <SocialIcon link={link} />
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <div className="footer-bottom">
+            <span>© {new Date().getFullYear()} Valentin Torassa Colombero</span>
+            <a href="#top">
+              {content.footer.backToTopLabel}
+              <ArrowUp aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </footer>
+
+      {selectedRepo ? (
+        <ProjectDrawer
+          repo={selectedRepo}
+          labels={{
+            close: content.research.closeProjectLabel,
+            problem: content.research.problemLabel,
+            architecture: content.research.architectureLabel,
+            security: content.research.securityLabel,
+            visit: content.research.visitProjectLabel,
+            repository: content.research.openRepoLabel,
+          }}
+          onClose={closeProjectDrawer}
+          returnFocusTarget={projectTriggerRef.current}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+type ProjectDrawerProps = {
+  repo: FeaturedRepo;
+  labels: {
+    close: string;
+    problem: string;
+    architecture: string;
+    security: string;
+    visit: string;
+    repository: string;
+  };
+  onClose: () => void;
+  returnFocusTarget: HTMLButtonElement | null;
+};
+
+function ProjectDrawer({ repo, labels, onClose, returnFocusTarget }: ProjectDrawerProps) {
+  const panelRef = useRef<HTMLElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const focusFrame = window.requestAnimationFrame(() => closeRef.current?.focus());
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !panelRef.current) return;
+
+      const focusable = [...panelRef.current.querySelectorAll<HTMLElement>(
+        'button, a[href], [tabindex]:not([tabindex="-1"])',
+      )].filter((element) => !element.hasAttribute('disabled'));
+      const first = focusable[0];
+      const last = focusable.at(-1);
+
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      returnFocusTarget?.focus();
+    };
+  }, [onClose, returnFocusTarget]);
+
+  return (
+    <div className="project-drawer-layer">
+      <button
+        className="project-drawer-backdrop"
+        type="button"
+        onClick={onClose}
+        aria-label={labels.close}
+        tabIndex={-1}
+      />
+      <aside
+        className={`project-drawer repo-${repo.tone}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-drawer-title"
+        ref={panelRef}
+      >
+        <div className="project-drawer-head">
+          <span className="repo-kicker">
+            <span style={{ backgroundColor: repo.languageColor }} />
+            {repo.language}
+          </span>
+          <button ref={closeRef} type="button" onClick={onClose} aria-label={labels.close}>
+            <X aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="project-drawer-intro">
+          <p>./project</p>
+          <h2 id="project-drawer-title">{repo.name}</h2>
+          <p>{repo.description}</p>
+          <TagList tags={repo.tags} />
+        </div>
+
+        <div className="project-drawer-details">
+          <article>
+            <span>01 / {labels.problem}</span>
+            <p>{repo.caseStudy.problem}</p>
+          </article>
+          <article>
+            <span>02 / {labels.architecture}</span>
+            <p>{repo.caseStudy.architecture}</p>
+          </article>
+          <article>
+            <span>03 / {labels.security}</span>
+            <p>{repo.caseStudy.security}</p>
+          </article>
+        </div>
+
+        <div className="project-drawer-actions">
+          {repo.siteHref ? (
+            <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
+              {labels.visit}
+              <ExternalLink aria-hidden="true" />
+            </a>
+          ) : null}
+          <a href={repo.href} target="_blank" rel="noopener noreferrer">
+            <Github aria-hidden="true" />
+            {labels.repository}
+          </a>
+        </div>
+      </aside>
     </div>
   );
 }

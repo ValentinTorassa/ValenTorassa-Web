@@ -60,6 +60,11 @@ export type FeaturedRepo = {
   featured?: boolean;
   previewImage?: string;
   siteHref?: string;
+  caseStudy: {
+    problem: string;
+    architecture: string;
+    security: string;
+  };
 };
 
 type PageContent = {
@@ -74,6 +79,8 @@ type PageContent = {
     languageLabel: string;
     spanishLabel: string;
     englishLabel: string;
+    menuLabel: string;
+    closeMenuLabel: string;
   };
   navItems: Array<{ label: string; href: string }>;
   status: string;
@@ -140,6 +147,12 @@ type PageContent = {
     forksLabel: string;
     updatedLabel: string;
     githubProfileLabel: string;
+    projectDetailsLabel: string;
+    closeProjectLabel: string;
+    problemLabel: string;
+    architectureLabel: string;
+    securityLabel: string;
+    visitProjectLabel: string;
     recognitions: Array<{
       event: string;
       title: string;
@@ -159,6 +172,12 @@ type PageContent = {
     copiedEmailLabel: string;
     timezone: string;
     availability: string;
+  };
+  footer: {
+    tagline: string;
+    socialLabel: string;
+    backToTopLabel: string;
+    location: string;
   };
 };
 
@@ -339,26 +358,51 @@ const esRepos: FeaturedRepo[] = [
     ...repoFacts.openSecurityLabs,
     description:
       'Plataforma educativa abierta en español con laboratorios prácticos de Linux, redes, backend, cloud y ciberseguridad.',
+    caseStudy: {
+      problem: 'La formación técnica en español suele quedarse en teoría o depender de plataformas cerradas.',
+      architecture: 'Sitio estático en Astro con rutas temáticas, laboratorios versionados en GitHub y progreso guardado localmente en el navegador.',
+      security: 'Sin cuentas ni tracking de progreso; los ejercicios se ejecutan en la máquina del estudiante y el contenido es auditable como código.',
+    },
   },
   {
     ...repoFacts.terminal,
     description:
       'Entorno de terminal reproducible para macOS y Linux con Zsh, Ghostty, dotfiles y herramientas de IA para shell.',
+    caseStudy: {
+      problem: 'Configurar una terminal consistente en macOS y Linux consume tiempo y produce entornos difíciles de reproducir.',
+      architecture: 'Dotfiles modulares, Zsh y Ghostty coordinados mediante scripts de instalación y configuración versionada.',
+      security: 'Configuración pequeña y revisable, sin credenciales embebidas y con cambios explícitos antes de modificar el entorno.',
+    },
   },
   {
     ...repoFacts.ide,
     description:
       'Configuración de desarrollo AI-first con Zed, integración con Claude y flujos de Git asistidos.',
+    caseStudy: {
+      problem: 'Los flujos AI-first suelen quedar fragmentados entre editor, agentes, MCP y automatizaciones de Git.',
+      architecture: 'Configuración reproducible de Zed con integraciones para Claude, MCP y flujos asistidos por GitHub Actions.',
+      security: 'Separación entre configuración versionada y secretos, más permisos explícitos para integraciones y herramientas.',
+    },
   },
   {
     ...repoFacts.secretShare,
     description:
       'Intercambio zero-knowledge de secretos de un solo uso con Go y Redis; cada enlace se destruye después de la primera lectura.',
+    caseStudy: {
+      problem: 'Compartir credenciales por chat o email deja copias persistentes y difíciles de revocar.',
+      architecture: 'Servicio en Go y Redis para secretos de una sola lectura, con cifrado y expiración coordinados desde el enlace.',
+      security: 'AES-GCM, clave separada del servidor, eliminación después de la primera lectura y TTL como defensa adicional.',
+    },
   },
   {
     ...repoFacts.autoConfine,
     description:
       'Generación automática de perfiles seccomp mínimos para contenedores OCI mediante observación del kernel con eBPF.',
+    caseStudy: {
+      problem: 'Los contenedores suelen ejecutar perfiles seccomp genéricos con más syscalls de las necesarias.',
+      architecture: 'Observación de syscalls con eBPF y generación en Go de una política mínima compatible con runtimes OCI.',
+      security: 'Enfoque allowlist, salida revisable antes de aplicar y reducción explícita de la superficie del kernel.',
+    },
   },
 ];
 
@@ -367,26 +411,51 @@ const enRepos: FeaturedRepo[] = [
     ...repoFacts.openSecurityLabs,
     description:
       'Open Spanish-language learning platform with hands-on labs for Linux, networking, backend, cloud, and cybersecurity.',
+    caseStudy: {
+      problem: 'Spanish-language technical education often stops at theory or depends on closed learning platforms.',
+      architecture: 'Static Astro site with themed paths, GitHub-versioned labs, and progress stored locally in the browser.',
+      security: 'No accounts or progress tracking; exercises run on the learner’s machine and the content remains auditable as code.',
+    },
   },
   {
     ...repoFacts.terminal,
     description:
       'Reproducible terminal environment for macOS and Linux with Zsh, Ghostty, dotfiles, and AI-powered shell tooling.',
+    caseStudy: {
+      problem: 'Building a consistent terminal across macOS and Linux takes time and produces environments that are hard to reproduce.',
+      architecture: 'Modular dotfiles, Zsh, and Ghostty coordinated through installation scripts and versioned configuration.',
+      security: 'Small auditable configuration, no embedded credentials, and explicit changes before modifying the local environment.',
+    },
   },
   {
     ...repoFacts.ide,
     description:
       'AI-first development setup with Zed, Claude integration, and assisted Git workflows.',
+    caseStudy: {
+      problem: 'AI-first workflows are often fragmented across the editor, agents, MCP services, and Git automation.',
+      architecture: 'Reproducible Zed configuration with Claude, MCP, and GitHub Actions-assisted workflows.',
+      security: 'Versioned configuration stays separate from secrets, with explicit permissions for integrations and tools.',
+    },
   },
   {
     ...repoFacts.secretShare,
     description:
       'Zero-knowledge one-time secret sharing with Go and Redis; every link self-destructs after its first read.',
+    caseStudy: {
+      problem: 'Sharing credentials through chat or email leaves persistent copies that are difficult to revoke.',
+      architecture: 'Go and Redis service for single-read secrets, coordinating encryption and expiration through the shared link.',
+      security: 'AES-GCM, a key kept separate from the server, deletion after first access, and TTL as an additional safeguard.',
+    },
   },
   {
     ...repoFacts.autoConfine,
     description:
       'Automatic generation of minimal seccomp profiles for OCI containers through eBPF-based kernel observation.',
+    caseStudy: {
+      problem: 'Containers often run generic seccomp profiles that permit more syscalls than the workload requires.',
+      architecture: 'eBPF syscall observation with Go-based generation of a minimal policy for OCI runtimes.',
+      security: 'Allowlist design, reviewable output before enforcement, and explicit reduction of kernel attack surface.',
+    },
   },
 ];
 
@@ -403,6 +472,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
       languageLabel: 'Cambiar idioma',
       spanishLabel: 'Español de Argentina',
       englishLabel: 'Inglés de Estados Unidos',
+      menuLabel: 'Abrir navegación',
+      closeMenuLabel: 'Cerrar navegación',
     },
     navItems: [
       { label: 'Perfil', href: '#profile' },
@@ -595,6 +666,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
       forksLabel: 'forks',
       updatedLabel: 'Actualizado',
       githubProfileLabel: 'Ver perfil completo en GitHub',
+      projectDetailsLabel: 'Explorar proyecto',
+      closeProjectLabel: 'Cerrar proyecto',
+      problemLabel: 'Problema',
+      architectureLabel: 'Arquitectura',
+      securityLabel: 'Decisiones de seguridad',
+      visitProjectLabel: 'Abrir proyecto',
       recognitions: [
         {
           event: 'DebConf26 · Santa Fe',
@@ -641,6 +718,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
       timezone: 'UTC−3 · Rosario',
       availability: 'Disponible para conversaciones técnicas',
     },
+    footer: {
+      tagline: 'Seguridad · sistemas · open source',
+      socialLabel: 'Redes de Valentin',
+      backToTopLabel: 'Volver arriba',
+      location: 'Rosario · UTC−3',
+    },
   },
   en: {
     documentTitle: 'Valentin Torassa Colombero · Cybersecurity & Backend',
@@ -654,6 +737,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
       languageLabel: 'Change language',
       spanishLabel: 'Argentinian Spanish',
       englishLabel: 'United States English',
+      menuLabel: 'Open navigation',
+      closeMenuLabel: 'Close navigation',
     },
     navItems: [
       { label: 'Profile', href: '#profile' },
@@ -846,6 +931,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
       forksLabel: 'forks',
       updatedLabel: 'Updated',
       githubProfileLabel: 'View complete GitHub profile',
+      projectDetailsLabel: 'Explore project',
+      closeProjectLabel: 'Close project',
+      problemLabel: 'Problem',
+      architectureLabel: 'Architecture',
+      securityLabel: 'Security decisions',
+      visitProjectLabel: 'Open project',
       recognitions: [
         {
           event: 'DebConf26 · Santa Fe',
@@ -891,6 +982,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
       copiedEmailLabel: 'Email copied',
       timezone: 'UTC−3 · Rosario',
       availability: 'Open to technical conversations',
+    },
+    footer: {
+      tagline: 'Security · systems · open source',
+      socialLabel: 'Valentin’s networks',
+      backToTopLabel: 'Back to top',
+      location: 'Rosario · UTC−3',
     },
   },
 };
