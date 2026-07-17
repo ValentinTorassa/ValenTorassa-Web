@@ -2,7 +2,10 @@ import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type 
 import {
   BookOpen,
   Calendar,
+  Check,
+  Clock3,
   Code2,
+  Copy,
   ExternalLink,
   GitFork,
   Github,
@@ -46,7 +49,20 @@ type LiveRepoStats = Record<string, {
   updatedAt: string;
 }>;
 
+const contactEmail = 'valentin.torassa.colombero@gmail.com';
+const canonicalBaseUrl = 'https://valentorassa.com/';
+
+function setMetaContent(selector: string, content: string) {
+  document.querySelector<HTMLMetaElement>(selector)?.setAttribute('content', content);
+}
+
 function getInitialLanguage(): Language {
+  const requestedLanguage = new URLSearchParams(window.location.search).get('lang');
+
+  if (requestedLanguage === 'es' || requestedLanguage === 'en') {
+    return requestedLanguage;
+  }
+
   const savedLanguage = window.localStorage.getItem('vt-language');
 
   if (savedLanguage === 'es' || savedLanguage === 'en') {
@@ -103,14 +119,32 @@ function App() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
   const [activeSection, setActiveSection] = useState('');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [emailCopied, setEmailCopied] = useState(false);
+  const copyResetTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
   const liveRepoStats = useLiveRepoStats();
   const content = contentByLanguage[language];
 
   useEffect(() => {
+    const canonicalUrl = `${canonicalBaseUrl}?lang=${language}`;
+
     document.documentElement.lang = language;
     document.title = content.documentTitle;
     window.localStorage.setItem('vt-language', language);
-  }, [content.documentTitle, language]);
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
+    setMetaContent('meta[name="description"]', content.seo.description);
+    setMetaContent('meta[property="og:title"]', content.documentTitle);
+    setMetaContent('meta[property="og:description"]', content.seo.description);
+    setMetaContent('meta[property="og:locale"]', content.seo.locale);
+    setMetaContent('meta[property="og:url"]', canonicalUrl);
+    setMetaContent('meta[name="twitter:title"]', content.documentTitle);
+    setMetaContent('meta[name="twitter:description"]', content.seo.description);
+  }, [content.documentTitle, content.seo.description, content.seo.locale, language]);
+
+  useEffect(() => () => {
+    if (copyResetTimer.current !== undefined) {
+      globalThis.clearTimeout(copyResetTimer.current);
+    }
+  }, []);
 
   useEffect(() => {
     const sectionIds = content.navItems.map((item) => item.href.slice(1));
@@ -164,10 +198,42 @@ function App() {
     { day: 'numeric', month: 'short', year: 'numeric' },
   ).format(new Date(date));
 
+  const copyEmail = async () => {
+    let copied = false;
+
+    try {
+      await navigator.clipboard.writeText(contactEmail);
+      copied = true;
+    } catch {
+      const copyTarget = document.createElement('textarea');
+      copyTarget.value = contactEmail;
+      copyTarget.setAttribute('readonly', '');
+      copyTarget.style.position = 'fixed';
+      copyTarget.style.opacity = '0';
+      document.body.appendChild(copyTarget);
+      copyTarget.select();
+      copied = document.execCommand('copy');
+      copyTarget.remove();
+    }
+
+    if (!copied) return;
+
+    setEmailCopied(true);
+
+    if (copyResetTimer.current !== undefined) {
+      globalThis.clearTimeout(copyResetTimer.current);
+    }
+
+    copyResetTimer.current = globalThis.setTimeout(() => setEmailCopied(false), 2200);
+  };
+
+  const [featuredRecognition, ...previousRecognitions] = content.research.recognitions;
+  const FeaturedRecognitionIcon = featuredRecognition?.icon;
+
   return (
     <div className="site-shell">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label={content.header.homeLabel}>
+        <a className="brand" href="#top" aria-label={`valentorassa — ${content.header.homeLabel}`}>
           <MarkImage width={34} height={34} sizes="34px" loading="eager" />
           <span>valentorassa</span>
         </a>
@@ -324,6 +390,7 @@ function App() {
           <div className="timeline">
             {content.experience.items.map((item) => (
               <Reveal as="article" className="timeline-item" key={`${item.company}-${item.role}`}>
+                <span className="timeline-node" aria-hidden="true" />
                 <div className="time">
                   <Calendar aria-hidden="true" />
                   <span>{item.period}</span>
@@ -433,21 +500,28 @@ function App() {
                 <h3>{content.research.speakingTitle}</h3>
               </div>
               <div className="recognition-list">
-                {content.research.recognitions.map((item) => (
+                {featuredRecognition ? (
                   <article
-                    className={`recognition-card kind-${item.kind}${item.badge ? ' is-featured' : ''}`}
-                    key={`${item.event}-${item.title}`}
+                    className={`recognition-card speaking-feature kind-${featuredRecognition.kind} is-featured`}
+                    key={`${featuredRecognition.event}-${featuredRecognition.title}`}
                   >
-                    <div className="recognition-meta">
-                      <span>{item.event}</span>
-                      {item.badge ? <strong>{item.badge}</strong> : null}
+                    <div className="speaking-feature-head">
+                      {FeaturedRecognitionIcon ? (
+                        <span className="speaking-feature-icon">
+                          <FeaturedRecognitionIcon aria-hidden="true" />
+                        </span>
+                      ) : null}
+                      <div className="recognition-meta">
+                        <span>{featuredRecognition.event}</span>
+                        {featuredRecognition.badge ? <strong>{featuredRecognition.badge}</strong> : null}
+                      </div>
                     </div>
-                    <h4>{item.title}</h4>
-                    <p>{item.detail}</p>
-                    {item.href ? (
+                    <h4>{featuredRecognition.title}</h4>
+                    <p>{featuredRecognition.detail}</p>
+                    {featuredRecognition.href ? (
                       <a
                         className="recognition-link"
-                        href={item.href}
+                        href={featuredRecognition.href}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -456,7 +530,23 @@ function App() {
                       </a>
                     ) : null}
                   </article>
-                ))}
+                ) : null}
+
+                {previousRecognitions.length > 0 ? (
+                  <div className="recognition-history">
+                    <h4 className="recognition-history-title">{content.research.previousTalksLabel}</h4>
+                    {previousRecognitions.map((item) => (
+                      <article
+                        className={`recognition-card recognition-compact kind-${item.kind}`}
+                        key={`${item.event}-${item.title}`}
+                      >
+                        <span>{item.event}</span>
+                        <h4>{item.title}</h4>
+                        <p>{item.detail}</p>
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </Reveal>
 
@@ -478,46 +568,74 @@ function App() {
                       className={`repo-card repo-${repo.tone}${repo.featured ? ' is-featured' : ''}`}
                       key={repo.name}
                     >
-                      {repo.featured ? (
-                        <strong className="repo-featured-label">{content.research.featuredLabel}</strong>
-                      ) : null}
-                      <div className="repo-card-head">
-                        <div>
-                          <span className="repo-kicker">
-                            <span style={{ backgroundColor: repo.languageColor }} />
-                            {repo.language}
-                          </span>
-                          <h4>{repo.name}</h4>
-                        </div>
+                      {repo.featured && repo.previewImage && repo.siteHref ? (
                         <a
-                          href={repo.href}
+                          className="repo-browser-preview"
+                          href={repo.siteHref}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={`${content.research.openRepoLabel}: ${repo.name}`}
-                          title={content.research.openRepoLabel}
+                          aria-label={content.research.openProjectLabel}
                         >
-                          <ExternalLink aria-hidden="true" />
+                          <span className="repo-browser-bar" aria-hidden="true">
+                            <span className="browser-dots"><i /><i /><i /></span>
+                            <span>labs.valentorassa.com</span>
+                            <ExternalLink />
+                          </span>
+                          <span className="repo-preview-image">
+                            <img
+                              src={repo.previewImage}
+                              alt="Open Security Labs"
+                              width="1200"
+                              height="750"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </span>
                         </a>
-                      </div>
-                      <p>{repo.description}</p>
-                      <TagList tags={repo.tags} />
-                      <div className="repo-meta">
-                        <span title={content.research.starsLabel}>
-                          <Star aria-hidden="true" />
-                          {stats.stars}
-                        </span>
-                        <span title={content.research.forksLabel}>
-                          <GitFork aria-hidden="true" />
-                          {stats.forks}
-                        </span>
-                        <span>
-                          <Calendar aria-hidden="true" />
-                          {content.research.updatedLabel} {formatUpdatedAt(stats.updatedAt)}
-                        </span>
-                        <span>
-                          <Code2 aria-hidden="true" />
-                          GitHub
-                        </span>
+                      ) : null}
+
+                      <div className="repo-card-body">
+                        {repo.featured ? (
+                          <strong className="repo-featured-label">{content.research.featuredLabel}</strong>
+                        ) : null}
+                        <div className="repo-card-head">
+                          <div>
+                            <span className="repo-kicker">
+                              <span style={{ backgroundColor: repo.languageColor }} />
+                              {repo.language}
+                            </span>
+                            <h4>{repo.name}</h4>
+                          </div>
+                          <a
+                            href={repo.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${content.research.openRepoLabel}: ${repo.name}`}
+                            title={content.research.openRepoLabel}
+                          >
+                            <ExternalLink aria-hidden="true" />
+                          </a>
+                        </div>
+                        <p>{repo.description}</p>
+                        <TagList tags={repo.tags} />
+                        <div className="repo-meta">
+                          <span title={content.research.starsLabel}>
+                            <Star aria-hidden="true" />
+                            {stats.stars}
+                          </span>
+                          <span title={content.research.forksLabel}>
+                            <GitFork aria-hidden="true" />
+                            {stats.forks}
+                          </span>
+                          <span>
+                            <Calendar aria-hidden="true" />
+                            {content.research.updatedLabel} {formatUpdatedAt(stats.updatedAt)}
+                          </span>
+                          <span>
+                            <Code2 aria-hidden="true" />
+                            GitHub
+                          </span>
+                        </div>
                       </div>
                     </article>
                   );
@@ -540,11 +658,27 @@ function App() {
           <Terminal aria-hidden="true" />
           <h2>{content.contact.title}</h2>
           <p>{content.contact.text}</p>
+          <div className="contact-presence" aria-label={content.contact.timezone}>
+            <span className="availability-indicator">
+              <i aria-hidden="true" />
+              {content.contact.availability}
+            </span>
+            <span>
+              <Clock3 aria-hidden="true" />
+              {content.contact.timezone}
+            </span>
+          </div>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="mailto:valentin.torassa.colombero@gmail.com">
+            <a className="btn btn-primary" href={`mailto:${contactEmail}`}>
               <Mail aria-hidden="true" />
-              Email
+              {content.contact.emailLabel}
             </a>
+            <button className="btn btn-secondary copy-email" type="button" onClick={copyEmail}>
+              {emailCopied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+              <span aria-live="polite">
+                {emailCopied ? content.contact.copiedEmailLabel : content.contact.copyEmailLabel}
+              </span>
+            </button>
             <a
               className="btn btn-secondary"
               href="https://github.com/ValentinTorassa"
@@ -665,6 +799,28 @@ function Reveal({ as = 'div', className, children, ...props }: RevealProps) {
   );
 }
 
+type SceneQuality = 'full' | 'reduced';
+
+function getScenePreference(): { enabled: boolean; quality: SceneQuality } {
+  const navigatorWithHints = navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+    deviceMemory?: number;
+  };
+  const connection = navigatorWithHints.connection;
+  const slowConnection = connection?.effectiveType === 'slow-2g' || connection?.effectiveType === '2g';
+  const constrainedDevice = (
+    (navigatorWithHints.deviceMemory !== undefined && navigatorWithHints.deviceMemory <= 4)
+    || navigator.hardwareConcurrency <= 4
+    || connection?.effectiveType === '3g'
+    || window.matchMedia('(max-width: 700px)').matches
+  );
+
+  return {
+    enabled: !connection?.saveData && !slowConnection,
+    quality: constrainedDevice ? 'reduced' : 'full',
+  };
+}
+
 function HeroScene() {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
@@ -675,9 +831,9 @@ function HeroScene() {
       return undefined;
     }
 
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const scenePreference = getScenePreference();
 
-    if (connection?.saveData) {
+    if (!scenePreference.enabled) {
       return undefined;
     }
 
@@ -685,6 +841,8 @@ function HeroScene() {
     let isDisposed = false;
     let idleHandle: number | undefined;
     let timeoutHandle: ReturnType<typeof globalThis.setTimeout> | undefined;
+    let visibilityObserver: IntersectionObserver | undefined;
+    let hasScheduledScene = false;
 
     const startScene = () => {
       void import('./threeRuntime').then((THREE) => {
@@ -693,7 +851,7 @@ function HeroScene() {
         }
 
         try {
-          disposeScene = setupHeroScene(THREE, container);
+          disposeScene = setupHeroScene(THREE, container, scenePreference.quality);
         } catch {
           container.classList.add('is-unavailable');
         }
@@ -702,14 +860,37 @@ function HeroScene() {
       });
     };
 
-    if (typeof window.requestIdleCallback === 'function') {
-      idleHandle = window.requestIdleCallback(startScene, { timeout: 900 });
+    const scheduleScene = () => {
+      if (hasScheduledScene) return;
+      hasScheduledScene = true;
+
+      if (typeof window.requestIdleCallback === 'function') {
+        idleHandle = window.requestIdleCallback(startScene, { timeout: 1200 });
+      } else {
+        timeoutHandle = globalThis.setTimeout(startScene, 120);
+      }
+    };
+
+    const heroContent = container.parentElement?.querySelector('.hero-inner') ?? container;
+
+    if ('IntersectionObserver' in window) {
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            visibilityObserver?.disconnect();
+            scheduleScene();
+          }
+        },
+        { threshold: 0.12 },
+      );
+      visibilityObserver.observe(heroContent);
     } else {
-      timeoutHandle = globalThis.setTimeout(startScene, 0);
+      scheduleScene();
     }
 
     return () => {
       isDisposed = true;
+      visibilityObserver?.disconnect();
 
       if (idleHandle !== undefined) {
         window.cancelIdleCallback(idleHandle);
@@ -726,7 +907,11 @@ function HeroScene() {
   return <div className="hero-scene" ref={mountRef} aria-hidden="true" />;
 }
 
-function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLDivElement) {
+function setupHeroScene(
+  THREE: typeof import('./threeRuntime'),
+  container: HTMLDivElement,
+  quality: SceneQuality,
+) {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const scene = new THREE.Scene();
@@ -735,10 +920,10 @@ function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLD
   const camera = new THREE.PerspectiveCamera(41, 1, 0.1, 100);
   const renderer = new THREE.WebGLRenderer({
     alpha: true,
-    antialias: true,
+    antialias: quality === 'full',
     depth: true,
     stencil: false,
-    powerPreference: 'high-performance',
+    powerPreference: quality === 'full' ? 'high-performance' : 'low-power',
   });
 
   renderer.setClearColor(0x000000, 0);
@@ -875,7 +1060,7 @@ function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLD
   topology.add(grid);
 
   const pseudoRandom = (seed: number) => Math.abs(Math.sin(seed * 12.9898) * 43758.5453) % 1;
-  const starPositions = new Float32Array(270);
+  const starPositions = new Float32Array(quality === 'full' ? 270 : 135);
   for (let index = 0; index < starPositions.length; index += 3) {
     const seed = index + 11;
     starPositions[index] = (pseudoRandom(seed) - 0.5) * 17;
@@ -888,7 +1073,7 @@ function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLD
   topology.add(starField);
   disposables.push(starGeometry);
 
-  const vertexPositions = new Float32Array(126);
+  const vertexPositions = new Float32Array(quality === 'full' ? 126 : 72);
   for (let index = 0; index < vertexPositions.length; index += 3) {
     const seed = index + 1;
     const side = seed % 2 === 0 ? -1 : 1;
@@ -1012,7 +1197,8 @@ function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLD
   disposables.push(linkGeometry);
 
   const packetGeometry = new THREE.OctahedronGeometry(0.058, 0);
-  const packets = linkSegments.map((segment, index) => {
+  const animatedLinkSegments = quality === 'full' ? linkSegments : linkSegments.slice(0, 4);
+  const packets = animatedLinkSegments.map((segment, index) => {
     const packet = new THREE.Mesh(packetGeometry, index % 2 === 0 ? packetMaterial : packetAltMaterial);
     topology.add(packet);
     return {
@@ -1047,7 +1233,8 @@ function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLD
     const height = container.clientHeight;
     if (!width || !height) return;
     const isCompact = width < 700;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isCompact ? 1.25 : 1.65));
+    const maxPixelRatio = quality === 'full' ? (isCompact ? 1.25 : 1.65) : 1;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.position.set(0, isCompact ? 0.1 : 0.28, isCompact ? 9.15 : 7.45);
@@ -1065,9 +1252,17 @@ function setupHeroScene(THREE: typeof import('./threeRuntime'), container: HTMLD
   let frame = 0;
   let running = false;
   let isIntersecting = true;
+  let previousFrameTime = 0;
   const clock = new THREE.Clock(false);
-  const render = () => {
+  const render = (frameTime = 0) => {
     if (!running) return;
+
+    if (quality === 'reduced' && frameTime - previousFrameTime < 32) {
+      frame = window.requestAnimationFrame(render);
+      return;
+    }
+
+    previousFrameTime = frameTime;
     const elapsed = clock.getElapsedTime();
     topology.rotation.y += (Math.sin(elapsed * 0.14) * 0.065 + pointerTarget.y - topology.rotation.y) * 0.035;
     topology.rotation.x += (Math.sin(elapsed * 0.1) * 0.014 + pointerTarget.x - topology.rotation.x) * 0.035;

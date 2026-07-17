@@ -5,6 +5,7 @@ import {
   SiClaude,
   SiComptia,
   SiDocker,
+  SiDebian,
   SiGithub,
   SiGithubactions,
   SiGnubash,
@@ -30,6 +31,7 @@ import {
 import consultingItLogo from './assets/companies/consulting-it.png';
 import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
+import openSecurityLabsPreview from './assets/open-security-labs-preview.webp';
 
 export type Language = 'es' | 'en';
 
@@ -56,10 +58,16 @@ export type FeaturedRepo = {
   tags: StackTag[];
   tone: string;
   featured?: boolean;
+  previewImage?: string;
+  siteHref?: string;
 };
 
 type PageContent = {
   documentTitle: string;
+  seo: {
+    description: string;
+    locale: 'es_AR' | 'en_US';
+  };
   header: {
     homeLabel: string;
     navLabel: string;
@@ -124,7 +132,9 @@ type PageContent = {
     speakingTitle: string;
     repositoriesTitle: string;
     featuredLabel: string;
+    previousTalksLabel: string;
     openTalkLabel: string;
+    openProjectLabel: string;
     openRepoLabel: string;
     starsLabel: string;
     forksLabel: string;
@@ -137,12 +147,18 @@ type PageContent = {
       kind: 'research' | 'speaker';
       badge?: string;
       href?: string;
+      icon?: IconType;
     }>;
     repos: FeaturedRepo[];
   };
   contact: {
     title: string;
     text: string;
+    emailLabel: string;
+    copyEmailLabel: string;
+    copiedEmailLabel: string;
+    timezone: string;
+    availability: string;
   };
 };
 
@@ -247,6 +263,8 @@ const repoFacts = {
     ],
     tone: 'learning',
     featured: true,
+    previewImage: openSecurityLabsPreview,
+    siteHref: 'https://labs.valentorassa.com',
   },
   terminal: {
     name: 'VT-Terminal-Project',
@@ -375,6 +393,10 @@ const enRepos: FeaturedRepo[] = [
 export const contentByLanguage: Record<Language, PageContent> = {
   es: {
     documentTitle: 'Valentín Torassa Colombero · Ciberseguridad y Backend',
+    seo: {
+      description: 'Ingeniero en ciberseguridad y backend especializado en seguridad cloud, arquitectura Go, Linux, compliance técnico y sistemas para agentes de IA.',
+      locale: 'es_AR',
+    },
     header: {
       homeLabel: 'Ir al inicio',
       navLabel: 'Secciones principales',
@@ -565,7 +587,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
+      previousTalksLabel: 'Charlas y reconocimientos anteriores',
       openTalkLabel: 'Ver agenda oficial',
+      openProjectLabel: 'Abrir Open Security Labs',
       openRepoLabel: 'Abrir repositorio',
       starsLabel: 'estrellas',
       forksLabel: 'forks',
@@ -579,6 +603,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           kind: 'speaker',
           badge: 'Próxima charla',
           href: 'https://debconf26.debconf.org/schedule/',
+          icon: SiDebian,
         },
         {
           event: 'Vincular Inteligente 2026',
@@ -610,10 +635,19 @@ export const contentByLanguage: Record<Language, PageContent> = {
     contact: {
       title: 'Contacto profesional.',
       text: 'Rosario, Argentina · conversaciones técnicas sobre seguridad cloud, backend, compliance, agentes de IA, Linux y arquitectura de sistemas.',
+      emailLabel: 'Enviar email',
+      copyEmailLabel: 'Copiar email',
+      copiedEmailLabel: 'Email copiado',
+      timezone: 'UTC−3 · Rosario',
+      availability: 'Disponible para conversaciones técnicas',
     },
   },
   en: {
     documentTitle: 'Valentin Torassa Colombero · Cybersecurity & Backend',
+    seo: {
+      description: 'Cybersecurity and backend engineer focused on cloud security, Go architecture, Linux, technical compliance, and systems for AI agents.',
+      locale: 'en_US',
+    },
     header: {
       homeLabel: 'Go to the top',
       navLabel: 'Main sections',
@@ -804,7 +838,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
+      previousTalksLabel: 'Previous talks and recognition',
       openTalkLabel: 'View official schedule',
+      openProjectLabel: 'Open Open Security Labs',
       openRepoLabel: 'Open repository',
       starsLabel: 'stars',
       forksLabel: 'forks',
@@ -818,6 +854,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           kind: 'speaker',
           badge: 'Upcoming talk',
           href: 'https://debconf26.debconf.org/schedule/',
+          icon: SiDebian,
         },
         {
           event: 'Vincular Inteligente 2026',
@@ -849,6 +886,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
     contact: {
       title: 'Professional contact.',
       text: 'Rosario, Argentina · technical conversations about cloud security, backend systems, compliance, AI agents, Linux, and systems architecture.',
+      emailLabel: 'Send email',
+      copyEmailLabel: 'Copy email',
+      copiedEmailLabel: 'Email copied',
+      timezone: 'UTC−3 · Rosario',
+      availability: 'Open to technical conversations',
     },
   },
 };
