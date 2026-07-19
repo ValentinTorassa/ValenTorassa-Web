@@ -31,7 +31,8 @@ import {
 import consultingItLogo from './assets/companies/consulting-it.png';
 import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
-import openSecurityLabsPreview from './assets/open-security-labs-preview.webp';
+import uaiCrest from './assets/companies/uai-crest.png';
+import openSecurityLabsPreview from './assets/open-security-labs-og.webp';
 
 export type Language = 'es' | 'en';
 
@@ -113,6 +114,7 @@ type PageContent = {
     title: string;
     academicTitle: string;
     certificationsTitle: string;
+    institutionLogo: string;
     items: Array<{ title: string; place: string; period: string; status: string }>;
     certifications: Array<{
       name: string;
@@ -170,12 +172,13 @@ type PageContent = {
     emailLabel: string;
     copyEmailLabel: string;
     copiedEmailLabel: string;
+    socialLabel: string;
+    youtubeLabel: string;
     timezone: string;
     availability: string;
   };
   footer: {
     tagline: string;
-    socialLabel: string;
     backToTopLabel: string;
     location: string;
   };
@@ -283,7 +286,7 @@ const repoFacts = {
     tone: 'learning',
     featured: true,
     previewImage: openSecurityLabsPreview,
-    siteHref: 'https://labs.valentorassa.com',
+    siteHref: 'https://securitylabs.valentorassa.com',
   },
   terminal: {
     name: 'VT-Terminal-Project',
@@ -576,6 +579,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Academia y certificaciones',
       academicTitle: 'Formación académica',
       certificationsTitle: 'Certificaciones',
+      institutionLogo: uaiCrest,
       items: [
         {
           title: 'Ingeniería en Sistemas Informáticos',
@@ -715,12 +719,13 @@ export const contentByLanguage: Record<Language, PageContent> = {
       emailLabel: 'Enviar email',
       copyEmailLabel: 'Copiar email',
       copiedEmailLabel: 'Email copiado',
+      socialLabel: 'Perfiles sociales',
+      youtubeLabel: 'Ver en YouTube',
       timezone: 'UTC−3 · Rosario',
       availability: 'Disponible para conversaciones técnicas',
     },
     footer: {
       tagline: 'Seguridad · sistemas · open source',
-      socialLabel: 'Redes de Valentin',
       backToTopLabel: 'Volver arriba',
       location: 'Rosario · UTC−3',
     },
@@ -841,6 +846,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Education and certifications',
       academicTitle: 'Academic background',
       certificationsTitle: 'Certifications',
+      institutionLogo: uaiCrest,
       items: [
         {
           title: 'Information Systems Engineering',
@@ -980,12 +986,13 @@ export const contentByLanguage: Record<Language, PageContent> = {
       emailLabel: 'Send email',
       copyEmailLabel: 'Copy email',
       copiedEmailLabel: 'Email copied',
+      socialLabel: 'Social profiles',
+      youtubeLabel: 'Watch on YouTube',
       timezone: 'UTC−3 · Rosario',
       availability: 'Open to technical conversations',
     },
     footer: {
       tagline: 'Security · systems · open source',
-      socialLabel: 'Valentin’s networks',
       backToTopLabel: 'Back to top',
       location: 'Rosario · UTC−3',
     },

@@ -56,7 +56,7 @@ type LiveRepoStats = Record<string, {
 
 const contactEmail = 'valentin.torassa.colombero@gmail.com';
 const canonicalBaseUrl = 'https://valentorassa.com/';
-const footerSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
+const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
 
 function setMetaContent(selector: string, content: string) {
   document.querySelector<HTMLMetaElement>(selector)?.setAttribute('content', content);
@@ -531,21 +531,33 @@ function App() {
           </div>
 
           <div className="split-grid">
-            <Reveal className="panel">
+            <Reveal className="panel education-panel">
               <div className="panel-title">
                 <GraduationCap aria-hidden="true" />
                 <h3>{content.education.academicTitle}</h3>
               </div>
               <div className="stack-list">
                 {content.education.items.map((item) => (
-                  <div className="stack-row" key={item.title}>
-                    <div>
-                      <strong>{item.title}</strong>
-                      <span>{item.place}</span>
+                  <div className="stack-row education-row" key={item.title}>
+                    <span className="education-entry-logo" aria-hidden="true">
+                      <img
+                        src={content.education.institutionLogo}
+                        alt=""
+                        width="150"
+                        height="199"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                    <div className="education-entry-content">
+                      <div>
+                        <strong>{item.title}</strong>
+                        <span>{item.place}</span>
+                      </div>
+                      <em>
+                        {item.period} · {item.status}
+                      </em>
                     </div>
-                    <em>
-                      {item.period} · {item.status}
-                    </em>
                   </div>
                 ))}
               </div>
@@ -657,6 +669,7 @@ function App() {
                   </div>
                 ) : null}
               </div>
+
             </Reveal>
 
             <Reveal className="panel github-panel">
@@ -666,6 +679,50 @@ function App() {
               </div>
               <div className="repo-grid">
                 {content.research.repos.map((repo) => {
+                  if (repo.featured && repo.previewImage && repo.siteHref) {
+                    return (
+                      <article className={`repo-unfurl-card repo-${repo.tone}`} key={repo.name}>
+                        <a
+                          className="repo-unfurl-media"
+                          href={repo.siteHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={content.research.openProjectLabel}
+                        >
+                          <img
+                            src={repo.previewImage}
+                            alt=""
+                            width="2212"
+                            height="1092"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <div className="repo-unfurl-copy">
+                          <div className="repo-unfurl-eyebrow">
+                            <strong>{content.research.featuredLabel}</strong>
+                            <span className="repo-kicker">
+                              <i style={{ backgroundColor: repo.languageColor }} />
+                              {repo.language}
+                            </span>
+                          </div>
+                          <h4>{repo.name}</h4>
+                          <p>{repo.description}</p>
+                          <div className="repo-unfurl-links">
+                            <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
+                              <span>securitylabs.valentorassa.com</span>
+                              <ExternalLink aria-hidden="true" />
+                            </a>
+                            <a href={repo.href} target="_blank" rel="noopener noreferrer">
+                              <Github aria-hidden="true" />
+                              <span>{content.research.openRepoLabel}</span>
+                            </a>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  }
+
                   const stats = liveRepoStats[repo.name] ?? {
                     stars: repo.stars,
                     forks: repo.forks,
@@ -674,43 +731,14 @@ function App() {
 
                   return (
                     <article
-                      className={`repo-card repo-${repo.tone}${repo.featured ? ' is-featured' : ''}`}
+                      className={`repo-card repo-${repo.tone}`}
                       key={repo.name}
                     >
-                      {repo.featured && repo.previewImage && repo.siteHref ? (
-                        <a
-                          className="repo-browser-preview"
-                          href={repo.siteHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={content.research.openProjectLabel}
-                        >
-                          <span className="repo-browser-bar" aria-hidden="true">
-                            <span className="browser-dots"><i /><i /><i /></span>
-                            <span>labs.valentorassa.com</span>
-                            <ExternalLink />
-                          </span>
-                          <span className="repo-preview-image">
-                            <img
-                              src={repo.previewImage}
-                              alt="Open Security Labs"
-                              width="1200"
-                              height="750"
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          </span>
-                        </a>
-                      ) : null}
-
                       <div className="repo-card-body">
-                        {repo.featured ? (
-                          <strong className="repo-featured-label">{content.research.featuredLabel}</strong>
-                        ) : null}
                         <div className="repo-card-head">
                           <div>
                             <span className="repo-kicker">
-                              <span style={{ backgroundColor: repo.languageColor }} />
+                              <i style={{ backgroundColor: repo.languageColor }} />
                               {repo.language}
                             </span>
                             <h4>{repo.name}</h4>
@@ -745,19 +773,17 @@ function App() {
                             GitHub
                           </span>
                         </div>
-                        {repo.featured ? null : (
-                          <button
-                            className="repo-details-trigger"
-                            type="button"
-                            onClick={(event) => {
-                              projectTriggerRef.current = event.currentTarget;
-                              setSelectedRepoName(repo.name);
-                            }}
-                          >
-                            <span>{content.research.projectDetailsLabel}</span>
-                            <ChevronRight aria-hidden="true" />
-                          </button>
-                        )}
+                        <button
+                          className="repo-details-trigger"
+                          type="button"
+                          onClick={(event) => {
+                            projectTriggerRef.current = event.currentTarget;
+                            setSelectedRepoName(repo.name);
+                          }}
+                        >
+                          <span>{content.research.projectDetailsLabel}</span>
+                          <ChevronRight aria-hidden="true" />
+                        </button>
                       </div>
                     </article>
                   );
@@ -790,7 +816,7 @@ function App() {
               {content.contact.timezone}
             </span>
           </div>
-          <div className="hero-actions">
+          <div className="contact-actions">
             <a className="btn btn-primary" href={`mailto:${contactEmail}`}>
               <Mail aria-hidden="true" />
               {content.contact.emailLabel}
@@ -801,46 +827,29 @@ function App() {
                 {emailCopied ? content.contact.copiedEmailLabel : content.contact.copyEmailLabel}
               </span>
             </button>
-            <a
-              className="btn btn-secondary"
-              href="https://github.com/ValentinTorassa"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Github aria-hidden="true" />
-              GitHub
-            </a>
+          </div>
+
+          <div className="contact-networks">
+            <nav className="contact-network-links" aria-label={content.contact.socialLabel}>
+              {contactSocialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-network={link.name.toLowerCase()}
+                >
+                  <SocialIcon link={link} />
+                  <span>{link.name === 'YouTube' ? content.contact.youtubeLabel : link.name}</span>
+                </a>
+              ))}
+            </nav>
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
         <div className="footer-shell">
-          <div className="footer-main">
-            <a className="footer-brand" href="#top" aria-label={`valentorassa — ${content.header.homeLabel}`}>
-              <MarkImage width={30} height={30} sizes="30px" />
-              <span>
-                <strong>valentorassa</strong>
-                <small>{content.footer.tagline}</small>
-              </span>
-            </a>
-
-            <nav className="footer-socials" aria-label={content.footer.socialLabel}>
-              {footerSocialLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.name}
-                  title={link.name}
-                >
-                  <SocialIcon link={link} />
-                </a>
-              ))}
-            </nav>
-          </div>
-
           <div className="footer-bottom">
             <span>© {new Date().getFullYear()} Valentin Torassa Colombero</span>
             <a href="#top">
@@ -947,7 +956,7 @@ function ProjectDrawer({ repo, labels, onClose, returnFocusTarget }: ProjectDraw
       >
         <div className="project-drawer-head">
           <span className="repo-kicker">
-            <span style={{ backgroundColor: repo.languageColor }} />
+            <i style={{ backgroundColor: repo.languageColor }} />
             {repo.language}
           </span>
           <button ref={closeRef} type="button" onClick={onClose} aria-label={labels.close}>
