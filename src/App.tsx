@@ -286,7 +286,8 @@ function App() {
     copyResetTimer.current = globalThis.setTimeout(() => setEmailCopied(false), 2200);
   };
 
-  const [featuredRecognition, ...previousRecognitions] = content.research.recognitions;
+  const [featuredRecognition, ...additionalUpcomingRecognitions] = content.research.upcomingRecognitions;
+  const previousRecognitions = content.research.recognitions;
   const FeaturedRecognitionIcon = featuredRecognition?.icon;
 
   return (
@@ -651,6 +652,33 @@ function App() {
                       </a>
                     ) : null}
                   </article>
+                ) : null}
+
+                {additionalUpcomingRecognitions.length > 0 ? (
+                  <div className="recognition-history">
+                    <h4 className="recognition-history-title">{content.research.upcomingTalksLabel}</h4>
+                    {additionalUpcomingRecognitions.map((item) => (
+                      <article
+                        className={`recognition-card recognition-compact kind-${item.kind}`}
+                        key={`${item.event}-${item.title}`}
+                      >
+                        <span>{item.event}</span>
+                        <h4>{item.title}</h4>
+                        <p>{item.detail}</p>
+                        {item.href ? (
+                          <a
+                            className="recognition-link"
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {content.research.openTalkLabel}
+                            <ExternalLink aria-hidden="true" />
+                          </a>
+                        ) : null}
+                      </article>
+                    ))}
+                  </div>
                 ) : null}
 
                 {previousRecognitions.length > 0 ? (
