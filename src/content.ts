@@ -141,6 +141,7 @@ type PageContent = {
     speakingTitle: string;
     repositoriesTitle: string;
     featuredLabel: string;
+    upcomingTalksLabel: string;
     previousTalksLabel: string;
     openTalkLabel: string;
     openProjectLabel: string;
@@ -155,6 +156,15 @@ type PageContent = {
     architectureLabel: string;
     securityLabel: string;
     visitProjectLabel: string;
+    upcomingRecognitions: Array<{
+      event: string;
+      title: string;
+      detail: string;
+      kind: 'research' | 'speaker';
+      badge?: string;
+      href?: string;
+      icon?: IconType;
+    }>;
     recognitions: Array<{
       event: string;
       title: string;
@@ -593,6 +603,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
           period: 'abr. 2022 — dic. 2024',
           status: 'Promedio 9,25 / 10',
         },
+        {
+          title: 'Módulo Pedagógico para Auxiliares en Docencia',
+          place: 'UAI · Diplomatura Académica en Docencia Universitaria',
+          period: '2026',
+          status: 'Certificado obtenido',
+        },
       ],
       certifications: [
         {
@@ -662,6 +678,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
+      upcomingTalksLabel: 'Próximas charlas confirmadas',
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
@@ -676,13 +693,35 @@ export const contentByLanguage: Record<Language, PageContent> = {
       architectureLabel: 'Arquitectura',
       securityLabel: 'Decisiones de seguridad',
       visitProjectLabel: 'Abrir proyecto',
+      upcomingRecognitions: [
+        {
+          event: 'Hacking Day 2026 · Paraná',
+          title: 'Firewall para agentes de IA: prompt injection en vivo',
+          detail: '2 de octubre de 2026. Charla de 45 minutos en Main Stage sobre permisos, policy enforcement y controles fuera del modelo.',
+          kind: 'speaker',
+          badge: 'Próxima charla',
+          href: 'https://www.hackingday.com.ar/',
+        },
+        {
+          event: 'JCC XXIV 2026 · Rosario',
+          title: 'Charla invitada sobre seguridad de sistemas',
+          detail: '21 al 23 de octubre de 2026. Sesión técnica de 45 minutos más preguntas; título, día y horario finales pendientes.',
+          kind: 'speaker',
+          href: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
+        },
+      ],
       recognitions: [
+        {
+          event: 'Webinar UAI · Tecnología Informática',
+          title: 'Orquestación, workers y arquitectura moderna: cómo diseñar sistemas que escalan',
+          detail: 'Webinar técnico realizado el 19 de agosto de 2026 sobre sistemas distribuidos, workers y decisiones de arquitectura.',
+          kind: 'speaker',
+        },
         {
           event: 'DebConf26 · Santa Fe',
           title: 'Abstraction Leaks: Why Understanding Linux Internals Still Matters',
-          detail: 'Viernes 24 de julio de 2026 · 10:00. Una charla sobre por qué comprender kernel, procesos, memoria y redes sigue siendo esencial detrás de las abstracciones modernas.',
+          detail: 'Charla realizada el 24 de julio de 2026 sobre por qué comprender kernel, procesos, memoria y redes sigue siendo esencial detrás de las abstracciones modernas.',
           kind: 'speaker',
-          badge: 'Próxima charla',
           href: 'https://debconf26.debconf.org/schedule/',
           icon: SiDebian,
         },
@@ -860,6 +899,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
           period: 'Apr. 2022 — Dec. 2024',
           status: 'GPA 9.25 / 10',
         },
+        {
+          title: 'Pedagogical Module for Teaching Assistants',
+          place: 'UAI · Academic Diploma in University Teaching pathway',
+          period: '2026',
+          status: 'Certificate obtained',
+        },
       ],
       certifications: [
         {
@@ -929,6 +974,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
+      upcomingTalksLabel: 'Confirmed upcoming talks',
       previousTalksLabel: 'Previous talks and recognition',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
@@ -943,13 +989,35 @@ export const contentByLanguage: Record<Language, PageContent> = {
       architectureLabel: 'Architecture',
       securityLabel: 'Security decisions',
       visitProjectLabel: 'Open project',
+      upcomingRecognitions: [
+        {
+          event: 'Hacking Day 2026 · Paraná',
+          title: 'Firewall for AI agents: live prompt injection',
+          detail: 'October 2, 2026. A 45-minute Main Stage talk on permissions, policy enforcement, and controls outside the model.',
+          kind: 'speaker',
+          badge: 'Upcoming talk',
+          href: 'https://www.hackingday.com.ar/',
+        },
+        {
+          event: 'JCC XXIV 2026 · Rosario',
+          title: 'Invited talk on real-world systems security',
+          detail: 'October 21–23, 2026. A 45-minute technical session plus Q&A; final title, date, and time are pending.',
+          kind: 'speaker',
+          href: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
+        },
+      ],
       recognitions: [
+        {
+          event: 'UAI Information Technology Webinar',
+          title: 'Orchestration, workers, and modern architecture: designing systems that scale',
+          detail: 'Technical webinar delivered on August 19, 2026, covering distributed systems, workers, and architectural decisions.',
+          kind: 'speaker',
+        },
         {
           event: 'DebConf26 · Santa Fe',
           title: 'Abstraction Leaks: Why Understanding Linux Internals Still Matters',
-          detail: 'Friday, July 24, 2026 · 10:00. A talk on why understanding kernels, processes, memory, and networking still matters behind modern abstractions.',
+          detail: 'Talk delivered on July 24, 2026, on why understanding kernels, processes, memory, and networking still matters behind modern abstractions.',
           kind: 'speaker',
-          badge: 'Upcoming talk',
           href: 'https://debconf26.debconf.org/schedule/',
           icon: SiDebian,
         },
