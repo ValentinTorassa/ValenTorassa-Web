@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy · mailctl</title>
+    <meta name="description" content="Privacy policy for mailctl, a local command-line email client that accesses Gmail through the Google API." />
+    <meta name="theme-color" content="#07090e" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg: #07090e;
+        --surface: #101721;
+        --line: rgba(166, 181, 205, 0.17);
+        --text: #f5f7fa;
+        --muted: #a9b4c4;
+        --faint: #7d8b9f;
+        --accent: #9c8cff;
+        --accent-2: #62dfd2;
+        --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        --display: 'Space Grotesk', Inter, system-ui, sans-serif;
+        --body: Manrope, Inter, system-ui, sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(circle at 50% -14%, rgba(98, 223, 210, 0.1), transparent 36rem),
+          linear-gradient(180deg, #07090e 0%, #090d14 52%, #07090e 100%);
+        background-attachment: fixed;
+        color: var(--text);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      main {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 5rem 1.5rem 4rem;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin: 0 0 0.75rem;
+      }
+
+      h1 {
+        font-family: var(--display);
+        font-size: clamp(1.9rem, 5vw, 2.6rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.75rem;
+      }
+
+      .updated {
+        font-family: var(--mono);
+        font-size: 0.82rem;
+        color: var(--faint);
+        margin: 0 0 2.5rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h2 {
+        font-family: var(--display);
+        font-size: 1.18rem;
+        letter-spacing: -0.01em;
+        margin: 2.75rem 0 0.85rem;
+        color: var(--text);
+      }
+
+      p { margin: 0 0 1rem; color: var(--muted); }
+
+      ul { margin: 0 0 1rem; padding-left: 1.15rem; color: var(--muted); }
+      li { margin-bottom: 0.55rem; }
+      li::marker { color: var(--accent); }
+
+      strong { color: var(--text); font-weight: 600; }
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 0.12em 0.42em;
+        color: var(--accent-2);
+        word-break: break-word;
+      }
+
+      a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(156, 140, 255, 0.35); }
+      a:hover { border-bottom-color: var(--accent); }
+
+      .callout {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-left: 2px solid var(--accent-2);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1.5rem 0;
+      }
+      .callout p:last-child { margin-bottom: 0; }
+
+      footer {
+        margin-top: 3.5rem;
+        padding-top: 1.75rem;
+        border-top: 1px solid var(--line);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--faint);
+      }
+
+      @media (max-width: 480px) {
+        main { padding: 3.5rem 1.15rem 3rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Privacy Policy</p>
+      <h1>mailctl</h1>
+      <p class="updated">Last updated: September 13, 2026</p>
+
+      <h2>What mailctl is</h2>
+      <p>
+        <strong>mailctl</strong> is a personal command-line email client. It runs entirely on the
+        machine of the person who installs it and reads and sends mail on behalf of that same
+        person's own accounts. There is no hosted service, no shared backend, and no server
+        operated by the developer that receives, stores, or processes your mail.
+      </p>
+
+      <h2>Google data mailctl accesses</h2>
+      <p>When you connect a Gmail account, mailctl requests these OAuth scopes:</p>
+      <ul>
+        <li><code>gmail.readonly</code> — to list and display your messages in the terminal.</li>
+        <li><code>gmail.send</code> — to send messages and replies that you compose.</li>
+        <li><code>gmail.modify</code> — to move a message to the trash when you run the trash command.</li>
+      </ul>
+      <p>
+        mailctl requests no scope beyond the ones above, and uses each only for the command you
+        explicitly run.
+      </p>
+
+      <h2>Where that data goes</h2>
+      <ul>
+        <li>
+          Message content is fetched from the Google API and written to your terminal. It is not
+          uploaded anywhere, and is not retained after the command finishes — except for
+          attachments you deliberately choose to save to disk.
+        </li>
+        <li>
+          OAuth tokens are stored on your own filesystem, under
+          <code>~/.config/mailctl/tokens</code>, with owner-only file permissions.
+        </li>
+        <li>
+          If you enable the optional triage sync, only the <strong>identifiers</strong> of threads you
+          marked as dismissed are synchronised, and only to infrastructure that you yourself operate
+          and configure. No message content, subject, sender, or body is included.
+        </li>
+      </ul>
+
+      <h2>What mailctl never does</h2>
+      <ul>
+        <li>It does not sell, rent, or share your data with anyone.</li>
+        <li>It does not transfer your data to any third party, advertiser, or data broker.</li>
+        <li>It does not use your data for advertising or for training any AI or machine-learning model.</li>
+        <li>It collects no telemetry, analytics, or usage statistics.</li>
+        <li>No human other than you ever reads your mail through mailctl.</li>
+      </ul>
+
+      <div class="callout">
+        <p>
+          <strong>Limited Use disclosure.</strong> mailctl's use and transfer of information received
+          from Google APIs to any other app will adhere to the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">Google API Services User Data Policy</a>,
+          including the Limited Use requirements.
+        </p>
+      </div>
+
+      <h2>Retention and deletion</h2>
+      <p>
+        Because all data stays on your own machine, you control its removal completely. Deleting the
+        <code>~/.config/mailctl</code> directory removes every stored token and all local state. To
+        revoke mailctl's access to your Google account at any time, visit
+        <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account → Third-party access</a>
+        and remove <strong>mailctl</strong>. Revoking access takes effect immediately and does not
+        require contacting the developer.
+      </p>
+
+      <h2>Security</h2>
+      <p>
+        Tokens are written with owner-only permissions and never leave your machine. All connections
+        to Google and to mail servers use TLS. Where supported, mailctl can read credentials from an
+        external password manager instead of storing them on disk at all.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        If this policy changes, the revised version will be posted at this same address with an
+        updated date at the top.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy or about mailctl's handling of your data:
+        <a href="mailto:valentintorassa21@gmail.com">valentintorassa21@gmail.com</a>
+      </p>
+
+      <footer>
+        Valentin Torassa Colombero · <a href="https://valentorassa.com/">valentorassa.com</a>
+      </footer>
+    </main>
+  </body>
+</html>
