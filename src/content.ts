@@ -722,7 +722,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           title: 'Abstraction Leaks: Why Understanding Linux Internals Still Matters',
           detail: 'Charla realizada el 24 de julio de 2026 sobre por qué comprender kernel, procesos, memoria y redes sigue siendo esencial detrás de las abstracciones modernas.',
           kind: 'speaker',
-          href: 'https://debconf26.debconf.org/schedule/',
+          href: 'https://debconf26.debconf.org/talks/75-abstraction-leaks-why-understanding-linux-internals-still-matters/',
           icon: SiDebian,
         },
         {
@@ -1018,7 +1018,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           title: 'Abstraction Leaks: Why Understanding Linux Internals Still Matters',
           detail: 'Talk delivered on July 24, 2026, on why understanding kernels, processes, memory, and networking still matters behind modern abstractions.',
           kind: 'speaker',
-          href: 'https://debconf26.debconf.org/schedule/',
+          href: 'https://debconf26.debconf.org/talks/75-abstraction-leaks-why-understanding-linux-internals-still-matters/',
           icon: SiDebian,
         },
         {
