@@ -33,3 +33,13 @@ npm run build
 npm run build
 npm run preview
 ```
+
+## Verificación de regresiones — 2026-09-14
+
+```bash
+npm ci
+npm run lint
+npm run build
+```
+
+GitHub Actions ejecuta los comandos existentes en cada PR y push a main/master. Los hechos públicos se revisan junto al perfil y sus fuentes en Brain; no actualizar cifras de memoria.
