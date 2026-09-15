@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons';
-import { FaAws, FaEnvelope, FaLinkedinIn } from 'react-icons/fa6';
+import { FaAws, FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
 import {
   SiAstro,
   SiClaude,
@@ -196,6 +196,11 @@ type PageContent = {
 
 export const socialLinks: SocialLink[] = [
   {
+    name: 'Blog',
+    href: 'https://vtsecurity.com.ar',
+    icon: FaPenNib,
+  },
+  {
     name: 'GitHub',
     href: 'https://github.com/ValentinTorassa',
     icon: SiGithub,
@@ -233,7 +238,7 @@ export const socialLinks: SocialLink[] = [
 ];
 
 export const headerSocialLinks = socialLinks.filter((link) =>
-  ['YouTube', 'TikTok', 'Instagram', 'X'].includes(link.name),
+  ['Blog', 'YouTube', 'TikTok', 'Instagram', 'X'].includes(link.name),
 );
 
 const cloudTags: StackTag[] = [
