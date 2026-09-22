@@ -293,7 +293,7 @@ function App() {
   return (
     <div className="site-shell">
       <header className="topbar" ref={headerRef}>
-        <a className="brand" href="#top" aria-label={`valentorassa — ${content.header.homeLabel}`}>
+        <a className="brand" href="#top" aria-label={`valentorassa - ${content.header.homeLabel}`}>
           <MarkImage width={34} height={34} sizes="34px" loading="eager" />
           <span>valentorassa</span>
         </a>
