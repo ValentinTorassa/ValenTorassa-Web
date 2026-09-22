@@ -548,7 +548,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Cybersecurity Engineer & Software Engineer',
           company: 'Teramot',
-          period: 'nov. 2025 — actualidad',
+          period: 'nov. 2025 - actualidad',
           description:
             'Liderazgo técnico de ciberseguridad y compliance en una startup de IA. Arquitectura principal de Aleph, un backend en Go para el acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
@@ -558,7 +558,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Cybersecurity & Compliance Analyst',
           company: 'Teramot',
-          period: 'jun. 2025 — nov. 2025',
+          period: 'jun. 2025 - nov. 2025',
           description:
             'Estructuración del área de seguridad, automatización de controles, evidencia de auditoría y hardening de infraestructura AWS para datos sensibles usados por agentes de IA.',
           tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
@@ -568,7 +568,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Analista de Ciberseguridad',
           company: 'Consulting IT',
-          period: 'ago. 2024 — jul. 2025',
+          period: 'ago. 2024 - jul. 2025',
           description:
             'Estrategia de seguridad para clientes de outsourcing, arquitectura de red segura, hardening, automatización y operación SOC con Sophos Central, Avast Business y Nagios.',
           tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
@@ -579,7 +579,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Ayudante de Cátedra · Arquitectura de Computadoras II',
           company: 'Universidad Abierta Interamericana',
-          period: 'sept. 2024 — jun. 2025',
+          period: 'sept. 2024 - jun. 2025',
           description:
             'Acompañamiento académico en arquitectura de procesadores, jerarquía de memoria, I/O y conceptos de sistemas de bajo nivel.',
           tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
@@ -599,13 +599,13 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           title: 'Ingeniería en Sistemas Informáticos',
           place: 'Universidad Abierta Interamericana',
-          period: 'abr. 2022 — dic. 2026',
+          period: 'abr. 2022 - dic. 2026',
           status: 'Último año',
         },
         {
           title: 'Analista de Sistemas Informáticos',
           place: 'Universidad Abierta Interamericana',
-          period: 'abr. 2022 — dic. 2024',
+          period: 'abr. 2022 - dic. 2024',
           status: 'Promedio 9,25 / 10',
         },
         {
@@ -765,13 +765,13 @@ export const contentByLanguage: Record<Language, PageContent> = {
       copiedEmailLabel: 'Email copiado',
       socialLabel: 'Perfiles sociales',
       youtubeLabel: 'Ver en YouTube',
-      timezone: 'UTC−3 · Rosario',
+      timezone: 'UTC-3 · Rosario',
       availability: 'Disponible para conversaciones técnicas',
     },
     footer: {
       tagline: 'Seguridad · sistemas · open source',
       backToTopLabel: 'Volver arriba',
-      location: 'Rosario · UTC−3',
+      location: 'Rosario · UTC-3',
     },
   },
   en: {
@@ -844,7 +844,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Cybersecurity Engineer & Software Engineer',
           company: 'Teramot',
-          period: 'Nov. 2025 — present',
+          period: 'Nov. 2025 - present',
           description:
             'Technical cybersecurity and compliance leadership at an AI startup. Principal architecture of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
@@ -854,7 +854,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Cybersecurity & Compliance Analyst',
           company: 'Teramot',
-          period: 'Jun. 2025 — Nov. 2025',
+          period: 'Jun. 2025 - Nov. 2025',
           description:
             'Built the security function, automated controls and audit evidence, and hardened AWS infrastructure for sensitive data used by AI agents.',
           tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
@@ -864,7 +864,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Cybersecurity Analyst',
           company: 'Consulting IT',
-          period: 'Aug. 2024 — Jul. 2025',
+          period: 'Aug. 2024 - Jul. 2025',
           description:
             'Security strategy for outsourcing clients, secure network architecture, hardening, automation, and SOC operations with Sophos Central, Avast Business, and Nagios.',
           tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
@@ -875,7 +875,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           role: 'Teaching Assistant · Computer Architecture II',
           company: 'Universidad Abierta Interamericana',
-          period: 'Sep. 2024 — Jun. 2025',
+          period: 'Sep. 2024 - Jun. 2025',
           description:
             'Academic support across processor architecture, memory hierarchies, I/O, and low-level systems concepts.',
           tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
@@ -895,13 +895,13 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           title: 'Information Systems Engineering',
           place: 'Universidad Abierta Interamericana',
-          period: 'Apr. 2022 — Dec. 2026',
+          period: 'Apr. 2022 - Dec. 2026',
           status: 'Final year',
         },
         {
           title: 'Information Systems Analyst',
           place: 'Universidad Abierta Interamericana',
-          period: 'Apr. 2022 — Dec. 2024',
+          period: 'Apr. 2022 - Dec. 2024',
           status: 'GPA 9.25 / 10',
         },
         {
@@ -1006,7 +1006,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           event: 'JCC XXIV 2026 · Rosario',
           title: 'Invited talk on real-world systems security',
-          detail: 'October 21–23, 2026. A 45-minute technical session plus Q&A; final title, date, and time are pending.',
+          detail: 'October 21-23, 2026. A 45-minute technical session plus Q&A; final title, date, and time are pending.',
           kind: 'speaker',
           href: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
         },
@@ -1061,13 +1061,13 @@ export const contentByLanguage: Record<Language, PageContent> = {
       copiedEmailLabel: 'Email copied',
       socialLabel: 'Social profiles',
       youtubeLabel: 'Watch on YouTube',
-      timezone: 'UTC−3 · Rosario',
+      timezone: 'UTC-3 · Rosario',
       availability: 'Open to technical conversations',
     },
     footer: {
       tagline: 'Security · systems · open source',
       backToTopLabel: 'Back to top',
-      location: 'Rosario · UTC−3',
+      location: 'Rosario · UTC-3',
     },
   },
 };

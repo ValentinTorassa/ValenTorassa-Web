@@ -34,7 +34,7 @@ npm run build
 npm run preview
 ```
 
-## Verificación de regresiones — 2026-09-14
+## Verificación de regresiones - 2026-09-14
 
 ```bash
 npm ci
