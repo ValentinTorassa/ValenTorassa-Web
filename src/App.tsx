@@ -1110,7 +1110,7 @@ function Reveal({ as = 'div', className, children, ...props }: RevealProps) {
           observer.disconnect();
         }
       },
-      { rootMargin: '0px 0px -80px' },
+      { rootMargin: '0px 0px 60px 0px' },
     );
 
     observer.observe(node);

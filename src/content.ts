@@ -352,23 +352,6 @@ const repoFacts = {
     ],
     tone: 'security',
   },
-  autoConfine: {
-    name: 'AutoConfine',
-    href: 'https://github.com/ValentinTorassa/AutoConfine',
-    language: 'Go',
-    languageColor: '#00add8',
-    stars: 0,
-    forks: 0,
-    updatedAt: '2026-06-21T03:07:00Z',
-    tags: [
-      { label: 'Go', icon: SiGo },
-      { label: 'Linux', icon: SiLinux },
-      'eBPF',
-      'seccomp',
-      { label: 'Docker', icon: SiDocker },
-    ],
-    tone: 'security',
-  },
 };
 
 const esRepos: FeaturedRepo[] = [
@@ -410,16 +393,6 @@ const esRepos: FeaturedRepo[] = [
       problem: 'Compartir credenciales por chat o email deja copias persistentes y difíciles de revocar.',
       architecture: 'Servicio en Go y Redis para secretos de una sola lectura, con cifrado y expiración coordinados desde el enlace.',
       security: 'AES-GCM, clave separada del servidor, eliminación después de la primera lectura y TTL como defensa adicional.',
-    },
-  },
-  {
-    ...repoFacts.autoConfine,
-    description:
-      'Generación automática de perfiles seccomp mínimos para contenedores OCI mediante observación del kernel con eBPF.',
-    caseStudy: {
-      problem: 'Los contenedores suelen ejecutar perfiles seccomp genéricos con más syscalls de las necesarias.',
-      architecture: 'Observación de syscalls con eBPF y generación en Go de una política mínima compatible con runtimes OCI.',
-      security: 'Enfoque allowlist, salida revisable antes de aplicar y reducción explícita de la superficie del kernel.',
     },
   },
 ];
@@ -465,16 +438,6 @@ const enRepos: FeaturedRepo[] = [
       security: 'AES-GCM, a key kept separate from the server, deletion after first access, and TTL as an additional safeguard.',
     },
   },
-  {
-    ...repoFacts.autoConfine,
-    description:
-      'Automatic generation of minimal seccomp profiles for OCI containers through eBPF-based kernel observation.',
-    caseStudy: {
-      problem: 'Containers often run generic seccomp profiles that permit more syscalls than the workload requires.',
-      architecture: 'eBPF syscall observation with Go-based generation of a minimal policy for OCI runtimes.',
-      security: 'Allowlist design, reviewable output before enforcement, and explicit reduction of kernel attack surface.',
-    },
-  },
 ];
 
 export const contentByLanguage: Record<Language, PageContent> = {
@@ -513,7 +476,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       {
         prompt: '$',
         command: 'certs --active',
-        output: 'CompTIA Security+, AWS CCP, Linux FCA, HCIA Datacom',
+        output: 'CompTIA Security+, AWS CCP, LFCA, HCIA Datacom',
       },
     ],
     profile: {
@@ -546,7 +509,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Trayectoria profesional',
       items: [
         {
-          role: 'Cybersecurity Engineer & Software Engineer',
+          role: 'Cybersecurity Engineer & Software Architect',
           company: 'Teramot',
           period: 'nov. 2025 - actualidad',
           description:
@@ -556,7 +519,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           logoMode: 'symbol',
         },
         {
-          role: 'Cybersecurity & Compliance Analyst',
+          role: 'Analista de Ciberseguridad y Compliance',
           company: 'Teramot',
           period: 'jun. 2025 - nov. 2025',
           description:
@@ -809,7 +772,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       {
         prompt: '$',
         command: 'certs --active',
-        output: 'CompTIA Security+, AWS CCP, Linux FCA, HCIA Datacom',
+        output: 'CompTIA Security+, AWS CCP, LFCA, HCIA Datacom',
       },
     ],
     profile: {
@@ -842,7 +805,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Professional experience',
       items: [
         {
-          role: 'Cybersecurity Engineer & Software Engineer',
+          role: 'Cybersecurity Engineer & Software Architect',
           company: 'Teramot',
           period: 'Nov. 2025 - present',
           description:

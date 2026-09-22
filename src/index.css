@@ -351,7 +351,7 @@ img {
   border-radius: 10px;
   background:
     radial-gradient(circle at 100% 0%, rgba(84, 230, 214, 0.12), transparent 46%),
-    linear-gradient(145deg, rgba(16, 23, 33, 0.98), rgba(7, 9, 14, 0.98));
+    linear-gradient(145deg, #101721, #07090e);
   box-shadow:
     0 28px 70px -24px rgba(0, 0, 0, 0.92),
     inset 0 1px 0 rgba(255, 255, 255, 0.045);
@@ -974,6 +974,13 @@ p {
 .reveal-item.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+@media print {
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 @keyframes scroll-x {
