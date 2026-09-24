@@ -43,3 +43,11 @@ npm run build
 ```
 
 GitHub Actions ejecuta los comandos existentes en cada PR y push a main/master. Los hechos públicos se revisan junto al perfil y sus fuentes en Brain; no actualizar cifras de memoria.
+
+## License
+
+The source code is licensed under the [Apache License 2.0](LICENSE).
+
+The content is not: the CV text, photos, logos and other personal material in this
+repository are © Valentín Torassa Colombero, all rights reserved.
+
