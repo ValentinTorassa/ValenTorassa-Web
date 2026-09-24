@@ -8,14 +8,17 @@ import { expect, test, type Page } from '@playwright/test';
  *   whose only "route" state is the `?lang=es|en` query param read in
  *   getInitialLanguage(). Without it the language comes from localStorage or
  *   the browser. In-page navigation is hash anchors (#profile, #experience...).
+ * - eventos.html is a second Vite entry (src/eventos.tsx), built to
+ *   dist/eventos.html and served at /eventos. It reads `?lang=` the same way.
  * - public/*.html are standalone static pages. vercel.json sets cleanUrls, so
  *   production serves them without the .html suffix; `vite preview` does the same.
- * - public/sitemap.xml lists /, /?lang=es and /?lang=en.
+ * - public/sitemap.xml lists /, /?lang=es, /?lang=en and /eventos.
  */
 const ROUTES = [
   { path: '/', name: 'home' },
   { path: '/?lang=es', name: 'home-es' },
   { path: '/?lang=en', name: 'home-en' },
+  { path: '/eventos', name: 'eventos' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
 ] as const;
