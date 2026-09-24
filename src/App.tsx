@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import {
-  ArrowUp,
+  ArrowRight,
+  Award,
   BookOpen,
   Calendar,
   Check,
@@ -13,13 +14,11 @@ import {
   Github,
   GraduationCap,
   Mail,
-  Menu,
   ShieldCheck,
   Star,
   Terminal,
   X,
 } from 'lucide-react';
-import { AR, US } from 'country-flag-icons/react/3x2';
 import portraitAvif256 from './assets/portrait-dark-256.avif';
 import portraitAvif384 from './assets/portrait-dark-384.avif';
 import portraitAvif512 from './assets/portrait-dark-512.avif';
@@ -27,26 +26,23 @@ import portraitWebp256 from './assets/portrait-dark-256.webp';
 import portraitWebp384 from './assets/portrait-dark-384.webp';
 import portraitWebp512 from './assets/portrait-dark-512.webp';
 import portraitFallback from './assets/portrait-dark-384.png';
-import vtMarkAvif96 from './assets/vt-mark-96.avif';
-import vtMarkAvif160 from './assets/vt-mark-160.avif';
-import vtMarkWebp96 from './assets/vt-mark-96.webp';
-import vtMarkWebp160 from './assets/vt-mark-160.webp';
-import vtMarkFallback from './assets/vt-mark-160.png';
 import {
   contentByLanguage,
-  headerSocialLinks,
   socialLinks,
+  talkLabelsByLanguage,
   type FeaturedRepo,
   type Language,
-  type SocialLink,
   type StackTag,
 } from './content';
+import { talks, type Talk } from './events';
+import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
+import { getInitialLanguage, setMetaContent } from './site';
+import { MarkImage, SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
+import { TalkChips } from './talkComponents';
 
 const portraitAvifSrcSet = `${portraitAvif256} 256w, ${portraitAvif384} 384w, ${portraitAvif512} 512w`;
 const portraitWebpSrcSet = `${portraitWebp256} 256w, ${portraitWebp384} 384w, ${portraitWebp512} 512w`;
 const portraitSizes = '(max-width: 520px) 156px, 172px';
-const vtMarkAvifSrcSet = `${vtMarkAvif96} 96w, ${vtMarkAvif160} 160w`;
-const vtMarkWebpSrcSet = `${vtMarkWebp96} 96w, ${vtMarkWebp160} 160w`;
 
 type LiveRepoStats = Record<string, {
   stars: number;
@@ -57,26 +53,6 @@ type LiveRepoStats = Record<string, {
 const contactEmail = 'valentin.torassa.colombero@gmail.com';
 const canonicalBaseUrl = 'https://valentorassa.com/';
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
-
-function setMetaContent(selector: string, content: string) {
-  document.querySelector<HTMLMetaElement>(selector)?.setAttribute('content', content);
-}
-
-function getInitialLanguage(): Language {
-  const requestedLanguage = new URLSearchParams(window.location.search).get('lang');
-
-  if (requestedLanguage === 'es' || requestedLanguage === 'en') {
-    return requestedLanguage;
-  }
-
-  const savedLanguage = window.localStorage.getItem('vt-language');
-
-  if (savedLanguage === 'es' || savedLanguage === 'en') {
-    return savedLanguage;
-  }
-
-  return window.navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en';
-}
 
 function useLiveRepoStats() {
   const [stats, setStats] = useState<LiveRepoStats>({});
@@ -127,10 +103,8 @@ function App() {
   const [activeExperienceIndex, setActiveExperienceIndex] = useState(-1);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [emailCopied, setEmailCopied] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedRepoName, setSelectedRepoName] = useState<string | null>(null);
   const copyResetTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
-  const headerRef = useRef<HTMLElement | null>(null);
   const projectTriggerRef = useRef<HTMLButtonElement | null>(null);
   const liveRepoStats = useLiveRepoStats();
   const content = contentByLanguage[language];
@@ -158,30 +132,6 @@ function App() {
       globalThis.clearTimeout(copyResetTimer.current);
     }
   }, []);
-
-  useEffect(() => {
-    if (!mobileMenuOpen) return undefined;
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMobileMenuOpen(false);
-    };
-    const closeOutside = (event: PointerEvent) => {
-      if (!headerRef.current?.contains(event.target as Node)) setMobileMenuOpen(false);
-    };
-    const closeOnDesktop = () => {
-      if (window.matchMedia('(min-width: 720px)').matches) setMobileMenuOpen(false);
-    };
-
-    document.addEventListener('keydown', closeOnEscape);
-    document.addEventListener('pointerdown', closeOutside);
-    window.addEventListener('resize', closeOnDesktop);
-
-    return () => {
-      document.removeEventListener('keydown', closeOnEscape);
-      document.removeEventListener('pointerdown', closeOutside);
-      window.removeEventListener('resize', closeOnDesktop);
-    };
-  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const sectionIds = content.navItems.map((item) => item.href.slice(1));
@@ -286,112 +236,32 @@ function App() {
     copyResetTimer.current = globalThis.setTimeout(() => setEmailCopied(false), 2200);
   };
 
-  const [featuredRecognition, ...additionalUpcomingRecognitions] = content.research.upcomingRecognitions;
-  const previousRecognitions = content.research.recognitions;
-  const FeaturedRecognitionIcon = featuredRecognition?.icon;
+  // Talks come from src/events.ts: the next three open to the public, then the
+  // past talks flagged as highlights. /eventos lists all of them.
+  const talkLabels = talkLabelsByLanguage[language];
+  const today = todayInArgentina();
+  const currentYear = today.slice(0, 4);
+  const { upcoming: upcomingTalks, past: pastTalks } = splitTalks(talks, today);
+  const [featuredTalk, ...moreUpcomingTalks] = upcomingTalks.filter((talk) => talk.status !== 'closed').slice(0, 3);
+  const highlightedPastTalks = pastTalks.filter((talk) => talk.highlight);
+  const talkWhen = (talk: Talk) => [
+    formatTalkDate(talk, language, currentYear),
+    formatTalkTime(talk),
+    formatTalkPlace(talk, language),
+  ].filter(Boolean).join(' · ');
 
   return (
     <div className="site-shell">
-      <header className="topbar" ref={headerRef}>
-        <a className="brand" href="#top" aria-label={`valentorassa - ${content.header.homeLabel}`}>
-          <MarkImage width={34} height={34} sizes="34px" loading="eager" />
-          <span>valentorassa</span>
-        </a>
-
-        <nav className="nav-links" aria-label={content.header.navLabel}>
-          {content.navItems.map((item) => {
-            const sectionId = item.href.slice(1);
-            const isActive = activeSection === sectionId;
-
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                className={isActive ? 'is-active' : undefined}
-                aria-current={isActive ? 'location' : undefined}
-              >
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="header-actions">
-          <div className="social-actions">
-            {headerSocialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.name}
-                title={link.name}
-              >
-                <SocialIcon link={link} />
-              </a>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className="language-toggle"
-            onClick={() => {
-              setLanguage((current) => current === 'es' ? 'en' : 'es');
-              setMobileMenuOpen(false);
-            }}
-            aria-label={`${content.header.languageLabel}: ${
-              language === 'es' ? content.header.englishLabel : content.header.spanishLabel
-            }`}
-            title={language === 'es' ? content.header.englishLabel : content.header.spanishLabel}
-          >
-            {language === 'es' ? <AR aria-hidden="true" /> : <US aria-hidden="true" />}
-          </button>
-
-          <button
-            type="button"
-            className="mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen((current) => !current)}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-navigation"
-            aria-label={mobileMenuOpen ? content.header.closeMenuLabel : content.header.menuLabel}
-          >
-            {mobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          </button>
-        </div>
-
-        {mobileMenuOpen ? (
-          <div className="mobile-nav-panel" id="mobile-navigation">
-            <nav aria-label={content.header.navLabel}>
-              {content.navItems.map((item, index) => {
-                const sectionId = item.href.slice(1);
-                const isActive = activeSection === sectionId;
-
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className={isActive ? 'is-active' : undefined}
-                    aria-current={isActive ? 'location' : undefined}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <span>0{index + 1}</span>
-                    <strong>{item.label}</strong>
-                    <ChevronRight aria-hidden="true" />
-                  </a>
-                );
-              })}
-            </nav>
-            <div className="mobile-nav-meta">
-              <span><i aria-hidden="true" />{content.footer.location}</span>
-              <span>{content.footer.tagline}</span>
-            </div>
-          </div>
-        ) : null}
-
-        <span className="scroll-progress" aria-hidden="true">
-          <span style={{ transform: `scaleX(${scrollProgress})` }} />
-        </span>
-      </header>
+      <SiteHeader
+        language={language}
+        onToggleLanguage={() => setLanguage((current) => current === 'es' ? 'en' : 'es')}
+        labels={content.header}
+        navItems={content.navItems}
+        brandHref="#top"
+        activeSection={activeSection}
+        scrollProgress={scrollProgress}
+        meta={content.footer}
+      />
 
       <main>
         <section className="hero" id="top">
@@ -622,28 +492,25 @@ function App() {
                 <h3>{content.research.speakingTitle}</h3>
               </div>
               <div className="recognition-list">
-                {featuredRecognition ? (
+                {featuredTalk ? (
                   <article
-                    className={`recognition-card speaking-feature kind-${featuredRecognition.kind} is-featured`}
-                    key={`${featuredRecognition.event}-${featuredRecognition.title}`}
+                    className="recognition-card speaking-feature kind-speaker is-featured"
+                    key={featuredTalk.id}
                   >
                     <div className="speaking-feature-head">
-                      {FeaturedRecognitionIcon ? (
-                        <span className="speaking-feature-icon">
-                          <FeaturedRecognitionIcon aria-hidden="true" />
-                        </span>
-                      ) : null}
                       <div className="recognition-meta">
-                        <span>{featuredRecognition.event}</span>
-                        {featuredRecognition.badge ? <strong>{featuredRecognition.badge}</strong> : null}
+                        <span>{[featuredTalk.event, featuredTalk.track].filter(Boolean).join(' · ')}</span>
+                        <strong>{content.research.nextTalkLabel}</strong>
                       </div>
                     </div>
-                    <h4>{featuredRecognition.title}</h4>
-                    <p>{featuredRecognition.detail}</p>
-                    {featuredRecognition.href ? (
+                    <h4>{featuredTalk.title[language]}</h4>
+                    <p>{talkWhen(featuredTalk)}</p>
+                    {featuredTalk.note ? <p className="recognition-note">{featuredTalk.note[language]}</p> : null}
+                    <TalkChips talk={featuredTalk} labels={talkLabels} showStatus />
+                    {featuredTalk.url ? (
                       <a
                         className="recognition-link"
-                        href={featuredRecognition.href}
+                        href={featuredTalk.url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -654,21 +521,22 @@ function App() {
                   </article>
                 ) : null}
 
-                {additionalUpcomingRecognitions.length > 0 ? (
+                {moreUpcomingTalks.length > 0 ? (
                   <div className="recognition-history">
                     <h4 className="recognition-history-title">{content.research.upcomingTalksLabel}</h4>
-                    {additionalUpcomingRecognitions.map((item) => (
+                    {moreUpcomingTalks.map((talk) => (
                       <article
-                        className={`recognition-card recognition-compact kind-${item.kind}`}
-                        key={`${item.event}-${item.title}`}
+                        className="recognition-card recognition-compact kind-speaker"
+                        key={talk.id}
                       >
-                        <span>{item.event}</span>
-                        <h4>{item.title}</h4>
-                        <p>{item.detail}</p>
-                        {item.href ? (
+                        <span>{[talk.event, talk.track].filter(Boolean).join(' · ')}</span>
+                        <h4>{talk.title[language]}</h4>
+                        <p>{talkWhen(talk)}</p>
+                        <TalkChips talk={talk} labels={talkLabels} showStatus />
+                        {talk.url ? (
                           <a
                             className="recognition-link"
-                            href={item.href}
+                            href={talk.url}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -681,23 +549,38 @@ function App() {
                   </div>
                 ) : null}
 
-                {previousRecognitions.length > 0 ? (
+                {highlightedPastTalks.length > 0 ? (
                   <div className="recognition-history">
                     <h4 className="recognition-history-title">{content.research.previousTalksLabel}</h4>
-                    {previousRecognitions.map((item) => (
+                    {highlightedPastTalks.map((talk) => (
                       <article
-                        className={`recognition-card recognition-compact kind-${item.kind}`}
-                        key={`${item.event}-${item.title}`}
+                        className={`recognition-card recognition-compact kind-${talk.recognition ? 'research' : 'speaker'}`}
+                        key={talk.id}
                       >
-                        <span>{item.event}</span>
-                        <h4>{item.title}</h4>
-                        <p>{item.detail}</p>
+                        <span>
+                          {talk.datePrecision === 'year'
+                            ? talk.event
+                            : `${talk.event} · ${formatTalkDate(talk, language, currentYear)}`}
+                        </span>
+                        <h4>{talk.title[language]}</h4>
+                        {talk.recognition ? (
+                          <p className="recognition-award">
+                            <Award aria-hidden="true" />
+                            {talk.recognition[language]}
+                          </p>
+                        ) : null}
+                        {talk.note ? <p>{talk.note[language]}</p> : null}
                       </article>
                     ))}
                   </div>
                 ) : null}
               </div>
 
+              <a className="talks-page-link" href="/eventos">
+                <Calendar aria-hidden="true" />
+                {content.research.allTalksLabel}
+                <ArrowRight aria-hidden="true" />
+              </a>
             </Reveal>
 
             <Reveal className="panel github-panel">
@@ -876,17 +759,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="footer-shell">
-          <div className="footer-bottom">
-            <span>© {new Date().getFullYear()} Valentin Torassa Colombero</span>
-            <a href="#top">
-              {content.footer.backToTopLabel}
-              <ArrowUp aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter backToTopLabel={content.footer.backToTopLabel} />
 
       {selectedRepo ? (
         <ProjectDrawer
@@ -1037,14 +910,6 @@ type TerminalLine = {
   output: string;
 };
 
-type MarkImageProps = {
-  className?: string;
-  width: number;
-  height: number;
-  sizes: string;
-  loading?: 'eager' | 'lazy';
-};
-
 type RevealProps = HTMLAttributes<HTMLElement> & {
   as?: 'div' | 'article';
   children: ReactNode;
@@ -1063,24 +928,6 @@ function PortraitImage() {
         height={172}
         decoding="async"
         fetchPriority="high"
-      />
-    </picture>
-  );
-}
-
-function MarkImage({ className, width, height, sizes, loading = 'lazy' }: MarkImageProps) {
-  return (
-    <picture>
-      <source type="image/avif" srcSet={vtMarkAvifSrcSet} sizes={sizes} />
-      <source type="image/webp" srcSet={vtMarkWebpSrcSet} sizes={sizes} />
-      <img
-        className={className}
-        src={vtMarkFallback}
-        alt=""
-        width={width}
-        height={height}
-        loading={loading}
-        decoding="async"
       />
     </picture>
   );
@@ -1709,11 +1556,6 @@ function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }
       </div>
     </div>
   );
-}
-
-function SocialIcon({ link }: { link: SocialLink }) {
-  const Icon = link.icon;
-  return <Icon aria-hidden="true" />;
 }
 
 function TagList({ tags, variant }: { tags: StackTag[]; variant?: 'colorful' }) {

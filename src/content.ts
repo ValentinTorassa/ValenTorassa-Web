@@ -5,7 +5,6 @@ import {
   SiClaude,
   SiComptia,
   SiDocker,
-  SiDebian,
   SiGithub,
   SiGithubactions,
   SiGnubash,
@@ -33,6 +32,7 @@ import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
 import uaiCrest from './assets/companies/uai-crest.png';
 import openSecurityLabsPreview from './assets/open-security-labs-og.webp';
+import type { TalkMode, TalkStatus } from './events';
 
 export type Language = 'es' | 'en';
 
@@ -68,22 +68,26 @@ export type FeaturedRepo = {
   };
 };
 
+export type HeaderLabels = {
+  homeLabel: string;
+  navLabel: string;
+  languageLabel: string;
+  spanishLabel: string;
+  englishLabel: string;
+  menuLabel: string;
+  closeMenuLabel: string;
+};
+
+export type NavItem = { label: string; href: string };
+
 type PageContent = {
   documentTitle: string;
   seo: {
     description: string;
     locale: 'es_AR' | 'en_US';
   };
-  header: {
-    homeLabel: string;
-    navLabel: string;
-    languageLabel: string;
-    spanishLabel: string;
-    englishLabel: string;
-    menuLabel: string;
-    closeMenuLabel: string;
-  };
-  navItems: Array<{ label: string; href: string }>;
+  header: HeaderLabels;
+  navItems: NavItem[];
   status: string;
   heroRole: string;
   heroSocialLabel: string;
@@ -143,6 +147,8 @@ type PageContent = {
     featuredLabel: string;
     upcomingTalksLabel: string;
     previousTalksLabel: string;
+    nextTalkLabel: string;
+    allTalksLabel: string;
     openTalkLabel: string;
     openProjectLabel: string;
     openRepoLabel: string;
@@ -156,24 +162,6 @@ type PageContent = {
     architectureLabel: string;
     securityLabel: string;
     visitProjectLabel: string;
-    upcomingRecognitions: Array<{
-      event: string;
-      title: string;
-      detail: string;
-      kind: 'research' | 'speaker';
-      badge?: string;
-      href?: string;
-      icon?: IconType;
-    }>;
-    recognitions: Array<{
-      event: string;
-      title: string;
-      detail: string;
-      kind: 'research' | 'speaker';
-      badge?: string;
-      href?: string;
-      icon?: IconType;
-    }>;
     repos: FeaturedRepo[];
   };
   contact: {
@@ -646,8 +634,10 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
-      upcomingTalksLabel: 'Próximas charlas confirmadas',
+      upcomingTalksLabel: 'Próximas charlas',
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
+      nextTalkLabel: 'Próxima charla',
+      allTalksLabel: 'Ver todas las charlas',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
       openRepoLabel: 'Abrir repositorio',
@@ -661,63 +651,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       architectureLabel: 'Arquitectura',
       securityLabel: 'Decisiones de seguridad',
       visitProjectLabel: 'Abrir proyecto',
-      upcomingRecognitions: [
-        {
-          event: 'Hacking Day 2026 · Paraná',
-          title: 'Firewall para agentes de IA: prompt injection en vivo',
-          detail: '2 de octubre de 2026. Charla de 45 minutos en Main Stage sobre permisos, policy enforcement y controles fuera del modelo.',
-          kind: 'speaker',
-          badge: 'Próxima charla',
-          href: 'https://www.hackingday.com.ar/',
-        },
-        {
-          event: 'JCC XXIV 2026 · Rosario',
-          title: 'Charla invitada sobre seguridad de sistemas',
-          detail: '21 al 23 de octubre de 2026. Sesión técnica de 45 minutos más preguntas; título, día y horario finales pendientes.',
-          kind: 'speaker',
-          href: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
-        },
-      ],
-      recognitions: [
-        {
-          event: 'Webinar UAI · Tecnología Informática',
-          title: 'Orquestación, workers y arquitectura moderna: cómo diseñar sistemas que escalan',
-          detail: 'Webinar técnico realizado el 19 de agosto de 2026 sobre sistemas distribuidos, workers y decisiones de arquitectura.',
-          kind: 'speaker',
-        },
-        {
-          event: 'DebConf26 · Santa Fe',
-          title: 'Abstraction Leaks: Why Understanding Linux Internals Still Matters',
-          detail: 'Charla realizada el 24 de julio de 2026 sobre por qué comprender kernel, procesos, memoria y redes sigue siendo esencial detrás de las abstracciones modernas.',
-          kind: 'speaker',
-          href: 'https://debconf26.debconf.org/talks/75-abstraction-leaks-why-understanding-linux-internals-still-matters/',
-          icon: SiDebian,
-        },
-        {
-          event: 'Vincular Inteligente 2026',
-          title: 'Seguridad con IA',
-          detail: 'Monitoreo inteligente, respuesta temprana y automatización aplicada a defensa.',
-          kind: 'speaker',
-        },
-        {
-          event: 'CyberSecTuc Meetup #3',
-          title: 'La realidad de un Ingeniero en Ciberseguridad',
-          detail: 'Charla sobre carrera, criterio técnico y trabajo práctico en seguridad.',
-          kind: 'speaker',
-        },
-        {
-          event: 'CACIC 2024',
-          title: 'Expositor Distinguido en Seguridad Informática',
-          detail: 'Reverse shells aplicadas a pruebas de penetración y análisis ofensivo.',
-          kind: 'research',
-        },
-        {
-          event: 'SACS / 53 JAIIO 2024',
-          title: 'Mejor Exposición',
-          detail: 'Investigación sobre botnets, comportamiento distribuido y taxonomía de amenazas.',
-          kind: 'research',
-        },
-      ],
       repos: esRepos,
     },
     contact: {
@@ -942,8 +875,10 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
-      upcomingTalksLabel: 'Confirmed upcoming talks',
+      upcomingTalksLabel: 'Upcoming talks',
       previousTalksLabel: 'Previous talks and recognition',
+      nextTalkLabel: 'Upcoming talk',
+      allTalksLabel: 'See all talks',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
       openRepoLabel: 'Open repository',
@@ -957,63 +892,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       architectureLabel: 'Architecture',
       securityLabel: 'Security decisions',
       visitProjectLabel: 'Open project',
-      upcomingRecognitions: [
-        {
-          event: 'Hacking Day 2026 · Paraná',
-          title: 'Firewall for AI agents: live prompt injection',
-          detail: 'October 2, 2026. A 45-minute Main Stage talk on permissions, policy enforcement, and controls outside the model.',
-          kind: 'speaker',
-          badge: 'Upcoming talk',
-          href: 'https://www.hackingday.com.ar/',
-        },
-        {
-          event: 'JCC XXIV 2026 · Rosario',
-          title: 'Invited talk on real-world systems security',
-          detail: 'October 21-23, 2026. A 45-minute technical session plus Q&A; final title, date, and time are pending.',
-          kind: 'speaker',
-          href: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
-        },
-      ],
-      recognitions: [
-        {
-          event: 'UAI Information Technology Webinar',
-          title: 'Orchestration, workers, and modern architecture: designing systems that scale',
-          detail: 'Technical webinar delivered on August 19, 2026, covering distributed systems, workers, and architectural decisions.',
-          kind: 'speaker',
-        },
-        {
-          event: 'DebConf26 · Santa Fe',
-          title: 'Abstraction Leaks: Why Understanding Linux Internals Still Matters',
-          detail: 'Talk delivered on July 24, 2026, on why understanding kernels, processes, memory, and networking still matters behind modern abstractions.',
-          kind: 'speaker',
-          href: 'https://debconf26.debconf.org/talks/75-abstraction-leaks-why-understanding-linux-internals-still-matters/',
-          icon: SiDebian,
-        },
-        {
-          event: 'Vincular Inteligente 2026',
-          title: 'Security with AI',
-          detail: 'Intelligent monitoring, early response, and automation applied to defensive security.',
-          kind: 'speaker',
-        },
-        {
-          event: 'CyberSecTuc Meetup #3',
-          title: 'The reality of working as a Cybersecurity Engineer',
-          detail: 'A practical talk about career development, technical judgment, and security work.',
-          kind: 'speaker',
-        },
-        {
-          event: 'CACIC 2024',
-          title: 'Distinguished Speaker in Information Security',
-          detail: 'Reverse shells applied to penetration testing and offensive analysis.',
-          kind: 'research',
-        },
-        {
-          event: 'SACS / 53 JAIIO 2024',
-          title: 'Best Presentation',
-          detail: 'Research on botnets, distributed behavior, and threat taxonomy.',
-          kind: 'research',
-        },
-      ],
       repos: enRepos,
     },
     contact: {
@@ -1032,5 +910,109 @@ export const contentByLanguage: Record<Language, PageContent> = {
       backToTopLabel: 'Back to top',
       location: 'Rosario · UTC-3',
     },
+  },
+};
+
+export type TalkLabels = {
+  status: Record<TalkStatus, string>;
+  mode: Record<TalkMode, string>;
+  officialLinkLabel: string;
+  slidesLabel: string;
+  talkCount: { one: string; other: string };
+};
+
+/** Chips and links shared by /eventos and the home speaking panel. */
+export const talkLabelsByLanguage: Record<Language, TalkLabels> = {
+  es: {
+    status: {
+      confirmed: 'Confirmado',
+      tentative: 'Tentativo',
+      tbd: 'Horario a confirmar',
+      closed: 'Por invitación',
+    },
+    mode: {
+      presencial: 'Presencial',
+      virtual: 'Virtual',
+    },
+    officialLinkLabel: 'Página oficial',
+    slidesLabel: 'Slides',
+    talkCount: { one: 'charla', other: 'charlas' },
+  },
+  en: {
+    status: {
+      confirmed: 'Confirmed',
+      tentative: 'Tentative',
+      tbd: 'Time TBC',
+      closed: 'Invite only',
+    },
+    mode: {
+      presencial: 'In person',
+      virtual: 'Online',
+    },
+    officialLinkLabel: 'Official page',
+    slidesLabel: 'Slides',
+    talkCount: { one: 'talk', other: 'talks' },
+  },
+};
+
+type EventsPageContent = {
+  documentTitle: string;
+  seo: {
+    description: string;
+    locale: 'es_AR' | 'en_US';
+  };
+  navItems: NavItem[];
+  eyebrow: string;
+  title: string;
+  intro: string;
+  timezoneNote: string;
+  upcomingTitle: string;
+  pastTitle: string;
+  emptyUpcoming: string;
+  emptyPast: string;
+};
+
+export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
+  es: {
+    documentTitle: 'Eventos y charlas · Valentín Torassa',
+    seo: {
+      description: 'Charlas, clases y presentaciones de Valentín Torassa Colombero sobre ciberseguridad, backend y agentes de IA: próximas fechas y charlas anteriores.',
+      locale: 'es_AR',
+    },
+    navItems: [
+      { label: 'Inicio', href: '/' },
+      { label: 'Próximas', href: '#proximas' },
+      { label: 'Pasadas', href: '#pasadas' },
+      { label: 'Contacto', href: '/#contact' },
+    ],
+    eyebrow: '// eventos',
+    title: 'Eventos y charlas',
+    intro: 'Dónde me vas a ver: charlas, clases y presentaciones de papers, con fecha, lugar y estado de cada una.',
+    timezoneNote: 'Horarios de Argentina (UTC-3)',
+    upcomingTitle: 'Próximas',
+    pastTitle: 'Pasadas',
+    emptyUpcoming: 'No hay charlas anunciadas por ahora.',
+    emptyPast: 'Todavía no hay charlas pasadas cargadas.',
+  },
+  en: {
+    documentTitle: 'Events and talks · Valentín Torassa',
+    seo: {
+      description: 'Talks, classes, and paper presentations by Valentin Torassa Colombero on cybersecurity, backend systems, and AI agents: upcoming dates and past talks.',
+      locale: 'en_US',
+    },
+    navItems: [
+      { label: 'Home', href: '/' },
+      { label: 'Upcoming', href: '#proximas' },
+      { label: 'Past', href: '#pasadas' },
+      { label: 'Contact', href: '/#contact' },
+    ],
+    eyebrow: '// events',
+    title: 'Events and talks',
+    intro: 'Where to catch me: talks, classes, and paper presentations, each with its date, venue, and status.',
+    timezoneNote: 'Times are Argentina time (UTC-3)',
+    upcomingTitle: 'Upcoming',
+    pastTitle: 'Past',
+    emptyUpcoming: 'No talks announced right now.',
+    emptyPast: 'No past talks listed yet.',
   },
 };
