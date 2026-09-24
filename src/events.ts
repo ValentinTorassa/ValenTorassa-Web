@@ -199,18 +199,18 @@ export const talks: Talk[] = [
   },
   {
     id: 'ekoparty-2026-devsecops-space',
-    date: '2026-10-07',
-    endDate: '2026-10-09',
+    date: '2026-10-09',
+    time: '10:30',
     event: ekoparty,
     track: 'DevSecOps Space',
     title: {
       es: 'GitOps: cuando la fuente de verdad también es el riesgo',
       en: 'GitOps: when the source of truth is also the risk',
     },
-    place: { es: cec, en: cec },
+    place: { es: `${cec}, Sala A3`, en: `${cec}, Room A3` },
     city: 'Buenos Aires',
     mode: 'presencial',
-    status: 'tbd',
+    status: 'confirmed',
     url: 'https://ekodevsecops.space/',
   },
   {
