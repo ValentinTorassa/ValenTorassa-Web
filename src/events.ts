@@ -50,6 +50,7 @@ export type Talk = {
   status: TalkStatus;
   /** Official event or talk page. */
   url?: string;
+  /** Public slides. The page shows the link from the talk's day on (Argentina time). */
   slidesUrl?: string;
   note?: Localized;
   /** Award or distinction received for the talk. */
@@ -111,6 +112,7 @@ export const talks: Talk[] = [
     mode: 'presencial',
     status: 'confirmed',
     url: 'https://www.hackingday.com.ar/',
+    slidesUrl: 'https://drive.google.com/file/d/1ELc0PAu_XoN2Z0rSs594N_mPxt2WtPee/view',
     note: {
       es: 'Charla de 45 minutos sobre permisos, policy enforcement y controles fuera del modelo.',
       en: 'A 45-minute talk on permissions, policy enforcement, and controls outside the model.',
@@ -181,6 +183,8 @@ export const talks: Talk[] = [
     city: 'Buenos Aires',
     mode: 'presencial',
     status: 'confirmed',
+
+    slidesUrl: 'https://drive.google.com/file/d/16Bf12aZ-_Yt0zhHgGhPFsEsE5kvaxQI1/view',
   },
   {
     id: 'ekoparty-2026-ai-resilience-hub',

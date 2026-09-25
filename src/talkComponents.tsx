@@ -5,7 +5,9 @@ import {
   formatTalkPlace,
   formatTalkTime,
   groupConsecutiveByEvent,
+  slidesAvailable,
   talkDateParts,
+  todayInArgentina,
 } from './eventSchedule';
 
 type TalkChipsProps = {
@@ -107,6 +109,7 @@ function TalkCard({ talk, language, labels, currentYear, isPast, inGroup = false
   const place = formatTalkPlace(talk, language);
   const kicker = inGroup ? talk.track : [talk.event, talk.track].filter(Boolean).join(' · ');
   const Title = inGroup ? 'h4' : 'h3';
+  const slidesUrl = slidesAvailable(talk, todayInArgentina()) ? talk.slidesUrl : undefined;
 
   return (
     <article className={`talk-card status-${talk.status}`} id={talk.id}>
@@ -148,7 +151,7 @@ function TalkCard({ talk, language, labels, currentYear, isPast, inGroup = false
 
         <div className="talk-footer">
           <TalkChips talk={talk} labels={labels} showStatus={!isPast} />
-          {talk.url || talk.slidesUrl ? (
+          {talk.url || slidesUrl ? (
             <div className="talk-links">
               {talk.url ? (
                 <a href={talk.url} target="_blank" rel="noopener noreferrer">
@@ -156,8 +159,8 @@ function TalkCard({ talk, language, labels, currentYear, isPast, inGroup = false
                   <ArrowUpRight aria-hidden="true" />
                 </a>
               ) : null}
-              {talk.slidesUrl ? (
-                <a href={talk.slidesUrl} target="_blank" rel="noopener noreferrer">
+              {slidesUrl ? (
+                <a href={slidesUrl} target="_blank" rel="noopener noreferrer">
                   <Presentation aria-hidden="true" />
                   {labels.slidesLabel}
                 </a>

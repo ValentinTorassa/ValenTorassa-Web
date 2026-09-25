@@ -40,6 +40,14 @@ function lastDay(talk: Talk) {
 }
 
 /** A talk is past once its last day is before `today` (Argentina). */
+/**
+ * Slides show up from the talk's day on, so a deck published ahead of time does
+ * not give the talk (or its live demo) away the week before.
+ */
+export function slidesAvailable(talk: Talk, today: string): boolean {
+  return Boolean(talk.slidesUrl) && talk.date <= today;
+}
+
 export function isPastTalk(talk: Talk, today: string) {
   return lastDay(talk) < today;
 }
