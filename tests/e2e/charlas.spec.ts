@@ -6,7 +6,8 @@ import path from 'node:path';
  * /charlas lists every talk in src/events.ts on a 3D stage with a selector
  * below. The selected talk comes from the URL (/charlas/<id> in production,
  * #<id> or ?c=<id> anywhere) and, like /eventos, the deck and its preview only
- * open from the talk's day on in Argentina, so each test pins the date.
+ * open from the talk's day on in Argentina, so each test pins the date. Papers
+ * (src/research.ts) open from the button too, and those without a talk get a card.
  */
 const BEFORE_EKOPARTY = new Date('2026-09-25T15:00:00Z');
 const OWASP_DAY = new Date('2026-10-07T15:00:00Z');
@@ -71,6 +72,27 @@ test.describe('/charlas', () => {
     await page.locator('#card-debconf26').click();
     await expect(page.locator('#card-debconf26')).toHaveAttribute('aria-selected', 'true');
     await expect(page.locator('.hub-name')).toContainText('Abstraction Leaks');
+  });
+
+  test('a talk with no slides opens its paper', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    await page.clock.setFixedTime(BEFORE_EKOPARTY);
+    await page.goto('/charlas?lang=es#sacs-jaiio-2024');
+    await expect(page.locator('a.hub-open')).toHaveText(/Leer el paper/);
+    await expect(page.locator('a.hub-open')).toHaveAttribute('href', 'https://revistas.unlp.edu.ar/JAIIO/article/view/17896');
+    await expect(page.locator('.hub-screen img')).toHaveAttribute('src', '/charlas/sacs-jaiio-2024/paper.webp');
+  });
+
+  test('papers of their own have a card, with the paper as the picture', async ({ page }) => {
+    await page.clock.setFixedTime(BEFORE_EKOPARTY);
+    await page.goto('/charlas?lang=es');
+    await page.locator('#card-wicc-2025-scada').click();
+    await expect(page.locator('.hub-name')).toContainText('Dockerización de servidores SCADA');
+    await expect(page.locator('.hub-soon.is-paper')).toHaveText('Póster');
+    await expect(page.locator('.hub-meta')).toContainText('Con Santiago Roatta y María Eugenia Casco');
+    await expect(page.locator('a.hub-open')).toHaveAttribute('href', 'https://sedici.unlp.edu.ar/handle/10915/183861');
+    await expect(page.locator('.hub-screen img')).toHaveAttribute('src', '/charlas/wicc-2025-scada/still.webp');
   });
 
   test('the landing page and /eventos link here', async ({ page }) => {

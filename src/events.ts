@@ -336,8 +336,9 @@ export const talks: Talk[] = [
   },
   {
     id: 'sacs-jaiio-2024',
-    date: '2024-01-01',
-    datePrecision: 'year',
+    // SACS ran inside the 53 JAIIO, Bahía Blanca, 12-16 Aug 2024.
+    date: '2024-08-01',
+    datePrecision: 'month',
     event: 'SACS / 53 JAIIO 2024',
     title: {
       es: 'Botnets: estado del arte y taxonomía de una amenaza sigilosa',

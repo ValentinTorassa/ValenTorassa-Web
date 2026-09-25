@@ -10,6 +10,8 @@ import type { Talk } from './events';
  *   crossfade of a few slides for a static deck). Like the slides link, it is
  *   shown from the talk's day on, so the page never gives the talk away early.
  * - cover: a still of the deck for past talks that have no Tux.
+ * - page: the first page of the talk's paper (src/research.ts), shown on the
+ *   screen of a past talk that has no deck.
  * - slides: how many slides the deck has, shown in the stats.
  * - code: the repository the talk is built on.
  * - icon: the lucide icon the background dots draw for the talk.
@@ -32,6 +34,7 @@ export type TalkMedia = {
   reel?: string;
   poster?: string;
   cover?: string;
+  page?: string;
   slides?: number;
   code?: string;
   /** The deck itself, hosted here with its animations and without speaker notes. */
@@ -156,11 +159,13 @@ export const talkMedia: Record<string, TalkMedia> = {
     icon: 'cap',
     still: `${base('cacic-2024')}/still.webp`,
     thumb: `${base('cacic-2024')}/thumb.webp`,
+    page: `${base('cacic-2024')}/paper.webp`,
   },
   'sacs-jaiio-2024': {
     icon: 'book',
     still: `${base('sacs-jaiio-2024')}/still.webp`,
     thumb: `${base('sacs-jaiio-2024')}/thumb.webp`,
+    page: `${base('sacs-jaiio-2024')}/paper.webp`,
   },
 };
 

@@ -27,8 +27,9 @@ import { charlasPageByLanguage, type Language } from './content';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, isPastTalk, slidesAvailable, todayInArgentina } from './eventSchedule';
 import type { HubScene } from './hubScene';
+import { paperMedia, paperOfTalk, papers, type Paper } from './research';
 import { getInitialLanguage, setMetaContent } from './site';
-import { talkMedia, type TalkIcon } from './talkMedia';
+import { talkMedia, type TalkIcon, type TalkMedia } from './talkMedia';
 
 const ICONS: Record<TalkIcon, ComponentType<LucideProps>> = {
   terminal: Terminal, lock: Lock, shield: Shield, 'pull-request': GitPullRequest, key: KeyRound, castle: Castle,
@@ -36,10 +37,41 @@ const ICONS: Record<TalkIcon, ComponentType<LucideProps>> = {
   link: Link, users: Users, cap: GraduationCap, book: BookOpen,
 };
 
-/** Oldest to newest, like a row of saves: the selector opens on the next talk. */
-const roster = [...talks].sort((a, b) => `${a.date} ${a.time ?? ''}`.localeCompare(`${b.date} ${b.time ?? ''}`));
+/** A card in the hub: a talk (with the paper it presented, if any) or a paper of its own. */
+type Entry = Talk & { kind: 'talk' | Paper['kind']; paper?: Paper };
 
-const iconOf = (talk: Talk): TalkIcon => talkMedia[talk.id]?.icon ?? 'layers';
+const paperEntry = (paper: Paper): Entry => ({
+  id: paper.id,
+  date: paper.date,
+  datePrecision: paper.datePrecision,
+  event: paper.venue,
+  track: paper.track,
+  city: paper.city,
+  title: paper.title,
+  status: 'confirmed',
+  kind: paper.kind,
+  paper,
+});
+
+/** Oldest to newest, like a row of saves: the selector opens on the next talk. */
+const roster: Entry[] = [
+  ...talks.map((talk): Entry => ({ ...talk, kind: 'talk', paper: paperOfTalk(talk.id) })),
+  ...papers.filter((paper) => !paper.talk).map(paperEntry),
+].sort((a, b) => `${a.date} ${a.time ?? ''}`.localeCompare(`${b.date} ${b.time ?? ''}`));
+
+const mediaOf = (entry: Entry): TalkMedia =>
+  entry.kind === 'talk' ? talkMedia[entry.id] ?? {} : entry.paper ? paperMedia(entry.paper) : {};
+
+const iconOf = (entry: Entry): TalkIcon => mediaOf(entry).icon ?? 'layers';
+
+/**
+ * What Enter and the main button open: from the talk's day on, the hosted deck
+ * (or the PDF when there is none); otherwise the paper, if the entry has one.
+ */
+function openUrlOf(entry: Entry, today: string): string | undefined {
+  const slides = entry.date <= today ? mediaOf(entry).deck ?? (slidesAvailable(entry, today) ? entry.slidesUrl : undefined) : undefined;
+  return slides ?? entry.paper?.url;
+}
 
 /** `/charlas/<id>` in production (a vercel.json rewrite), `#<id>` or `?c=<id>` anywhere. */
 function idFromLocation(): string | null {
@@ -88,12 +120,14 @@ function CharlasPage() {
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const talk = roster[selected];
-  const media = talkMedia[talk.id] ?? {};
+  const media = mediaOf(talk);
   const dayHasCome = talk.date <= today;
   const slidesUrl = slidesAvailable(talk, today) ? talk.slidesUrl : undefined;
   // The hosted deck (with its animations) opens first; the Drive PDF stays as the download.
   const deckUrl = dayHasCome ? media.deck ?? slidesUrl : undefined;
+  const openUrl = openUrlOf(talk, today);
   const hasSlides = Boolean(media.deck || talk.slidesUrl);
+  const coauthors = talk.kind !== 'talk' && talk.paper ? talk.paper.authors.slice(1) : [];
   const showReel = Boolean(media.reel) && dayHasCome && !reducedMotion();
   const date = formatTalkDate(talk, language, currentYear);
   const meta = [
@@ -101,6 +135,7 @@ function CharlasPage() {
     [date, formatTalkTime(talk)].filter(Boolean).join(', '),
     media.slides ? copy.slides(media.slides) : '',
     talk.track ?? '',
+    coauthors.length ? copy.coauthors(coauthors) : '',
   ].filter(Boolean);
 
   useEffect(() => {
@@ -187,11 +222,7 @@ function CharlasPage() {
         event.preventDefault();
         select(event.key === 'Home' ? 0 : roster.length - 1, onCard);
       } else if (event.key === 'Enter' && (onCard || !target?.closest('a, button'))) {
-        const current = roster[selectedRef.current];
-        const deck = talkMedia[current.id]?.deck;
-        const open = current.date <= todayInArgentina()
-          ? deck ?? (slidesAvailable(current, todayInArgentina()) ? current.slidesUrl : undefined)
-          : undefined;
+        const open = openUrlOf(roster[selectedRef.current], todayInArgentina());
         if (open) {
           event.preventDefault();
           if (open.startsWith('/')) window.location.assign(open);
@@ -236,7 +267,11 @@ function CharlasPage() {
           <p className="hub-count">
             <i aria-hidden="true" />
             {pad(selected + 1)} / {pad(roster.length)}
-            {!isPastTalk(talk, today) ? <span className="hub-soon">{copy.upcoming}</span> : null}
+            {talk.kind !== 'talk' ? (
+              <span className="hub-soon is-paper">{copy.kinds[talk.kind]}</span>
+            ) : !isPastTalk(talk, today) ? (
+              <span className="hub-soon">{copy.upcoming}</span>
+            ) : null}
           </p>
           <h1>{copy.title}</h1>
           <h2 className={`hub-name${talk.title[language].length > 90 ? ' is-long' : ''}`} key={talk.id}>
@@ -246,13 +281,13 @@ function CharlasPage() {
           {talk.recognition ? <p className="hub-note">{talk.recognition[language]}</p> : null}
 
           <div className="hub-actions">
-            {deckUrl ? (
+            {openUrl ? (
               <a
                 className="hub-open"
-                href={deckUrl}
-                {...(deckUrl.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                href={openUrl}
+                {...(openUrl.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
               >
-                {copy.openLabel}
+                {deckUrl ? copy.openLabel : copy.paperLabel}
                 <ArrowRight aria-hidden="true" />
               </a>
             ) : (
@@ -262,6 +297,12 @@ function CharlasPage() {
               <a className="hub-link" href={slidesUrl} target="_blank" rel="noopener noreferrer">
                 <FileDown aria-hidden="true" />
                 PDF
+              </a>
+            ) : null}
+            {deckUrl && talk.paper ? (
+              <a className="hub-link" href={talk.paper.url} target="_blank" rel="noopener noreferrer">
+                <BookOpen aria-hidden="true" />
+                {copy.kinds[talk.paper.kind]}
               </a>
             ) : null}
             {media.code && dayHasCome ? (
@@ -290,6 +331,8 @@ function CharlasPage() {
               <video src={media.reel} poster={media.poster} autoPlay muted loop playsInline />
             ) : dayHasCome && media.poster ? (
               <img src={media.poster} alt="" />
+            ) : dayHasCome && media.page ? (
+              <img src={media.page} alt="" />
             ) : media.still ? (
               <img src={media.still} alt="" />
             ) : media.cover ? (
@@ -311,7 +354,7 @@ function CharlasPage() {
       <nav className="hub-deck" aria-label={copy.listLabel}>
         <div className="hub-deck-row" role="listbox" aria-label={copy.listLabel} aria-activedescendant={`card-${talk.id}`}>
           {roster.map((item, index) => {
-            const itemMedia = talkMedia[item.id] ?? {};
+            const itemMedia = mediaOf(item);
             const picture = itemMedia.thumb ?? itemMedia.cover;
             const isSelected = index === selected;
             return (
@@ -335,7 +378,9 @@ function CharlasPage() {
                     <em>{glyph(item)}</em>
                   )}
                 </span>
-                <span className="deck-label">{item.track ?? item.event}</span>
+                <span className="deck-label">
+                  {item.kind !== 'talk' ? `${copy.kinds[item.kind]} · ${item.event}` : item.track ?? item.event}
+                </span>
                 <span className="deck-date">{formatTalkDate(item, language, currentYear)}</span>
                 <span className="sr-only">{item.title[language]}</span>
               </button>
