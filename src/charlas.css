@@ -452,11 +452,72 @@ a.hub-open:focus-visible {
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 44px, #000 calc(100% - 44px), transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 44px, #000 calc(100% - 44px), transparent 100%);
   gap: 14px;
-  /* Half the row on each side: any card, the first and the last included, can sit in the middle. */
-  padding: 10px calc(50% - var(--card-w) / 2) 6px;
+  padding: 10px 0 6px;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
+}
+
+/*
+ * Half the row on each side, so any card, the first and the last included, can sit in the
+ * middle. Spacers rather than padding: padding would also push the sticky year cuts inward.
+ */
+.hub-deck-row::before,
+.hub-deck-row::after {
+  flex: none;
+  width: calc(50% - var(--card-w) / 2 - 14px);
+  content: '';
+}
+
+/* A year: its cut and its entries. The cut sticks inside its group, so the next year pushes it out. */
+.deck-group {
+  display: flex;
+  flex: none;
+  gap: 14px;
+}
+
+/* The cut that opens each year: the year, big, over a rule. Clicking it jumps to the year. */
+.deck-year {
+  position: sticky;
+  left: 30px;
+  z-index: 1;
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  align-self: stretch;
+  margin-left: 10px;
+  padding: 10px 28px 0 18px;
+  border: 0;
+  border-left: 1px solid rgba(166, 181, 205, 0.18);
+  /* The entries slide under it and fade, instead of showing through the numbers. */
+  background: linear-gradient(90deg, #0b0d12 72%, rgba(11, 13, 18, 0));
+  color: rgba(243, 241, 234, 0.22);
+  font-family: var(--display);
+  font-size: 3.4rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.82;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.deck-group:first-child .deck-year {
+  margin-left: 0;
+}
+
+.deck-year:hover {
+  color: rgba(243, 241, 234, 0.5);
+}
+
+.deck-year.is-current {
+  border-left-color: var(--mint);
+  color: var(--paper);
+}
+
+.deck-year:focus-visible {
+  outline: 1px solid var(--paper);
+  outline-offset: 4px;
 }
 
 .deck-card {
@@ -602,6 +663,23 @@ a.hub-open:focus-visible {
 
   .hub-deck-row {
     --card-w: 132px;
+  }
+
+  /* On a phone a wide cut would cover the centered card: the year turns into a thin vertical tab. */
+  .deck-year {
+    left: 6px;
+    align-items: center;
+    padding: 0 16px 0 8px;
+    font-size: 1.9rem;
+    transform: rotate(180deg);
+    writing-mode: vertical-rl;
+    background: linear-gradient(270deg, #0b0d12 60%, rgba(11, 13, 18, 0));
+    border-left: 0;
+    border-right: 1px solid rgba(166, 181, 205, 0.18);
+  }
+
+  .deck-year.is-current {
+    border-right-color: var(--mint);
   }
 }
 

@@ -1049,6 +1049,8 @@ type CharlasPageContent = {
   officialLabel: string;
   hintOpen: string;
   hintMove: string;
+  hintYear: string;
+  yearLabel: (year: string) => string;
 };
 
 const list = (names: string[], and: string) =>
@@ -1079,6 +1081,8 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     officialLabel: 'Página oficial',
     hintOpen: 'abrir',
     hintMove: 'elegir',
+    hintYear: 'año',
+    yearLabel: (year) => `Ir a ${year}`,
   },
   en: {
     documentTitle: 'Talks · Valentín Torassa',
@@ -1104,5 +1108,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     officialLabel: 'Official page',
     hintOpen: 'open',
     hintMove: 'pick',
+    hintYear: 'year',
+    yearLabel: (year) => `Go to ${year}`,
   },
 };
