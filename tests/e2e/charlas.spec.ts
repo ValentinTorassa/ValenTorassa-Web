@@ -66,6 +66,28 @@ test.describe('/charlas', () => {
     await expect(page).toHaveURL(new RegExp(`/charlas/${id}`));
   });
 
+  test('the selector is cut by year: a click on a year or ↑ ↓ jump between years', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    await page.clock.setFixedTime(BEFORE_EKOPARTY);
+    await page.goto('/charlas?lang=es#cacic-2024');
+    const years = await page.locator('.deck-year').allInnerTexts();
+    expect(years).toEqual([...years].sort());
+    expect(years.length).toBeGreaterThanOrEqual(3);
+    await expect(page.locator('.deck-year.is-current')).toHaveText('2024');
+
+    await page.keyboard.press('ArrowDown');
+    await expect(page.locator('.deck-year.is-current')).toHaveText('2025');
+    await expect(page.locator('.deck-group[aria-label="2025"] .deck-card').first()).toHaveAttribute('aria-selected', 'true');
+
+    await page.keyboard.press('ArrowUp');
+    await expect(page.locator('.deck-group[aria-label="2024"] .deck-card').first()).toHaveAttribute('aria-selected', 'true');
+
+    await page.locator('.deck-year', { hasText: '2026' }).click();
+    await expect(page.locator('.deck-year.is-current')).toHaveText('2026');
+    await expect(page.locator('.deck-group[aria-label="2026"] .deck-card').first()).toHaveAttribute('aria-selected', 'true');
+  });
+
   test('clicking a talk selects it', async ({ page }) => {
     await page.clock.setFixedTime(BEFORE_EKOPARTY);
     await page.goto('/charlas?lang=es');

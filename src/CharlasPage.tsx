@@ -59,6 +59,10 @@ const roster: Entry[] = [
   ...papers.filter((paper) => !paper.talk).map(paperEntry),
 ].sort((a, b) => `${a.date} ${a.time ?? ''}`.localeCompare(`${b.date} ${b.time ?? ''}`));
 
+const yearOf = (entry: Entry) => entry.date.slice(0, 4);
+/** Index of the first entry of each year: the cuts in the selector row, and where ↑ ↓ jump. */
+const yearStarts = roster.flatMap((entry, index) => (index === 0 || yearOf(roster[index - 1]) !== yearOf(entry) ? [index] : []));
+
 const mediaOf = (entry: Entry): TalkMedia =>
   entry.kind === 'talk' ? talkMedia[entry.id] ?? {} : entry.paper ? paperMedia(entry.paper) : {};
 
@@ -181,7 +185,7 @@ function CharlasPage() {
     if (sceneRef.current && svg) sceneRef.current.setIcon(svg);
     // Center the card inside the selector row only: scrollIntoView would also scroll the page.
     const card = cardRefs.current[selected];
-    const row = card?.parentElement;
+    const row = card?.closest<HTMLElement>('.hub-deck-row');
     if (card && row) {
       row.scrollTo({ left: card.offsetLeft - (row.clientWidth - card.clientWidth) / 2, behavior: reducedMotion() ? 'auto' : 'smooth' });
     }
@@ -218,6 +222,14 @@ function CharlasPage() {
       if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
         event.preventDefault();
         select(selectedRef.current + (event.key === 'ArrowRight' ? 1 : -1), onCard);
+      } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        // A year at a time: ↓ to the first entry of the next year, ↑ to that of this one or the one before.
+        event.preventDefault();
+        const current = selectedRef.current;
+        const next = event.key === 'ArrowDown'
+          ? yearStarts.find((start) => start > current)
+          : [...yearStarts].reverse().find((start) => start < current);
+        if (next !== undefined) select(next, onCard);
       } else if (event.key === 'Home' || event.key === 'End') {
         event.preventDefault();
         select(event.key === 'Home' ? 0 : roster.length - 1, onCard);
@@ -322,6 +334,8 @@ function CharlasPage() {
             <kbd>Enter</kbd> {copy.hintOpen}
             <kbd>←</kbd>
             <kbd>→</kbd> {copy.hintMove}
+            <kbd>↑</kbd>
+            <kbd>↓</kbd> {copy.hintYear}
           </p>
         </section>
 
@@ -353,37 +367,57 @@ function CharlasPage() {
 
       <nav className="hub-deck" aria-label={copy.listLabel}>
         <div className="hub-deck-row" role="listbox" aria-label={copy.listLabel} aria-activedescendant={`card-${talk.id}`}>
-          {roster.map((item, index) => {
-            const itemMedia = mediaOf(item);
-            const picture = itemMedia.thumb ?? itemMedia.cover;
-            const isSelected = index === selected;
+          {yearStarts.map((start, group) => {
+            const end = yearStarts[group + 1] ?? roster.length;
+            const year = yearOf(roster[start]);
+            // Each year opens with a cut: the year, big, that stays at the left while its entries
+            // scroll past and jumps to the first of them when clicked.
             return (
-              <button
-                key={item.id}
-                ref={(element) => {
-                  cardRefs.current[index] = element;
-                }}
-                id={`card-${item.id}`}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                tabIndex={isSelected ? 0 : -1}
-                className={`deck-card${isSelected ? ' is-selected' : ''}`}
-                onClick={() => select(index)}
-              >
-                <span className="deck-thumb">
-                  {picture ? (
-                    <img src={picture} alt="" loading="lazy" decoding="async" />
-                  ) : (
-                    <em>{glyph(item)}</em>
-                  )}
-                </span>
-                <span className="deck-label">
-                  {item.kind !== 'talk' ? `${copy.kinds[item.kind]} · ${item.event}` : item.track ?? item.event}
-                </span>
-                <span className="deck-date">{formatTalkDate(item, language, currentYear)}</span>
-                <span className="sr-only">{item.title[language]}</span>
-              </button>
+              <div key={year} className="deck-group" role="group" aria-label={year}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className={`deck-year${year === yearOf(talk) ? ' is-current' : ''}`}
+                  aria-label={copy.yearLabel(year)}
+                  onClick={() => select(start)}
+                >
+                  {year}
+                </button>
+                {roster.slice(start, end).map((item, offset) => {
+                  const index = start + offset;
+                  const itemMedia = mediaOf(item);
+                  const picture = itemMedia.thumb ?? itemMedia.cover;
+                  const isSelected = index === selected;
+                  return (
+                    <button
+                      key={item.id}
+                      ref={(element) => {
+                        cardRefs.current[index] = element;
+                      }}
+                      id={`card-${item.id}`}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      tabIndex={isSelected ? 0 : -1}
+                      className={`deck-card${isSelected ? ' is-selected' : ''}`}
+                      onClick={() => select(index)}
+                    >
+                      <span className="deck-thumb">
+                        {picture ? (
+                          <img src={picture} alt="" loading="lazy" decoding="async" />
+                        ) : (
+                          <em>{glyph(item)}</em>
+                        )}
+                      </span>
+                      <span className="deck-label">
+                        {item.kind !== 'talk' ? `${copy.kinds[item.kind]} · ${item.event}` : item.track ?? item.event}
+                      </span>
+                      <span className="deck-date">{formatTalkDate(item, language, year)}</span>
+                      <span className="sr-only">{item.title[language]}</span>
+                    </button>
+                  );
+                })}
+              </div>
             );
           })}
         </div>
