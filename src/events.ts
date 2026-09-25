@@ -131,6 +131,7 @@ export const talks: Talk[] = [
     mode: 'virtual',
     status: 'tbd',
     url: 'https://www.frcu.utn.edu.ar/cacic-2026',
+    slidesUrl: 'https://drive.google.com/file/d/1mPDE4FnB6czxPlq86ihIzeVnuskxvRTZ/view',
     note: {
       es: 'Presentación de paper. Los workshops se dan de 14:30 a 19:00.',
       en: 'Paper presentation. Workshops run from 14:30 to 19:00.',
