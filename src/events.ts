@@ -170,6 +170,8 @@ export const talks: Talk[] = [
     city: 'Buenos Aires',
     mode: 'presencial',
     status: 'confirmed',
+
+    slidesUrl: 'https://drive.google.com/file/d/1FJstqPbD8Af0KCtKqlGQD65ko8MVYv0e/view',
   },
   {
     id: 'ekoparty-2026-bluespace',
@@ -204,6 +206,8 @@ export const talks: Talk[] = [
     city: 'Buenos Aires',
     mode: 'presencial',
     status: 'confirmed',
+
+    slidesUrl: 'https://drive.google.com/file/d/1jZFSgB1WZZr4TdQ0YitQpLKp00Q4Q_XA/view',
   },
   {
     id: 'ekoparty-2026-devsecops-space',
