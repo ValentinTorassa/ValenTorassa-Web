@@ -5,6 +5,7 @@ export {
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  CanvasTexture,
   Clock,
   Color,
   DoubleSide,

@@ -12,19 +12,29 @@ import { expect, test, type Page } from '@playwright/test';
  *   dist/eventos.html and served at /eventos. It reads `?lang=` the same way.
  * - public/*.html are standalone static pages. vercel.json sets cleanUrls, so
  *   production serves them without the .html suffix; `vite preview` does the same.
- * - public/sitemap.xml lists /, /?lang=es, /?lang=en and /eventos.
+ * - charlas.html is a third entry (src/charlas.tsx), served at /charlas; vercel.json
+ *   rewrites /charlas/<talk id> to it, and the page reads the id from the path.
+ * - public/sitemap.xml lists /, /?lang=es, /?lang=en, /eventos and /charlas.
  */
 const ROUTES = [
   { path: '/', name: 'home' },
   { path: '/?lang=es', name: 'home-es' },
   { path: '/?lang=en', name: 'home-en' },
   { path: '/eventos', name: 'eventos' },
+  { path: '/charlas', name: 'charlas' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
 ] as const;
 
 /** Hosts that point back at this site (static pages link to the canonical domain). */
 const SITE_HOSTS = new Set(['valentorassa.com', 'www.valentorassa.com']);
+
+/** vercel.json rewrites (/charlas/<id> -> /charlas), applied here because `vite preview` does not know them. */
+const REWRITES = (JSON.parse(readFileSync('vercel.json', 'utf8')).rewrites ?? []).map(
+  ({ source, destination }: { source: string; destination: string }) =>
+    [new RegExp(`^${source.replace(/:\w+/g, '[^/]+')}$`), destination] as const,
+);
+const rewrite = (pathname: string) => REWRITES.find(([pattern]) => pattern.test(pathname))?.[1] ?? pathname;
 
 /**
  * Console errors that genuinely cannot work in a local `vite preview` run.
@@ -141,7 +151,7 @@ for (const route of ROUTES) {
           continue;
         }
 
-        const localPath = `${url.pathname}${url.search}`;
+        const localPath = `${rewrite(url.pathname)}${url.search}`;
         if (!checkedPaths.has(localPath)) {
           const res = await request.get(localPath);
           const body = res.ok() ? await res.text() : '';

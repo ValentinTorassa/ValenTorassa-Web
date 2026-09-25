@@ -18,6 +18,7 @@ import {
   Star,
   Terminal,
   X,
+  Presentation,
 } from 'lucide-react';
 import portraitAvif256 from './assets/portrait-dark-256.avif';
 import portraitAvif384 from './assets/portrait-dark-384.avif';
@@ -576,11 +577,18 @@ function App() {
                 ) : null}
               </div>
 
-              <a className="talks-page-link" href="/eventos">
-                <Calendar aria-hidden="true" />
-                {content.research.allTalksLabel}
-                <ArrowRight aria-hidden="true" />
-              </a>
+              <div className="talks-page-links">
+                <a className="talks-page-link is-hub" href="/charlas">
+                  <Presentation aria-hidden="true" />
+                  {content.research.hubLabel}
+                  <ArrowRight aria-hidden="true" />
+                </a>
+                <a className="talks-page-link" href="/eventos">
+                  <Calendar aria-hidden="true" />
+                  {content.research.allTalksLabel}
+                  <ArrowRight aria-hidden="true" />
+                </a>
+              </div>
             </Reveal>
 
             <Reveal className="panel github-panel">

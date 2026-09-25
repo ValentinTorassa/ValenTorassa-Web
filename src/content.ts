@@ -149,6 +149,7 @@ type PageContent = {
     previousTalksLabel: string;
     nextTalkLabel: string;
     allTalksLabel: string;
+    hubLabel: string;
     openTalkLabel: string;
     openProjectLabel: string;
     openRepoLabel: string;
@@ -449,6 +450,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       { label: 'Experiencia', href: '#experience' },
       { label: 'Stack', href: '#stack' },
       { label: 'Charlas y proyectos', href: '#research' },
+      { label: 'Slides', href: '/charlas' },
       { label: 'Contacto', href: '#contact' },
     ],
     status: 'Teramot · seguridad cloud, backend y agentes de IA',
@@ -638,6 +640,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
       nextTalkLabel: 'Próxima charla',
       allTalksLabel: 'Ver todas las charlas',
+      hubLabel: 'Explorar las charlas y sus slides',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
       openRepoLabel: 'Abrir repositorio',
@@ -690,6 +693,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       { label: 'Experience', href: '#experience' },
       { label: 'Stack', href: '#stack' },
       { label: 'Talks & projects', href: '#research' },
+      { label: 'Slides', href: '/charlas' },
       { label: 'Contact', href: '#contact' },
     ],
     status: 'Teramot · cloud security, backend, and AI agents',
@@ -879,6 +883,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       previousTalksLabel: 'Previous talks and recognition',
       nextTalkLabel: 'Upcoming talk',
       allTalksLabel: 'See all talks',
+      hubLabel: 'Browse the talks and their slides',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
       openRepoLabel: 'Open repository',
@@ -983,6 +988,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
       { label: 'Inicio', href: '/' },
       { label: 'Próximas', href: '#proximas' },
       { label: 'Pasadas', href: '#pasadas' },
+      { label: 'Charlas', href: '/charlas' },
       { label: 'Contacto', href: '/#contact' },
     ],
     eyebrow: '// eventos',
@@ -1004,6 +1010,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
       { label: 'Home', href: '/' },
       { label: 'Upcoming', href: '#proximas' },
       { label: 'Past', href: '#pasadas' },
+      { label: 'Talks', href: '/charlas' },
       { label: 'Contact', href: '/#contact' },
     ],
     eyebrow: '// events',
@@ -1014,5 +1021,75 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
     pastTitle: 'Past',
     emptyUpcoming: 'No talks announced right now.',
     emptyPast: 'No past talks listed yet.',
+  },
+};
+
+type CharlasPageContent = {
+  documentTitle: string;
+  seo: {
+    description: string;
+    locale: 'es_AR' | 'en_US';
+  };
+  section: string;
+  title: string;
+  eventsLabel: string;
+  homeLabel: string;
+  languageLabel: string;
+  listLabel: string;
+  upcoming: string;
+  slides: (count: number) => string;
+  openLabel: string;
+  slidesOn: (date: string) => string;
+  noSlides: string;
+  codeLabel: string;
+  officialLabel: string;
+  hintOpen: string;
+  hintMove: string;
+};
+
+export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
+  es: {
+    documentTitle: 'Charlas · Valentín Torassa',
+    seo: {
+      description: 'Todas las charlas de Valentín Torassa Colombero en un solo lugar: elegí una para ver de qué trata, cuándo y dónde fue, una vista de sus slides y el PDF.',
+      locale: 'es_AR',
+    },
+    section: 'charlas',
+    title: 'Charlas',
+    eventsLabel: 'eventos',
+    homeLabel: 'Inicio',
+    languageLabel: 'Cambiar idioma',
+    listLabel: 'Elegí una charla',
+    upcoming: 'Próxima',
+    slides: (count) => `${count} slides`,
+    openLabel: 'Ver slides',
+    slidesOn: (date) => `Slides el ${date}`,
+    noSlides: 'Sin slides públicas',
+    codeLabel: 'Código',
+    officialLabel: 'Página oficial',
+    hintOpen: 'abrir',
+    hintMove: 'elegir',
+  },
+  en: {
+    documentTitle: 'Talks · Valentín Torassa',
+    seo: {
+      description: 'Every talk by Valentin Torassa Colombero in one place: pick one to see what it is about, when and where it was, a look at its slides, and the PDF.',
+      locale: 'en_US',
+    },
+    section: 'talks',
+    title: 'Talks',
+    eventsLabel: 'events',
+    homeLabel: 'Home',
+    languageLabel: 'Change language',
+    listLabel: 'Pick a talk',
+    upcoming: 'Upcoming',
+    slides: (count) => `${count} slides`,
+    openLabel: 'Open slides',
+    slidesOn: (date) => `Slides on ${date}`,
+    noSlides: 'No public slides',
+    codeLabel: 'Code',
+    officialLabel: 'Official page',
+    hintOpen: 'open',
+    hintMove: 'pick',
   },
 };
