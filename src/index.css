@@ -2221,6 +2221,22 @@ p {
 }
 
 .github-profile-link,
+.talks-page-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.talks-page-links .talks-page-link {
+  margin-top: 0;
+}
+
+.talks-page-link.is-hub {
+  border-color: rgba(143, 224, 198, 0.45);
+  color: #8fe0c6;
+}
+
 .talks-page-link {
   display: inline-flex;
   align-items: center;

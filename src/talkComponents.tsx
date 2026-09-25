@@ -5,10 +5,10 @@ import {
   formatTalkPlace,
   formatTalkTime,
   groupConsecutiveByEvent,
-  slidesAvailable,
   talkDateParts,
   todayInArgentina,
 } from './eventSchedule';
+import { slidesHref } from './talkMedia';
 
 type TalkChipsProps = {
   talk: Talk;
@@ -109,7 +109,8 @@ function TalkCard({ talk, language, labels, currentYear, isPast, inGroup = false
   const place = formatTalkPlace(talk, language);
   const kicker = inGroup ? talk.track : [talk.event, talk.track].filter(Boolean).join(' · ');
   const Title = inGroup ? 'h4' : 'h3';
-  const slidesUrl = slidesAvailable(talk, todayInArgentina()) ? talk.slidesUrl : undefined;
+  const slidesUrl = slidesHref(talk, todayInArgentina());
+  const slidesOutside = slidesUrl?.startsWith('http');
 
   return (
     <article className={`talk-card status-${talk.status}`} id={talk.id}>
@@ -160,7 +161,7 @@ function TalkCard({ talk, language, labels, currentYear, isPast, inGroup = false
                 </a>
               ) : null}
               {slidesUrl ? (
-                <a href={slidesUrl} target="_blank" rel="noopener noreferrer">
+                <a href={slidesUrl} {...(slidesOutside ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                   <Presentation aria-hidden="true" />
                   {labels.slidesLabel}
                 </a>

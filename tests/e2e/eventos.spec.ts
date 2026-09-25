@@ -57,6 +57,8 @@ test.describe('/eventos', () => {
     await page.clock.setFixedTime(new Date('2026-10-02T12:00:00Z'));
     await page.reload();
     await expect(slides).toHaveCount(1);
+    // The deck is hosted in /charlas, animations and all, so the link goes there, not to the PDF.
+    await expect(slides).toHaveAttribute('href', '/charlas/hacking-day-2026');
   });
 
   test('switches language with the header toggle', async ({ page }) => {

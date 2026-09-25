@@ -13,6 +13,7 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         eventos: fileURLToPath(new URL('./eventos.html', import.meta.url)),
+        charlas: fileURLToPath(new URL('./charlas.html', import.meta.url)),
       },
     },
   },
