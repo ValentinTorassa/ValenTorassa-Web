@@ -173,6 +173,12 @@
   text-transform: uppercase;
 }
 
+/* A paper or poster of its own, in the tone of its page. */
+.hub-soon.is-paper {
+  border-color: rgba(243, 241, 234, 0.35);
+  color: var(--paper);
+}
+
 .hub-info h1 {
   margin: 0;
   font-family: var(--display);

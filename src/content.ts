@@ -1041,17 +1041,24 @@ type CharlasPageContent = {
   openLabel: string;
   slidesOn: (date: string) => string;
   noSlides: string;
+  /** Opens a paper (src/research.ts) when there is no deck. */
+  paperLabel: string;
+  kinds: { paper: string; poster: string };
+  coauthors: (names: string[]) => string;
   codeLabel: string;
   officialLabel: string;
   hintOpen: string;
   hintMove: string;
 };
 
+const list = (names: string[], and: string) =>
+  names.length > 1 ? `${names.slice(0, -1).join(', ')} ${and} ${names[names.length - 1]}` : names.join('');
+
 export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
   es: {
     documentTitle: 'Charlas · Valentín Torassa',
     seo: {
-      description: 'Todas las charlas de Valentín Torassa Colombero en un solo lugar: elegí una para ver de qué trata, cuándo y dónde fue, una vista de sus slides y el PDF.',
+      description: 'Las charlas y los papers de Valentín Torassa Colombero en un solo lugar: elegí uno para ver de qué trata, cuándo y dónde fue, y abrir sus slides o el paper.',
       locale: 'es_AR',
     },
     section: 'charlas',
@@ -1065,6 +1072,9 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     openLabel: 'Ver slides',
     slidesOn: (date) => `Slides el ${date}`,
     noSlides: 'Sin slides públicas',
+    paperLabel: 'Leer el paper',
+    kinds: { paper: 'Paper', poster: 'Póster' },
+    coauthors: (names) => `Con ${list(names, 'y')}`,
     codeLabel: 'Código',
     officialLabel: 'Página oficial',
     hintOpen: 'abrir',
@@ -1073,7 +1083,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
   en: {
     documentTitle: 'Talks · Valentín Torassa',
     seo: {
-      description: 'Every talk by Valentin Torassa Colombero in one place: pick one to see what it is about, when and where it was, a look at its slides, and the PDF.',
+      description: 'Talks and papers by Valentin Torassa Colombero in one place: pick one to see what it is about, when and where it was, and open its slides or the paper.',
       locale: 'en_US',
     },
     section: 'talks',
@@ -1087,6 +1097,9 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     openLabel: 'Open slides',
     slidesOn: (date) => `Slides on ${date}`,
     noSlides: 'No public slides',
+    paperLabel: 'Read the paper',
+    kinds: { paper: 'Paper', poster: 'Poster' },
+    coauthors: (names) => `With ${list(names, 'and')}`,
     codeLabel: 'Code',
     officialLabel: 'Official page',
     hintOpen: 'open',
