@@ -192,17 +192,18 @@ export const talks: Talk[] = [
   {
     id: 'ekoparty-2026-ai-resilience-hub',
     date: '2026-10-07',
-    endDate: '2026-10-09',
+    time: '12:00',
+    endTime: '13:00',
     event: ekoparty,
     track: 'AI Resilience Hub',
     title: {
       es: 'Prompt injection en agentes con tools: permisos, aislamiento y auditoría',
       en: 'Prompt injection in tool-using agents: permissions, isolation, and auditing',
     },
-    place: { es: cec, en: cec },
+    place: { es: `${cec}, Sala C2`, en: `${cec}, Room C2` },
     city: 'Buenos Aires',
     mode: 'presencial',
-    status: 'tbd',
+    status: 'confirmed',
   },
   {
     id: 'ekoparty-2026-devsecops-space',
