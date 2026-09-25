@@ -152,6 +152,8 @@ export const talks: Talk[] = [
     city: 'Buenos Aires',
     mode: 'presencial',
     status: 'tentative',
+
+    slidesUrl: 'https://drive.google.com/file/d/11qHadCzOQ-Lr7NtYDCUxBMLvR3JhglAs/view',
   },
   {
     id: 'ekoparty-2026-cyberfinance',
