@@ -43,6 +43,22 @@ test.describe('/eventos', () => {
     await expect(page.locator('#proximas #cacic-2026-podman')).toBeVisible();
   });
 
+  test('shows the slides link only from the talk\'s day on', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    const slides = page.locator('#hacking-day-2026 .talk-links a', { hasText: 'Slides' });
+
+    await page.clock.setFixedTime(BEFORE_THE_TALKS);
+    await page.goto('/eventos?lang=es');
+    await expect(page.locator('#hacking-day-2026')).toBeVisible();
+    await expect(slides).toHaveCount(0);
+
+    // 2026-10-02 09:00 in Argentina: the day of Hacking Day.
+    await page.clock.setFixedTime(new Date('2026-10-02T12:00:00Z'));
+    await page.reload();
+    await expect(slides).toHaveCount(1);
+  });
+
   test('switches language with the header toggle', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
