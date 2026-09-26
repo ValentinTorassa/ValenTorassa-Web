@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 
@@ -12,9 +12,9 @@ import { expect, test, type Page } from '@playwright/test';
  *   dist/eventos.html and served at /eventos. It reads `?lang=` the same way.
  * - public/*.html are standalone static pages. vercel.json sets cleanUrls, so
  *   production serves them without the .html suffix; `vite preview` does the same.
- * - charlas.html is a third entry (src/charlas.tsx), served at /charlas; vercel.json
- *   rewrites /charlas/<talk id> to it, and the page reads the id from the path.
- * - public/sitemap.xml lists /, /?lang=es, /?lang=en, /eventos and /charlas.
+ * - charlas.html is a third entry (src/charlas.tsx), served at /charlas. The
+ *   build also writes dist/charlas/<id>.html for every talk and paper.
+ * - the build sitemap lists the main pages and each /charlas/<id>.
  */
 const ROUTES = [
   { path: '/', name: 'home' },
@@ -22,19 +22,13 @@ const ROUTES = [
   { path: '/?lang=en', name: 'home-en' },
   { path: '/eventos', name: 'eventos' },
   { path: '/charlas', name: 'charlas' },
+  { path: '/charlas/hacking-day-2026', name: 'talk-hacking-day' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
 ] as const;
 
 /** Hosts that point back at this site (static pages link to the canonical domain). */
 const SITE_HOSTS = new Set(['valentorassa.com', 'www.valentorassa.com']);
-
-/** vercel.json rewrites (/charlas/<id> -> /charlas), applied here because `vite preview` does not know them. */
-const REWRITES = (JSON.parse(readFileSync('vercel.json', 'utf8')).rewrites ?? []).map(
-  ({ source, destination }: { source: string; destination: string }) =>
-    [new RegExp(`^${source.replace(/:\w+/g, '[^/]+')}$`), destination] as const,
-);
-const rewrite = (pathname: string) => REWRITES.find(([pattern]) => pattern.test(pathname))?.[1] ?? pathname;
 
 /**
  * Console errors that genuinely cannot work in a local `vite preview` run.
@@ -70,7 +64,7 @@ async function horizontalOverflow(page: Page) {
 }
 
 test.describe('route coverage', () => {
-  test('every static page and sitemap entry is in ROUTES', () => {
+  test('every static page is covered and every sitemap entry has an HTML file', () => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
     const covered = new Set<string>(ROUTES.map((route) => route.path));
 
@@ -79,13 +73,17 @@ test.describe('route coverage', () => {
       .map((file) => `/${file.replace(/\.html$/, '')}`);
     for (const page of staticPages) expect(covered, `public page ${page}`).toContain(page);
 
-    const sitemap = readFileSync(path.join(repoRoot, 'public/sitemap.xml'), 'utf8');
+    const sitemap = readFileSync(path.join(repoRoot, 'dist/sitemap.xml'), 'utf8');
     const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => {
       const url = new URL(match[1]);
       return `${url.pathname}${url.search}`;
     });
     expect(locs.length).toBeGreaterThan(0);
-    for (const loc of locs) expect(covered, `sitemap entry ${loc}`).toContain(loc);
+    for (const loc of locs) {
+      if (covered.has(loc)) continue;
+      expect(loc, `sitemap entry ${loc}`).toMatch(/^\/charlas\/[a-z0-9-]+$/);
+      expect(existsSync(path.join(repoRoot, 'dist', `${loc}.html`.slice(1))), `built page ${loc}`).toBe(true);
+    }
   });
 });
 
@@ -151,7 +149,7 @@ for (const route of ROUTES) {
           continue;
         }
 
-        const localPath = `${rewrite(url.pathname)}${url.search}`;
+        const localPath = `${url.pathname}${url.search}`;
         if (!checkedPaths.has(localPath)) {
           const res = await request.get(localPath);
           const body = res.ok() ? await res.text() : '';
