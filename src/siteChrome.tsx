@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowUp, ChevronRight, Menu, X } from 'lucide-react';
-import { AR, US } from 'country-flag-icons/react/3x2';
 import vtMarkAvif96 from './assets/vt-mark-96.avif';
 import vtMarkAvif160 from './assets/vt-mark-160.avif';
 import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
-import { headerSocialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './content';
+import { headerSocialLinks, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './content';
+
+/** Every network, for the phone menu: the bar only has room for three. */
+const panelSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
 
 const vtMarkAvifSrcSet = `${vtMarkAvif96} 96w, ${vtMarkAvif160} 160w`;
 const vtMarkWebpSrcSet = `${vtMarkWebp96} 96w, ${vtMarkWebp160} 160w`;
@@ -54,6 +56,8 @@ type SiteHeaderProps = {
   /** 0-1 page scroll, drawn under the bar when set. */
   scrollProgress?: number;
   meta: { location: string; tagline: string };
+  /** `inline` sits in the page flow (the /charlas hub) instead of floating over it. */
+  variant?: 'fixed' | 'inline';
 };
 
 export function SiteHeader({
@@ -65,10 +69,16 @@ export function SiteHeader({
   activeSection = '',
   scrollProgress,
   meta,
+  variant = 'fixed',
 }: SiteHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
-  const isActive = (href: string) => href.startsWith('#') && activeSection !== '' && activeSection === href.slice(1);
+  const isSection = (item: NavItem) => {
+    const section = item.section ?? (item.href.startsWith('#') ? item.href.slice(1) : '');
+    return section !== '' && activeSection === section;
+  };
+  const isActive = (item: NavItem) => Boolean(item.current) || isSection(item);
+  const current = (item: NavItem) => (item.current ? 'page' : isSection(item) ? 'location' : undefined);
 
   useEffect(() => {
     if (!mobileMenuOpen) return undefined;
@@ -95,7 +105,7 @@ export function SiteHeader({
   }, [mobileMenuOpen]);
 
   return (
-    <header className="topbar" ref={headerRef}>
+    <header className={variant === 'inline' ? 'topbar is-inline' : 'topbar'} ref={headerRef}>
       <a className="brand" href={brandHref} aria-label={`valentorassa - ${labels.homeLabel}`}>
         <MarkImage width={34} height={34} sizes="34px" loading="eager" />
         <span>valentorassa</span>
@@ -106,8 +116,8 @@ export function SiteHeader({
           <a
             key={item.href}
             href={item.href}
-            className={isActive(item.href) ? 'is-active' : undefined}
-            aria-current={isActive(item.href) ? 'location' : undefined}
+            className={isActive(item) ? 'is-active' : undefined}
+            aria-current={current(item)}
           >
             {item.label}
           </a>
@@ -142,7 +152,8 @@ export function SiteHeader({
           }`}
           title={language === 'es' ? labels.englishLabel : labels.spanishLabel}
         >
-          {language === 'es' ? <AR aria-hidden="true" /> : <US aria-hidden="true" />}
+          <span className={language === 'es' ? 'is-on' : undefined}>ES</span>
+          <span className={language === 'en' ? 'is-on' : undefined}>EN</span>
         </button>
 
         <button
@@ -164,16 +175,23 @@ export function SiteHeader({
               <a
                 key={item.href}
                 href={item.href}
-                className={isActive(item.href) ? 'is-active' : undefined}
-                aria-current={isActive(item.href) ? 'location' : undefined}
+                className={isActive(item) ? 'is-active' : undefined}
+                aria-current={current(item)}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <span>0{index + 1}</span>
+                <span>{String(index + 1).padStart(2, '0')}</span>
                 <strong>{item.label}</strong>
                 <ChevronRight aria-hidden="true" />
               </a>
             ))}
           </nav>
+          <div className="mobile-nav-social">
+            {panelSocialLinks.map((link) => (
+              <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.name} title={link.name}>
+                <SocialIcon link={link} />
+              </a>
+            ))}
+          </div>
           <div className="mobile-nav-meta">
             <span><i aria-hidden="true" />{meta.location}</span>
             <span>{meta.tagline}</span>

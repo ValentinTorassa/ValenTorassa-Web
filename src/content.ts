@@ -78,7 +78,35 @@ export type HeaderLabels = {
   closeMenuLabel: string;
 };
 
-export type NavItem = { label: string; href: string };
+/**
+ * `current` marks the page the menu is on (aria-current="page"); `section` is the id of the
+ * home section that lights the item up when the link itself goes elsewhere.
+ */
+export type NavItem = { label: string; href: string; current?: boolean; section?: string };
+
+export type SitePage = 'home' | 'eventos' | 'charlas';
+
+const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'contact', string>> = {
+  es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', contact: 'Contacto' },
+  en: { profile: 'Profile', experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', contact: 'Contact' },
+};
+
+/**
+ * One menu for every page, same items in the same order. On the home page the
+ * sections are anchors; on the others they point back to the home page.
+ */
+export function siteNav(page: SitePage, language: Language): NavItem[] {
+  const home = page === 'home' ? '' : '/';
+  const label = navLabels[language];
+  return [
+    { label: label.profile, href: `${home}#profile` },
+    { label: label.experience, href: `${home}#experience` },
+    { label: label.projects, href: `${home}#research` },
+    { label: label.talks, href: '/charlas', current: page === 'charlas', section: page === 'home' ? 'talks' : undefined },
+    { label: label.agenda, href: '/eventos', current: page === 'eventos' },
+    { label: label.contact, href: `${home}#contact` },
+  ];
+}
 
 type PageContent = {
   documentTitle: string;
@@ -91,6 +119,8 @@ type PageContent = {
   status: string;
   heroRole: string;
   heroSocialLabel: string;
+  heroTalksLabel: string;
+  heroContactLabel: string;
   terminalLines: Array<{ prompt: string; command: string; output: string }>;
   profile: {
     eyebrow: string;
@@ -142,6 +172,9 @@ type PageContent = {
   research: {
     eyebrow: string;
     title: string;
+    talksEyebrow: string;
+    talksTitle: string;
+    talksIntro: string;
     speakingTitle: string;
     repositoriesTitle: string;
     featuredLabel: string;
@@ -166,6 +199,7 @@ type PageContent = {
     repos: FeaturedRepo[];
   };
   contact: {
+    eyebrow: string;
     title: string;
     text: string;
     emailLabel: string;
@@ -227,7 +261,7 @@ export const socialLinks: SocialLink[] = [
 ];
 
 export const headerSocialLinks = socialLinks.filter((link) =>
-  ['Blog', 'YouTube', 'TikTok', 'Instagram', 'X'].includes(link.name),
+  ['GitHub', 'LinkedIn', 'YouTube'].includes(link.name),
 );
 
 const cloudTags: StackTag[] = [
@@ -445,17 +479,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
       menuLabel: 'Abrir navegación',
       closeMenuLabel: 'Cerrar navegación',
     },
-    navItems: [
-      { label: 'Perfil', href: '#profile' },
-      { label: 'Experiencia', href: '#experience' },
-      { label: 'Stack', href: '#stack' },
-      { label: 'Charlas y proyectos', href: '#research' },
-      { label: 'Slides', href: '/charlas' },
-      { label: 'Contacto', href: '#contact' },
-    ],
+    navItems: siteNav('home', 'es'),
     status: 'Teramot · seguridad cloud, backend y agentes de IA',
     heroRole: 'Ingeniero en Ciberseguridad · Ingeniero Backend · Seguridad Cloud',
     heroSocialLabel: 'Redes y contacto',
+    heroTalksLabel: 'Charlas y slides',
+    heroContactLabel: 'Contacto',
     terminalLines: [
       { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
       {
@@ -631,8 +660,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     research: {
-      eyebrow: '// speaking & open source',
-      title: 'Charlas, reconocimiento y proyectos abiertos',
+      eyebrow: '// open source',
+      title: 'Proyectos abiertos',
+      talksEyebrow: '// charlas',
+      talksTitle: 'Charlas y reconocimiento',
+      talksIntro: 'Charlas, clases y papers. Cada una tiene su página en valentorassa.com/charlas, con las slides desde el día que la doy.',
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
@@ -657,6 +689,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       repos: esRepos,
     },
     contact: {
+      eyebrow: '// contacto',
       title: 'Contacto profesional.',
       text: 'Rosario, Argentina · conversaciones técnicas sobre seguridad cloud, backend, compliance, agentes de IA, Linux y arquitectura de sistemas.',
       emailLabel: 'Enviar email',
@@ -688,17 +721,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
       menuLabel: 'Open navigation',
       closeMenuLabel: 'Close navigation',
     },
-    navItems: [
-      { label: 'Profile', href: '#profile' },
-      { label: 'Experience', href: '#experience' },
-      { label: 'Stack', href: '#stack' },
-      { label: 'Talks & projects', href: '#research' },
-      { label: 'Slides', href: '/charlas' },
-      { label: 'Contact', href: '#contact' },
-    ],
+    navItems: siteNav('home', 'en'),
     status: 'Teramot · cloud security, backend, and AI agents',
     heroRole: 'Cybersecurity Engineer · Backend Engineer · Cloud Security',
     heroSocialLabel: 'Social profiles and contact',
+    heroTalksLabel: 'Talks and slides',
+    heroContactLabel: 'Contact',
     terminalLines: [
       { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
       {
@@ -874,8 +902,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     research: {
-      eyebrow: '// speaking & open source',
-      title: 'Talks, recognition, and open projects',
+      eyebrow: '// open source',
+      title: 'Open projects',
+      talksEyebrow: '// talks',
+      talksTitle: 'Talks and recognition',
+      talksIntro: 'Talks, classes, and papers. Each one has its own page at valentorassa.com/charlas, with the slides from the day I give it.',
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
@@ -900,6 +931,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       repos: enRepos,
     },
     contact: {
+      eyebrow: '// contact',
       title: 'Professional contact.',
       text: 'Rosario, Argentina · technical conversations about cloud security, backend systems, compliance, AI agents, Linux, and systems architecture.',
       emailLabel: 'Send email',
@@ -984,13 +1016,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
       description: 'Charlas, clases y presentaciones de Valentín Torassa Colombero sobre ciberseguridad, backend y agentes de IA: próximas fechas y charlas anteriores.',
       locale: 'es_AR',
     },
-    navItems: [
-      { label: 'Inicio', href: '/' },
-      { label: 'Próximas', href: '#proximas' },
-      { label: 'Pasadas', href: '#pasadas' },
-      { label: 'Charlas', href: '/charlas' },
-      { label: 'Contacto', href: '/#contact' },
-    ],
+    navItems: siteNav('eventos', 'es'),
     eyebrow: '// eventos',
     title: 'Eventos y charlas',
     intro: 'Dónde me vas a ver: charlas, clases y presentaciones de papers, con fecha, lugar y estado de cada una.',
@@ -1006,13 +1032,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
       description: 'Talks, classes, and paper presentations by Valentin Torassa Colombero on cybersecurity, backend systems, and AI agents: upcoming dates and past talks.',
       locale: 'en_US',
     },
-    navItems: [
-      { label: 'Home', href: '/' },
-      { label: 'Upcoming', href: '#proximas' },
-      { label: 'Past', href: '#pasadas' },
-      { label: 'Talks', href: '/charlas' },
-      { label: 'Contact', href: '/#contact' },
-    ],
+    navItems: siteNav('eventos', 'en'),
     eyebrow: '// events',
     title: 'Events and talks',
     intro: 'Where to catch me: talks, classes, and paper presentations, each with its date, venue, and status.',
@@ -1026,6 +1046,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
 
 type CharlasPageContent = {
   documentTitle: string;
+  navItems: NavItem[];
   seo: {
     description: string;
     locale: 'es_AR' | 'en_US';
@@ -1059,6 +1080,7 @@ const list = (names: string[], and: string) =>
 export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
   es: {
     documentTitle: 'Charlas · Valentín Torassa',
+    navItems: siteNav('charlas', 'es'),
     seo: {
       description: 'Las charlas y los papers de Valentín Torassa Colombero en un solo lugar: elegí uno para ver de qué trata, cuándo y dónde fue, y abrir sus slides o el paper.',
       locale: 'es_AR',
@@ -1086,6 +1108,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
   },
   en: {
     documentTitle: 'Talks · Valentín Torassa',
+    navItems: siteNav('charlas', 'en'),
     seo: {
       description: 'Talks and papers by Valentin Torassa Colombero in one place: pick one to see what it is about, when and where it was, and open its slides or the paper.',
       locale: 'en_US',

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
 import {
-  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
@@ -23,12 +22,13 @@ import {
   Workflow,
   type LucideProps,
 } from 'lucide-react';
-import { charlasPageByLanguage, type Language } from './content';
+import { charlasPageByLanguage, contentByLanguage, type Language } from './content';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, isPastTalk, slidesAvailable, todayInArgentina } from './eventSchedule';
 import type { HubScene } from './hubScene';
 import { paperMedia, paperOfTalk, papers, type Paper } from './research';
 import { getInitialLanguage, setMetaContent } from './site';
+import { SiteHeader } from './siteChrome';
 import { talkMedia, type TalkIcon, type TalkMedia } from './talkMedia';
 
 const ICONS: Record<TalkIcon, ComponentType<LucideProps>> = {
@@ -114,6 +114,7 @@ const pad = (value: number) => String(value).padStart(2, '0');
 function CharlasPage() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
   const copy = charlasPageByLanguage[language];
+  const siteContent = contentByLanguage[language];
   const today = todayInArgentina();
   const currentYear = today.slice(0, 4);
   const [selected, setSelected] = useState(() => defaultIndex(today));
@@ -250,29 +251,15 @@ function CharlasPage() {
     <div className="hub">
       <canvas className="hub-canvas" ref={canvasRef} aria-hidden="true" />
 
-      <header className="hub-top">
-        <a className="hub-crumb" href="/">
-          <img src="/icon.png" alt="" width="28" height="28" />
-          <span>valentorassa</span>
-        </a>
-        <span className="hub-crumb-sep" aria-hidden="true">/</span>
-        <span className="hub-crumb-here">{copy.section}</span>
-        <nav className="hub-top-right">
-          <a className="hub-home" href="/">
-            <ArrowLeft aria-hidden="true" />
-            {copy.homeLabel}
-          </a>
-          <a href="/eventos">{copy.eventsLabel}</a>
-          <button
-            type="button"
-            className="hub-lang"
-            aria-label={copy.languageLabel}
-            onClick={() => setLanguage((current) => (current === 'es' ? 'en' : 'es'))}
-          >
-            {language === 'es' ? 'EN' : 'ES'}
-          </button>
-        </nav>
-      </header>
+      <SiteHeader
+        language={language}
+        onToggleLanguage={() => setLanguage((current) => (current === 'es' ? 'en' : 'es'))}
+        labels={siteContent.header}
+        navItems={copy.navItems}
+        brandHref="/"
+        meta={siteContent.footer}
+        variant="inline"
+      />
 
       <main className="hub-main">
         <section className="hub-info" aria-live="polite">

@@ -44,6 +44,11 @@
 
 /* ── top ─────────────────────────────────────────────────────────────────── */
 
+.hub > .topbar {
+  --bar-inline: 56px;
+}
+
+
 .hub-top {
   position: relative;
   z-index: 2;
@@ -622,9 +627,8 @@ a.hub-open:focus-visible {
     width: 100%;
   }
 
-  .hub-top {
-    padding: 18px 18px 0;
-    font-size: 0.9rem;
+  .hub > .topbar {
+    --bar-inline: 18px;
   }
 
   .hub-main {

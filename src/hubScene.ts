@@ -20,7 +20,7 @@ export type HubScene = {
 };
 
 /** Sample the icon on a GRID×GRID lattice: a dot wherever the stroke covers the cell. */
-async function sampleIcon(svgMarkup: string): Promise<Array<[number, number]>> {
+export async function sampleIcon(svgMarkup: string): Promise<Array<[number, number]>> {
   const svg = svgMarkup
     .replace(/stroke-width="[^"]*"/, 'stroke-width="2.9"')
     .replace(/stroke="currentColor"/, 'stroke="#fff"');
@@ -49,7 +49,7 @@ async function sampleIcon(svgMarkup: string): Promise<Array<[number, number]>> {
   return points;
 }
 
-function dotTexture(THREE: Three) {
+export function dotTexture(THREE: Three) {
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 64;
   const context = canvas.getContext('2d')!;

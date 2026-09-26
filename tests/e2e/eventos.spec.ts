@@ -78,7 +78,7 @@ test.describe('/eventos', () => {
 
     await page.clock.setFixedTime(BEFORE_THE_TALKS);
     await page.goto('/?lang=es');
-    const link = page.locator('#research a[href="/eventos"]');
+    const link = page.locator('#talks a[href="/eventos"]');
     await expect(link).toHaveText('Ver todas las charlas');
 
     await link.click();
