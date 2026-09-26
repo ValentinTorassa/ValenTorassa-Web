@@ -121,9 +121,11 @@ export const talkMedia: Record<string, TalkMedia> = {
     slides: 15,
   },
   'ekoparty-2026-devsecops-space': {
+    deck: `${base('ekoparty-2026-devsecops-space')}/slides`,
     icon: 'branch',
     still: `${base('ekoparty-2026-devsecops-space')}/still.webp`,
     thumb: `${base('ekoparty-2026-devsecops-space')}/thumb.webp`,
+    slides: 14,
   },
   'jcc-2026': {
     icon: 'chat',
