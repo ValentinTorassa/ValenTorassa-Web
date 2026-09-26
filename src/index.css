@@ -342,7 +342,7 @@ img {
   position: absolute;
   top: calc(100% + 8px);
   right: var(--bar-inline);
-  width: min(330px, calc(100vw - 32px));
+  width: min(360px, calc(100vw - 24px));
   padding: 8px;
   overflow: hidden;
   border: 1px solid rgba(142, 156, 189, 0.25);
@@ -376,7 +376,7 @@ img {
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr) auto;
   gap: 10px;
-  min-height: 45px;
+  min-height: 48px;
   align-items: center;
   padding: 0 10px;
   border-radius: 7px;
@@ -3677,7 +3677,7 @@ p {
 .mobile-nav-social {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 2px;
   margin: 8px 3px 0;
   padding: 10px 7px 2px;
   border-top: 1px solid var(--line);
@@ -3713,8 +3713,8 @@ p {
   .language-toggle,
   .mobile-menu-toggle {
     width: auto;
-    min-width: 44px;
-    height: 44px;
+    min-width: 48px;
+    height: 48px;
   }
 }
 

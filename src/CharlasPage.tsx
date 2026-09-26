@@ -30,6 +30,7 @@ import { paperMedia, paperOfTalk, papers, type Paper } from './research';
 import { getInitialLanguage, setMetaContent } from './site';
 import { SiteHeader } from './siteChrome';
 import { talkMedia, type TalkIcon, type TalkMedia } from './talkMedia';
+import { SITE_ORIGIN, talkPageMeta } from './talkSeo';
 
 const ICONS: Record<TalkIcon, ComponentType<LucideProps>> = {
   terminal: Terminal, lock: Lock, shield: Shield, 'pull-request': GitPullRequest, key: KeyRound, castle: Castle,
@@ -77,7 +78,7 @@ function openUrlOf(entry: Entry, today: string): string | undefined {
   return slides ?? entry.paper?.url;
 }
 
-/** `/charlas/<id>` in production (a vercel.json rewrite), `#<id>` or `?c=<id>` anywhere. */
+/** `/charlas/<id>` has its own static HTML, with hash and query links kept for compatibility. */
 function idFromLocation(): string | null {
   const path = /^\/charlas\/([^/]+)\/?$/.exec(window.location.pathname);
   if (path) return decodeURIComponent(path[1]);
@@ -87,7 +88,7 @@ function idFromLocation(): string | null {
 
 function writeLocation(id: string) {
   const { pathname, search } = window.location;
-  // Only /charlas and /charlas/<id> are rewritten; charlas.html (vite dev) keeps the hash.
+  // Vite dev uses charlas.html; production and preview have a static page for every id.
   const url = pathname.startsWith('/charlas') && !pathname.endsWith('.html')
     ? `/charlas/${encodeURIComponent(id)}${search}`
     : `${pathname}${search}#${encodeURIComponent(id)}`;
@@ -144,16 +145,28 @@ function CharlasPage() {
   ].filter(Boolean);
 
   useEffect(() => {
+    const entryMeta = idFromLocation() ? talkPageMeta(talk.id, language) : undefined;
+    const title = entryMeta?.title ?? copy.documentTitle;
+    const description = entryMeta?.description ?? copy.seo.description;
     document.documentElement.lang = language;
-    document.title = copy.documentTitle;
+    document.title = title;
     window.localStorage.setItem('vt-language', language);
-    setMetaContent('meta[name="description"]', copy.seo.description);
-    setMetaContent('meta[property="og:title"]', copy.documentTitle);
-    setMetaContent('meta[property="og:description"]', copy.seo.description);
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', description);
     setMetaContent('meta[property="og:locale"]', copy.seo.locale);
-    setMetaContent('meta[name="twitter:title"]', copy.documentTitle);
-    setMetaContent('meta[name="twitter:description"]', copy.seo.description);
-  }, [copy.documentTitle, copy.seo.description, copy.seo.locale, language]);
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', description);
+    const url = entryMeta?.url ?? `${SITE_ORIGIN}/charlas`;
+    const image = entryMeta?.image ?? `${SITE_ORIGIN}/og-charlas.png`;
+    const imageAlt = entryMeta?.imageAlt ?? 'Charlas de Valentín Torassa Colombero';
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', url);
+    setMetaContent('meta[property="og:url"]', url);
+    setMetaContent('meta[property="og:image"]', image);
+    setMetaContent('meta[property="og:image:alt"]', imageAlt);
+    setMetaContent('meta[name="twitter:image"]', image);
+    setMetaContent('meta[name="twitter:image:alt"]', imageAlt);
+  }, [copy.documentTitle, copy.seo.description, copy.seo.locale, language, talk.id]);
 
   const iconMarkup = (index: number) =>
     iconsRef.current?.querySelector(`[data-icon="${iconOf(roster[index])}"]`)?.outerHTML;
