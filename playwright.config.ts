@@ -1,21 +1,24 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const baseURL = `http://127.0.0.1:${PORT}`;
 
 // Smoke tests run against the production build served by `vite preview`,
 // which (like Vercel's cleanUrls) serves /privacy from public/privacy.html.
 export default defineConfig({
   testDir: './tests/e2e',
-  outputDir: './test-results',
+  outputDir: process.env.PLAYWRIGHT_OUTPUT_DIR ?? './test-results',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
+  reporter: [['list'], ['html', { outputFolder: process.env.PLAYWRIGHT_REPORT_DIR ?? 'playwright-report', open: 'never' }]],
   use: {
     baseURL,
     trace: 'retain-on-failure',
+    launchOptions: process.env.PLAYWRIGHT_CHROME_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROME_PATH }
+      : undefined,
   },
   projects: [
     {
