@@ -224,6 +224,7 @@ export const talks: Talk[] = [
     mode: 'presencial',
     status: 'confirmed',
     url: 'https://ekodevsecops.space/',
+    slidesUrl: 'https://drive.google.com/file/d/1blK_CCeJVIuVX4OOj5JArldnGEgwETz4/view',
   },
   {
     id: 'jcc-2026',
