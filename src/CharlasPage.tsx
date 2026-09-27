@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { charlasPageByLanguage } from './charlasContent';
 import { talks, type Talk } from './events';
-import { formatTalkDate, formatTalkPlace, formatTalkTime, isPastTalk, slidesAvailable, todayInArgentina } from './eventSchedule';
+import { formatTalkDate, formatTalkPlace, formatTalkTime, isPastTalk, slidesAvailable, slidesReleased, todayInArgentina } from './eventSchedule';
 import type { HubScene } from './hubScene';
 import { paperMedia, paperOfTalk, papers, type Paper } from './research';
 import { getInitialLanguage, setMetaContent } from './site';
@@ -72,11 +72,11 @@ const mediaOf = (entry: Entry): TalkMedia =>
 const iconOf = (entry: Entry): TalkIcon => mediaOf(entry).icon ?? 'layers';
 
 /**
- * What Enter and the main button open: from the talk's day on, the hosted deck
+ * What Enter and the main button open: from the slide release day, the hosted deck
  * (or the PDF when there is none); otherwise the paper, if the entry has one.
  */
 function openUrlOf(entry: Entry, today: string): string | undefined {
-  const slides = entry.date <= today ? mediaOf(entry).deck ?? (slidesAvailable(entry, today) ? entry.slidesUrl : undefined) : undefined;
+  const slides = slidesReleased(entry, today) ? mediaOf(entry).deck ?? (slidesAvailable(entry, today) ? entry.slidesUrl : undefined) : undefined;
   return slides ?? entry.paper?.url;
 }
 
@@ -131,13 +131,14 @@ function CharlasPage() {
   const talk = roster[selected];
   const media = mediaOf(talk);
   const dayHasCome = talk.date <= today;
+  const deckHasReleased = slidesReleased(talk, today);
   const slidesUrl = slidesAvailable(talk, today) ? talk.slidesUrl : undefined;
   // The hosted deck (with its animations) opens first; the Drive PDF stays as the download.
-  const deckUrl = dayHasCome ? media.deck ?? slidesUrl : undefined;
+  const deckUrl = deckHasReleased ? media.deck ?? slidesUrl : undefined;
   const openUrl = openUrlOf(talk, today);
   const hasSlides = Boolean(media.deck || talk.slidesUrl);
   const coauthors = talk.kind !== 'talk' && talk.paper ? talk.paper.authors.slice(1) : [];
-  const showReel = Boolean(media.reel) && dayHasCome && !reducedMotion();
+  const showReel = Boolean(media.reel) && deckHasReleased && !reducedMotion();
   const date = formatTalkDate(talk, language, currentYear);
   const meta = [
     formatTalkPlace(talk, language) || talk.city,
@@ -374,7 +375,7 @@ function CharlasPage() {
           <div className="hub-screen" key={talk.id}>
             {showReel ? (
               <video src={media.reel} poster={media.poster} autoPlay muted loop playsInline />
-            ) : dayHasCome && media.poster ? (
+            ) : deckHasReleased && media.poster ? (
               <img src={media.poster} alt="" />
             ) : dayHasCome && media.page ? (
               <img src={media.page} alt="" />

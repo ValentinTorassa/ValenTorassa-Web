@@ -50,8 +50,10 @@ export type Talk = {
   status: TalkStatus;
   /** Official event or talk page. */
   url?: string;
-  /** Public slides. The page shows the link from the talk's day on (Argentina time). */
+  /** Public PDF, when available. Hosted decks are configured in talkMedia. */
   slidesUrl?: string;
+  /** First day the site's slide links appear, in Argentina time. Defaults to the talk day. */
+  slidesReleaseDate?: string;
   note?: Localized;
   /** Award or distinction received for the talk. */
   recognition?: Localized;
@@ -92,6 +94,7 @@ export const talks: Talk[] = [
     city: 'Rosario',
     mode: 'presencial',
     status: 'closed',
+    slidesReleaseDate: '2026-09-27',
     note: {
       es: 'Sesión compartida con Matías Ocariz, fiscal especializado en cibercrimen.',
       en: 'Joint session with Matías Ocariz, a prosecutor specialized in cybercrime.',
