@@ -546,7 +546,7 @@ function App() {
                         >
                           <img
                             src={repo.previewImage}
-                            alt=""
+                            alt={repo.previewAlt ?? ''}
                             width="2212"
                             height="1092"
                             loading="lazy"
@@ -584,6 +584,23 @@ function App() {
                       className={`repo-card repo-${repo.tone} ${index < 3 ? 'is-lead' : 'is-standard'}`}
                       key={repo.name}
                     >
+                      {repo.previewImage && (
+                        <div className="repo-card-media">
+                          <img
+                            src={repo.previewImage}
+                            alt={repo.previewAlt ?? ''}
+                            width="1000"
+                            height="620"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <span className="repo-card-media-label">
+                            {repo.previewKind === 'screenshot'
+                              ? content.research.screenshotLabel
+                              : content.research.illustrationLabel}
+                          </span>
+                        </div>
+                      )}
                       <div className="repo-card-body">
                         <div className="repo-card-head">
                           <div>
