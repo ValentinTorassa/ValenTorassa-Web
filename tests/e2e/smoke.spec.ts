@@ -90,6 +90,15 @@ test.describe('route coverage', () => {
 for (const route of ROUTES) {
   test.describe(`${route.name} (${route.path})`, () => {
     test('loads cleanly, fits the viewport and has working internal links', async ({ page, request }, testInfo) => {
+      if (route.name.startsWith('home')) {
+        // Live repository metadata is optional. Keep the site smoke test independent
+        // of GitHub's unauthenticated API quota and use the site's fallback values.
+        await page.route(
+          (url) => url.origin === 'https://api.github.com' && url.pathname === '/users/ValentinTorassa/repos',
+          (githubRoute) => githubRoute.fulfill({ status: 200, contentType: 'application/json', body: '[]' }),
+        );
+      }
+
       const pageErrors: string[] = [];
       const consoleErrors: string[] = [];
       page.on('pageerror', (error) => pageErrors.push(error.stack ?? error.message));
@@ -165,3 +174,22 @@ for (const route of ROUTES) {
     });
   });
 }
+
+test('home keeps repository fallback values when GitHub rate limits the request', async ({ page }) => {
+  test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+  await page.route(
+    (url) => url.origin === 'https://api.github.com' && url.pathname === '/users/ValentinTorassa/repos',
+    (githubRoute) => githubRoute.fulfill({ status: 403, contentType: 'application/json', body: '{}' }),
+  );
+
+  const pageErrors: string[] = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.goto('/?lang=es');
+  await page.waitForLoadState('networkidle');
+
+  const repoCard = page.locator('.repo-card').filter({ has: page.getByRole('heading', { name: 'VT-Terminal-Project' }) });
+  await expect(repoCard.locator('.repo-meta span').nth(0)).toContainText('32');
+  await expect(repoCard.locator('.repo-meta span').nth(1)).toContainText('2');
+  expect(pageErrors, 'uncaught page errors').toEqual([]);
+});
