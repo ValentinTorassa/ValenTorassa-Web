@@ -9,6 +9,9 @@ test('the same navigation works across the three pages', async ({ page }) => {
   for (const path of pages) {
     await page.goto(`${path}?lang=es`);
     await expect(page.locator('.nav-links a')).toHaveText(spanish);
+    await expect(page.locator('.social-actions a')).toHaveCount(3);
+    expect(await page.locator('.social-actions a').evaluateAll((links) => links.map((link) => link.getAttribute('aria-label'))))
+      .toEqual(['GitHub', 'LinkedIn', 'YouTube']);
     if (path === '/charlas') await expect(page.locator('.nav-links a[href="/charlas"]')).toHaveAttribute('aria-current', 'page');
     if (path === '/eventos') await expect(page.locator('.nav-links a[href="/eventos"]')).toHaveAttribute('aria-current', 'page');
   }
