@@ -23,6 +23,11 @@ import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
 import uaiCrest from './assets/companies/uai-crest.png';
 import openSecurityLabsPreview from './assets/open-security-labs-og.webp';
+import lensVisual from './assets/projects/lens.svg';
+import plumaScreenshot from './assets/projects/pluma-homepage.png';
+import ragnarosVisual from './assets/projects/ragnaros.svg';
+import secretShareScreenshot from './assets/projects/secretshare-homepage.png';
+import securityFixesVisual from './assets/projects/security-fixes.svg';
 
 import { siteChromeByLanguage, siteNav, type HeaderLabels, type Language, type NavItem } from './siteContent';
 
@@ -43,6 +48,8 @@ export type FeaturedRepo = {
   tone: string;
   featured?: boolean;
   previewImage?: string;
+  previewKind?: 'screenshot' | 'illustration';
+  previewAlt?: string;
   siteHref?: string;
   caseStudy: {
     problem: string;
@@ -121,6 +128,8 @@ type PageContent = {
     speakingTitle: string;
     repositoriesTitle: string;
     featuredLabel: string;
+    screenshotLabel: string;
+    illustrationLabel: string;
     upcomingTalksLabel: string;
     previousTalksLabel: string;
     nextTalkLabel: string;
@@ -213,6 +222,7 @@ const repoFacts = {
     tone: 'learning',
     featured: true,
     previewImage: openSecurityLabsPreview,
+    previewKind: 'screenshot' as const,
     siteHref: 'https://securitylabs.valentorassa.com',
   },
   securityFixes: {
@@ -222,6 +232,8 @@ const repoFacts = {
     languageColor: '#89e051',
     tags: ['DEP-3', 'Ubuntu', 'CVE', 'Patch provenance'],
     tone: 'security',
+    previewImage: securityFixesVisual,
+    previewKind: 'illustration' as const,
   },
   secretShare: {
     name: 'VT-SecretShare',
@@ -231,6 +243,8 @@ const repoFacts = {
     tags: [{ label: 'Go', icon: SiGo }, { label: 'Redis', icon: SiRedis }, 'WebCrypto', 'One-time links'],
     tone: 'security',
     siteHref: 'https://secretshare.valentorassa.com',
+    previewImage: secretShareScreenshot,
+    previewKind: 'screenshot' as const,
   },
   pluma: {
     name: 'pluma',
@@ -240,6 +254,8 @@ const repoFacts = {
     tags: ['Next.js', 'TypeScript', 'Turso', 'Publishing API'],
     tone: 'product',
     siteHref: 'https://vtsecurity.com.ar',
+    previewImage: plumaScreenshot,
+    previewKind: 'screenshot' as const,
   },
   ragnaros: {
     name: 'VT-Ragnaros',
@@ -248,6 +264,8 @@ const repoFacts = {
     languageColor: '#f7c95a',
     tags: ['Linux', 'USB', 'libusb', 'systemd'],
     tone: 'systems',
+    previewImage: ragnarosVisual,
+    previewKind: 'illustration' as const,
   },
   lens: {
     name: 'VT-Lens',
@@ -256,12 +274,15 @@ const repoFacts = {
     languageColor: '#d98a54',
     tags: ['Rust', 'Linux /proc', 'Processes', 'Networks'],
     tone: 'systems',
+    previewImage: lensVisual,
+    previewKind: 'illustration' as const,
   },
 };
 
 const esRepos: FeaturedRepo[] = [
   {
     ...repoFacts.openSecurityLabs,
+    previewAlt: 'Vista de la plataforma Open Security Labs',
     stage: 'Plataforma pública',
     proof: 'Laboratorios MDX versionados · seis rutas de aprendizaje',
     description: 'Laboratorios abiertos en español para aprender Linux, redes, backend y seguridad entendiendo cómo funcionan los sistemas.',
@@ -273,6 +294,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.securityFixes,
+    previewAlt: 'Ilustración de un parche DEP-3 que conecta un CVE con un paquete',
     stage: 'Candidatos de parche',
     proof: 'Tres parches DEP-3 con trazabilidad de CVE y upstream',
     description: 'Parches para CVEs de paquetes Ubuntu universe, con procedencia y estado documentados por paquete.',
@@ -284,6 +306,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.secretShare,
+    previewAlt: 'Captura de la interfaz pública de VT-SecretShare',
     stage: 'Servicio en vivo',
     proof: 'Cifrado WebCrypto · lectura única con Redis GETDEL',
     description: 'Enlaces de una sola lectura: el navegador cifra el secreto y un backend en Go coordina su vencimiento.',
@@ -295,6 +318,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.pluma,
+    previewAlt: 'Captura del blog VT Security publicado con Pluma',
     stage: 'Aplicación en uso',
     proof: 'Un código · dos sitios públicos · API con permisos',
     description: 'Plataforma de publicación con editor, imágenes y comentarios, desplegada para sitios independientes desde un mismo código.',
@@ -306,6 +330,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.ragnaros,
+    previewAlt: 'Ilustración del control deck USB con teclas, perillas y pantalla táctil',
     stage: 'Daemon Linux',
     proof: 'Protocolo USB reconstruido · controles y pantallas vía libusb',
     description: 'Daemon Linux y perfiles configurables para un control deck USB cuyo software oficial funciona en Windows.',
@@ -317,6 +342,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
+    previewAlt: 'Ilustración de la vista de procesos, conexiones y exportación de evidencia',
     stage: 'Aplicación de escritorio',
     proof: 'GUI Rust · procesos, conexiones y exportación de evidencia',
     description: 'Interfaz nativa para inspeccionar procesos y conexiones de Linux y convertir una selección en evidencia legible.',
@@ -331,6 +357,7 @@ const esRepos: FeaturedRepo[] = [
 const enRepos: FeaturedRepo[] = [
   {
     ...repoFacts.openSecurityLabs,
+    previewAlt: 'Preview of the Open Security Labs platform',
     stage: 'Public learning platform',
     proof: 'Versioned MDX labs · six learning paths',
     description: 'Open Spanish-language labs for learning Linux, networking, backend systems, and security from the underlying mechanisms.',
@@ -342,6 +369,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.securityFixes,
+    previewAlt: 'Illustration of a DEP-3 patch linking a CVE to a package',
     stage: 'Patch candidates',
     proof: 'Three DEP-3 patches with CVE and upstream provenance',
     description: 'Candidate patches for Ubuntu universe CVEs, with source and package status recorded for each fix.',
@@ -353,6 +381,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.secretShare,
+    previewAlt: 'Screenshot of the public VT-SecretShare interface',
     stage: 'Live service',
     proof: 'WebCrypto encryption · one read through Redis GETDEL',
     description: 'Single-read links: the browser encrypts the secret and a Go backend coordinates its expiration.',
@@ -364,6 +393,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.pluma,
+    previewAlt: 'Screenshot of the VT Security blog published with Pluma',
     stage: 'Live application',
     proof: 'One codebase · two public sites · scoped API',
     description: 'Publishing platform with an editor, images, and comments, deployed for independent sites from one codebase.',
@@ -375,6 +405,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.ragnaros,
+    previewAlt: 'Illustration of the USB control deck with keys, knobs, and touch display',
     stage: 'Linux daemon',
     proof: 'Reverse-engineered USB protocol · libusb controls and displays',
     description: 'Linux daemon and configurable profiles for a USB control deck whose official software runs on Windows.',
@@ -386,6 +417,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
+    previewAlt: 'Illustration of the process, connection, and evidence export workspace',
     stage: 'Desktop app',
     proof: 'Rust GUI · processes, connections, evidence export',
     description: 'Native app for inspecting Linux processes and connections and turning a selection into readable evidence.',
@@ -594,6 +626,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
+      screenshotLabel: 'Captura real',
+      illustrationLabel: 'Ilustración',
       upcomingTalksLabel: 'Próximas charlas',
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
       nextTalkLabel: 'Próxima charla',
@@ -826,6 +860,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
+      screenshotLabel: 'Real screenshot',
+      illustrationLabel: 'Illustration',
       upcomingTalksLabel: 'Upcoming talks',
       previousTalksLabel: 'Previous talks and recognition',
       nextTalkLabel: 'Upcoming talk',

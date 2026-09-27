@@ -4129,8 +4129,46 @@ p {
 }
 
 #research .repo-card {
-  padding: 22px;
+  gap: 0;
+  padding: 0;
   border-top: 2px solid var(--card);
+}
+
+#research .repo-card-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1000 / 570;
+  border-bottom: 1px solid color-mix(in srgb, var(--card) 30%, var(--line));
+  background: #0a1119;
+}
+
+#research .repo-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#research .repo-card:hover .repo-card-media img {
+  transform: scale(1.025);
+}
+
+#research .repo-card-media-label {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--card) 48%, transparent);
+  border-radius: 5px;
+  color: #eef6f7;
+  background: rgba(6, 12, 20, 0.88);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 #research .repo-card::before {
@@ -4152,6 +4190,10 @@ p {
 #research .repo-card h4 {
   margin-top: 8px;
   font-size: 1.18rem;
+}
+
+#research .repo-card-body {
+  padding: 20px 22px 22px;
 }
 
 #research .repo-card.is-lead h4 {
