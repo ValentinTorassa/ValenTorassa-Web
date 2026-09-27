@@ -33,12 +33,11 @@ import portraitWebp512 from './assets/portrait-dark-512.webp';
 import portraitFallback from './assets/portrait-dark-384.png';
 import {
   contentByLanguage,
-  socialLinks,
-  talkLabelsByLanguage,
   type FeaturedRepo,
-  type Language,
   type StackTag,
-} from './content';
+} from './homeContent';
+import { talkLabelsByLanguage } from './eventsContent';
+import { socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
 import { getInitialLanguage, setMetaContent } from './site';

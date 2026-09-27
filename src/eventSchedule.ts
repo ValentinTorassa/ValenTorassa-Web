@@ -1,4 +1,4 @@
-import type { Language } from './content';
+import type { Language } from './siteContent';
 import type { Talk } from './events';
 
 /** Talks are scheduled, and move to "past", in Argentina time. */
@@ -39,15 +39,15 @@ function lastDay(talk: Talk) {
   return end;
 }
 
-/** A talk is past once its last day is before `today` (Argentina). */
 /**
- * Slides show up from the talk's day on, so a deck published ahead of time does
- * not give the talk (or its live demo) away the week before.
+ * The date controls when a slide link appears in the site UI. Deck files copied
+ * to public/ are reachable by direct URL before that date; this is not access control.
  */
 export function slidesAvailable(talk: Talk, today: string): boolean {
   return Boolean(talk.slidesUrl) && talk.date <= today;
 }
 
+/** A talk is past once its last day is before `today` (Argentina). */
 export function isPastTalk(talk: Talk, today: string) {
   return lastDay(talk) < today;
 }

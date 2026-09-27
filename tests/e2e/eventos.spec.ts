@@ -17,6 +17,7 @@ test.describe('/eventos', () => {
     await page.goto('/eventos?lang=es');
 
     await expect(page.getByRole('heading', { level: 1, name: 'Eventos y charlas' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Explorar las charlas, slides y papers' })).toHaveAttribute('href', '/charlas');
 
     const upcoming = page.locator('#proximas');
     await expect(upcoming.getByRole('heading', { level: 2, name: 'Próximas' })).toBeVisible();

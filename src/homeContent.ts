@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons';
-import { FaAws, FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
+import { FaAws } from 'react-icons/fa6';
 import {
   SiAstro,
   SiClaude,
@@ -10,7 +10,6 @@ import {
   SiGnubash,
   SiGo,
   SiHuawei,
-  SiInstagram,
   SiJsonwebtokens,
   SiLinux,
   SiLinuxfoundation,
@@ -20,11 +19,8 @@ import {
   SiOpenid,
   SiPostgresql,
   SiRedis,
-  SiTiktok,
   SiTerraform,
   SiWireguard,
-  SiX,
-  SiYoutube,
   SiZedindustries,
 } from 'react-icons/si';
 import consultingItLogo from './assets/companies/consulting-it.png';
@@ -32,15 +28,8 @@ import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
 import uaiCrest from './assets/companies/uai-crest.png';
 import openSecurityLabsPreview from './assets/open-security-labs-og.webp';
-import type { TalkMode, TalkStatus } from './events';
 
-export type Language = 'es' | 'en';
-
-export type SocialLink = {
-  name: string;
-  href: string;
-  icon: IconType;
-};
+import { siteChromeByLanguage, siteNav, type HeaderLabels, type Language, type NavItem } from './siteContent';
 
 export type StackTag = string | {
   label: string;
@@ -67,46 +56,6 @@ export type FeaturedRepo = {
     security: string;
   };
 };
-
-export type HeaderLabels = {
-  homeLabel: string;
-  navLabel: string;
-  languageLabel: string;
-  spanishLabel: string;
-  englishLabel: string;
-  menuLabel: string;
-  closeMenuLabel: string;
-};
-
-/**
- * `current` marks the page the menu is on (aria-current="page"); `section` is the id of the
- * home section that lights the item up when the link itself goes elsewhere.
- */
-export type NavItem = { label: string; href: string; current?: boolean; section?: string };
-
-export type SitePage = 'home' | 'eventos' | 'charlas';
-
-const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'contact', string>> = {
-  es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', contact: 'Contacto' },
-  en: { profile: 'Profile', experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', contact: 'Contact' },
-};
-
-/**
- * One menu for every page, same items in the same order. On the home page the
- * sections are anchors; on the others they point back to the home page.
- */
-export function siteNav(page: SitePage, language: Language): NavItem[] {
-  const home = page === 'home' ? '' : '/';
-  const label = navLabels[language];
-  return [
-    { label: label.profile, href: `${home}#profile` },
-    { label: label.experience, href: `${home}#experience` },
-    { label: label.projects, href: `${home}#research` },
-    { label: label.talks, href: '/charlas', current: page === 'charlas', section: page === 'home' ? 'talks' : undefined },
-    { label: label.agenda, href: '/eventos', current: page === 'eventos' },
-    { label: label.contact, href: `${home}#contact` },
-  ];
-}
 
 type PageContent = {
   documentTitle: string;
@@ -216,53 +165,6 @@ type PageContent = {
     location: string;
   };
 };
-
-export const socialLinks: SocialLink[] = [
-  {
-    name: 'Blog',
-    href: 'https://vtsecurity.com.ar',
-    icon: FaPenNib,
-  },
-  {
-    name: 'GitHub',
-    href: 'https://github.com/ValentinTorassa',
-    icon: SiGithub,
-  },
-  {
-    name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/valetorassa/',
-    icon: FaLinkedinIn,
-  },
-  {
-    name: 'YouTube',
-    href: 'https://www.youtube.com/@vtcibersecurity',
-    icon: SiYoutube,
-  },
-  {
-    name: 'TikTok',
-    href: 'https://tiktok.com/@vtsecurity',
-    icon: SiTiktok,
-  },
-  {
-    name: 'Instagram',
-    href: 'https://instagram.com/vtsecurity',
-    icon: SiInstagram,
-  },
-  {
-    name: 'X',
-    href: 'https://x.com/ValenSecurity',
-    icon: SiX,
-  },
-  {
-    name: 'Email',
-    href: 'mailto:valentin.torassa.colombero@gmail.com',
-    icon: FaEnvelope,
-  },
-];
-
-export const headerSocialLinks = socialLinks.filter((link) =>
-  ['GitHub', 'LinkedIn', 'YouTube'].includes(link.name),
-);
 
 const cloudTags: StackTag[] = [
   { label: 'ECS/Fargate', icon: FaAws },
@@ -470,15 +372,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       description: 'Ingeniero en ciberseguridad y backend especializado en seguridad cloud, arquitectura Go, Linux, compliance técnico y sistemas para agentes de IA.',
       locale: 'es_AR',
     },
-    header: {
-      homeLabel: 'Ir al inicio',
-      navLabel: 'Secciones principales',
-      languageLabel: 'Cambiar idioma',
-      spanishLabel: 'Español de Argentina',
-      englishLabel: 'Inglés de Estados Unidos',
-      menuLabel: 'Abrir navegación',
-      closeMenuLabel: 'Cerrar navegación',
-    },
+    header: siteChromeByLanguage.es.header,
     navItems: siteNav('home', 'es'),
     status: 'Teramot · seguridad cloud, backend y agentes de IA',
     heroRole: 'Ingeniero en Ciberseguridad · Ingeniero Backend · Seguridad Cloud',
@@ -700,11 +594,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       timezone: 'UTC-3 · Rosario',
       availability: 'Disponible para conversaciones técnicas',
     },
-    footer: {
-      tagline: 'Seguridad · sistemas · open source',
-      backToTopLabel: 'Volver arriba',
-      location: 'Rosario · UTC-3',
-    },
+    footer: siteChromeByLanguage.es.footer,
   },
   en: {
     documentTitle: 'Valentin Torassa Colombero · Cybersecurity & Backend',
@@ -712,15 +602,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       description: 'Cybersecurity and backend engineer focused on cloud security, Go architecture, Linux, technical compliance, and systems for AI agents.',
       locale: 'en_US',
     },
-    header: {
-      homeLabel: 'Go to the top',
-      navLabel: 'Main sections',
-      languageLabel: 'Change language',
-      spanishLabel: 'Argentinian Spanish',
-      englishLabel: 'United States English',
-      menuLabel: 'Open navigation',
-      closeMenuLabel: 'Close navigation',
-    },
+    header: siteChromeByLanguage.en.header,
     navItems: siteNav('home', 'en'),
     status: 'Teramot · cloud security, backend, and AI agents',
     heroRole: 'Cybersecurity Engineer · Backend Engineer · Cloud Security',
@@ -942,196 +824,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       timezone: 'UTC-3 · Rosario',
       availability: 'Open to technical conversations',
     },
-    footer: {
-      tagline: 'Security · systems · open source',
-      backToTopLabel: 'Back to top',
-      location: 'Rosario · UTC-3',
-    },
-  },
-};
-
-export type TalkLabels = {
-  status: Record<TalkStatus, string>;
-  mode: Record<TalkMode, string>;
-  officialLinkLabel: string;
-  slidesLabel: string;
-  talkCount: { one: string; other: string };
-};
-
-/** Chips and links shared by /eventos and the home speaking panel. */
-export const talkLabelsByLanguage: Record<Language, TalkLabels> = {
-  es: {
-    status: {
-      confirmed: 'Confirmado',
-      tentative: 'Tentativo',
-      tbd: 'Horario a confirmar',
-      closed: 'Por invitación',
-    },
-    mode: {
-      presencial: 'Presencial',
-      virtual: 'Virtual',
-    },
-    officialLinkLabel: 'Página oficial',
-    slidesLabel: 'Slides',
-    talkCount: { one: 'charla', other: 'charlas' },
-  },
-  en: {
-    status: {
-      confirmed: 'Confirmed',
-      tentative: 'Tentative',
-      tbd: 'Time TBC',
-      closed: 'Invite only',
-    },
-    mode: {
-      presencial: 'In person',
-      virtual: 'Online',
-    },
-    officialLinkLabel: 'Official page',
-    slidesLabel: 'Slides',
-    talkCount: { one: 'talk', other: 'talks' },
-  },
-};
-
-type EventsPageContent = {
-  documentTitle: string;
-  seo: {
-    description: string;
-    locale: 'es_AR' | 'en_US';
-  };
-  navItems: NavItem[];
-  eyebrow: string;
-  title: string;
-  intro: string;
-  timezoneNote: string;
-  upcomingTitle: string;
-  pastTitle: string;
-  emptyUpcoming: string;
-  emptyPast: string;
-};
-
-export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
-  es: {
-    documentTitle: 'Eventos y charlas · Valentín Torassa',
-    seo: {
-      description: 'Charlas, clases y presentaciones de Valentín Torassa Colombero sobre ciberseguridad, backend y agentes de IA: próximas fechas y charlas anteriores.',
-      locale: 'es_AR',
-    },
-    navItems: siteNav('eventos', 'es'),
-    eyebrow: '// eventos',
-    title: 'Eventos y charlas',
-    intro: 'Dónde me vas a ver: charlas, clases y presentaciones de papers, con fecha, lugar y estado de cada una.',
-    timezoneNote: 'Horarios de Argentina (UTC-3)',
-    upcomingTitle: 'Próximas',
-    pastTitle: 'Pasadas',
-    emptyUpcoming: 'No hay charlas anunciadas por ahora.',
-    emptyPast: 'Todavía no hay charlas pasadas cargadas.',
-  },
-  en: {
-    documentTitle: 'Events and talks · Valentín Torassa',
-    seo: {
-      description: 'Talks, classes, and paper presentations by Valentin Torassa Colombero on cybersecurity, backend systems, and AI agents: upcoming dates and past talks.',
-      locale: 'en_US',
-    },
-    navItems: siteNav('eventos', 'en'),
-    eyebrow: '// events',
-    title: 'Events and talks',
-    intro: 'Where to catch me: talks, classes, and paper presentations, each with its date, venue, and status.',
-    timezoneNote: 'Times are Argentina time (UTC-3)',
-    upcomingTitle: 'Upcoming',
-    pastTitle: 'Past',
-    emptyUpcoming: 'No talks announced right now.',
-    emptyPast: 'No past talks listed yet.',
-  },
-};
-
-type CharlasPageContent = {
-  documentTitle: string;
-  navItems: NavItem[];
-  seo: {
-    description: string;
-    locale: 'es_AR' | 'en_US';
-  };
-  section: string;
-  title: string;
-  eventsLabel: string;
-  homeLabel: string;
-  languageLabel: string;
-  listLabel: string;
-  upcoming: string;
-  slides: (count: number) => string;
-  openLabel: string;
-  slidesOn: (date: string) => string;
-  noSlides: string;
-  /** Opens a paper (src/research.ts) when there is no deck. */
-  paperLabel: string;
-  kinds: { paper: string; poster: string };
-  coauthors: (names: string[]) => string;
-  codeLabel: string;
-  officialLabel: string;
-  hintOpen: string;
-  hintMove: string;
-  hintYear: string;
-  yearLabel: (year: string) => string;
-};
-
-const list = (names: string[], and: string) =>
-  names.length > 1 ? `${names.slice(0, -1).join(', ')} ${and} ${names[names.length - 1]}` : names.join('');
-
-export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
-  es: {
-    documentTitle: 'Charlas · Valentín Torassa',
-    navItems: siteNav('charlas', 'es'),
-    seo: {
-      description: 'Las charlas y los papers de Valentín Torassa Colombero en un solo lugar: elegí uno para ver de qué trata, cuándo y dónde fue, y abrir sus slides o el paper.',
-      locale: 'es_AR',
-    },
-    section: 'charlas',
-    title: 'Charlas',
-    eventsLabel: 'eventos',
-    homeLabel: 'Inicio',
-    languageLabel: 'Cambiar idioma',
-    listLabel: 'Elegí una charla',
-    upcoming: 'Próxima',
-    slides: (count) => `${count} slides`,
-    openLabel: 'Ver slides',
-    slidesOn: (date) => `Slides el ${date}`,
-    noSlides: 'Sin slides públicas',
-    paperLabel: 'Leer el paper',
-    kinds: { paper: 'Paper', poster: 'Póster' },
-    coauthors: (names) => `Con ${list(names, 'y')}`,
-    codeLabel: 'Código',
-    officialLabel: 'Página oficial',
-    hintOpen: 'abrir',
-    hintMove: 'elegir',
-    hintYear: 'año',
-    yearLabel: (year) => `Ir a ${year}`,
-  },
-  en: {
-    documentTitle: 'Talks · Valentín Torassa',
-    navItems: siteNav('charlas', 'en'),
-    seo: {
-      description: 'Talks and papers by Valentin Torassa Colombero in one place: pick one to see what it is about, when and where it was, and open its slides or the paper.',
-      locale: 'en_US',
-    },
-    section: 'talks',
-    title: 'Talks',
-    eventsLabel: 'events',
-    homeLabel: 'Home',
-    languageLabel: 'Change language',
-    listLabel: 'Pick a talk',
-    upcoming: 'Upcoming',
-    slides: (count) => `${count} slides`,
-    openLabel: 'Open slides',
-    slidesOn: (date) => `Slides on ${date}`,
-    noSlides: 'No public slides',
-    paperLabel: 'Read the paper',
-    kinds: { paper: 'Paper', poster: 'Poster' },
-    coauthors: (names) => `With ${list(names, 'and')}`,
-    codeLabel: 'Code',
-    officialLabel: 'Official page',
-    hintOpen: 'open',
-    hintMove: 'pick',
-    hintYear: 'year',
-    yearLabel: (year) => `Go to ${year}`,
+    footer: siteChromeByLanguage.en.footer,
   },
 };
