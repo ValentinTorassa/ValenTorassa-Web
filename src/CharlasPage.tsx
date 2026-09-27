@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType } from 'react';
 import {
   ArrowRight,
+  ArrowLeft,
   ArrowUpRight,
   BookOpen,
   Castle,
@@ -22,12 +23,13 @@ import {
   Workflow,
   type LucideProps,
 } from 'lucide-react';
-import { charlasPageByLanguage, contentByLanguage, type Language } from './content';
+import { charlasPageByLanguage } from './charlasContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, isPastTalk, slidesAvailable, todayInArgentina } from './eventSchedule';
 import type { HubScene } from './hubScene';
 import { paperMedia, paperOfTalk, papers, type Paper } from './research';
 import { getInitialLanguage, setMetaContent } from './site';
+import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteHeader } from './siteChrome';
 import { talkMedia, type TalkIcon, type TalkMedia } from './talkMedia';
 import { SITE_ORIGIN, talkPageMeta } from './talkSeo';
@@ -115,7 +117,7 @@ const pad = (value: number) => String(value).padStart(2, '0');
 function CharlasPage() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
   const copy = charlasPageByLanguage[language];
-  const siteContent = contentByLanguage[language];
+  const siteContent = siteChromeByLanguage[language];
   const today = todayInArgentina();
   const currentYear = today.slice(0, 4);
   const [selected, setSelected] = useState(() => defaultIndex(today));
@@ -124,6 +126,7 @@ function CharlasPage() {
   const iconsRef = useRef<HTMLDivElement | null>(null);
   const sceneRef = useRef<HubScene | null>(null);
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const talk = roster[selected];
   const media = mediaOf(talk);
@@ -276,7 +279,7 @@ function CharlasPage() {
 
       <main className="hub-main">
         <section className="hub-info" aria-live="polite">
-          <p className="hub-count">
+          <div className="hub-count">
             <i aria-hidden="true" />
             {pad(selected + 1)} / {pad(roster.length)}
             {talk.kind !== 'talk' ? (
@@ -284,7 +287,15 @@ function CharlasPage() {
             ) : !isPastTalk(talk, today) ? (
               <span className="hub-soon">{copy.upcoming}</span>
             ) : null}
-          </p>
+            <div className="hub-touch-controls" role="group" aria-label={copy.moveControlsLabel}>
+              <button type="button" aria-label={copy.previousLabel} disabled={selected === 0} onClick={() => select(selected - 1)}>
+                <ArrowLeft aria-hidden="true" />
+              </button>
+              <button type="button" aria-label={copy.nextLabel} disabled={selected === roster.length - 1} onClick={() => select(selected + 1)}>
+                <ArrowRight aria-hidden="true" />
+              </button>
+            </div>
+          </div>
           <h1>{copy.title}</h1>
           <h2 className={`hub-name${talk.title[language].length > 90 ? ' is-long' : ''}`} key={talk.id}>
             {talk.title[language]}
@@ -329,6 +340,10 @@ function CharlasPage() {
                 <ArrowUpRight aria-hidden="true" />
               </a>
             ) : null}
+            <a className="hub-link" href="/eventos">
+              {copy.eventsLabel}
+              <ArrowUpRight aria-hidden="true" />
+            </a>
           </div>
           <p className="hub-hint">
             <kbd>Enter</kbd> {copy.hintOpen}
@@ -339,7 +354,23 @@ function CharlasPage() {
           </p>
         </section>
 
-        <div className="hub-stage" aria-hidden="true">
+        <div
+          className="hub-stage"
+          aria-hidden="true"
+          onPointerDown={(event) => {
+            if (event.pointerType === 'touch') swipeStartRef.current = { x: event.clientX, y: event.clientY };
+          }}
+          onPointerUp={(event) => {
+            const start = swipeStartRef.current;
+            swipeStartRef.current = null;
+            if (!start || event.pointerType !== 'touch') return;
+            const deltaX = event.clientX - start.x;
+            const deltaY = event.clientY - start.y;
+            if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.3) return;
+            select(selectedRef.current + (deltaX < 0 ? 1 : -1));
+          }}
+          onPointerCancel={() => { swipeStartRef.current = null; }}
+        >
           <div className="hub-screen" key={talk.id}>
             {showReel ? (
               <video src={media.reel} poster={media.poster} autoPlay muted loop playsInline />

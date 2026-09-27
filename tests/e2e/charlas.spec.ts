@@ -35,6 +35,11 @@ test.describe('/charlas', () => {
     await expect(page.locator('.hub-screen video')).toHaveCount(0);
     await expect(page.locator('.hub-link', { hasText: 'Código' })).toHaveCount(0);
 
+    // UI release timing does not restrict direct access to a deck already in public/.
+    const direct = await page.request.get('/charlas/ekoparty-2026-owasp-village/slides');
+    expect(direct.status()).toBe(200);
+    expect(await direct.text()).toContain('class="slide');
+
     await page.clock.setFixedTime(OWASP_DAY);
     await page.reload();
     await expect(page.locator('a.hub-open')).toHaveAttribute('href', '/charlas/ekoparty-2026-owasp-village/slides');
@@ -64,6 +69,51 @@ test.describe('/charlas', () => {
     await expect(selected).not.toHaveId('card-hacking-day-2026');
     const id = (await selected.getAttribute('id'))!.replace('card-', '');
     await expect(page).toHaveURL(new RegExp(`/charlas/${id}`));
+  });
+
+  test('phone controls and horizontal swipe change one talk without blocking vertical movement', async ({ page }) => {
+    test.skip(test.info().project.name !== 'mobile', 'touch layout only');
+
+    await page.clock.setFixedTime(BEFORE_EKOPARTY);
+    await page.goto('/charlas?lang=es#hacking-day-2026');
+    const previous = page.getByRole('button', { name: 'Charla anterior' });
+    const next = page.getByRole('button', { name: 'Charla siguiente' });
+    await expect(previous).toBeVisible();
+    await expect(next).toBeVisible();
+    for (const button of [previous, next]) {
+      const box = await button.boundingBox();
+      expect(box?.width).toBeGreaterThanOrEqual(44);
+      expect(box?.height).toBeGreaterThanOrEqual(44);
+    }
+
+    const selected = page.locator('.deck-card[aria-selected="true"]');
+    const originalId = await selected.getAttribute('id');
+    await next.click();
+    await expect(selected).not.toHaveId(originalId!);
+    await expect(page).toHaveURL(/\/charlas\/[a-z0-9-]+/);
+    await previous.click();
+    await expect(selected).toHaveId(originalId!);
+
+    const stage = await page.locator('.hub-stage').boundingBox();
+    expect(stage).not.toBeNull();
+    const x = stage!.x + stage!.width * 0.75;
+    const y = stage!.y + stage!.height * 0.5;
+    const cdp = await page.context().newCDPSession(page);
+    const touch = async (type: 'touchStart' | 'touchMove' | 'touchEnd', px: number, py: number) =>
+      cdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: type === 'touchEnd' ? [] : [{ x: px, y: py }],
+      });
+    await touch('touchStart', x, y);
+    await touch('touchMove', x - 95, y + 3);
+    await touch('touchEnd', x - 95, y + 3);
+    await expect(selected).not.toHaveId(originalId!);
+    const afterSwipeId = await selected.getAttribute('id');
+
+    await touch('touchStart', x, y);
+    await touch('touchMove', x - 8, y - 90);
+    await touch('touchEnd', x - 8, y - 90);
+    await expect(selected).toHaveId(afterSwipeId!);
   });
 
   test('the selector is cut by year: a click on a year or ↑ ↓ jump between years', async ({ page }) => {
