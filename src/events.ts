@@ -243,6 +243,7 @@ export const talks: Talk[] = [
     mode: 'presencial',
     status: 'confirmed',
     url: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
+    slidesUrl: 'https://drive.google.com/file/d/1LyPKFPVF150lI5hS65ALVes8JyJBwWyf/view',
     note: {
       es: 'Charla invitada en las Jornadas de Ciencias de la Computación: 45 minutos más preguntas.',
       en: 'Invited talk at the Jornadas de Ciencias de la Computación: 45 minutes plus Q&A.',
