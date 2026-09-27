@@ -44,7 +44,7 @@ test.describe('/eventos', () => {
     await expect(page.locator('#proximas #cacic-2026-podman')).toBeVisible();
   });
 
-  test('shows the slides link only from the talk\'s day on', async ({ page }) => {
+  test('shows a standard slides link only from the talk\'s day on', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
     const slides = page.locator('#hacking-day-2026 .talk-links a', { hasText: 'Slides' });
@@ -60,6 +60,20 @@ test.describe('/eventos', () => {
     await expect(slides).toHaveCount(1);
     // The deck is hosted in /charlas, animations and all, so the link goes there, not to the PDF.
     await expect(slides).toHaveAttribute('href', '/charlas/hacking-day-2026');
+  });
+
+  test('FNGA slides appear the day before while later talks stay scheduled', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    const fnga = page.locator('#joven-argentina-fnga-2026 .talk-links a', { hasText: 'Slides' });
+    await page.clock.setFixedTime(new Date('2026-09-26T15:00:00Z'));
+    await page.goto('/eventos?lang=es');
+    await expect(fnga).toHaveCount(0);
+
+    await page.clock.setFixedTime(new Date('2026-09-27T15:00:00Z'));
+    await page.reload();
+    await expect(fnga).toHaveAttribute('href', '/charlas/joven-argentina-fnga-2026');
+    await expect(page.locator('#hacking-day-2026 .talk-links a', { hasText: 'Slides' })).toHaveCount(0);
   });
 
   test('switches language with the header toggle', async ({ page }) => {
