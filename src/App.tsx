@@ -10,7 +10,6 @@ import {
   Cloud,
   Copy,
   ExternalLink,
-  GitFork,
   Github,
   GraduationCap,
   Lock,
@@ -19,25 +18,17 @@ import {
   Server,
   ShieldCheck,
   Wrench,
-  Star,
   Terminal,
   X,
   Presentation,
 } from 'lucide-react';
-import portraitAvif256 from './assets/portrait-dark-256.avif';
-import portraitAvif384 from './assets/portrait-dark-384.avif';
-import portraitAvif512 from './assets/portrait-dark-512.avif';
-import portraitWebp256 from './assets/portrait-dark-256.webp';
-import portraitWebp384 from './assets/portrait-dark-384.webp';
-import portraitWebp512 from './assets/portrait-dark-512.webp';
-import portraitFallback from './assets/portrait-dark-384.png';
 import {
   contentByLanguage,
   type FeaturedRepo,
   type StackTag,
 } from './homeContent';
 import { talkLabelsByLanguage } from './eventsContent';
-import { socialLinks, type Language } from './siteContent';
+import { headerSocialLinks, socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
 import { getInitialLanguage, setMetaContent } from './site';
@@ -45,62 +36,9 @@ import { SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
 import { TalkChips } from './talkComponents';
 import { talkMedia } from './talkMedia';
 
-const portraitAvifSrcSet = `${portraitAvif256} 256w, ${portraitAvif384} 384w, ${portraitAvif512} 512w`;
-const portraitWebpSrcSet = `${portraitWebp256} 256w, ${portraitWebp384} 384w, ${portraitWebp512} 512w`;
-const portraitSizes = '(max-width: 520px) 156px, 172px';
-
-type LiveRepoStats = Record<string, {
-  stars: number;
-  forks: number;
-  updatedAt: string;
-}>;
-
 const contactEmail = 'valentin.torassa.colombero@gmail.com';
 const canonicalBaseUrl = 'https://valentorassa.com/';
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
-
-function useLiveRepoStats() {
-  const [stats, setStats] = useState<LiveRepoStats>({});
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    fetch('https://api.github.com/users/ValentinTorassa/repos?per_page=100&sort=updated', {
-      signal: controller.signal,
-      headers: { Accept: 'application/vnd.github+json' },
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error('GitHub metadata unavailable');
-        return response.json() as Promise<Array<{
-          name: string;
-          stargazers_count: number;
-          forks_count: number;
-          updated_at: string;
-        }>>;
-      })
-      .then((repos) => {
-        const nextStats = Object.fromEntries(
-          repos.map((repo) => [
-            repo.name,
-            {
-              stars: repo.stargazers_count,
-              forks: repo.forks_count,
-              updatedAt: repo.updated_at,
-            },
-          ]),
-        );
-
-        setStats(nextStats);
-      })
-      .catch(() => {
-        // The page keeps recently verified fallback values when the API is unavailable.
-      });
-
-    return () => controller.abort();
-  }, []);
-
-  return stats;
-}
 
 function App() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
@@ -111,7 +49,6 @@ function App() {
   const [selectedRepoName, setSelectedRepoName] = useState<string | null>(null);
   const copyResetTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
   const projectTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const liveRepoStats = useLiveRepoStats();
   const content = contentByLanguage[language];
   const selectedRepo = content.research.repos.find((repo) => repo.name === selectedRepoName) ?? null;
   const closeProjectDrawer = useCallback(() => setSelectedRepoName(null), []);
@@ -209,11 +146,6 @@ function App() {
     };
   }, [content.navItems]);
 
-  const formatUpdatedAt = (date: string) => new Intl.DateTimeFormat(
-    language === 'es' ? 'es-AR' : 'en-US',
-    { day: 'numeric', month: 'short', year: 'numeric' },
-  ).format(new Date(date));
-
   const copyEmail = async () => {
     let copied = false;
 
@@ -274,27 +206,16 @@ function App() {
         <section className="hero" id="top">
           <HeroScene />
           <div className="hero-inner">
-            <p className="hero-status">
-              <span className="hero-avatar">
-                <PortraitImage />
-              </span>
-              <span className="status-dot" />
-              {content.status}
-            </p>
+            <p className="hero-eyebrow">{content.heroEyebrow}</p>
 
-            <p className="terminal-kicker">
-              vt@security:~$ <span>whoami</span>
-              <span className="caret" aria-hidden="true" />
-            </p>
+            <h1>Valentín Torassa Colombero</h1>
 
-            <h1>Valentin Torassa Colombero</h1>
-
-            <p className="hero-role">{content.heroRole}</p>
+            <p className="hero-statement">{content.heroStatement}</p>
 
             <div className="hero-actions">
-              <a className="btn btn-primary" href="/charlas">
-                <Presentation aria-hidden="true" />
-                {content.heroTalksLabel}
+              <a className="btn btn-primary" href="#research">
+                <ArrowRight aria-hidden="true" />
+                {content.heroProjectsLabel}
               </a>
               <a className="btn btn-secondary" href="#contact">
                 <Mail aria-hidden="true" />
@@ -303,7 +224,7 @@ function App() {
             </div>
 
             <div className="hero-socials" aria-label={content.heroSocialLabel}>
-              {socialLinks.map((link) => (
+              {headerSocialLinks.map((link) => (
                 <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" title={link.name}>
                   <SocialIcon link={link} />
                   <span>{link.name}</span>
@@ -612,7 +533,7 @@ function App() {
           </div>
 
             <Reveal className="repo-grid">
-                {content.research.repos.map((repo) => {
+                {content.research.repos.map((repo, index) => {
                   if (repo.featured && repo.previewImage && repo.siteHref) {
                     return (
                       <article className={`repo-unfurl-card repo-${repo.tone}`} key={repo.name}>
@@ -642,6 +563,7 @@ function App() {
                           </div>
                           <h4>{repo.name}</h4>
                           <p>{repo.description}</p>
+                          <p className="repo-featured-proof"><span>{content.research.proofLabel}</span>{repo.proof}</p>
                           <div className="repo-unfurl-links">
                             <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
                               <span>securitylabs.valentorassa.com</span>
@@ -657,15 +579,9 @@ function App() {
                     );
                   }
 
-                  const stats = liveRepoStats[repo.name] ?? {
-                    stars: repo.stars,
-                    forks: repo.forks,
-                    updatedAt: repo.updatedAt,
-                  };
-
                   return (
                     <article
-                      className={`repo-card repo-${repo.tone}`}
+                      className={`repo-card repo-${repo.tone} ${index < 3 ? 'is-lead' : 'is-standard'}`}
                       key={repo.name}
                     >
                       <div className="repo-card-body">
@@ -687,22 +603,13 @@ function App() {
                             <ExternalLink aria-hidden="true" />
                           </a>
                         </div>
+                        <span className="repo-stage">{repo.stage}</span>
                         <p>{repo.description}</p>
                         <TagList tags={repo.tags} />
                         <div className="repo-card-foot">
-                        <div className="repo-meta">
-                          <span title={content.research.starsLabel}>
-                            <Star aria-hidden="true" />
-                            {stats.stars}
-                          </span>
-                          <span title={content.research.forksLabel}>
-                            <GitFork aria-hidden="true" />
-                            {stats.forks}
-                          </span>
-                          <span>
-                            <Calendar aria-hidden="true" />
-                            {content.research.updatedLabel} {formatUpdatedAt(stats.updatedAt)}
-                          </span>
+                        <div className="repo-proof">
+                          <span>{content.research.proofLabel}</span>
+                          <p>{repo.proof}</p>
                         </div>
                         <button
                           className="repo-details-trigger"
@@ -721,6 +628,26 @@ function App() {
                   );
                 })}
             </Reveal>
+
+            <div className="repo-more">
+              <div className="repo-more-heading">
+                <span className="eyebrow">// {content.research.additionalLabel}</span>
+              </div>
+              <div className="repo-more-item">
+                <span>{content.research.contributionLabel}</span>
+                <a href="https://github.com/podman-container-tools/podman/pull/28637" target="_blank" rel="noopener noreferrer">
+                  {content.research.contributionProof}
+                  <ExternalLink aria-hidden="true" />
+                </a>
+              </div>
+              <div className="repo-more-item">
+                <span>{content.research.developerSetupLabel}</span>
+                <div className="repo-more-links">
+                  <a href="https://github.com/ValentinTorassa/VT-Terminal-Project" target="_blank" rel="noopener noreferrer">VT Terminal <ExternalLink aria-hidden="true" /></a>
+                  <a href="https://github.com/ValentinTorassa/VT-IDE-Project" target="_blank" rel="noopener noreferrer">VT IDE <ExternalLink aria-hidden="true" /></a>
+                </div>
+              </div>
+            </div>
         </section>
 
         <section className="section contact-block" id="contact">
@@ -930,24 +857,6 @@ type RevealProps = HTMLAttributes<HTMLElement> & {
   as?: 'div' | 'article';
   children: ReactNode;
 };
-
-function PortraitImage() {
-  return (
-    <picture className="portrait-picture">
-      <source type="image/avif" srcSet={portraitAvifSrcSet} sizes={portraitSizes} />
-      <source type="image/webp" srcSet={portraitWebpSrcSet} sizes={portraitSizes} />
-      <img
-        className="portrait"
-        src={portraitFallback}
-        alt="Valentin Torassa Colombero"
-        width={172}
-        height={172}
-        decoding="async"
-        fetchPriority="high"
-      />
-    </picture>
-  );
-}
 
 function Reveal({ as = 'div', className, children, ...props }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
