@@ -1,4 +1,5 @@
 import type { Talk } from './events';
+import { slidesReleased } from './eventSchedule';
 
 /**
  * What /charlas shows for each talk, keyed by the talk's id in events.ts.
@@ -8,7 +9,7 @@ import type { Talk } from './events';
  *   the day, thumb is the "character" in the selector.
  * - reel + poster: a short muted loop of the deck (its animations, or a
  *   crossfade of a few slides for a static deck). Like the slides link, it is
- *   shown from the talk's day on, so the page never gives the talk away early.
+ *   shown from slidesReleaseDate (or the talk day by default).
  * - cover: a still of the deck for past talks that have no Tux.
  * - page: the first page of the talk's paper (src/research.ts), shown on the
  *   screen of a past talk that has no deck.
@@ -174,10 +175,10 @@ export const talkMedia: Record<string, TalkMedia> = {
 };
 
 /**
- * Where a talk's "Slides" link points from its day on: the talk in /charlas when
+ * Where a talk's "Slides" link points from its release day: the talk in /charlas when
  * the deck is hosted there (with its animations), else the PDF in Drive.
  */
 export function slidesHref(talk: Talk, today: string): string | undefined {
-  if (talk.date > today) return undefined;
+  if (!slidesReleased(talk, today)) return undefined;
   return talkMedia[talk.id]?.deck ? `/charlas/${talk.id}` : talk.slidesUrl;
 }
