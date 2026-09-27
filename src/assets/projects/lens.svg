@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-labelledby="title desc">
+  <title id="title">VT Lens visual</title>
+  <desc id="desc">An illustration of a Linux process and network inspection workspace.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#122540"/><stop offset="1" stop-color="#090f19"/></linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#77b0ed" stroke-opacity=".08"/></pattern>
+  </defs>
+  <rect width="1000" height="620" fill="url(#bg)"/><rect width="1000" height="620" fill="url(#grid)"/>
+  <rect x="68" y="58" width="864" height="504" rx="18" fill="#0c1420" stroke="#547497" stroke-width="2"/>
+  <path d="M68 122H932" stroke="#3b5a78" stroke-width="2"/>
+  <circle cx="104" cy="91" r="7" fill="#ed7778"/><circle cx="129" cy="91" r="7" fill="#e9bc62"/><circle cx="154" cy="91" r="7" fill="#60d5b8"/>
+  <text x="193" y="99" fill="#b6d7f2" font-size="21" font-weight="700" font-family="monospace">VT LENS</text>
+  <text x="740" y="99" fill="#7796b4" font-size="15" font-family="monospace">LOCAL / LINUX</text>
+  <rect x="93" y="151" width="385" height="369" rx="11" fill="#101e2b" stroke="#314e68"/>
+  <text x="119" y="188" fill="#7cb4ef" font-size="16" font-weight="700" font-family="monospace">PROCESSES</text>
+  <path d="M115 211H453" stroke="#2e4962"/>
+  <g fill="#82a5c8" font-family="monospace" font-size="14"><text x="121" y="244">PID</text><text x="214" y="244">NAME</text><text x="393" y="244">NET</text></g>
+  <rect x="108" y="261" width="353" height="52" rx="7" fill="#224464" stroke="#6ab3ed"/>
+  <circle cx="132" cy="287" r="7" fill="#6bd5cd"/><path d="M209 286h113M402 286h23" stroke="#a6d4f6" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="132" cy="347" r="7" fill="#6c8ea8"/><path d="M209 347h82M402 347h23" stroke="#577b98" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="132" cy="407" r="7" fill="#6c8ea8"/><path d="M209 407h132M402 407h23" stroke="#577b98" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="132" cy="467" r="7" fill="#6c8ea8"/><path d="M209 467h96M402 467h23" stroke="#577b98" stroke-width="8" stroke-linecap="round"/>
+  <rect x="499" y="151" width="405" height="369" rx="11" fill="#101e2b" stroke="#314e68"/>
+  <text x="525" y="188" fill="#7cb4ef" font-size="16" font-weight="700" font-family="monospace">CONNECTIONS + EVIDENCE</text>
+  <path d="M522 211H881" stroke="#2e4962"/>
+  <circle cx="592" cy="317" r="33" fill="#1d4d72" stroke="#79bafa" stroke-width="3"/><circle cx="797" cy="265" r="26" fill="#23465e" stroke="#81cfc5" stroke-width="3"/><circle cx="790" cy="397" r="26" fill="#23465e" stroke="#81cfc5" stroke-width="3"/>
+  <path d="M625 309 771 269M624 327 764 390" stroke="#72b3db" stroke-width="4" stroke-dasharray="10 8"/>
+  <path d="M579 317h26M592 304v26" stroke="#bcdefa" stroke-width="4" stroke-linecap="round"/>
+  <path d="M786 265h22M779 397h22" stroke="#a9e5dc" stroke-width="4" stroke-linecap="round"/>
+  <rect x="531" y="455" width="337" height="42" rx="7" fill="#163d52" stroke="#438ba9"/>
+  <text x="552" y="482" fill="#ace3f8" font-size="16" font-weight="700" font-family="monospace">EXPORT → MARKDOWN</text>
+</svg>

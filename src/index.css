@@ -515,66 +515,6 @@ img {
   animation: hero-settle 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.status-dot {
-  flex: none;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent-2);
-  box-shadow: 0 0 0 5px rgba(84, 230, 214, 0.1);
-}
-
-.portrait-picture {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.portrait {
-  width: 100%;
-  height: 100%;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-  object-fit: cover;
-  background:
-    radial-gradient(circle at 50% 30%, rgba(84, 230, 214, 0.14), transparent 62%),
-    radial-gradient(circle at 78% 82%, rgba(139, 124, 255, 0.12), transparent 58%),
-    linear-gradient(180deg, #141a26 0%, #0a0d14 100%);
-  box-shadow:
-    0 30px 72px -34px rgba(0, 0, 0, 0.94),
-    0 0 0 6px rgba(156, 140, 255, 0.065),
-    0 0 38px -19px rgba(98, 223, 210, 0.68);
-}
-
-.terminal-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin: 16px 0 8px;
-  color: var(--accent-2);
-  font-family: var(--mono);
-  font-size: 0.84rem;
-}
-
-.terminal-kicker span {
-  color: var(--muted);
-}
-
-.caret {
-  display: inline-block;
-  width: 9px;
-  height: 1.05em;
-  background: var(--accent-2);
-  transform: translateY(0.16em);
-  animation: blink 1.1s steps(1) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
 h1,
 h2,
 h3,
@@ -590,7 +530,7 @@ p {
     0 0 30px rgba(84, 230, 214, 0.08);
 }
 
-.hero-role {
+.hero-statement {
   max-width: 760px;
   margin: 0 0 17px;
   color: var(--muted);
@@ -1667,8 +1607,7 @@ p {
   transform: translate(2px, -2px);
 }
 
-.repo-kicker,
-.repo-meta {
+.repo-kicker {
   color: color-mix(in srgb, var(--accent-2) 64%, white);
   font-family: var(--mono);
   font-size: 0.74rem;
@@ -1924,7 +1863,6 @@ p {
 }
 
 .repo-card-head svg,
-.repo-meta svg,
 .github-profile-link svg,
 .talks-page-link svg {
   width: 15px;
@@ -1943,19 +1881,6 @@ p {
   aspect-ratio: 1;
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.24);
-}
-
-.repo-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  color: var(--faint);
-}
-
-.repo-meta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
 }
 
 .repo-details-trigger {
@@ -2684,7 +2609,7 @@ p {
     font-size: 3.75rem;
   }
 
-  .hero-role {
+  .hero-statement {
     font-size: 0.96rem;
   }
 
@@ -2810,7 +2735,7 @@ p {
     max-width: calc(100vw - 24px);
   }
 
-  .hero-role {
+  .hero-statement {
     width: min(100%, calc(100vw - 48px));
     max-width: 318px;
     overflow-wrap: anywhere;
@@ -4085,43 +4010,14 @@ p {
   text-align: center;
 }
 
-.hero-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  max-width: 100%;
-  margin: 0 0 30px;
-  padding: 5px 16px 5px 5px;
-  border: 1px solid rgba(98, 223, 210, 0.25);
-  border-radius: 999px;
-  color: var(--muted);
-  background: rgba(10, 15, 22, 0.72);
+.hero-eyebrow {
+  margin: 0 0 26px;
+  color: var(--accent-2);
   font-family: var(--mono);
-  font-size: 0.76rem;
-  text-align: left;
-}
-
-.hero-avatar {
-  display: block;
-  flex: none;
-  width: 32px;
-  height: 32px;
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-}
-
-.hero-avatar .portrait-picture,
-.hero-avatar .portrait {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.hero .terminal-kicker {
-  margin: 0 0 16px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
 }
 
 .hero h1 {
@@ -4132,13 +4028,13 @@ p {
   letter-spacing: -0.045em;
 }
 
-.hero .hero-role {
-  max-width: 62ch;
+.hero .hero-statement {
+  max-width: 54ch;
   margin: 0 0 34px;
-  color: var(--muted);
+  color: #c0cadd;
   font-family: var(--body);
-  font-size: 1.12rem;
-  line-height: 1.6;
+  font-size: clamp(1.05rem, 1.55vw, 1.26rem);
+  line-height: 1.55;
 }
 
 .hero-actions {
@@ -4194,16 +4090,17 @@ p {
     padding: 36px 12px 48px;
   }
 
-  .hero-status {
-    margin-bottom: 24px;
-    font-size: 0.7rem;
+  .hero-eyebrow {
+    margin-bottom: 20px;
+    font-size: 0.63rem;
+    letter-spacing: 0.12em;
   }
 
   .hero h1 {
     font-size: 2.9rem;
   }
 
-  .hero .hero-role {
+  .hero .hero-statement {
     margin-bottom: 28px;
     font-size: 1rem;
   }
@@ -4216,5 +4113,233 @@ p {
     width: 40px;
     height: 40px;
     min-height: 40px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-inner {
+    top: 56px;
+  }
+}
+
+/* Selected work: a flagship, two lead cards, and three supporting case studies. */
+#research .repo-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+#research .repo-card {
+  gap: 0;
+  padding: 0;
+  border-top: 2px solid var(--card);
+}
+
+#research .repo-card-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1000 / 570;
+  border-bottom: 1px solid color-mix(in srgb, var(--card) 30%, var(--line));
+  background: #0a1119;
+}
+
+#research .repo-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#research .repo-card:hover .repo-card-media img {
+  transform: scale(1.025);
+}
+
+#research .repo-card-media-label {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--card) 48%, transparent);
+  border-radius: 5px;
+  color: #eef6f7;
+  background: rgba(6, 12, 20, 0.88);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+#research .repo-card::before {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card) 85%, white), transparent);
+}
+
+#research .repo-security {
+  --card: #54e6d6;
+}
+
+#research .repo-product {
+  --card: #ab94f4;
+}
+
+#research .repo-systems {
+  --card: #79aef2;
+}
+
+#research .repo-card h4 {
+  margin-top: 8px;
+  font-size: 1.18rem;
+}
+
+#research .repo-card-body {
+  padding: 20px 22px 22px;
+}
+
+#research .repo-card.is-lead h4 {
+  font-size: clamp(1.28rem, 2vw, 1.62rem);
+}
+
+#research .repo-card-head a,
+#research .repo-details-trigger,
+#research .repo-unfurl-links a {
+  min-height: 44px;
+}
+
+#research .repo-card-head a {
+  width: 44px;
+}
+
+.repo-stage {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 9px;
+  border: 1px solid color-mix(in srgb, var(--card) 42%, transparent);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--card) 70%, white);
+  background: color-mix(in srgb, var(--card) 8%, transparent);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.repo-proof {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--card);
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--card) 5%, var(--surface-soft));
+}
+
+.repo-proof > span,
+.repo-featured-proof > span {
+  color: color-mix(in srgb, var(--card, var(--project-accent)) 72%, white);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+#research .repo-proof p {
+  color: #d3dce9;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+#research .repo-featured-proof {
+  display: grid;
+  gap: 6px;
+  margin-top: 2px;
+  padding: 11px 13px;
+  border-left: 2px solid var(--project-accent);
+  background: rgba(74, 222, 112, 0.055);
+  color: #d3dce9;
+}
+
+.repo-more {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.repo-more-heading {
+  grid-column: 1 / -1;
+}
+
+.repo-more-heading .eyebrow {
+  margin: 0;
+}
+
+.repo-more-item {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.repo-more-item > span {
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.repo-more-item a {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 44px;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent-2);
+  font-size: 0.81rem;
+  line-height: 1.45;
+}
+
+.repo-more-item svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.repo-more-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+@media (min-width: 680px) {
+  #research .repo-grid,
+  .repo-more {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #research .repo-unfurl-card,
+  #research .repo-card:last-of-type {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1040px) {
+  #research .repo-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  #research .repo-unfurl-card {
+    grid-column: span 6;
+  }
+
+  #research .repo-card.is-lead {
+    grid-column: span 3;
+  }
+
+  #research .repo-card.is-standard,
+  #research .repo-card:last-of-type {
+    grid-column: span 2;
   }
 }
