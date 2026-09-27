@@ -5,7 +5,7 @@ import vtMarkAvif160 from './assets/vt-mark-160.avif';
 import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
-import { headerSocialLinks, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './content';
+import { headerSocialLinks, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
 
 /** Every network, for the phone menu: the bar only has room for three. */
 const panelSocialLinks = socialLinks.filter((link) => link.name !== 'Email');

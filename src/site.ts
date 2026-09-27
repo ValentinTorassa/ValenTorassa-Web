@@ -1,4 +1,4 @@
-import type { Language } from './content';
+import type { Language } from './siteContent';
 
 /**
  * Language for every page: `?lang=es|en` wins, then the choice saved by the

@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Clock3 } from 'lucide-react';
-import { contentByLanguage, eventsPageByLanguage, talkLabelsByLanguage, type Language } from './content';
+import { eventsPageByLanguage, talkLabelsByLanguage } from './eventsContent';
 import { talks } from './events';
 import { splitTalks, todayInArgentina } from './eventSchedule';
 import { getInitialLanguage, setMetaContent } from './site';
+import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteFooter, SiteHeader } from './siteChrome';
 import { TalkList } from './talkComponents';
 
 function EventosPage() {
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
   const copy = eventsPageByLanguage[language];
-  const siteContent = contentByLanguage[language];
+  const siteContent = siteChromeByLanguage[language];
   const labels = talkLabelsByLanguage[language];
   const today = todayInArgentina();
   const currentYear = today.slice(0, 4);
@@ -49,6 +50,7 @@ function EventosPage() {
             <Clock3 aria-hidden="true" />
             {copy.timezoneNote}
           </p>
+          <a className="events-archive-link" href="/charlas">{copy.archiveLabel} <span aria-hidden="true">↗</span></a>
         </header>
 
         <section className="events-section" id="proximas" aria-labelledby="proximas-title">

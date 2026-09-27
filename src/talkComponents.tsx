@@ -1,5 +1,6 @@
 import { ArrowUpRight, Award, Clock3, MapPin, Presentation } from 'lucide-react';
-import type { Language, TalkLabels } from './content';
+import type { TalkLabels } from './eventsContent';
+import type { Language } from './siteContent';
 import type { Talk } from './events';
 import {
   formatTalkPlace,
