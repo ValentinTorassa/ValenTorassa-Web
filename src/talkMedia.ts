@@ -86,6 +86,15 @@ export const talkMedia: Record<string, TalkMedia> = {
     poster: `${base('cacic-2026-podman')}/poster.webp`,
     slides: 12,
   },
+  'cacic-2026-ubuntu': {
+    deck: `${base('cacic-2026-ubuntu')}/slides`,
+    icon: 'shield',
+    still: `${base('cacic-2026-ubuntu')}/still.webp`,
+    thumb: `${base('cacic-2026-ubuntu')}/thumb.webp`,
+    reel: `${base('cacic-2026-ubuntu')}/reel.mp4`,
+    poster: `${base('cacic-2026-ubuntu')}/poster.webp`,
+    slides: 12,
+  },
   'ekoparty-2026-owasp-village': {
     deck: `${base('ekoparty-2026-owasp-village')}/slides`,
     icon: 'key',

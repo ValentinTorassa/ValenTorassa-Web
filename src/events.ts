@@ -141,6 +141,24 @@ export const talks: Talk[] = [
     },
   },
   {
+    id: 'cacic-2026-ubuntu',
+    date: '2026-10-06',
+    event: 'CACIC 2026',
+    track: 'Workshop de Seguridad Informática',
+    title: {
+      es: 'Marco Metodológico para Parches de Seguridad Comunitarios en Ubuntu Universe: Trazabilidad de CVEs, Backports y Aportes SRU',
+      en: 'Marco Metodológico para Parches de Seguridad Comunitarios en Ubuntu Universe: Trazabilidad de CVEs, Backports y Aportes SRU',
+    },
+    mode: 'virtual',
+    status: 'tbd',
+    url: 'https://www.frcu.utn.edu.ar/cacic-2026',
+    slidesUrl: 'https://drive.google.com/file/d/1gLp4l69ylvFnNOVsMU_btKjvUgpi0Qpf/view',
+    note: {
+      es: 'Presentación de paper. Los workshops se dan de 14:30 a 19:00.',
+      en: 'Paper presentation. Workshops run from 14:30 to 19:00.',
+    },
+  },
+  {
     id: 'ekoparty-2026-owasp-village',
     date: '2026-10-07',
     time: '15:30',
