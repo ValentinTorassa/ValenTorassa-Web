@@ -6,13 +6,31 @@ import path from 'node:path';
  * /charlas lists every talk in src/events.ts on a 3D stage with a selector
  * below. The selected talk comes from the URL (/charlas/<id> in production,
  * #<id> or ?c=<id> anywhere) and, like /eventos, the deck and its preview only
- * open from the talk's day on in Argentina, so each test pins the date. Papers
+ * open from their release day in Argentina (normally the talk day), so each test pins the date. Papers
  * (src/research.ts) open from the button too, and those without a talk get a card.
  */
 const BEFORE_EKOPARTY = new Date('2026-09-25T15:00:00Z');
+const BEFORE_FNGA_RELEASE = new Date('2026-09-26T15:00:00Z');
+const FNGA_RELEASE_DAY = new Date('2026-09-27T15:00:00Z');
 const OWASP_DAY = new Date('2026-10-07T15:00:00Z');
 
 test.describe('/charlas', () => {
+  test('FNGA deck opens one day before the talk', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    await page.clock.setFixedTime(BEFORE_FNGA_RELEASE);
+    await page.goto('/charlas?lang=es#joven-argentina-fnga-2026');
+    await expect(page.locator('a.hub-open')).toHaveCount(0);
+
+    await page.clock.setFixedTime(FNGA_RELEASE_DAY);
+    await page.reload();
+    await expect(page.locator('a.hub-open')).toHaveAttribute('href', '/charlas/joven-argentina-fnga-2026/slides');
+    await expect(page.locator('.hub-screen video')).toHaveAttribute('src', '/charlas/joven-argentina-fnga-2026/reel.mp4');
+    await page.locator('a.hub-open').click();
+    await expect(page).toHaveURL(/\/charlas\/joven-argentina-fnga-2026\/slides/);
+    await expect(page.locator('section.slide').first()).toBeAttached();
+  });
+
   test('shows every talk and opens the one in the URL', async ({ page }) => {
     await page.clock.setFixedTime(BEFORE_EKOPARTY);
     await page.goto('/charlas?lang=es#hacking-day-2026');
