@@ -40,11 +40,15 @@ function lastDay(talk: Talk) {
 }
 
 /**
- * The date controls when a slide link appears in the site UI. Deck files copied
+ * The release date controls when a slide link appears in the site UI. Deck files copied
  * to public/ are reachable by direct URL before that date; this is not access control.
  */
+export function slidesReleased(talk: Talk, today: string): boolean {
+  return (talk.slidesReleaseDate ?? talk.date) <= today;
+}
+
 export function slidesAvailable(talk: Talk, today: string): boolean {
-  return Boolean(talk.slidesUrl) && talk.date <= today;
+  return Boolean(talk.slidesUrl) && slidesReleased(talk, today);
 }
 
 /** A talk is past once its last day is before `today` (Argentina). */
