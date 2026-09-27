@@ -66,6 +66,19 @@ test.describe('/charlas', () => {
     await expect(page.locator('.hub-link', { hasText: 'Código' })).toHaveAttribute('href', /VT-Agent-Firewall/);
   });
 
+  test('offers the CyberFinance checklist only from the talk\'s day on', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    await page.clock.setFixedTime(BEFORE_EKOPARTY);
+    await page.goto('/charlas?lang=es#ekoparty-2026-cyberfinance');
+    await expect(page.locator('.hub-name')).toContainText('webhook');
+    await expect(page.locator('.hub-link', { hasText: 'Checklist' })).toHaveCount(0);
+
+    await page.clock.setFixedTime(new Date('2026-10-08T15:00:00Z'));
+    await page.reload();
+    await expect(page.locator('.hub-link', { hasText: 'Checklist' })).toHaveAttribute('href', /drive\.google\.com\/file\/d\/1bhxqc6VqCClaBxIeZ6TjghG2-m_rca4i/);
+  });
+
   test('Enter opens the hosted deck, with its animations', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 

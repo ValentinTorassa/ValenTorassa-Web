@@ -15,6 +15,8 @@ import { slidesReleased } from './eventSchedule';
  *   screen of a past talk that has no deck.
  * - slides: how many slides the deck has, shown in the stats.
  * - code: the repository the talk is built on.
+ * - checklist: a download the talk promised (checklist, handout), shown like
+ *   the code link, from the talk's day on.
  * - icon: the lucide icon the background dots draw for the talk.
  * - deck: public/charlas/<id>/slides.html, the deck as presented, animations and
  *   all, with the speaker notes taken out. Enter on /charlas opens it, from the
@@ -38,6 +40,7 @@ export type TalkMedia = {
   page?: string;
   slides?: number;
   code?: string;
+  checklist?: string;
   /** The deck itself, hosted here with its animations and without speaker notes. */
   deck?: string;
 };
@@ -111,6 +114,7 @@ export const talkMedia: Record<string, TalkMedia> = {
     poster: `${base('ekoparty-2026-cyberfinance')}/poster.webp`,
     deck: `${base('ekoparty-2026-cyberfinance')}/slides`,
     slides: 14,
+    checklist: 'https://drive.google.com/file/d/1bhxqc6VqCClaBxIeZ6TjghG2-m_rca4i/view',
   },
   'ekoparty-2026-bluespace': {
     deck: `${base('ekoparty-2026-bluespace')}/slides`,

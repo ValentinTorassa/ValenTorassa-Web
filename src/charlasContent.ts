@@ -23,6 +23,7 @@ type CharlasPageContent = {
   kinds: { paper: string; poster: string };
   coauthors: (names: string[]) => string;
   codeLabel: string;
+  checklistLabel: string;
   officialLabel: string;
   hintOpen: string;
   hintMove: string;
@@ -59,6 +60,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     kinds: { paper: 'Paper', poster: 'Póster' },
     coauthors: (names) => `Con ${list(names, 'y')}`,
     codeLabel: 'Código',
+    checklistLabel: 'Checklist',
     officialLabel: 'Página oficial',
     hintOpen: 'abrir',
     hintMove: 'elegir',
@@ -90,6 +92,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     kinds: { paper: 'Paper', poster: 'Poster' },
     coauthors: (names) => `With ${list(names, 'and')}`,
     codeLabel: 'Code',
+    checklistLabel: 'Checklist',
     officialLabel: 'Official page',
     hintOpen: 'open',
     hintMove: 'pick',

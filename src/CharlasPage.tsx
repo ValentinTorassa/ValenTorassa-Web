@@ -14,6 +14,7 @@ import {
   KeyRound,
   Layers,
   Link,
+  ListChecks,
   Lock,
   MessageSquare,
   Shield,
@@ -327,6 +328,12 @@ function CharlasPage() {
               <a className="hub-link" href={talk.paper.url} target="_blank" rel="noopener noreferrer">
                 <BookOpen aria-hidden="true" />
                 {copy.kinds[talk.paper.kind]}
+              </a>
+            ) : null}
+            {media.checklist && dayHasCome ? (
+              <a className="hub-link" href={media.checklist} target="_blank" rel="noopener noreferrer">
+                <ListChecks aria-hidden="true" />
+                {copy.checklistLabel}
               </a>
             ) : null}
             {media.code && dayHasCome ? (
