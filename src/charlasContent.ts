@@ -24,6 +24,9 @@ type CharlasPageContent = {
   coauthors: (names: string[]) => string;
   codeLabel: string;
   checklistLabel: string;
+  /** Apuntes, the newsletter on vtsecurity.com.ar: each talk links it with its own ?ref=. */
+  apuntesLead: string;
+  apuntesLabel: string;
   officialLabel: string;
   hintOpen: string;
   hintMove: string;
@@ -61,6 +64,8 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     coauthors: (names) => `Con ${list(names, 'y')}`,
     codeLabel: 'Código',
     checklistLabel: 'Checklist',
+    apuntesLead: 'Las slides de cada charla y lo que voy aprendiendo, cada quince días por mail.',
+    apuntesLabel: 'Suscribirme a Apuntes',
     officialLabel: 'Página oficial',
     hintOpen: 'abrir',
     hintMove: 'elegir',
@@ -93,6 +98,8 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     coauthors: (names) => `With ${list(names, 'and')}`,
     codeLabel: 'Code',
     checklistLabel: 'Checklist',
+    apuntesLead: 'Talk slides and what I am learning, every two weeks by email (in Spanish).',
+    apuntesLabel: 'Subscribe to Apuntes',
     officialLabel: 'Official page',
     hintOpen: 'open',
     hintMove: 'pick',

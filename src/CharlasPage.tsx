@@ -16,6 +16,7 @@ import {
   Link,
   ListChecks,
   Lock,
+  Mail,
   MessageSquare,
   Shield,
   Terminal,
@@ -64,6 +65,9 @@ const roster: Entry[] = [
 ].sort((a, b) => `${a.date} ${a.time ?? ''}`.localeCompare(`${b.date} ${b.time ?? ''}`));
 
 const yearOf = (entry: Entry) => entry.date.slice(0, 4);
+
+/** Apuntes counts where each signup came from by its ?ref= (Pluma, newsletter_signups). */
+const apuntesUrl = (id: string) => `https://vtsecurity.com.ar/apuntes?ref=charla-${id}`;
 /** Index of the first entry of each year: the cuts in the selector row, and where ↑ ↓ jump. */
 const yearStarts = roster.flatMap((entry, index) => (index === 0 || yearOf(roster[index - 1]) !== yearOf(entry) ? [index] : []));
 
@@ -353,6 +357,14 @@ function CharlasPage() {
               <ArrowUpRight aria-hidden="true" />
             </a>
           </div>
+          <p className="hub-apuntes">
+            <Mail aria-hidden="true" />
+            {copy.apuntesLead}{' '}
+            <a href={apuntesUrl(talk.id)} target="_blank" rel="noopener noreferrer">
+              {copy.apuntesLabel}
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+          </p>
           <p className="hub-hint">
             <kbd>Enter</kbd> {copy.hintOpen}
             <kbd>←</kbd>
