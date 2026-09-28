@@ -31,6 +31,19 @@ test.describe('/charlas', () => {
     await expect(page.locator('section.slide').first()).toBeAttached();
   });
 
+  test('Hacking Day deck opens from 28 September', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    await page.clock.setFixedTime(new Date('2026-09-27T15:00:00Z'));
+    await page.goto('/charlas?lang=es#hacking-day-2026');
+    await expect(page.locator('a.hub-open')).toHaveCount(0);
+
+    await page.clock.setFixedTime(new Date('2026-09-28T15:00:00Z'));
+    await page.reload();
+    await expect(page.locator('a.hub-open')).toHaveAttribute('href', '/charlas/hacking-day-2026/slides');
+    await expect(page.locator('.hub-screen video')).toHaveAttribute('src', '/charlas/hacking-day-2026/reel.mp4');
+  });
+
   test('shows every talk and opens the one in the URL', async ({ page }) => {
     await page.clock.setFixedTime(BEFORE_EKOPARTY);
     await page.goto('/charlas?lang=es#hacking-day-2026');

@@ -114,6 +114,7 @@ export const talks: Talk[] = [
     city: 'Paraná, Entre Ríos',
     mode: 'presencial',
     status: 'confirmed',
+    slidesReleaseDate: '2026-09-28',
     url: 'https://www.hackingday.com.ar/',
     slidesUrl: 'https://drive.google.com/file/d/1ELc0PAu_XoN2Z0rSs594N_mPxt2WtPee/view',
     note: {
