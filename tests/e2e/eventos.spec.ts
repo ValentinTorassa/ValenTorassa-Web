@@ -47,18 +47,36 @@ test.describe('/eventos', () => {
   test('shows a standard slides link only from the talk\'s day on', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
-    const slides = page.locator('#hacking-day-2026 .talk-links a', { hasText: 'Slides' });
+    const slides = page.locator('#cacic-2026-podman .talk-links a', { hasText: 'Slides' });
 
     await page.clock.setFixedTime(BEFORE_THE_TALKS);
     await page.goto('/eventos?lang=es');
-    await expect(page.locator('#hacking-day-2026')).toBeVisible();
+    await expect(page.locator('#cacic-2026-podman')).toBeVisible();
     await expect(slides).toHaveCount(0);
 
-    // 2026-10-02 09:00 in Argentina: the day of Hacking Day.
-    await page.clock.setFixedTime(new Date('2026-10-02T12:00:00Z'));
+    // 2026-10-05 12:00 in Argentina: the day before CACIC 16618.
+    await page.clock.setFixedTime(new Date('2026-10-05T15:00:00Z'));
+    await page.reload();
+    await expect(slides).toHaveCount(0);
+
+    // 2026-10-06 09:00 in Argentina: the day of the talk.
+    await page.clock.setFixedTime(new Date('2026-10-06T12:00:00Z'));
     await page.reload();
     await expect(slides).toHaveCount(1);
     // The deck is hosted in /charlas, animations and all, so the link goes there, not to the PDF.
+    await expect(slides).toHaveAttribute('href', '/charlas/cacic-2026-podman');
+  });
+
+  test('Hacking Day slides appear on 28 September, ahead of the talk', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    const slides = page.locator('#hacking-day-2026 .talk-links a', { hasText: 'Slides' });
+    await page.clock.setFixedTime(new Date('2026-09-27T15:00:00Z'));
+    await page.goto('/eventos?lang=es');
+    await expect(slides).toHaveCount(0);
+
+    await page.clock.setFixedTime(new Date('2026-09-28T15:00:00Z'));
+    await page.reload();
     await expect(slides).toHaveAttribute('href', '/charlas/hacking-day-2026');
   });
 
