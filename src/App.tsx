@@ -585,7 +585,7 @@ function App() {
                       key={repo.name}
                     >
                       {repo.previewImage && (
-                        <div className="repo-card-media">
+                        <div className={`repo-card-media ${repo.previewKind === 'photo' ? 'is-photo' : ''}`}>
                           <img
                             src={repo.previewImage}
                             alt={repo.previewAlt ?? ''}
@@ -595,9 +595,7 @@ function App() {
                             decoding="async"
                           />
                           <span className="repo-card-media-label">
-                            {repo.previewKind === 'screenshot'
-                              ? content.research.screenshotLabel
-                              : content.research.illustrationLabel}
+                            {repo.previewKind === 'photo' ? content.research.photoLabel : content.research.screenshotLabel}
                           </span>
                         </div>
                       )}

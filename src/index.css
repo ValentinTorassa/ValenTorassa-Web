@@ -4151,6 +4151,10 @@ p {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+#research .repo-card-media.is-photo img {
+  object-position: center 65%;
+}
+
 #research .repo-card:hover .repo-card-media img {
   transform: scale(1.025);
 }
