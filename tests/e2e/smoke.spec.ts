@@ -25,6 +25,8 @@ const ROUTES = [
   { path: '/charlas/hacking-day-2026', name: 'talk-hacking-day' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
+  { path: '/creatorstack', name: 'creatorstack' },
+  { path: '/creatorstack-privacy', name: 'creatorstack-privacy' },
 ] as const;
 
 /** Hosts that point back at this site (static pages link to the canonical domain). */
