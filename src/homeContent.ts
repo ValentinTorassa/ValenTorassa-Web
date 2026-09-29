@@ -22,12 +22,12 @@ import consultingItLogo from './assets/companies/consulting-it.png';
 import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
 import uaiCrest from './assets/companies/uai-crest.png';
-import openSecurityLabsPreview from './assets/open-security-labs-og.webp';
-import lensVisual from './assets/projects/lens.svg';
+import openSecurityLabsPreview from './assets/projects/open-security-labs-live.png';
+import lensScreenshot from './assets/projects/lens-demo.png';
 import plumaScreenshot from './assets/projects/pluma-homepage.png';
-import ragnarosVisual from './assets/projects/ragnaros.svg';
+import ragnarosPhoto from './assets/projects/ragnaros-device.jpg';
 import secretShareScreenshot from './assets/projects/secretshare-homepage.png';
-import securityFixesVisual from './assets/projects/security-fixes.svg';
+import securityFixesScreenshot from './assets/projects/security-fixes-repo.png';
 
 import { siteChromeByLanguage, siteNav, type HeaderLabels, type Language, type NavItem } from './siteContent';
 
@@ -48,7 +48,7 @@ export type FeaturedRepo = {
   tone: string;
   featured?: boolean;
   previewImage?: string;
-  previewKind?: 'screenshot' | 'illustration';
+  previewKind?: 'screenshot' | 'photo';
   previewAlt?: string;
   siteHref?: string;
   caseStudy: {
@@ -129,7 +129,7 @@ type PageContent = {
     repositoriesTitle: string;
     featuredLabel: string;
     screenshotLabel: string;
-    illustrationLabel: string;
+    photoLabel: string;
     upcomingTalksLabel: string;
     previousTalksLabel: string;
     nextTalkLabel: string;
@@ -232,8 +232,8 @@ const repoFacts = {
     languageColor: '#89e051',
     tags: ['DEP-3', 'Ubuntu', 'CVE', 'Patch provenance'],
     tone: 'security',
-    previewImage: securityFixesVisual,
-    previewKind: 'illustration' as const,
+    previewImage: securityFixesScreenshot,
+    previewKind: 'screenshot' as const,
   },
   secretShare: {
     name: 'VT-SecretShare',
@@ -264,8 +264,8 @@ const repoFacts = {
     languageColor: '#f7c95a',
     tags: ['Linux', 'USB', 'libusb', 'systemd'],
     tone: 'systems',
-    previewImage: ragnarosVisual,
-    previewKind: 'illustration' as const,
+    previewImage: ragnarosPhoto,
+    previewKind: 'photo' as const,
   },
   lens: {
     name: 'VT-Lens',
@@ -274,8 +274,8 @@ const repoFacts = {
     languageColor: '#d98a54',
     tags: ['Rust', 'Linux /proc', 'Processes', 'Networks'],
     tone: 'systems',
-    previewImage: lensVisual,
-    previewKind: 'illustration' as const,
+    previewImage: lensScreenshot,
+    previewKind: 'screenshot' as const,
   },
 };
 
@@ -294,7 +294,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.securityFixes,
-    previewAlt: 'Ilustración de un parche DEP-3 que conecta un CVE con un paquete',
+    previewAlt: 'Captura del registro fixes.yaml de VT Security Fixes en GitHub',
     stage: 'Candidatos de parche',
     proof: 'Tres parches DEP-3 con trazabilidad de CVE y upstream',
     description: 'Parches para CVEs de paquetes Ubuntu universe, con procedencia y estado documentados por paquete.',
@@ -330,7 +330,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.ragnaros,
-    previewAlt: 'Ilustración del control deck USB con teclas, perillas y pantalla táctil',
+    previewAlt: 'Foto del control deck real funcionando con el daemon de Ragnaros',
     stage: 'Daemon Linux',
     proof: 'Protocolo USB reconstruido · controles y pantallas vía libusb',
     description: 'Daemon Linux y perfiles configurables para un control deck USB cuyo software oficial funciona en Windows.',
@@ -342,7 +342,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Ilustración de la vista de procesos, conexiones y exportación de evidencia',
+    previewAlt: 'Captura real de VT Lens con datos de demostración sintéticos',
     stage: 'Aplicación de escritorio',
     proof: 'GUI Rust · procesos, conexiones y exportación de evidencia',
     description: 'Interfaz nativa para inspeccionar procesos y conexiones de Linux y convertir una selección en evidencia legible.',
@@ -369,7 +369,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.securityFixes,
-    previewAlt: 'Illustration of a DEP-3 patch linking a CVE to a package',
+    previewAlt: 'Screenshot of the VT Security Fixes fixes.yaml registry on GitHub',
     stage: 'Patch candidates',
     proof: 'Three DEP-3 patches with CVE and upstream provenance',
     description: 'Candidate patches for Ubuntu universe CVEs, with source and package status recorded for each fix.',
@@ -405,7 +405,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.ragnaros,
-    previewAlt: 'Illustration of the USB control deck with keys, knobs, and touch display',
+    previewAlt: 'Photo of the real USB control deck running the Ragnaros daemon',
     stage: 'Linux daemon',
     proof: 'Reverse-engineered USB protocol · libusb controls and displays',
     description: 'Linux daemon and configurable profiles for a USB control deck whose official software runs on Windows.',
@@ -417,7 +417,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Illustration of the process, connection, and evidence export workspace',
+    previewAlt: 'Real VT Lens screenshot using synthetic demo data',
     stage: 'Desktop app',
     proof: 'Rust GUI · processes, connections, evidence export',
     description: 'Native app for inspecting Linux processes and connections and turning a selection into readable evidence.',
@@ -627,7 +627,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
       screenshotLabel: 'Captura real',
-      illustrationLabel: 'Ilustración',
+      photoLabel: 'Foto real',
       upcomingTalksLabel: 'Próximas charlas',
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
       nextTalkLabel: 'Próxima charla',
@@ -861,7 +861,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
       screenshotLabel: 'Real screenshot',
-      illustrationLabel: 'Illustration',
+      photoLabel: 'Real photo',
       upcomingTalksLabel: 'Upcoming talks',
       previousTalksLabel: 'Previous talks and recognition',
       nextTalkLabel: 'Upcoming talk',

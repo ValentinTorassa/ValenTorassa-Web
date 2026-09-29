@@ -188,11 +188,11 @@ test('home leads to six selected projects without a GitHub API request', async (
   const projectVisuals = page.locator('#research .repo-card-media img');
   await expect(projectVisuals).toHaveCount(5);
   await expect(page.locator('#research .repo-card-media-label')).toHaveText([
-    'Illustration',
     'Real screenshot',
     'Real screenshot',
-    'Illustration',
-    'Illustration',
+    'Real screenshot',
+    'Real photo',
+    'Real screenshot',
   ]);
   for (const visual of await projectVisuals.all()) {
     await visual.scrollIntoViewIfNeeded();
