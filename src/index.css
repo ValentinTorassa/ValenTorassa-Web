@@ -4159,21 +4159,6 @@ p {
   transform: scale(1.025);
 }
 
-#research .repo-card-media-label {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  padding: 5px 9px;
-  border: 1px solid color-mix(in srgb, var(--card) 48%, transparent);
-  border-radius: 5px;
-  color: #eef6f7;
-  background: rgba(6, 12, 20, 0.88);
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  font-weight: 750;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 
 #research .repo-card::before {
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card) 85%, white), transparent);

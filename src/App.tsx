@@ -594,9 +594,6 @@ function App() {
                             loading="lazy"
                             decoding="async"
                           />
-                          <span className="repo-card-media-label">
-                            {repo.previewKind === 'photo' ? content.research.photoLabel : content.research.screenshotLabel}
-                          </span>
                         </div>
                       )}
                       <div className="repo-card-body">
