@@ -34,6 +34,9 @@ type CharlasPageContent = {
   moveControlsLabel: string;
   previousLabel: string;
   nextLabel: string;
+  /** The talk's reel loops on the stage; this button stops and restarts it. */
+  pauseReelLabel: string;
+  playReelLabel: string;
   yearLabel: (year: string) => string;
 };
 
@@ -73,6 +76,8 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     moveControlsLabel: 'Navegar charlas',
     previousLabel: 'Charla anterior',
     nextLabel: 'Charla siguiente',
+    pauseReelLabel: 'Pausar video',
+    playReelLabel: 'Reproducir video',
     yearLabel: (year) => `Ir a ${year}`,
   },
   en: {
@@ -107,6 +112,8 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     moveControlsLabel: 'Browse talks',
     previousLabel: 'Previous talk',
     nextLabel: 'Next talk',
+    pauseReelLabel: 'Pause video',
+    playReelLabel: 'Play video',
     yearLabel: (year) => `Go to ${year}`,
   },
 };

@@ -197,6 +197,14 @@ a.hub-open:focus-visible {
   text-decoration: none;
 }
 
+/* The reel's pause control reads like the links around it. */
+.hub-reel-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
 .hub-link svg {
   width: 16px;
   height: 16px;
