@@ -490,7 +490,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'nov. 2025 - actualidad',
           description:
-            'Liderazgo técnico de ciberseguridad y compliance en una startup de IA. Arquitectura principal de Aleph, un backend en Go para el acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
+            'Liderazgo técnico de ciberseguridad y compliance en una startup de IA. Coordiné la auditoría SOC 2 de Teramot, del Tipo 1 (dic. 2025) al informe final del Tipo 2 (sep. 2026). Arquitectura principal de Aleph, un backend en Go para el acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
           logo: teramotLogo,
           logoMode: 'symbol',
@@ -724,7 +724,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'Nov. 2025 - present',
           description:
-            'Technical cybersecurity and compliance leadership at an AI startup. Principal architecture of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
+            'Technical cybersecurity and compliance leadership at an AI startup. I coordinated Teramot’s SOC 2 audit, from the Type 1 (Dec. 2025) to the final Type 2 report (Sep. 2026). Principal architecture of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
           logo: teramotLogo,
           logoMode: 'symbol',
