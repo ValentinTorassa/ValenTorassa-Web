@@ -34,7 +34,7 @@ npm run build
 npm run preview
 ```
 
-The build writes one HTML file per talk and standalone paper to `dist/charlas/<id>.html`, plus `dist/sitemap.xml`. Each entry has its own 1200×630 social card in `public/og-charlas/`. After adding a talk or changing its title, run `npm run build:talks` (requires Python Pillow). This generates the cards from the current talk manifest and rebuilds the site with them. Commit any changed cards with the event edit.
+The build writes one HTML file per talk and standalone paper to `dist/charlas/<id>.html`, plus `dist/sitemap.xml`. Each entry has its own 1200×630 social card in `public/og-charlas/`. After adding a talk or changing its title, run `npm run build:talks` (requires Python Pillow). It writes the talk catalog, draws the cards from it, then builds the site once. Commit any changed cards with the event edit.
 
 Public decks in `public/charlas/<id>/slides.html` carry a canonical URL and a link back to the talk. `VT-Knowledge-Engine-Brain/events/charlas-2026-decks/hub/public_decks.py` adds those when creating the public copies. Its `--decorate-existing <public/charlas>` mode updates already published copies.
 

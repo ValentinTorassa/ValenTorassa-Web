@@ -1,26 +1,77 @@
-"""Generate 1200×630 social cards after `npm run build` writes dist/talk-seo.json.
+"""Generate 1200×630 social cards from the talk catalog.
+
+`npm run build:talks` writes the catalog with scripts/write-talk-seo.mjs, runs
+this script, then builds once. Pass the catalog path as the first argument;
+without it the script reads dist/talk-seo.json from a previous build.
 
 The PNGs are committed under public/ so the production build needs no Python.
 Run this whenever a talk or paper is added or its public title changes.
+
+Fonts: DejaVu Sans is the reference face. TALK_OG_FONT and TALK_OG_FONT_BOLD
+override it; otherwise the usual Linux and macOS paths and `fc-match` are
+tried, and Pillow's built-in face is the last resort (with a warning).
 """
 
 import json
+import os
+import shutil
+import subprocess
+import sys
+from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = json.loads((ROOT / "dist/talk-seo.json").read_text(encoding="utf-8"))
+CATALOG = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "dist/talk-seo.json"
+PAGES = json.loads(CATALOG.read_text(encoding="utf-8"))
 OUTPUT = ROOT / "public/og-charlas"
 OUTPUT.mkdir(parents=True, exist_ok=True)
-FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 WIDTH, HEIGHT = 1200, 630
+
+FONT_CANDIDATES = {
+    False: [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",
+        "/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf",
+        "/opt/homebrew/share/fonts/DejaVuSans.ttf",
+        str(Path.home() / "Library/Fonts/DejaVuSans.ttf"),
+        "/Library/Fonts/DejaVuSans.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+    ],
+    True: [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/dejavu-sans-fonts/DejaVuSans-Bold.ttf",
+        "/opt/homebrew/share/fonts/DejaVuSans-Bold.ttf",
+        str(Path.home() / "Library/Fonts/DejaVuSans-Bold.ttf"),
+        "/Library/Fonts/DejaVuSans-Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    ],
+}
+
+
+@lru_cache(maxsize=None)
+def font_path(bold):
+    override = os.environ.get("TALK_OG_FONT_BOLD" if bold else "TALK_OG_FONT")
+    candidates = ([override] if override else []) + FONT_CANDIDATES[bold]
+    for candidate in candidates:
+        if Path(candidate).is_file():
+            return candidate
+    if shutil.which("fc-match"):
+        pattern = "DejaVu Sans:bold" if bold else "DejaVu Sans"
+        found = subprocess.run(["fc-match", "-f", "%{file}", pattern], capture_output=True, text=True).stdout.strip()
+        if found and Path(found).is_file():
+            return found
+    print(f"warning: no {'bold ' if bold else ''}TrueType font found; set TALK_OG_FONT{'_BOLD' if bold else ''}. "
+          "Using Pillow's built-in face, which will not match the committed cards.", file=sys.stderr)
+    return None
 
 
 def font(size, bold=False):
-    return ImageFont.truetype(BOLD if bold else FONT, size)
+    path = font_path(bold)
+    return ImageFont.truetype(path, size) if path else ImageFont.load_default(size)
 
 
 def lines(draw, text, typeface, max_width):

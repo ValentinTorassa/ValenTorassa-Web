@@ -27,7 +27,7 @@ function talkPagesPlugin() {
         try {
           await access(path.join(socialImages, `${page.id}.png`))
         } catch {
-          throw new Error(`Missing social image for ${page.id}. Run python3 scripts/generate-talk-og.py after this build.`)
+          throw new Error(`Missing social image for ${page.id}. Run npm run build:talks to draw it.`)
         }
         const meta = talkPageMeta(page.id)!
         let html = template.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(meta.title)}</title>`)
