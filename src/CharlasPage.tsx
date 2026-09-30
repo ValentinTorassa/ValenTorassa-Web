@@ -18,6 +18,8 @@ import {
   Lock,
   Mail,
   MessageSquare,
+  Pause,
+  Play,
   Shield,
   Terminal,
   Users,
@@ -132,6 +134,8 @@ function CharlasPage() {
   const sceneRef = useRef<HubScene | null>(null);
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const reelRef = useRef<HTMLVideoElement | null>(null);
+  const [reelPaused, setReelPaused] = useState(false);
 
   const talk = roster[selected];
   const media = mediaOf(talk);
@@ -241,11 +245,22 @@ function CharlasPage() {
       const target = event.target as HTMLElement | null;
       if (target?.closest('input, textarea')) return;
       const onCard = target?.classList.contains('deck-card') ?? false;
+      // The arrows belong to the hub when focus is on its controls, or on nothing at all.
+      // Anywhere else (header, links) they keep their normal meaning.
+      const inHub = Boolean(target?.closest('.hub-deck, .hub-touch-controls'));
+      const onPage = !target || target === document.body || target === document.documentElement;
+      // ↑ ↓ Home End also scroll the page: take them only when it has nothing to scroll.
+      const pageScrolls = () => {
+        const root = document.scrollingElement ?? document.documentElement;
+        return root.scrollHeight > root.clientHeight + 1;
+      };
+      const ownsArrows = inHub || onPage;
+      const ownsVertical = inHub || (onPage && !pageScrolls());
 
-      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      if ((event.key === 'ArrowRight' || event.key === 'ArrowLeft') && ownsArrows) {
         event.preventDefault();
         select(selectedRef.current + (event.key === 'ArrowRight' ? 1 : -1), onCard);
-      } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      } else if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && ownsVertical) {
         // A year at a time: ↓ to the first entry of the next year, ↑ to that of this one or the one before.
         event.preventDefault();
         const current = selectedRef.current;
@@ -253,7 +268,7 @@ function CharlasPage() {
           ? yearStarts.find((start) => start > current)
           : [...yearStarts].reverse().find((start) => start < current);
         if (next !== undefined) select(next, onCard);
-      } else if (event.key === 'Home' || event.key === 'End') {
+      } else if ((event.key === 'Home' || event.key === 'End') && ownsVertical) {
         event.preventDefault();
         select(event.key === 'Home' ? 0 : roster.length - 1, onCard);
       } else if (event.key === 'Enter' && (onCard || !target?.closest('a, button'))) {
@@ -284,7 +299,10 @@ function CharlasPage() {
       />
 
       <main className="hub-main">
-        <section className="hub-info" aria-live="polite">
+        <section className="hub-info">
+          <p className="sr-only" aria-live="polite" aria-atomic="true">
+            {pad(selected + 1)} / {pad(roster.length)}: {talk.title[language]}. {meta.join(' · ')}
+          </p>
           <div className="hub-count">
             <i aria-hidden="true" />
             {pad(selected + 1)} / {pad(roster.length)}
@@ -352,6 +370,25 @@ function CharlasPage() {
                 <ArrowUpRight aria-hidden="true" />
               </a>
             ) : null}
+            {showReel ? (
+              <button
+                type="button"
+                className="hub-link hub-reel-toggle"
+                aria-pressed={reelPaused}
+                onClick={() => {
+                  const video = reelRef.current;
+                  const pause = !reelPaused;
+                  if (video) {
+                    if (pause) video.pause();
+                    else void video.play().catch(() => undefined);
+                  }
+                  setReelPaused(pause);
+                }}
+              >
+                {reelPaused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
+                {reelPaused ? copy.playReelLabel : copy.pauseReelLabel}
+              </button>
+            ) : null}
             <a className="hub-link" href="/eventos">
               {copy.eventsLabel}
               <ArrowUpRight aria-hidden="true" />
@@ -393,7 +430,7 @@ function CharlasPage() {
         >
           <div className="hub-screen" key={talk.id}>
             {showReel ? (
-              <video src={media.reel} poster={media.poster} autoPlay muted loop playsInline />
+              <video ref={reelRef} src={media.reel} poster={media.poster} autoPlay={!reelPaused} muted loop playsInline />
             ) : deckHasReleased && media.poster ? (
               <img src={media.poster} alt="" />
             ) : dayHasCome && media.page ? (

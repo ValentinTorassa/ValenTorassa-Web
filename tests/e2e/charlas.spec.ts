@@ -115,6 +115,17 @@ test.describe('/charlas', () => {
     await expect(page).toHaveURL(new RegExp(`/charlas/${id}`));
   });
 
+  test('arrow keys on the header keep their normal meaning', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+    await page.clock.setFixedTime(BEFORE_EKOPARTY);
+    await page.goto('/charlas?lang=es#hacking-day-2026');
+    await page.locator('header a').first().focus();
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('End');
+    await expect(page.locator('.deck-card[aria-selected="true"]')).toHaveId('card-hacking-day-2026');
+  });
+
   test('phone controls and horizontal swipe change one talk without blocking vertical movement', async ({ page }) => {
     test.skip(test.info().project.name !== 'mobile', 'touch layout only');
 
