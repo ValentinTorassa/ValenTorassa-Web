@@ -14,7 +14,8 @@ import { expect, test, type Page } from '@playwright/test';
  *   production serves them without the .html suffix; `vite preview` does the same.
  * - charlas.html is a third entry (src/charlas.tsx), served at /charlas. The
  *   build also writes dist/charlas/<id>.html for every talk and paper.
- * - the build sitemap lists the main pages and each /charlas/<id>.
+ * - the build sitemap lists the main pages and each /charlas/<id>; noindex
+ *   static pages (the CreatorStack OAuth pages) are reachable but left out.
  */
 const ROUTES = [
   { path: '/', name: 'home' },
@@ -81,6 +82,11 @@ test.describe('route coverage', () => {
       return `${url.pathname}${url.search}`;
     });
     expect(locs.length).toBeGreaterThan(0);
+    const noindex = readdirSync(path.join(repoRoot, 'public'))
+      .filter((file) => file.endsWith('.html'))
+      .filter((file) => /<meta name="robots" content="[^"]*noindex/.test(readFileSync(path.join(repoRoot, 'public', file), 'utf8')))
+      .map((file) => `/${file.replace(/\.html$/, '')}`);
+    for (const page of noindex) expect(locs, `noindex page ${page} is not in the sitemap`).not.toContain(page);
     for (const loc of locs) {
       if (covered.has(loc)) continue;
       expect(loc, `sitemap entry ${loc}`).toMatch(/^\/charlas\/[a-z0-9-]+$/);
