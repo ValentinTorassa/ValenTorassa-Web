@@ -128,8 +128,6 @@ type PageContent = {
     speakingTitle: string;
     repositoriesTitle: string;
     featuredLabel: string;
-    screenshotLabel: string;
-    photoLabel: string;
     upcomingTalksLabel: string;
     previousTalksLabel: string;
     nextTalkLabel: string;
@@ -342,7 +340,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Captura real de VT Lens con datos de demostración sintéticos',
+    previewAlt: 'Captura de VT Lens con datos de demostración sintéticos',
     stage: 'Aplicación de escritorio',
     proof: 'GUI Rust · procesos, conexiones y exportación de evidencia',
     description: 'Interfaz nativa para inspeccionar procesos y conexiones de Linux y convertir una selección en evidencia legible.',
@@ -626,8 +624,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
-      screenshotLabel: 'Captura real',
-      photoLabel: 'Foto real',
       upcomingTalksLabel: 'Próximas charlas',
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
       nextTalkLabel: 'Próxima charla',
@@ -860,8 +856,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
-      screenshotLabel: 'Real screenshot',
-      photoLabel: 'Real photo',
       upcomingTalksLabel: 'Upcoming talks',
       previousTalksLabel: 'Previous talks and recognition',
       nextTalkLabel: 'Upcoming talk',
