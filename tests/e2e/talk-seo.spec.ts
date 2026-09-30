@@ -35,6 +35,10 @@ test('public decks link back to their talk and identify themselves to sharing bo
     expect(html, id).toContain(`<link rel="canonical" href="https://valentorassa.com/charlas/${id}/slides">`);
     expect(html, id).toContain(`href="/charlas/${id}">← Volver a la charla</a>`);
     expect(html, id).toContain(`content="https://valentorassa.com/og-charlas/${id}.png"`);
+    // Opened offline, the browser only honours a charset declared in the first 1024 bytes.
+    const charset = Buffer.from(html, 'utf8').indexOf('<meta charset=');
+    expect(charset, `${id}: <meta charset> position`).toBeGreaterThanOrEqual(0);
+    expect(charset, `${id}: <meta charset> position`).toBeLessThan(1024);
   }
 });
 
