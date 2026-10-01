@@ -1,6 +1,6 @@
 # valentorassa.com — hero and project showcase plan
 
-Prepared 27 September 2026. This is a local proposal for review; it does not change the live site or scheduled posts.
+Prepared 27 September 2026. **Status:** implemented and live. PR #13 merged the hero and the six project cards into `main` on 27 September; `e53df63` (29 September) and `ff9930f` (30 September) finished the project images. What shipped, and where it differs from this proposal, is in the *Registro de implementación* at the end.
 
 **Selection revision:** Valen asked to replace VT-Agent-Firewall in the showcase. VT Security Fixes now takes that card. The agent-firewall repo is outside the Projects section.
 
@@ -93,3 +93,14 @@ The **23 private** account repositories were counted in the scan and excluded fr
 5. **Release and campaign alignment:** merge after preview review, then capture the new desktop and phone hero and projects area. The **31 October site-refactor post** currently contains the old hero screenshot; replace its queued media and verify previews before that post goes live. Leave the **15 October Charlas** assets alone unless this work visibly changes Charlas.
 
 **Acceptance:** the hero has no left-side portrait pill, names the work in one readable sentence, and links directly to projects; six cards accurately represent public code and its limits; the project section remains usable at phone widths; the 31 October publication shows the released design.
+
+## Registro de implementación · 27 al 30 de septiembre
+
+Se implementó la dirección A del hero y la sección de seis proyectos. Dos cambios respecto de la propuesta: la frase del hero es la que eligió Valen, no la recomendada, y las imágenes de las tarjetas son capturas y una foto reales en lugar de diagramas.
+
+- **Hero:** sin retrato, sin la pill de Teramot y sin el `whoami` de arriba. Muestra `SEGURIDAD / BACKEND / SISTEMAS`, el nombre, la frase "Diseño sistemas, creo herramientas para Linux y comparto lo que aprendo." ("I design systems, build tools for Linux, and share what I learn."), **Ver proyectos** hacia `#research`, **Contacto**, y GitHub, LinkedIn y YouTube.
+- **Proyectos:** el título visible es **Proyectos seleccionados / Selected work** y el ancla sigue siendo `#research`. Las seis tarjetas van en el orden del plan: Open Security Labs, VT Security Fixes, VT SecretShare, pluma, VT Ragnaros y VT Lens. Cada una lleva una línea de evidencia en lugar de estrellas, forks y fecha, y la consulta a la API de GitHub se eliminó. VT-Agent-Firewall no aparece en la sección.
+- **Más trabajo:** el PR de Podman figura como contribución, y VT Terminal y VT IDE quedaron como dos links chicos bajo *Entornos de desarrollo / Developer setup* (`src/App.tsx`, cerca de la línea 658). Se mantiene *Ver todos los repositorios*.
+- **Imágenes:** PR #13 sumó dos capturas y tres ilustraciones SVG. `e53df63` reemplazó las ilustraciones por capturas reales y una foto del dispositivo; el origen de cada imagen está en `docs/project-media-2026-09-29.md`. `ff9930f` sacó la etiqueta *Captura real / Foto real* que iba sobre cada imagen.
+- **Verificación:** el test `home leads to six selected projects without a GitHub API request` comprueba que el hero no tiene retrato, que el botón principal lleva a `#research`, los seis títulos en orden, cinco imágenes cargadas, ninguna etiqueta de captura y ninguna request a `api.github.com`. PR #13 pasó CI (`verify` y `e2e`) y Vercel, y entró a `main` como `e558b91`. `e53df63` y `ff9930f` pasaron los mismos checks en `main` y su deploy de Vercel terminó. El 1 de octubre el bundle de producción tenía *Proyectos seleccionados* y el link a VT Terminal, y no tenía *Captura real* ni llamadas a la API de GitHub.
+- **Sin registrar:** el repositorio no muestra si se reemplazaron las capturas del post del 31 de octubre (paso 5). Según este plan tenían el hero anterior; hay que revisarlas antes de que salga.
