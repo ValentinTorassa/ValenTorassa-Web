@@ -14,6 +14,8 @@ import { expect, test, type Page } from '@playwright/test';
  *   production serves them without the .html suffix; `vite preview` does the same.
  * - charlas.html is a third entry (src/charlas.tsx), served at /charlas. The
  *   build also writes dist/charlas/<id>.html for every talk and paper.
+ * - speaker-kit.html is a fourth entry (src/speakerKit.tsx), served at
+ *   /speaker-kit: the page for event organizers.
  * - the build sitemap lists the main pages and each /charlas/<id>; noindex
  *   static pages (the CreatorStack OAuth pages) are reachable but left out.
  */
@@ -24,6 +26,8 @@ const ROUTES = [
   { path: '/eventos', name: 'eventos' },
   { path: '/charlas', name: 'charlas' },
   { path: '/charlas/hacking-day-2026', name: 'talk-hacking-day' },
+  { path: '/speaker-kit', name: 'speaker-kit' },
+  { path: '/speaker-kit?lang=en', name: 'speaker-kit-en' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
   { path: '/creatorstack', name: 'creatorstack' },

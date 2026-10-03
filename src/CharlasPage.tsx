@@ -393,6 +393,10 @@ function CharlasPage() {
               {copy.eventsLabel}
               <ArrowUpRight aria-hidden="true" />
             </a>
+            <a className="hub-link" href="/speaker-kit">
+              {copy.speakerKitLabel}
+              <ArrowUpRight aria-hidden="true" />
+            </a>
           </div>
           <p className="hub-apuntes">
             <Mail aria-hidden="true" />

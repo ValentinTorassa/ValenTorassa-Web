@@ -50,7 +50,10 @@ function EventosPage() {
             <Clock3 aria-hidden="true" />
             {copy.timezoneNote}
           </p>
-          <a className="events-archive-link" href="/charlas">{copy.archiveLabel} <span aria-hidden="true">↗</span></a>
+          <div className="events-hero-links">
+            <a className="events-archive-link" href="/charlas">{copy.archiveLabel} <span aria-hidden="true">↗</span></a>
+            <a className="events-archive-link" href="/speaker-kit">{copy.speakerKitLabel} <span aria-hidden="true">↗</span></a>
+          </div>
         </header>
 
         <section className="events-section" id="proximas" aria-labelledby="proximas-title">

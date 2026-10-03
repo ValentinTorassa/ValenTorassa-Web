@@ -21,6 +21,7 @@ import {
   Terminal,
   X,
   Presentation,
+  MicVocal,
 } from 'lucide-react';
 import {
   contentByLanguage,
@@ -28,7 +29,7 @@ import {
   type StackTag,
 } from './homeContent';
 import { talkLabelsByLanguage } from './eventsContent';
-import { headerSocialLinks, socialLinks, type Language } from './siteContent';
+import { contactEmail, headerSocialLinks, socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
 import { getInitialLanguage, setMetaContent } from './site';
@@ -36,7 +37,6 @@ import { SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
 import { TalkChips } from './talkComponents';
 import { talkMedia } from './talkMedia';
 
-const contactEmail = 'valentin.torassa.colombero@gmail.com';
 const canonicalBaseUrl = 'https://valentorassa.com/';
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
 
@@ -509,6 +509,11 @@ function App() {
             <a className="talks-page-link" href="/eventos">
               <Calendar aria-hidden="true" />
               {content.research.allTalksLabel}
+              <ArrowRight aria-hidden="true" />
+            </a>
+            <a className="talks-page-link" href="/speaker-kit">
+              <MicVocal aria-hidden="true" />
+              {content.research.speakerKitLabel}
               <ArrowRight aria-hidden="true" />
             </a>
           </div>

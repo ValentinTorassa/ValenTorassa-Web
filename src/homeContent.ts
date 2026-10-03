@@ -133,6 +133,8 @@ type PageContent = {
     nextTalkLabel: string;
     allTalksLabel: string;
     hubLabel: string;
+    /** Link to /speaker-kit, the page for event organizers. */
+    speakerKitLabel: string;
     openTalkLabel: string;
     openProjectLabel: string;
     openRepoLabel: string;
@@ -629,6 +631,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       nextTalkLabel: 'Próxima charla',
       allTalksLabel: 'Ver todas las charlas',
       hubLabel: 'Explorar las charlas y sus slides',
+      speakerKitLabel: 'Invitarme a tu evento',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
       openRepoLabel: 'Abrir repositorio',
@@ -861,6 +864,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       nextTalkLabel: 'Upcoming talk',
       allTalksLabel: 'See all talks',
       hubLabel: 'Browse the talks and their slides',
+      speakerKitLabel: 'Invite me to your event',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
       openRepoLabel: 'Open repository',
