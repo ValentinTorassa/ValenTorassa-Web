@@ -10,6 +10,8 @@ type CharlasPageContent = {
   section: string;
   title: string;
   eventsLabel: string;
+  /** Link to /speaker-kit, the page for event organizers. */
+  speakerKitLabel: string;
   homeLabel: string;
   languageLabel: string;
   listLabel: string;
@@ -54,6 +56,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     section: 'charlas',
     title: 'Charlas',
     eventsLabel: 'Ver agenda y próximas fechas',
+    speakerKitLabel: 'Invitarme a tu evento',
     homeLabel: 'Inicio',
     languageLabel: 'Cambiar idioma',
     listLabel: 'Elegí una charla',
@@ -90,6 +93,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     section: 'talks',
     title: 'Talks',
     eventsLabel: 'See events and upcoming dates',
+    speakerKitLabel: 'Invite me to your event',
     homeLabel: 'Home',
     languageLabel: 'Change language',
     listLabel: 'Pick a talk',

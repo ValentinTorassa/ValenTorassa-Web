@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-const pages = ['/', '/eventos', '/charlas'];
+const pages = ['/', '/eventos', '/charlas', '/speaker-kit'];
 const spanish = ['Perfil', 'Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Contacto'];
 const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Contact'];
 
-test('the same navigation works across the three pages', async ({ page }) => {
+test('the same navigation works across every page', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'shared navigation; run once');
   for (const path of pages) {
     await page.goto(`${path}?lang=es`);

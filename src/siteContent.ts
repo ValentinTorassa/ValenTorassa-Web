@@ -26,7 +26,7 @@ export type HeaderLabels = {
  */
 export type NavItem = { label: string; href: string; current?: boolean; section?: string };
 
-export type SitePage = 'home' | 'eventos' | 'charlas';
+export type SitePage = 'home' | 'eventos' | 'charlas' | 'speaker-kit';
 
 const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'contact', string>> = {
   es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', contact: 'Contacto' },
@@ -49,6 +49,8 @@ export function siteNav(page: SitePage, language: Language): NavItem[] {
     { label: label.contact, href: `${home}#contact` },
   ];
 }
+
+export const contactEmail = 'valentin.torassa.colombero@gmail.com';
 
 export const socialLinks: SocialLink[] = [
   {
@@ -88,7 +90,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: 'Email',
-    href: 'mailto:valentin.torassa.colombero@gmail.com',
+    href: `mailto:${contactEmail}`,
     icon: FaEnvelope,
   },
 ];

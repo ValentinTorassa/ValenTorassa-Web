@@ -55,6 +55,8 @@ type EventsPageContent = {
   intro: string;
   timezoneNote: string;
   archiveLabel: string;
+  /** Link to /speaker-kit, the page for event organizers. */
+  speakerKitLabel: string;
   upcomingTitle: string;
   pastTitle: string;
   emptyUpcoming: string;
@@ -74,6 +76,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
     intro: 'Dónde me vas a ver: charlas, clases y presentaciones de papers, con fecha, lugar y estado de cada una.',
     timezoneNote: 'Horarios de Argentina (UTC-3)',
     archiveLabel: 'Explorar las charlas, slides y papers',
+    speakerKitLabel: 'Invitarme a tu evento',
     upcomingTitle: 'Próximas',
     pastTitle: 'Pasadas',
     emptyUpcoming: 'No hay charlas anunciadas por ahora.',
@@ -91,6 +94,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
     intro: 'Where to catch me: talks, classes, and paper presentations, each with its date, venue, and status.',
     timezoneNote: 'Times are Argentina time (UTC-3)',
     archiveLabel: 'Browse talks, slides, and papers',
+    speakerKitLabel: 'Invite me to your event',
     upcomingTitle: 'Upcoming',
     pastTitle: 'Past',
     emptyUpcoming: 'No talks announced right now.',

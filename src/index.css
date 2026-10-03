@@ -2979,6 +2979,12 @@ p {
   text-decoration: none;
 }
 
+.events-hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 22px;
+}
+
 .events-archive-link:hover,
 .events-archive-link:focus-visible {
   text-decoration: underline;
