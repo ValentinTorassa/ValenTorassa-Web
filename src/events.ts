@@ -173,7 +173,7 @@ export const talks: Talk[] = [
     place: { es: cec, en: cec },
     city: 'Buenos Aires',
     mode: 'presencial',
-    status: 'tentative',
+    status: 'confirmed',
 
     slidesUrl: 'https://drive.google.com/file/d/11qHadCzOQ-Lr7NtYDCUxBMLvR3JhglAs/view',
   },
