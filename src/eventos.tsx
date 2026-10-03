@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import './analytics'
 import './index.css'
 import EventosPage from './EventosPage.tsx'
 
