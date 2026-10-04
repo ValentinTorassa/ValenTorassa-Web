@@ -112,7 +112,7 @@ export const talkMedia: Record<string, TalkMedia> = {
     thumb: `${base('ekoparty-2026-ai-resilience-hub')}/thumb.webp`,
     reel: `${base('ekoparty-2026-ai-resilience-hub')}/reel.mp4`,
     poster: `${base('ekoparty-2026-ai-resilience-hub')}/poster.webp`,
-    slides: 14,
+    slides: 16,
     code: firewall,
   },
   'ekoparty-2026-cyberfinance': {
