@@ -132,8 +132,8 @@ export const talkMedia: Record<string, TalkMedia> = {
     thumb: `${base('ekoparty-2026-bluespace')}/thumb.webp`,
     // ?v=: the reel and poster were rebuilt on 2026-10-09 with the new deck, and
     // public/ files are cached for 4 h, so browsers kept showing the old loop.
-    reel: `${base('ekoparty-2026-bluespace')}/reel.mp4?v=2026-10-09`,
-    poster: `${base('ekoparty-2026-bluespace')}/poster.webp?v=2026-10-09`,
+    reel: `${base('ekoparty-2026-bluespace')}/reel.mp4?v=2026-10-09b`,
+    poster: `${base('ekoparty-2026-bluespace')}/poster.webp?v=2026-10-09b`,
     slides: 15,
   },
   'ekoparty-2026-devsecops-space': {
