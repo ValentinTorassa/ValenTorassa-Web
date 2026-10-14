@@ -204,6 +204,7 @@ export const talks: Talk[] = [
     city: 'Rosario',
     mode: 'presencial',
     status: 'confirmed',
+    slidesReleaseDate: '2026-10-14',
     url: 'https://jcc.dcc.fceia.unr.edu.ar/2026/',
     slidesUrl: 'https://drive.google.com/file/d/1LyPKFPVF150lI5hS65ALVes8JyJBwWyf/view',
     note: {
