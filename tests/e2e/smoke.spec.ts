@@ -178,7 +178,7 @@ for (const route of ROUTES) {
   });
 }
 
-test('home leads to six selected projects without a GitHub API request', async ({ page }) => {
+test('home leads to six selected projects and the private case study without a GitHub API request', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
   const apiRequests: string[] = [];
@@ -196,6 +196,7 @@ test('home leads to six selected projects without a GitHub API request', async (
     'pluma',
     'VT-Ragnaros',
     'VT-Lens',
+    'Scheduling system for a health practice',
   ]);
   const projectVisuals = page.locator('#research .repo-card-media img');
   await expect(projectVisuals).toHaveCount(5);
@@ -205,4 +206,32 @@ test('home leads to six selected projects without a GitHub API request', async (
     await expect.poll(() => visual.evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   }
   expect(apiRequests).toEqual([]);
+});
+
+test('private work says its code is private and links nothing', async ({ page }) => {
+  test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+  for (const lang of ['es', 'en'] as const) {
+    await page.goto(`/?lang=${lang}`);
+    const label = lang === 'es' ? 'Código privado' : 'Private code';
+    const card = page.locator('#research .repo-card.is-private');
+
+    await expect(card).toHaveCount(1);
+    await expect(card.locator('.repo-private-badge')).toHaveText(label);
+    await expect(card.locator('a')).toHaveCount(0);
+    await expect(card.locator('img')).toHaveCount(0);
+    await expect(card).toContainText(lang === 'es' ? 'El código es privado' : 'The code is private');
+
+    await card.getByRole('button').click();
+    const drawer = page.getByRole('dialog');
+    await expect(drawer.locator('.project-drawer-details article')).toHaveCount(3);
+    await expect(drawer.locator('.repo-private-badge')).toHaveText(label);
+    await expect(drawer.locator('a')).toHaveCount(0);
+
+    const text = `${await card.innerText()}\n${await drawer.innerText()}`;
+    expect(text, `${lang}: em or en dashes`).not.toMatch(/[—–]/);
+    expect(text, `${lang}: never presented as open source`).not.toMatch(/open source|código abierto/i);
+    await page.keyboard.press('Escape');
+    await expect(drawer).toHaveCount(0);
+  }
 });

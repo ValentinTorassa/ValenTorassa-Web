@@ -26,6 +26,7 @@ import {
 import {
   contentByLanguage,
   type FeaturedRepo,
+  type PrivateProject,
   type StackTag,
 } from './homeContent';
 import { talkLabelsByLanguage } from './eventsContent';
@@ -50,8 +51,20 @@ function App() {
   const copyResetTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
   const projectTriggerRef = useRef<HTMLButtonElement | null>(null);
   const content = contentByLanguage[language];
-  const selectedRepo = content.research.repos.find((repo) => repo.name === selectedRepoName) ?? null;
+  const selectedRepo =
+    [...content.research.repos, ...content.research.privateProjects].find((repo) => repo.name === selectedRepoName) ??
+    null;
   const closeProjectDrawer = useCallback(() => setSelectedRepoName(null), []);
+  const openProjectDrawer = useCallback((name: string, trigger: HTMLButtonElement) => {
+    projectTriggerRef.current = trigger;
+    setSelectedRepoName(name);
+  }, []);
+  const projectCardLabels: ProjectCardLabels = {
+    openRepository: content.research.openRepoLabel,
+    proof: content.research.proofLabel,
+    details: content.research.projectDetailsLabel,
+    privateCode: content.research.privateCodeLabel,
+  };
 
   useEffect(() => {
     const canonicalUrl = `${canonicalBaseUrl}?lang=${language}`;
@@ -585,66 +598,33 @@ function App() {
                   }
 
                   return (
-                    <article
-                      className={`repo-card repo-${repo.tone} ${index < 3 ? 'is-lead' : 'is-standard'}`}
+                    <ProjectCard
                       key={repo.name}
-                    >
-                      {repo.previewImage && (
-                        <div className={`repo-card-media ${repo.previewKind === 'photo' ? 'is-photo' : ''}`}>
-                          <img
-                            src={repo.previewImage}
-                            alt={repo.previewAlt ?? ''}
-                            width="1000"
-                            height="620"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </div>
-                      )}
-                      <div className="repo-card-body">
-                        <div className="repo-card-head">
-                          <div>
-                            <span className="repo-kicker">
-                              <i style={{ backgroundColor: repo.languageColor }} />
-                              {repo.language}
-                            </span>
-                            <h4>{repo.name}</h4>
-                          </div>
-                          <a
-                            href={repo.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${content.research.openRepoLabel}: ${repo.name}`}
-                            title={content.research.openRepoLabel}
-                          >
-                            <ExternalLink aria-hidden="true" />
-                          </a>
-                        </div>
-                        <span className="repo-stage">{repo.stage}</span>
-                        <p>{repo.description}</p>
-                        <TagList tags={repo.tags} />
-                        <div className="repo-card-foot">
-                        <div className="repo-proof">
-                          <span>{content.research.proofLabel}</span>
-                          <p>{repo.proof}</p>
-                        </div>
-                        <button
-                          className="repo-details-trigger"
-                          type="button"
-                          onClick={(event) => {
-                            projectTriggerRef.current = event.currentTarget;
-                            setSelectedRepoName(repo.name);
-                          }}
-                        >
-                          <span>{content.research.projectDetailsLabel}</span>
-                          <ChevronRight aria-hidden="true" />
-                        </button>
-                        </div>
-                      </div>
-                    </article>
+                      repo={repo}
+                      className={index < 3 ? 'is-lead' : 'is-standard'}
+                      labels={projectCardLabels}
+                      onOpen={openProjectDrawer}
+                    />
                   );
                 })}
             </Reveal>
+
+            {content.research.privateProjects.length > 0 ? (
+              <div className="repo-private">
+                <span className="eyebrow">// {content.research.privateWorkLabel}</span>
+                <Reveal className="repo-grid repo-grid-private">
+                  {content.research.privateProjects.map((project) => (
+                    <ProjectCard
+                      key={project.name}
+                      repo={project}
+                      className="is-private"
+                      labels={projectCardLabels}
+                      onOpen={openProjectDrawer}
+                    />
+                  ))}
+                </Reveal>
+              </div>
+            ) : null}
 
             <div className="repo-more">
               <div className="repo-more-heading">
@@ -731,6 +711,7 @@ function App() {
             security: content.research.securityLabel,
             visit: content.research.visitProjectLabel,
             repository: content.research.openRepoLabel,
+            privateCode: content.research.privateCodeLabel,
           }}
           onClose={closeProjectDrawer}
           returnFocusTarget={projectTriggerRef.current}
@@ -740,8 +721,88 @@ function App() {
   );
 }
 
+type ProjectCardLabels = {
+  openRepository: string;
+  proof: string;
+  details: string;
+  privateCode: string;
+};
+
+type ProjectCardProps = {
+  repo: FeaturedRepo | PrivateProject;
+  className: string;
+  labels: ProjectCardLabels;
+  onOpen: (name: string, trigger: HTMLButtonElement) => void;
+};
+
+/** A selected-work card. Private work says so where public work links its repository. */
+function ProjectCard({ repo, className, labels, onOpen }: ProjectCardProps) {
+  const isPublic = 'href' in repo;
+
+  return (
+    <article className={`repo-card repo-${repo.tone} ${className}`}>
+      {isPublic && repo.previewImage && (
+        <div className={`repo-card-media ${repo.previewKind === 'photo' ? 'is-photo' : ''}`}>
+          <img
+            src={repo.previewImage}
+            alt={repo.previewAlt ?? ''}
+            width="1000"
+            height="620"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      )}
+      <div className="repo-card-body">
+        <div className="repo-card-head">
+          <div>
+            <span className="repo-kicker">
+              <i style={{ backgroundColor: repo.languageColor }} />
+              {repo.language}
+            </span>
+            <h4>{repo.name}</h4>
+          </div>
+          {isPublic ? (
+            <a
+              href={repo.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${labels.openRepository}: ${repo.name}`}
+              title={labels.openRepository}
+            >
+              <ExternalLink aria-hidden="true" />
+            </a>
+          ) : (
+            <span className="repo-private-badge">
+              <Lock aria-hidden="true" />
+              {labels.privateCode}
+            </span>
+          )}
+        </div>
+        <span className="repo-stage">{repo.stage}</span>
+        <p>{repo.description}</p>
+        <TagList tags={repo.tags} />
+        <div className="repo-card-foot">
+          <div className="repo-proof">
+            <span>{labels.proof}</span>
+            <p>{repo.proof}</p>
+          </div>
+          <button
+            className="repo-details-trigger"
+            type="button"
+            onClick={(event) => onOpen(repo.name, event.currentTarget)}
+          >
+            <span>{labels.details}</span>
+            <ChevronRight aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 type ProjectDrawerProps = {
-  repo: FeaturedRepo;
+  repo: FeaturedRepo | PrivateProject;
   labels: {
     close: string;
     problem: string;
@@ -749,6 +810,7 @@ type ProjectDrawerProps = {
     security: string;
     visit: string;
     repository: string;
+    privateCode: string;
   };
   onClose: () => void;
   returnFocusTarget: HTMLButtonElement | null;
@@ -848,16 +910,25 @@ function ProjectDrawer({ repo, labels, onClose, returnFocusTarget }: ProjectDraw
         </div>
 
         <div className="project-drawer-actions">
-          {repo.siteHref ? (
-            <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
-              {labels.visit}
-              <ExternalLink aria-hidden="true" />
-            </a>
-          ) : null}
-          <a href={repo.href} target="_blank" rel="noopener noreferrer">
-            <Github aria-hidden="true" />
-            {labels.repository}
-          </a>
+          {'href' in repo ? (
+            <>
+              {repo.siteHref ? (
+                <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
+                  {labels.visit}
+                  <ExternalLink aria-hidden="true" />
+                </a>
+              ) : null}
+              <a href={repo.href} target="_blank" rel="noopener noreferrer">
+                <Github aria-hidden="true" />
+                {labels.repository}
+              </a>
+            </>
+          ) : (
+            <span className="repo-private-badge">
+              <Lock aria-hidden="true" />
+              {labels.privateCode}
+            </span>
+          )}
         </div>
       </aside>
     </div>
