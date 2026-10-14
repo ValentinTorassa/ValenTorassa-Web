@@ -1,0 +1,11 @@
+{
+  "_doc": "Advisories .github/scripts/npm-audit.mjs reports as warnings instead of failing the Security workflow. Each entry needs id, package, added (YYYY-MM-DD) and reason. Remove an entry once a release without the advisory is in the lockfile; the script flags entries that no longer match anything.",
+  "allow": [
+    {
+      "id": "GHSA-vfj7-8cjw-p6xm",
+      "package": "braces",
+      "added": "2026-10-14",
+      "reason": "Stack exhaustion on deeply nested brace patterns. No patched braces release exists (3.0.3, the latest, is affected). It is reached only through tailwindcss 3 (chokidar and micromatch > braces), at build time, expanding the content globs in tailwind.config.js. npm's only offered fix is tailwindcss 4, a major upgrade with a new configuration model."
+    }
+  ]
+}

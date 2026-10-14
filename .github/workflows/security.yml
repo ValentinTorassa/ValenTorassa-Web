@@ -1,0 +1,67 @@
+name: Security
+
+# Dependency audit plus CodeQL. The weekly run catches advisories published
+# against dependencies that did not change.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Mondays 06:00 UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  npm-audit:
+    name: npm audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          # Nothing is installed, so nothing to cache (setup-node turns its
+          # npm cache on by itself when package.json sets packageManager).
+          package-manager-cache: false
+
+      # npm audit --audit-level=high, minus the dated entries in
+      # .github/npm-audit-allowlist.json (printed as warnings on every run).
+      # Reads package-lock.json; installs nothing.
+      - name: npm audit
+        run: node "$GITHUB_WORKSPACE/.github/scripts/npm-audit.mjs" --audit-level=high
+
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, python, actions]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+
+      - uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          category: /language:${{ matrix.language }}
