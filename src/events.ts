@@ -257,6 +257,22 @@ export const talks: Talk[] = [
     },
   },
   {
+    id: 'uai-redes-vlans-2026',
+    date: '2026-10-15',
+    time: '18:00',
+    event: 'UAI',
+    track: 'Redes y Teleprocesamiento',
+    title: { es: 'Un muelle, cinco cargas: VLANs en una red hogareña', en: 'One dock, five cargoes: VLANs in a home network' },
+    place: { es: 'UAI Rosario', en: 'UAI Rosario' },
+    city: 'Rosario',
+    mode: 'presencial',
+    status: 'closed',
+    note: {
+      es: 'Clase de la cursada, con Martín Luraschi y Manuel Reggiardo: la teoría de VLANs sobre una red hogareña y después la práctica con un MikroTik.',
+      en: 'A class in the course, with Martín Luraschi and Manuel Reggiardo: VLAN theory on a home network, then hands-on configuration on a MikroTik.',
+    },
+  },
+  {
     id: 'uai-clase-invitada-2026-09',
     date: '2026-09-25',
     time: '18:30',

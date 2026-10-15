@@ -49,6 +49,15 @@ const base = (id: string) => `/charlas/${id}`;
 const firewall = 'https://github.com/ValentinTorassa/VT-Agent-Firewall';
 
 export const talkMedia: Record<string, TalkMedia> = {
+  'uai-redes-vlans-2026': {
+    deck: `${base('uai-redes-vlans-2026')}/slides`,
+    icon: 'layers',
+    still: `${base('uai-redes-vlans-2026')}/still.webp`,
+    thumb: `${base('uai-redes-vlans-2026')}/thumb.webp`,
+    reel: `${base('uai-redes-vlans-2026')}/reel.mp4`,
+    poster: `${base('uai-redes-vlans-2026')}/poster.webp`,
+    slides: 19,
+  },
   'uai-clase-invitada-2026-09': {
     deck: `${base('uai-clase-invitada-2026-09')}/slides`,
     icon: 'terminal',
