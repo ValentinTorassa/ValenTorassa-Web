@@ -268,8 +268,8 @@ export const talks: Talk[] = [
     mode: 'presencial',
     status: 'closed',
     note: {
-      es: 'Clase de la cursada, con Martín Luraschi y Manuel Reggiardo: la teoría de VLANs sobre una red hogareña y después la práctica con un MikroTik.',
-      en: 'A class in the course, with Martín Luraschi and Manuel Reggiardo: VLAN theory on a home network, then hands-on configuration on a MikroTik.',
+      es: 'Clase de la cursada, con Martín Luraschi y Manuel Regiardo: la teoría de VLANs sobre una red hogareña y después la práctica con un MikroTik.',
+      en: 'A class in the course, with Martín Luraschi and Manuel Regiardo: VLAN theory on a home network, then hands-on configuration on a MikroTik.',
     },
   },
   {
