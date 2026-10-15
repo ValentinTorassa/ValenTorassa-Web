@@ -340,8 +340,10 @@ img {
   top: calc(100% + 8px);
   right: var(--bar-inline);
   width: min(360px, calc(100vw - 24px));
+  max-height: calc(100dvh - 82px);
   padding: 8px;
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border: 1px solid rgba(142, 156, 189, 0.25);
   border-radius: 10px;
   background:
@@ -1721,26 +1723,120 @@ p {
 }
 
 .repo-unfurl-media {
-  display: block;
+  display: grid;
   overflow: hidden;
   aspect-ratio: 2212 / 1092;
   border-bottom: 1px solid var(--line);
-  background: #000;
+  background: #080d13;
 }
 
-.repo-unfurl-media img {
+.project-preview {
+  --preview-accent: var(--card, var(--project-accent, #54e6d6));
+  display: grid;
+  grid-template-rows: 34px minmax(0, 1fr);
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  transition:
-    filter 0.2s ease,
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 0;
+  overflow: hidden;
+  background: #080d13;
 }
 
-.repo-unfurl-media:hover img,
-.repo-unfurl-media:focus-visible img {
-  filter: brightness(1.06);
-  transform: scale(1.006);
+.project-preview-chrome {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 13px;
+  border-bottom: 1px solid rgba(157, 178, 202, 0.14);
+  color: #91a3b6;
+  background: linear-gradient(180deg, #18222d, #111923);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.025em;
+}
+
+.project-preview-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.project-preview-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #506578;
+}
+
+.project-preview-dots i:first-child {
+  background: #f47b74;
+}
+
+.project-preview-dots i:nth-child(2) {
+  background: #ebc171;
+}
+
+.project-preview-dots i:last-child {
+  background: #65cda8;
+}
+
+.project-preview-address {
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-preview-signal {
+  justify-self: end;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--preview-accent);
+  box-shadow: 0 0 11px color-mix(in srgb, var(--preview-accent) 65%, transparent);
+}
+
+.project-preview-stage {
+  position: relative;
+  min-height: 0;
+  padding: 9px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--preview-accent) 15%, transparent), transparent 70%),
+    repeating-linear-gradient(90deg, transparent 0 31px, rgba(166, 194, 218, 0.025) 31px 32px),
+    #090e15;
+}
+
+.project-preview-stage::after {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  left: 9px;
+  height: 24%;
+  border-radius: 0 0 5px 5px;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(transparent, rgba(2, 7, 13, 0.22));
+}
+
+.project-preview-stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(157, 178, 202, 0.18);
+  border-radius: 5px;
+  object-fit: cover;
+  object-position: center top;
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.38);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-preview.is-dark-adapted .project-preview-stage img {
+  filter: invert(1) hue-rotate(180deg) saturate(0.9) contrast(0.96);
+}
+
+.repo-unfurl-media:hover .project-preview-stage img,
+.repo-unfurl-media:focus-visible .project-preview-stage img {
+  transform: scale(1.012);
 }
 
 .repo-unfurl-copy {
@@ -2591,15 +2687,6 @@ p {
 }
 
 @media (min-width: 720px) {
-  .mobile-menu-toggle,
-  .mobile-nav-panel {
-    display: none;
-  }
-
-  .nav-links {
-    display: inline-flex;
-  }
-
   .statement-watermark {
     display: block;
   }
@@ -2670,6 +2757,14 @@ p {
 }
 
 @media (min-width: 900px) {
+  .mobile-menu-toggle,
+  .mobile-nav-panel {
+    display: none;
+  }
+
+  .nav-links {
+    display: inline-flex;
+  }
 }
 
 @media (min-width: 1040px) {
@@ -2700,7 +2795,9 @@ p {
     gap: 14px;
     font-size: 0.75rem;
   }
+}
 
+@media (max-width: 899px) {
   .social-actions {
     display: none;
   }
@@ -3354,7 +3451,7 @@ p {
   height: 18px;
 }
 
-@media (max-width: 719px) {
+@media (max-width: 899px) {
   .brand {
     min-height: 44px;
   }
@@ -4128,7 +4225,7 @@ p {
   }
 }
 
-/* Selected work: a flagship, two lead cards, and three supporting case studies. */
+/* Selected work: a flagship, two lead cards, and supporting case studies. */
 #research .repo-grid {
   grid-template-columns: minmax(0, 1fr);
   gap: 16px;
@@ -4141,28 +4238,32 @@ p {
 }
 
 #research .repo-card-media {
-  position: relative;
+  display: grid;
   overflow: hidden;
   aspect-ratio: 1000 / 570;
   border-bottom: 1px solid color-mix(in srgb, var(--card) 30%, var(--line));
-  background: #0a1119;
+  background: #090e15;
 }
 
-#research .repo-card-media img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+#research .repo-card-media .project-preview {
+  grid-template-rows: 30px minmax(0, 1fr);
 }
 
-#research .repo-card-media.is-photo img {
+#research .repo-card-media .project-preview-stage {
+  padding: 7px;
+}
+
+#research .repo-card-media.is-photo .project-preview-stage img {
   object-position: center 65%;
+  filter: brightness(0.74) saturate(0.82);
 }
 
-#research .repo-card:hover .repo-card-media img {
-  transform: scale(1.025);
+.project-preview.crop-bottom .project-preview-stage img {
+  object-position: center bottom;
+}
+
+#research .repo-card:hover .project-preview-stage img {
+  transform: scale(1.018);
 }
 
 
@@ -4253,7 +4354,7 @@ p {
   color: #d3dce9;
 }
 
-/* Private work: its own full-width row under the open-source grid. */
+/* Private work uses the same card width and preview ratio as the project grid. */
 .repo-private {
   display: grid;
   gap: 14px;
@@ -4264,16 +4365,16 @@ p {
   margin: 0;
 }
 
-#research .repo-grid.repo-grid-private {
-  grid-template-columns: minmax(0, 1fr);
-}
-
 #research .repo-grid.repo-grid-private > .repo-card {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
 
 #research .repo-card.is-private .repo-card-body > p {
   max-width: 78ch;
+}
+
+#research .repo-card.is-private.has-preview .project-preview-stage img {
+  object-position: left top;
 }
 
 /* Stands where a public card links its repository. */
@@ -4380,6 +4481,10 @@ p {
 
   #research .repo-card.is-standard,
   #research .repo-card:last-of-type {
+    grid-column: span 2;
+  }
+
+  #research .repo-grid.repo-grid-private > .repo-card {
     grid-column: span 2;
   }
 }

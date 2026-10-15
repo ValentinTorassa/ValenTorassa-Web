@@ -33,6 +33,8 @@ const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' |
   en: { profile: 'Profile', experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', contact: 'Contact' },
 };
 
+export const blogUrl = 'https://vtsecurity.com.ar';
+
 /**
  * One menu for every page, same items in the same order. On the home page the
  * sections are anchors; on the others they point back to the home page.
@@ -55,7 +57,7 @@ export const contactEmail = 'valentin.torassa.colombero@gmail.com';
 export const socialLinks: SocialLink[] = [
   {
     name: 'Blog',
-    href: 'https://vtsecurity.com.ar',
+    href: blogUrl,
     icon: FaPenNib,
   },
   {
@@ -95,9 +97,9 @@ export const socialLinks: SocialLink[] = [
   },
 ];
 
-/** The same three primary profiles appear in the desktop bar on every page. */
-const headerSocialNames = ['GitHub', 'LinkedIn', 'YouTube'];
-export const headerSocialLinks = socialLinks.filter((link) => headerSocialNames.includes(link.name));
+/** The blog and primary profiles appear together on the right of every desktop header. */
+const headerSocialNames = ['GitHub', 'LinkedIn', 'YouTube', 'Blog'];
+export const headerSocialLinks = headerSocialNames.flatMap((name) => socialLinks.filter((link) => link.name === name));
 
 export const siteChromeByLanguage = {
   es: {

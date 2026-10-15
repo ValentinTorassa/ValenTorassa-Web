@@ -28,6 +28,7 @@ import plumaScreenshot from './assets/projects/pluma-homepage.png';
 import ragnarosPhoto from './assets/projects/ragnaros-device.jpg';
 import secretShareScreenshot from './assets/projects/secretshare-homepage.png';
 import securityFixesScreenshot from './assets/projects/security-fixes-repo.png';
+import radarAudienceScreenshot from './assets/projects/vt-radar-audience-demo.webp';
 
 import { siteChromeByLanguage, siteNav, type HeaderLabels, type Language, type NavItem } from './siteContent';
 
@@ -50,6 +51,10 @@ export type FeaturedRepo = {
   previewImage?: string;
   previewKind?: 'screenshot' | 'photo';
   previewAlt?: string;
+  previewAddress?: string;
+  previewDarkAdapt?: boolean;
+  previewCrop?: 'top' | 'bottom';
+  previewSize?: { width: number; height: number };
   siteHref?: string;
   caseStudy: {
     problem: string;
@@ -59,13 +64,12 @@ export type FeaturedRepo = {
 };
 
 /**
- * Work whose code is not public: the same card and case study as a featured
- * repo, but no repository, demo or screenshot. The card says the code is
- * private instead of linking it.
+ * Work presented without a public repository or product URL. Its preview may
+ * use a screenshot whose displayed metrics were replaced with synthetic data.
  */
 export type PrivateProject = Omit<
   FeaturedRepo,
-  'href' | 'featured' | 'previewImage' | 'previewKind' | 'previewAlt' | 'siteHref'
+  'href' | 'featured' | 'siteHref'
 >;
 
 type PageContent = {
@@ -80,6 +84,7 @@ type PageContent = {
   heroStatement: string;
   heroSocialLabel: string;
   heroProjectsLabel: string;
+  heroBlogLabel: string;
   heroContactLabel: string;
   terminalLines: Array<{ prompt: string; command: string; output: string }>;
   profile: {
@@ -238,6 +243,7 @@ const repoFacts = {
     featured: true,
     previewImage: openSecurityLabsPreview,
     previewKind: 'screenshot' as const,
+    previewAddress: 'securitylabs.valentorassa.com',
     siteHref: 'https://securitylabs.valentorassa.com',
   },
   securityFixes: {
@@ -249,6 +255,9 @@ const repoFacts = {
     tone: 'security',
     previewImage: securityFixesScreenshot,
     previewKind: 'screenshot' as const,
+    previewAddress: 'github.com/ValentinTorassa/VT-Security-Fixes',
+    previewDarkAdapt: true,
+    previewCrop: 'bottom' as const,
   },
   secretShare: {
     name: 'VT-SecretShare',
@@ -260,6 +269,7 @@ const repoFacts = {
     siteHref: 'https://secretshare.valentorassa.com',
     previewImage: secretShareScreenshot,
     previewKind: 'screenshot' as const,
+    previewAddress: 'secretshare.valentorassa.com',
   },
   pluma: {
     name: 'pluma',
@@ -271,6 +281,8 @@ const repoFacts = {
     siteHref: 'https://vtsecurity.com.ar',
     previewImage: plumaScreenshot,
     previewKind: 'screenshot' as const,
+    previewAddress: 'vtsecurity.com.ar',
+    previewDarkAdapt: true,
   },
   ragnaros: {
     name: 'VT-Ragnaros',
@@ -281,6 +293,7 @@ const repoFacts = {
     tone: 'systems',
     previewImage: ragnarosPhoto,
     previewKind: 'photo' as const,
+    previewAddress: 'VT-Ragnaros / USB',
   },
   lens: {
     name: 'VT-Lens',
@@ -291,6 +304,8 @@ const repoFacts = {
     tone: 'systems',
     previewImage: lensScreenshot,
     previewKind: 'screenshot' as const,
+    previewAddress: 'VT-Lens / demo',
+    previewDarkAdapt: true,
   },
 };
 
@@ -309,7 +324,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.securityFixes,
-    previewAlt: 'Captura del registro fixes.yaml de VT Security Fixes en GitHub',
+    previewAlt: 'Vista del registro fixes.yaml de VT Security Fixes, adaptada a una paleta oscura',
     stage: 'Candidatos de parche',
     proof: 'Tres parches DEP-3 con trazabilidad de CVE y upstream',
     description: 'Parches para CVEs de paquetes Ubuntu universe, con procedencia y estado documentados por paquete.',
@@ -333,7 +348,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.pluma,
-    previewAlt: 'Captura del blog VT Security publicado con Pluma',
+    previewAlt: 'Vista del blog VT Security publicado con Pluma, adaptada a una paleta oscura',
     stage: 'Aplicación en uso',
     proof: 'Un código · dos sitios públicos · API con permisos',
     description: 'Plataforma de publicación con editor, imágenes y comentarios, desplegada para sitios independientes desde un mismo código.',
@@ -357,7 +372,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Captura de VT Lens con datos de demostración sintéticos',
+    previewAlt: 'Vista de VT Lens con datos sintéticos, adaptada a una paleta oscura',
     stage: 'Aplicación de escritorio',
     proof: 'GUI Rust · procesos, conexiones y exportación de evidencia',
     description: 'Interfaz nativa para inspeccionar procesos y conexiones de Linux y convertir una selección en evidencia legible.',
@@ -384,7 +399,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.securityFixes,
-    previewAlt: 'Screenshot of the VT Security Fixes fixes.yaml registry on GitHub',
+    previewAlt: 'Dark-adapted view of the VT Security Fixes fixes.yaml registry on GitHub',
     stage: 'Patch candidates',
     proof: 'Three DEP-3 patches with CVE and upstream provenance',
     description: 'Candidate patches for Ubuntu universe CVEs, with source and package status recorded for each fix.',
@@ -408,7 +423,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.pluma,
-    previewAlt: 'Screenshot of the VT Security blog published with Pluma',
+    previewAlt: 'Dark-adapted view of the VT Security blog published with Pluma',
     stage: 'Live application',
     proof: 'One codebase · two public sites · scoped API',
     description: 'Publishing platform with an editor, images, and comments, deployed for independent sites from one codebase.',
@@ -432,7 +447,7 @@ const enRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Real VT Lens screenshot using synthetic demo data',
+    previewAlt: 'Dark-adapted VT Lens view using synthetic demo data',
     stage: 'Desktop app',
     proof: 'Rust GUI · processes, connections, evidence export',
     description: 'Native app for inspecting Linux processes and connections and turning a selection into readable evidence.',
@@ -444,42 +459,45 @@ const enRepos: FeaturedRepo[] = [
   },
 ];
 
-// Private client work, anonymized: no client name, domain, screenshot or
-// patient data. Every claim comes from that project's README and code; the
-// PR that added this lists the source of each one.
-const privateProjectFacts = {
+const radarFacts = {
+  name: 'VT-Radar',
   language: 'TypeScript',
   languageColor: '#3178c6',
-  tags: ['Next.js', 'Convex', 'AES-256-GCM', 'Vitest'],
-  tone: 'security',
+  tags: ['Next.js', 'TypeScript', 'Tailscale', 'Gatus'],
+  tone: 'product',
+  previewImage: radarAudienceScreenshot,
+  previewKind: 'screenshot' as const,
+  previewSize: { width: 2143, height: 734 },
 };
 
 const esPrivateProjects: PrivateProject[] = [
   {
-    ...privateProjectFacts,
-    name: 'Sistema de turnos para un consultorio de salud',
-    stage: 'En producción',
-    proof: 'Restauración ensayada con copias sintéticas y una real · 191 tests en CI',
-    description: 'Agenda de turnos, pacientes y pagos pensada para reemplazar la agenda en papel de un consultorio. Los turnos los asigna el consultorio: no hay reserva online. El código es privado y esta ficha no incluye datos del consultorio ni de sus pacientes.',
+    ...radarFacts,
+    previewAddress: 'VT-Radar · datos sintéticos',
+    previewAlt: 'Captura de la vista Audiencia de VT-Radar editada con métricas sintéticas',
+    stage: 'Tablero privado en uso',
+    proof: 'Atlas de proyectos · agenda de 14 días · señales de salud',
+    description: 'Tablero de solo lectura que reúne proyectos, infraestructura, publicaciones y estado operativo de VT Security y VT Art.',
     caseStudy: {
-      problem: 'Los datos de pacientes viven en una base administrada, y las copias automáticas también. Hacía falta una copia fuera de ese proveedor y una forma probada de restaurarla.',
-      architecture: 'Next.js en Vercel y Convex como base y backend. Convex guarda una copia semanal por cuenta, con AES-256-GCM opcional en reposo; cada noche un servidor propio baja una copia completa por /backup/pull y la guarda cifrada fuera de Convex. Restaurar desde la app hace primero un ensayo sin escribir, verifica de qué cuenta es la copia y guarda los datos anteriores en la misma transacción.',
-      security: 'El endpoint de copias pide un token Bearer de 256 bits: Convex guarda sólo su SHA-256 y compara los hashes sin cortar en la primera diferencia. Sin hash configurado responde 503, y si falla una cuenta devuelve 500 en vez de una copia parcial. El registro público de cuentas se rechaza en el servidor, con un test que lo cubre. La restauración se ensayó con la cuenta real en un deployment aislado, eliminado después.',
+      problem: 'El estado de los proyectos, los servicios y el calendario de contenido estaba repartido entre varias fuentes.',
+      architecture: 'Una aplicación Next.js combina señales de GitHub, Gatus, Tailscale y herramientas de publicación. Presenta un atlas de repositorios e infraestructura, una agenda de 14 días y vistas de salud y rendimiento con la procedencia de cada dato.',
+      security: 'El acceso requiere login y red privada Tailscale. El tablero solo lee: no publica ni agenda contenido; las vistas y API protegidas exigen autenticación.',
     },
   },
 ];
 
 const enPrivateProjects: PrivateProject[] = [
   {
-    ...privateProjectFacts,
-    name: 'Scheduling system for a health practice',
-    stage: 'In production',
-    proof: 'Restore drilled with synthetic backups and a real one · 191 tests in CI',
-    description: 'Appointments, patients, and payments, built to replace a practice’s paper diary. The practice assigns the appointments; there is no online booking. The code is private, and this summary leaves out any practice or patient data.',
+    ...radarFacts,
+    previewAddress: 'VT-Radar · synthetic data',
+    previewAlt: 'Screenshot of the VT-Radar Audience view edited with synthetic metrics',
+    stage: 'Private dashboard in use',
+    proof: 'Project atlas · 14-day schedule · health signals',
+    description: 'Read-only dashboard bringing together projects, infrastructure, publishing, and operational health for VT Security and VT Art.',
     caseStudy: {
-      problem: 'Patient data lives in a managed database, and so do its automatic backups. The system needed a copy outside that provider and a tested way to restore it.',
-      architecture: 'Next.js on Vercel with Convex as database and backend. Convex keeps a weekly backup per account, with optional AES-256-GCM at rest; every night a self-hosted server pulls a full backup through /backup/pull and stores it encrypted outside Convex. Restoring from the app first runs a dry run that writes nothing, checks which account the backup belongs to, and saves the previous data in the same transaction.',
-      security: 'The backup endpoint takes a 256-bit bearer token: Convex stores only its SHA-256 and compares the hashes without stopping at the first difference. With no hash configured it returns 503, and if one account fails it returns 500 instead of a partial backup. Public sign-up is rejected on the server, and a test covers it. The restore was drilled with the real account in an isolated deployment, deleted afterwards.',
+      problem: 'Project status, service health, and the publishing calendar were scattered across several sources.',
+      architecture: 'A Next.js app combines signals from GitHub, Gatus, Tailscale, and publishing tools. It presents a repository and infrastructure atlas, a 14-day schedule, and health and performance views with source provenance.',
+      security: 'Access requires a login on the private Tailscale network. The dashboard only reads: it does not publish or schedule content, and protected views and APIs require authentication.',
     },
   },
 ];
@@ -497,6 +515,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
     heroStatement: 'Diseño sistemas, creo herramientas para Linux y comparto lo que aprendo.',
     heroSocialLabel: 'Redes y contacto',
     heroProjectsLabel: 'Ver proyectos',
+    heroBlogLabel: 'Leer el blog',
     heroContactLabel: 'Contacto',
     terminalLines: [
       { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
@@ -704,7 +723,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       visitProjectLabel: 'Abrir proyecto',
       repos: esRepos,
       privateWorkLabel: 'trabajo privado',
-      privateCodeLabel: 'Código privado',
+      privateCodeLabel: 'Acceso privado',
       privateProjects: esPrivateProjects,
     },
     contact: {
@@ -733,6 +752,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
     heroStatement: 'I design systems, build tools for Linux, and share what I learn.',
     heroSocialLabel: 'Social profiles and contact',
     heroProjectsLabel: 'Explore projects',
+    heroBlogLabel: 'Read the blog',
     heroContactLabel: 'Contact',
     terminalLines: [
       { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
@@ -940,7 +960,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       visitProjectLabel: 'Open project',
       repos: enRepos,
       privateWorkLabel: 'private work',
-      privateCodeLabel: 'Private code',
+      privateCodeLabel: 'Private access',
       privateProjects: enPrivateProjects,
     },
     contact: {

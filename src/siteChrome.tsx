@@ -7,8 +7,11 @@ import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
 import { headerSocialLinks, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
 
-/** Every network, for the phone menu: the bar only has room for three. */
-const panelSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
+/** The blog appears with the other profiles below the phone menu. */
+const panelSocialLinks = [
+  ...headerSocialLinks,
+  ...socialLinks.filter((link) => link.name !== 'Email' && !headerSocialLinks.some((primary) => primary.name === link.name)),
+];
 
 const vtMarkAvifSrcSet = `${vtMarkAvif96} 96w, ${vtMarkAvif160} 160w`;
 const vtMarkWebpSrcSet = `${vtMarkWebp96} 96w, ${vtMarkWebp160} 160w`;
@@ -90,7 +93,7 @@ export function SiteHeader({
       if (!headerRef.current?.contains(event.target as Node)) setMobileMenuOpen(false);
     };
     const closeOnDesktop = () => {
-      if (window.matchMedia('(min-width: 720px)').matches) setMobileMenuOpen(false);
+      if (window.matchMedia('(min-width: 900px)').matches) setMobileMenuOpen(false);
     };
 
     document.addEventListener('keydown', closeOnEscape);

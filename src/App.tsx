@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type HTMLAttributes, type Rea
 import {
   ArrowRight,
   Award,
+  BookOpenText,
   Calendar,
   Check,
   ChevronRight,
@@ -30,7 +31,7 @@ import {
   type StackTag,
 } from './homeContent';
 import { talkLabelsByLanguage } from './eventsContent';
-import { contactEmail, headerSocialLinks, socialLinks, type Language } from './siteContent';
+import { blogUrl, contactEmail, headerSocialLinks, socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
 import { getInitialLanguage, setMetaContent } from './site';
@@ -229,6 +230,10 @@ function App() {
               <a className="btn btn-primary" href="#research">
                 <ArrowRight aria-hidden="true" />
                 {content.heroProjectsLabel}
+              </a>
+              <a className="btn btn-secondary" href={blogUrl} target="_blank" rel="noopener noreferrer">
+                <BookOpenText aria-hidden="true" />
+                {content.heroBlogLabel}
               </a>
               <a className="btn btn-secondary" href="#contact">
                 <Mail aria-hidden="true" />
@@ -562,14 +567,7 @@ function App() {
                           rel="noopener noreferrer"
                           aria-label={content.research.openProjectLabel}
                         >
-                          <img
-                            src={repo.previewImage}
-                            alt={repo.previewAlt ?? ''}
-                            width="2212"
-                            height="1092"
-                            loading="lazy"
-                            decoding="async"
-                          />
+                          <ProjectPreview repo={repo} />
                         </a>
                         <div className="repo-unfurl-copy">
                           <div className="repo-unfurl-eyebrow">
@@ -617,7 +615,7 @@ function App() {
                     <ProjectCard
                       key={project.name}
                       repo={project}
-                      className="is-private"
+                      className={project.previewImage ? 'is-private has-preview' : 'is-private'}
                       labels={projectCardLabels}
                       onOpen={openProjectDrawer}
                     />
@@ -741,18 +739,11 @@ function ProjectCard({ repo, className, labels, onOpen }: ProjectCardProps) {
 
   return (
     <article className={`repo-card repo-${repo.tone} ${className}`}>
-      {isPublic && repo.previewImage && (
+      {repo.previewImage ? (
         <div className={`repo-card-media ${repo.previewKind === 'photo' ? 'is-photo' : ''}`}>
-          <img
-            src={repo.previewImage}
-            alt={repo.previewAlt ?? ''}
-            width="1000"
-            height="620"
-            loading="lazy"
-            decoding="async"
-          />
+          <ProjectPreview repo={repo} />
         </div>
-      )}
+      ) : null}
       <div className="repo-card-body">
         <div className="repo-card-head">
           <div>
@@ -798,6 +789,31 @@ function ProjectCard({ repo, className, labels, onOpen }: ProjectCardProps) {
         </div>
       </div>
     </article>
+  );
+}
+
+function ProjectPreview({ repo }: { repo: FeaturedRepo | PrivateProject }) {
+  if (!repo.previewImage) return null;
+  const isFeatured = 'featured' in repo && repo.featured;
+
+  return (
+    <div className={`project-preview ${repo.previewDarkAdapt ? 'is-dark-adapted' : ''} ${repo.previewCrop === 'bottom' ? 'crop-bottom' : ''}`}>
+      <div className="project-preview-chrome" aria-hidden="true">
+        <span className="project-preview-dots"><i /><i /><i /></span>
+        <span className="project-preview-address">{repo.previewAddress ?? repo.name}</span>
+        <span className="project-preview-signal" />
+      </div>
+      <div className="project-preview-stage">
+        <img
+          src={repo.previewImage}
+          alt={repo.previewAlt ?? ''}
+          width={repo.previewSize?.width ?? (isFeatured ? 1440 : repo.previewKind === 'photo' ? 720 : 1280)}
+          height={repo.previewSize?.height ?? (isFeatured ? 900 : repo.previewKind === 'photo' ? 1280 : 800)}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
   );
 }
 
