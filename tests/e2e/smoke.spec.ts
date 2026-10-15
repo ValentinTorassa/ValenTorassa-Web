@@ -189,6 +189,7 @@ test('home leads to six selected projects and the private case study without a G
 
   await expect(page.locator('.hero-avatar')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Explore projects' })).toHaveAttribute('href', '#research');
+  await expect(page.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', 'https://vtsecurity.com.ar');
   await expect(page.locator('#research h4')).toHaveText([
     'Open-Security-Labs',
     'VT-Security-Fixes',
@@ -196,10 +197,10 @@ test('home leads to six selected projects and the private case study without a G
     'pluma',
     'VT-Ragnaros',
     'VT-Lens',
-    'Scheduling system for a health practice',
+    'VT-Radar',
   ]);
   const projectVisuals = page.locator('#research .repo-card-media img');
-  await expect(projectVisuals).toHaveCount(5);
+  await expect(projectVisuals).toHaveCount(6);
   await expect(page.locator('#research .repo-card-media-label')).toHaveCount(0);
   for (const visual of await projectVisuals.all()) {
     await visual.scrollIntoViewIfNeeded();
@@ -208,19 +209,20 @@ test('home leads to six selected projects and the private case study without a G
   expect(apiRequests).toEqual([]);
 });
 
-test('private work says its code is private and links nothing', async ({ page }) => {
+test('private work shows its synthetic preview without a public link', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
   for (const lang of ['es', 'en'] as const) {
     await page.goto(`/?lang=${lang}`);
-    const label = lang === 'es' ? 'Código privado' : 'Private code';
+    const label = lang === 'es' ? 'Acceso privado' : 'Private access';
     const card = page.locator('#research .repo-card.is-private');
 
     await expect(card).toHaveCount(1);
     await expect(card.locator('.repo-private-badge')).toHaveText(label);
     await expect(card.locator('a')).toHaveCount(0);
-    await expect(card.locator('img')).toHaveCount(0);
-    await expect(card).toContainText(lang === 'es' ? 'El código es privado' : 'The code is private');
+    await expect(card.locator('img')).toHaveCount(1);
+    await expect(card.locator('img')).toHaveAttribute('alt', /synthetic|sintéticas/);
+    await expect(card).toContainText(lang === 'es' ? 'Tablero de solo lectura' : 'Read-only dashboard');
 
     await card.getByRole('button').click();
     const drawer = page.getByRole('dialog');
