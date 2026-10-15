@@ -4253,6 +4253,51 @@ p {
   color: #d3dce9;
 }
 
+/* Private work: its own full-width row under the open-source grid. */
+.repo-private {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.repo-private > .eyebrow {
+  margin: 0;
+}
+
+#research .repo-grid.repo-grid-private {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#research .repo-grid.repo-grid-private > .repo-card {
+  grid-column: 1 / -1;
+}
+
+#research .repo-card.is-private .repo-card-body > p {
+  max-width: 78ch;
+}
+
+/* Stands where a public card links its repository. */
+.repo-private-badge {
+  display: inline-flex;
+  flex: none;
+  min-height: 32px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px dashed color-mix(in srgb, var(--card, var(--accent-2)) 45%, var(--line));
+  border-radius: 7px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.repo-private-badge svg {
+  width: 13px;
+  height: 13px;
+}
+
 .repo-more {
   display: grid;
   gap: 14px;
