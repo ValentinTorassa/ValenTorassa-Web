@@ -80,7 +80,7 @@ function LibroPage() {
             <picture>
               <source type="image/avif" srcSet={coverAvif} sizes={coverSizes} />
               <source type="image/webp" srcSet={coverWebp} sizes={coverSizes} />
-              <img src={coverFallback} alt={page.coverAlt} width={540} height={724} decoding="async" fetchPriority="high" />
+              <img src={coverFallback} alt={page.coverAlt} width={540} height={714} decoding="async" fetchPriority="high" />
             </picture>
           </figure>
         </header>
