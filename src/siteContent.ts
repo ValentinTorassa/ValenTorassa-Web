@@ -26,7 +26,7 @@ export type HeaderLabels = {
  */
 export type NavItem = { label: string; href: string; current?: boolean; section?: string };
 
-export type SitePage = 'home' | 'eventos' | 'charlas' | 'speaker-kit';
+export type SitePage = 'home' | 'eventos' | 'charlas' | 'speaker-kit' | 'libro';
 
 const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'contact', string>> = {
   es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', contact: 'Contacto' },

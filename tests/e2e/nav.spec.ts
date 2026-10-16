@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const pages = ['/', '/eventos', '/charlas', '/speaker-kit'];
+const pages = ['/', '/eventos', '/charlas', '/speaker-kit', '/libro'];
 const spanish = ['Perfil', 'Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Contacto'];
 const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Contact'];
 

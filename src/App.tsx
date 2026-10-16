@@ -534,6 +534,11 @@ function App() {
               {content.research.speakerKitLabel}
               <ArrowRight aria-hidden="true" />
             </a>
+            <a className="talks-page-link" href="/libro">
+              <BookOpenText aria-hidden="true" />
+              {content.research.bookLabel}
+              <ArrowRight aria-hidden="true" />
+            </a>
           </div>
         </section>
 
