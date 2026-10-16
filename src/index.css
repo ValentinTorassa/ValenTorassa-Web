@@ -339,7 +339,7 @@ img {
   position: absolute;
   top: calc(100% + 8px);
   right: var(--bar-inline);
-  width: min(360px, calc(100vw - 24px));
+  width: min(366px, calc(100vw - 24px));
   max-height: calc(100dvh - 82px);
   padding: 8px;
   overflow-y: auto;
@@ -3420,19 +3420,20 @@ p {
   background: rgba(7, 9, 14, 0.55);
 }
 
+/* Eight 40 px icons and their gaps (334 px) fit on one row in the 366 px panel, from a 390 px phone up. */
 .mobile-nav-social {
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
   margin: 8px 3px 0;
-  padding: 10px 7px 2px;
+  padding: 10px 3px 2px;
   border-top: 1px solid var(--line);
 }
 
 .mobile-nav-social a {
   display: inline-grid;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
