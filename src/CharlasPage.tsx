@@ -352,6 +352,12 @@ function CharlasPage() {
                 {copy.kinds[talk.paper.kind]}
               </a>
             ) : null}
+            {talk.paper ? (
+              <a className="hub-link" href="/research-publications.bib" download>
+                <FileDown aria-hidden="true" />
+                {copy.citationsLabel}
+              </a>
+            ) : null}
             {media.checklist && dayHasCome ? (
               <a className="hub-link" href={media.checklist} target="_blank" rel="noopener noreferrer">
                 <ListChecks aria-hidden="true" />

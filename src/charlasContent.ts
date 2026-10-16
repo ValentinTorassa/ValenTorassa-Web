@@ -22,6 +22,7 @@ type CharlasPageContent = {
   noSlides: string;
   /** Opens a paper (src/research.ts) when there is no deck. */
   paperLabel: string;
+  citationsLabel: string;
   kinds: { paper: string; poster: string };
   coauthors: (names: string[]) => string;
   codeLabel: string;
@@ -66,6 +67,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     slidesOn: (date) => `Slides el ${date}`,
     noSlides: 'Sin slides públicas',
     paperLabel: 'Leer el paper',
+    citationsLabel: 'Citas (.bib)',
     kinds: { paper: 'Paper', poster: 'Póster' },
     coauthors: (names) => `Con ${list(names, 'y')}`,
     codeLabel: 'Código',
@@ -103,6 +105,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     slidesOn: (date) => `Slides on ${date}`,
     noSlides: 'No public slides',
     paperLabel: 'Read the paper',
+    citationsLabel: 'Citations (.bib)',
     kinds: { paper: 'Paper', poster: 'Poster' },
     coauthors: (names) => `With ${list(names, 'and')}`,
     codeLabel: 'Code',

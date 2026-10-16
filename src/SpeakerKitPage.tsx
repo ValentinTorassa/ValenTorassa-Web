@@ -29,8 +29,7 @@ import {
 
 const locales: Record<Language, string> = { es: 'es-AR', en: 'en-US' };
 const talkById = new Map(talks.map((talk) => [talk.id, talk]));
-/** Papers and posters with a card of their own in /charlas; the rest hang from a talk. */
-const standalonePapers = papers.filter((paper) => !paper.talk).length;
+const publishedPapers = papers.length;
 const programProfiles = socialLinks.filter((link) => link.name !== 'Email');
 const headshotAvif = `${headshotAvif256} 256w, ${headshotAvif384} 384w, ${headshotAvif512} 512w`;
 const headshotWebp = `${headshotWebp256} 256w, ${headshotWebp384} 384w, ${headshotWebp512} 512w`;
@@ -383,7 +382,7 @@ function SpeakerKitPage() {
             </div>
           </div>
           <p className="kit-talks-more">
-            {kit.talks.papers(standalonePapers)}{' '}
+            {kit.talks.papers(publishedPapers)}{' '}
             <a href="/charlas">
               {kit.talks.hubLink}
               <ArrowRight aria-hidden="true" />
