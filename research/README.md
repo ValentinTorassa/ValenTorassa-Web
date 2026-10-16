@@ -19,6 +19,7 @@ by Valentin Torassa Colombero on **24 July 2026**. Add it manually as a
 conference presentation if it is absent. Keep paper presentations attached to
 their paper records unless there is a distinct presentation artifact to cite.
 
-Once the ORCID iD is confirmed, add its public URL to the site and to the
-software citation metadata. The two CACIC 2026 presentations in `src/events.ts`
-should be revisited when public proceedings records become available.
+The confirmed public ORCID iD is
+[0009-0005-7980-4128](https://orcid.org/0009-0005-7980-4128). It is linked from
+the site and from VT-Ragnaros citation metadata. The two CACIC 2026 presentations
+in `src/events.ts` should be revisited when public proceedings records become available.

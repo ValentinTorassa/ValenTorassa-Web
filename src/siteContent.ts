@@ -1,6 +1,6 @@
 import type { IconType } from 'react-icons';
 import { FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
-import { SiGithub, SiInstagram, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
+import { SiGithub, SiInstagram, SiOrcid, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
 
 export type Language = 'es' | 'en';
 
@@ -69,6 +69,11 @@ export const socialLinks: SocialLink[] = [
     name: 'LinkedIn',
     href: 'https://www.linkedin.com/in/valetorassa/',
     icon: FaLinkedinIn,
+  },
+  {
+    name: 'ORCID',
+    href: 'https://orcid.org/0009-0005-7980-4128',
+    icon: SiOrcid,
   },
   {
     name: 'YouTube',
