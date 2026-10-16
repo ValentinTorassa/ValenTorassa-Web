@@ -50,7 +50,7 @@ function talkPagesPlugin() {
       }
 
       // The CreatorStack pages exist for Google's OAuth review: reachable, but noindex and not listed here.
-      const staticUrls = ['/', '/?lang=es', '/?lang=en', '/eventos', '/charlas', '/speaker-kit']
+      const staticUrls = ['/', '/?lang=es', '/?lang=en', '/eventos', '/charlas', '/speaker-kit', '/libro']
       const urls = [...staticUrls, ...talkPages.map((page) => `/charlas/${page.id}`)]
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>https://valentorassa.com${url.replaceAll('&', '&amp;')}</loc></url>`).join('\n')}\n</urlset>\n`
       await writeFile(path.join(dist, 'sitemap.xml'), sitemap)
@@ -71,6 +71,7 @@ export default defineConfig({
         eventos: fileURLToPath(new URL('./eventos.html', import.meta.url)),
         charlas: fileURLToPath(new URL('./charlas.html', import.meta.url)),
         'speaker-kit': fileURLToPath(new URL('./speaker-kit.html', import.meta.url)),
+        libro: fileURLToPath(new URL('./libro.html', import.meta.url)),
       },
     },
   },

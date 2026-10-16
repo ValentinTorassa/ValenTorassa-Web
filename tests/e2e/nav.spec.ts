@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const pages = ['/', '/eventos', '/charlas', '/speaker-kit'];
+const pages = ['/', '/eventos', '/charlas', '/speaker-kit', '/libro'];
 const spanish = ['Perfil', 'Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Contacto'];
 const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Contact'];
 
@@ -10,9 +10,11 @@ test('the same navigation works across every page', async ({ page }) => {
     await page.goto(`${path}?lang=es`);
     await expect(page.locator('.nav-links a')).toHaveText(spanish);
     await expect(page.locator('.social-actions a[aria-label="Blog"]')).toHaveAttribute('href', 'https://vtsecurity.com.ar');
-    await expect(page.locator('.social-actions a')).toHaveCount(4);
+    await expect(page.locator('.social-actions a')).toHaveCount(5);
     expect(await page.locator('.social-actions a').evaluateAll((links) => links.map((link) => link.getAttribute('aria-label'))))
-      .toEqual(['GitHub', 'LinkedIn', 'YouTube', 'Blog']);
+      .toEqual(['GitHub', 'LinkedIn', 'YouTube', 'Blog', 'Libro']);
+    await expect(page.locator('.social-actions a[aria-label="Libro"]')).toHaveAttribute('href', '/libro');
+    await expect(page.locator('.social-actions a[aria-label="Libro"]')).not.toHaveAttribute('target', '_blank');
     if (path === '/charlas') await expect(page.locator('.nav-links a[href="/charlas"]')).toHaveAttribute('aria-current', 'page');
     if (path === '/eventos') await expect(page.locator('.nav-links a[href="/eventos"]')).toHaveAttribute('aria-current', 'page');
   }
@@ -44,6 +46,7 @@ test('the phone menu is usable at 390 px on every page', async ({ page }) => {
     await expect(page.locator('.mobile-nav-panel nav a')).toHaveText(spanish.map((label, index) => `${String(index + 1).padStart(2, '0')}${label}`));
     const socialTops = await page.locator('.mobile-nav-social a').evaluateAll((links) => links.map((link) => link.getBoundingClientRect().top));
     expect(Math.max(...socialTops) - Math.min(...socialTops), `${path}: social icons on one row`).toBeLessThan(1);
+    await expect(page.locator('.mobile-nav-book')).toHaveAttribute('href', '/libro');
     for (const control of [menu, page.locator('.language-toggle'), ...await page.locator('.mobile-nav-panel nav a').all()]) {
       const box = await control.boundingBox();
       expect(box?.width, `${path}: touch width`).toBeGreaterThanOrEqual(44);

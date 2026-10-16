@@ -81,6 +81,9 @@ type PageContent = {
   header: HeaderLabels;
   navItems: NavItem[];
   heroEyebrow: string;
+  /** Small tag and text of the announcement above the name, linking to /libro. */
+  heroBookTag: string;
+  heroBookLabel: string;
   heroStatement: string;
   heroSocialLabel: string;
   heroProjectsLabel: string;
@@ -150,6 +153,8 @@ type PageContent = {
     hubLabel: string;
     /** Link to /speaker-kit, the page for event organizers. */
     speakerKitLabel: string;
+    /** Link to /libro, the upcoming book and its waitlist. */
+    bookLabel: string;
     openTalkLabel: string;
     openProjectLabel: string;
     openRepoLabel: string;
@@ -512,6 +517,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
     header: siteChromeByLanguage.es.header,
     navItems: siteNav('home', 'es'),
     heroEyebrow: 'SEGURIDAD / BACKEND / SISTEMAS',
+    heroBookTag: 'Nuevo',
+    heroBookLabel: 'Estoy escribiendo un libro',
     heroStatement: 'Diseño sistemas, creo herramientas para Linux y comparto lo que aprendo.',
     heroSocialLabel: 'Redes y contacto',
     heroProjectsLabel: 'Ver proyectos',
@@ -706,6 +713,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       allTalksLabel: 'Ver todas las charlas',
       hubLabel: 'Explorar las charlas y sus slides',
       speakerKitLabel: 'Invitarme a tu evento',
+      bookLabel: 'El libro, en preparación',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
       openRepoLabel: 'Abrir repositorio',
@@ -749,6 +757,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
     header: siteChromeByLanguage.en.header,
     navItems: siteNav('home', 'en'),
     heroEyebrow: 'SECURITY / BACKEND / SYSTEMS',
+    heroBookTag: 'New',
+    heroBookLabel: 'I am writing a book',
     heroStatement: 'I design systems, build tools for Linux, and share what I learn.',
     heroSocialLabel: 'Social profiles and contact',
     heroProjectsLabel: 'Explore projects',
@@ -943,6 +953,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       allTalksLabel: 'See all talks',
       hubLabel: 'Browse the talks and their slides',
       speakerKitLabel: 'Invite me to your event',
+      bookLabel: 'The upcoming book',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
       openRepoLabel: 'Open repository',

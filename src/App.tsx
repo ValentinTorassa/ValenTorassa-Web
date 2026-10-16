@@ -31,7 +31,7 @@ import {
   type StackTag,
 } from './homeContent';
 import { talkLabelsByLanguage } from './eventsContent';
-import { blogUrl, contactEmail, headerSocialLinks, socialLinks, type Language } from './siteContent';
+import { blogUrl, contactEmail, headerSocialLinks, isExternalLink, socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
 import { getInitialLanguage, setMetaContent } from './site';
@@ -220,6 +220,12 @@ function App() {
         <section className="hero" id="top">
           <HeroScene />
           <div className="hero-inner">
+            <a className="hero-announce" href="/libro">
+              <span className="hero-announce-tag">{content.heroBookTag}</span>
+              <span>{content.heroBookLabel}</span>
+              <ArrowRight aria-hidden="true" />
+            </a>
+
             <p className="hero-eyebrow">{content.heroEyebrow}</p>
 
             <h1>Valentín Torassa Colombero</h1>
@@ -242,7 +248,7 @@ function App() {
             </div>
 
             <div className="hero-socials" aria-label={content.heroSocialLabel}>
-              {headerSocialLinks.map((link) => (
+              {headerSocialLinks.filter(isExternalLink).map((link) => (
                 <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" title={link.name}>
                   <SocialIcon link={link} />
                   <span>{link.name}</span>
@@ -532,6 +538,11 @@ function App() {
             <a className="talks-page-link" href="/speaker-kit">
               <MicVocal aria-hidden="true" />
               {content.research.speakerKitLabel}
+              <ArrowRight aria-hidden="true" />
+            </a>
+            <a className="talks-page-link" href="/libro">
+              <BookOpenText aria-hidden="true" />
+              {content.research.bookLabel}
               <ArrowRight aria-hidden="true" />
             </a>
           </div>

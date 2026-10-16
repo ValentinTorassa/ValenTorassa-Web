@@ -16,6 +16,8 @@ import { expect, test, type Page } from '@playwright/test';
  *   build also writes dist/charlas/<id>.html for every talk and paper.
  * - speaker-kit.html is a fourth entry (src/speakerKit.tsx), served at
  *   /speaker-kit: the page for event organizers.
+ * - libro.html is a fifth entry (src/libro.tsx), served at /libro: the
+ *   upcoming book and its waitlist form.
  * - the build sitemap lists the main pages and each /charlas/<id>; noindex
  *   static pages (the CreatorStack OAuth pages) are reachable but left out.
  */
@@ -28,6 +30,8 @@ const ROUTES = [
   { path: '/charlas/hacking-day-2026', name: 'talk-hacking-day' },
   { path: '/speaker-kit', name: 'speaker-kit' },
   { path: '/speaker-kit?lang=en', name: 'speaker-kit-en' },
+  { path: '/libro', name: 'libro' },
+  { path: '/libro?lang=en', name: 'libro-en' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
   { path: '/creatorstack', name: 'creatorstack' },

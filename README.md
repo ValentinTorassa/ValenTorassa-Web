@@ -38,6 +38,8 @@ The build writes one HTML file per talk and standalone paper to `dist/charlas/<i
 
 `/speaker-kit` (`speaker-kit.html`, `src/SpeakerKitPage.tsx`) is the page for event organizers: bios, headshot, topics, talks, practical details and an invitation form that drafts a `mailto:` in the browser, with no backend. Its copy lives in `src/speakerKitContent.ts`; topics point at talk ids, and the talk lists come from `src/events.ts`, so a new talk shows up there without editing the kit.
 
+`/libro` (`libro.html`, `src/LibroPage.tsx`) is the page for the upcoming book. Its copy lives in `src/libroContent.ts`. The waitlist is a plain HTML form that posts to listmonk (`news.valentorassa.com/subscription/form`, list «Libro: lista de espera», double opt-in), so nothing on the site stores emails. The cover ships as responsive AVIF/WebP in `src/assets/libro-cover-*`, and `public/og-libro.png` is its 1200×630 social card. The page is linked from the home talks section but not from the main menu.
+
 Public decks in `public/charlas/<id>/slides.html` carry a canonical URL and a link back to the talk. `VT-Knowledge-Engine-Brain/events/charlas-2026-decks/hub/public_decks.py` adds those when creating the public copies. Its `--decorate-existing <public/charlas>` mode updates already published copies.
 
 ## Verificación de regresiones - 2026-09-14
