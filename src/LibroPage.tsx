@@ -7,9 +7,12 @@ import coverAvif720 from './assets/libro-cover-720.avif';
 import coverWebp360 from './assets/libro-cover-360.webp';
 import coverWebp540 from './assets/libro-cover-540.webp';
 import coverWebp720 from './assets/libro-cover-720.webp';
-import portraitFallback from './assets/portrait-dark-384.png';
-import portraitAvif256 from './assets/portrait-dark-256.avif';
-import portraitWebp256 from './assets/portrait-dark-256.webp';
+// Same photo as Wikimedia Commons "Valentin Torassa Colombero.jpg" (CC0), cropped to the face.
+import portraitFallback from './assets/author-commons-264.jpg';
+import portraitAvif176 from './assets/author-commons-176.avif';
+import portraitAvif264 from './assets/author-commons-264.avif';
+import portraitWebp176 from './assets/author-commons-176.webp';
+import portraitWebp264 from './assets/author-commons-264.webp';
 import { book, libroByLanguage, sourceTalkHref, waitlistForm, youtubeChannelUrl } from './libroContent';
 import { getInitialLanguage, setMetaContent } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
@@ -162,8 +165,8 @@ function LibroPage() {
         <section className="book-section" id="autor" aria-labelledby="autor-title">
           <div className="book-card book-author">
             <picture>
-              <source type="image/avif" srcSet={portraitAvif256} />
-              <source type="image/webp" srcSet={portraitWebp256} />
+              <source type="image/avif" srcSet={`${portraitAvif176} 2x, ${portraitAvif264} 3x`} />
+              <source type="image/webp" srcSet={`${portraitWebp176} 2x, ${portraitWebp264} 3x`} />
               <img src={portraitFallback} alt="" width={88} height={88} loading="lazy" decoding="async" />
             </picture>
             <h2 id="autor-title">{author.title}</h2>
