@@ -5,11 +5,11 @@ import vtMarkAvif160 from './assets/vt-mark-160.avif';
 import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
-import { headerSocialLinks, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
+import { bookLink, headerSocialLinks, isExternalLink, linkTargetProps, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
 
 /** The blog appears with the other profiles below the phone menu. */
 const panelSocialLinks = [
-  ...headerSocialLinks,
+  ...headerSocialLinks.filter(isExternalLink),
   ...socialLinks.filter((link) => link.name !== 'Email' && !headerSocialLinks.some((primary) => primary.name === link.name)),
 ];
 
@@ -133,8 +133,7 @@ export function SiteHeader({
             <a
               key={link.name}
               href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...linkTargetProps(link)}
               aria-label={link.name}
               title={link.name}
             >
@@ -190,11 +189,16 @@ export function SiteHeader({
           </nav>
           <div className="mobile-nav-social">
             {panelSocialLinks.map((link) => (
-              <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.name} title={link.name}>
+              <a key={link.name} href={link.href} {...linkTargetProps(link)} aria-label={link.name} title={link.name}>
                 <SocialIcon link={link} />
               </a>
             ))}
           </div>
+          <a className="mobile-nav-book" href={bookLink.href} onClick={() => setMobileMenuOpen(false)}>
+            <SocialIcon link={bookLink} />
+            <span>{labels.bookLabel}</span>
+            <ChevronRight aria-hidden="true" />
+          </a>
           <div className="mobile-nav-meta">
             <span><i aria-hidden="true" />{meta.location}</span>
             <span>{meta.tagline}</span>

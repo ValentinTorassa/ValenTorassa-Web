@@ -81,6 +81,9 @@ type PageContent = {
   header: HeaderLabels;
   navItems: NavItem[];
   heroEyebrow: string;
+  /** Small tag and text of the announcement above the name, linking to /libro. */
+  heroBookTag: string;
+  heroBookLabel: string;
   heroStatement: string;
   heroSocialLabel: string;
   heroProjectsLabel: string;
@@ -514,6 +517,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
     header: siteChromeByLanguage.es.header,
     navItems: siteNav('home', 'es'),
     heroEyebrow: 'SEGURIDAD / BACKEND / SISTEMAS',
+    heroBookTag: 'Nuevo',
+    heroBookLabel: 'Estoy escribiendo un libro',
     heroStatement: 'Diseño sistemas, creo herramientas para Linux y comparto lo que aprendo.',
     heroSocialLabel: 'Redes y contacto',
     heroProjectsLabel: 'Ver proyectos',
@@ -752,6 +757,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
     header: siteChromeByLanguage.en.header,
     navItems: siteNav('home', 'en'),
     heroEyebrow: 'SECURITY / BACKEND / SYSTEMS',
+    heroBookTag: 'New',
+    heroBookLabel: 'I am writing a book',
     heroStatement: 'I design systems, build tools for Linux, and share what I learn.',
     heroSocialLabel: 'Social profiles and contact',
     heroProjectsLabel: 'Explore projects',

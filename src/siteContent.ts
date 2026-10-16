@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons';
-import { FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
+import { FaBookOpen, FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
 import { SiGithub, SiInstagram, SiOrcid, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
 
 export type Language = 'es' | 'en';
@@ -18,6 +18,8 @@ export type HeaderLabels = {
   englishLabel: string;
   menuLabel: string;
   closeMenuLabel: string;
+  /** Link to /libro in the phone menu, under the profile icons. */
+  bookLabel: string;
 };
 
 /**
@@ -102,9 +104,20 @@ export const socialLinks: SocialLink[] = [
   },
 ];
 
-/** The blog and primary profiles appear together on the right of every desktop header. */
+/** The book page on this site; it sits next to the blog icon in every header. */
+export const bookLink: SocialLink = { name: 'Libro', href: '/libro', icon: FaBookOpen };
+
+/** The blog, the book and the primary profiles appear together on the right of every desktop header. */
 const headerSocialNames = ['GitHub', 'LinkedIn', 'YouTube', 'Blog'];
-export const headerSocialLinks = headerSocialNames.flatMap((name) => socialLinks.filter((link) => link.name === name));
+export const headerSocialLinks = [
+  ...headerSocialNames.flatMap((name) => socialLinks.filter((link) => link.name === name)),
+  bookLink,
+];
+
+/** Site pages (like /libro) open in the same tab; profiles and the blog open in a new one. */
+export const isExternalLink = (link: SocialLink) => !link.href.startsWith('/');
+export const linkTargetProps = (link: SocialLink) =>
+  isExternalLink(link) ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 
 export const siteChromeByLanguage = {
   es: {
@@ -116,6 +129,7 @@ export const siteChromeByLanguage = {
       englishLabel: 'Inglés de Estados Unidos',
       menuLabel: 'Abrir navegación',
       closeMenuLabel: 'Cerrar navegación',
+      bookLabel: 'El libro, en preparación',
     },
     footer: {
       tagline: 'Seguridad · sistemas · open source',
@@ -132,6 +146,7 @@ export const siteChromeByLanguage = {
       englishLabel: 'United States English',
       menuLabel: 'Open navigation',
       closeMenuLabel: 'Close navigation',
+      bookLabel: 'The upcoming book',
     },
     footer: {
       tagline: 'Security · systems · open source',
