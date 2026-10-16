@@ -5,12 +5,13 @@ authors, venues, years, page ranges, and public URLs were checked against the
 JAIIO journal or SEDICI repository records. The records checked show their
 article URLs or SEDICI handles; the file does not claim a DOI.
 
-To import them, sign in to ORCID, open **Works → +Add → Add BibTeX**, choose
-`research-publications.bib`, review all six previews, and import only works that are not
-already on the record. Check accents, coauthors, type, and URLs after import;
-ORCID says BibTeX import may lose metadata or fail to group works without a
-supported identifier. Prefer an ORCID-connected import service if one offers
-these works with correct metadata.
+All six were imported into the public
+[ORCID record](https://orcid.org/0009-0005-7980-4128) on 16 October 2026.
+The public API was checked for their titles, years, types, source URLs, and
+coauthor counts. For later works, check the record before importing to avoid
+duplicates. ORCID says BibTeX import may lose metadata or fail to group works
+without a supported identifier; prefer a connected import service when it
+provides correct metadata.
 
 For a separate conference-presentation entry, the official [DebConf26 talk
 page](https://debconf26.debconf.org/talks/75-abstraction-leaks-why-understanding-linux-internals-still-matters/)
