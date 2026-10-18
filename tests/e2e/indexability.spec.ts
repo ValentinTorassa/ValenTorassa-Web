@@ -22,7 +22,8 @@ async function rawHtml(request: APIRequestContext, pathname: string) {
 }
 
 const attribute = (html: string, pattern: RegExp) => pattern.exec(html)?.[1];
-const h1Text = (html: string) => /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1].replace(/<[^>]+>/g, '');
+// Los títulos de estas páginas son texto plano; la prueba falla si eso cambia.
+const h1Text = (html: string) => /<h1[^>]*>([^<]*)<\/h1>/.exec(html)?.[1];
 const jsonLd = (html: string) =>
   [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
 
