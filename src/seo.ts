@@ -84,6 +84,7 @@ const person = {
     'https://bsky.app/profile/vtsecurity.bsky.social',
     'https://www.threads.com/@vt_security_',
     'https://www.instagram.com/vtsecurity/',
+    'https://www.facebook.com/vtsecurity',
     'https://www.tiktok.com/@vtsecurity',
     'https://vtsecurity.com.ar/',
     'https://securitylabs.valentorassa.com/',

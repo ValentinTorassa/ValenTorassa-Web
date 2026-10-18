@@ -96,6 +96,7 @@ test.describe('structured data', () => {
         'https://www.wikidata.org/wiki/Q141749900',
         'https://bsky.app/profile/vtsecurity.bsky.social',
         'https://www.threads.com/@vt_security_',
+        'https://www.facebook.com/vtsecurity',
         'https://es.everybodywiki.com/Valent%C3%ADn_Torassa_Colombero',
       ]));
       const image = new URL(full.image as string);
@@ -241,15 +242,21 @@ test.describe('site files', () => {
   });
 });
 
-test('Bluesky and Threads are with the other profiles, but the phone menu row stays as it was', async ({ page }) => {
+test('Bluesky, Threads and Facebook are with the other profiles, but the phone menu row stays as it was', async ({ page }) => {
   once();
+  const profiles = [
+    ['Bluesky', 'https://bsky.app/profile/vtsecurity.bsky.social'],
+    ['Threads', 'https://www.threads.com/@vt_security_'],
+    ['Facebook', 'https://www.facebook.com/vtsecurity'],
+  ];
   await page.goto('/');
-  for (const [name, href] of [['Bluesky', 'https://bsky.app/profile/vtsecurity.bsky.social'], ['Threads', 'https://www.threads.com/@vt_security_']]) {
+  for (const [name, href] of profiles) {
     await expect(page.locator(`.contact-network-links a[href="${href}"]`)).toHaveText(name);
   }
   await page.goto('/speaker-kit');
-  await expect(page.locator('.kit-profiles a', { hasText: 'Bluesky' })).toHaveAttribute('href', 'https://bsky.app/profile/vtsecurity.bsky.social');
-  await expect(page.locator('.kit-profiles a', { hasText: 'Threads' })).toHaveAttribute('href', 'https://www.threads.com/@vt_security_');
+  for (const [name, href] of profiles) {
+    await expect(page.locator('.kit-profiles a', { hasText: name })).toHaveAttribute('href', href);
+  }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.locator('.mobile-menu-toggle').click();

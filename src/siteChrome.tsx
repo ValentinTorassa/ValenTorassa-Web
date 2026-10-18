@@ -13,7 +13,7 @@ import { bookLink, headerSocialLinks, isExternalLink, linkTargetProps, socialLin
  * that row is in the screenshots of the redesign. The home contact section and
  * the speaker kit list them.
  */
-const phoneMenuHidden = new Set(['Bluesky', 'Threads']);
+const phoneMenuHidden = new Set(['Bluesky', 'Threads', 'Facebook']);
 
 /** The blog appears with the other profiles below the phone menu. */
 const panelSocialLinks = [
