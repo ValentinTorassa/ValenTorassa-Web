@@ -1,0 +1,43 @@
+/* dist/404.html (src/NotFoundPage.tsx): the site's dark page with one message. */
+
+.not-found {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(64px, 14vh, 140px) 16px 80px;
+}
+
+.not-found h1 {
+  margin: 0 0 14px;
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.not-found p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--muted);
+}
+
+.not-found-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 28px 0 36px;
+}
+
+.not-found-en {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+
+.not-found-en a {
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

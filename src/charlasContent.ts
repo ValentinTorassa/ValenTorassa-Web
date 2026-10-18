@@ -7,6 +7,8 @@ type CharlasPageContent = {
     description: string;
     locale: 'es_AR' | 'en_US';
   };
+  /** Text alternative of the hub's share image. */
+  socialImageAlt: string;
   section: string;
   title: string;
   eventsLabel: string;
@@ -54,6 +56,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
       description: 'Las charlas y los papers de Valentín Torassa Colombero en un solo lugar: elegí uno para ver de qué trata, cuándo y dónde fue, y abrir sus slides o el paper.',
       locale: 'es_AR',
     },
+    socialImageAlt: 'Charlas de Valentín Torassa Colombero',
     section: 'charlas',
     title: 'Charlas',
     eventsLabel: 'Ver agenda y próximas fechas',
@@ -92,6 +95,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
       description: 'Talks and papers by Valentin Torassa Colombero in one place: pick one to see what it is about, when and where it was, and open its slides or the paper.',
       locale: 'en_US',
     },
+    socialImageAlt: 'Talks by Valentín Torassa Colombero',
     section: 'talks',
     title: 'Talks',
     eventsLabel: 'See events and upcoming dates',

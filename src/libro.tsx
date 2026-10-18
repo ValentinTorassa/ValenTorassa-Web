@@ -1,12 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './analytics'
 import './index.css'
 import './libro.css'
 import LibroPage from './LibroPage.tsx'
+import { mount } from './mount.tsx'
+import { languageFromPath } from './site'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <LibroPage />
-  </StrictMode>,
-)
+mount(<LibroPage language={languageFromPath(window.location.pathname)} />)

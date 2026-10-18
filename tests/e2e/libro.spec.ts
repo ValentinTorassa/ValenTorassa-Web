@@ -96,7 +96,7 @@ test.describe('/libro', () => {
     desktopOnly();
     await page.setViewportSize({ width: 375, height: 812 });
     for (const lang of ['es', 'en']) {
-      await page.goto(`/libro?lang=${lang}`);
+      await page.goto(lang === 'es' ? '/libro' : '/en/libro');
       await page.evaluate(async () => {
         for (let y = 0; y < document.documentElement.scrollHeight; y += 400) {
           window.scrollTo(0, y);
@@ -110,7 +110,7 @@ test.describe('/libro', () => {
   test('keeps the public copy rules and says in English that the book is in Spanish', async ({ page }) => {
     desktopOnly();
     for (const lang of ['es', 'en']) {
-      await page.goto(`/libro?lang=${lang}`);
+      await page.goto(lang === 'es' ? '/libro' : '/en/libro');
       const text = await page.locator('main').innerText();
       expect(text, `${lang}: em or en dashes`).not.toMatch(/[—–]/);
       expect(text, `${lang}: exclamation marks`).not.toMatch(/[!¡]/);
@@ -125,6 +125,7 @@ test.describe('/libro', () => {
     await expect(page.locator('#lista form').getByRole('textbox', { name: 'Your email' })).toBeVisible();
 
     await page.locator('.language-toggle').click();
+    await expect(page).toHaveURL(/\/libro$/);
     await expect(page.locator('.book-language-note')).toHaveCount(0);
     await expect(page.locator('#lista h2')).toHaveText('Anotate en la lista de espera');
   });
@@ -140,8 +141,8 @@ test.describe('/libro', () => {
       '@type': 'Book',
       name: 'No podés defender lo que no entendés',
       alternativeHeadline: 'Linux, las abstracciones que fallan y el camino a la ciberseguridad',
-      inLanguage: 'es-AR',
-      author: { '@id': 'https://valentorassa.com/#person' },
+      inLanguage: 'es',
+      author: { '@type': 'Person', '@id': 'https://valentorassa.com/#person', name: 'Valentín Torassa Colombero' },
       image: 'https://valentorassa.com/og-libro.png',
       url: 'https://valentorassa.com/libro',
       isPartOf: { '@id': 'https://valentorassa.com/#website' },

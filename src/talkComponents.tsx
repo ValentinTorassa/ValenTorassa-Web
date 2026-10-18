@@ -7,7 +7,6 @@ import {
   formatTalkTime,
   groupConsecutiveByEvent,
   talkDateParts,
-  todayInArgentina,
 } from './eventSchedule';
 import { slidesHref } from './talkMedia';
 
@@ -35,12 +34,14 @@ type TalkListProps = {
   talks: Talk[];
   language: Language;
   labels: TalkLabels;
-  currentYear: string;
+  /** Today in Argentina, `YYYY-MM-DD`: decides the year shown and when slides appear. */
+  today: string;
   isPast: boolean;
 };
 
 /** Talks in order, with consecutive talks at the same event shown as one block. */
-export function TalkList({ talks, language, labels, currentYear, isPast }: TalkListProps) {
+export function TalkList({ talks, language, labels, today, isPast }: TalkListProps) {
+  const currentYear = today.slice(0, 4);
   return (
     <ol className="talk-list">
       {groupConsecutiveByEvent(talks).map((run) => {
@@ -49,7 +50,7 @@ export function TalkList({ talks, language, labels, currentYear, isPast }: TalkL
 
           return (
             <li key={talk.id}>
-              <TalkCard talk={talk} language={language} labels={labels} currentYear={currentYear} isPast={isPast} />
+              <TalkCard talk={talk} language={language} labels={labels} today={today} isPast={isPast} />
             </li>
           );
         }
@@ -81,7 +82,7 @@ export function TalkList({ talks, language, labels, currentYear, isPast }: TalkL
                     talk={talk}
                     language={language}
                     labels={labels}
-                    currentYear={currentYear}
+                    today={today}
                     isPast={isPast}
                     inGroup
                   />
@@ -99,18 +100,18 @@ type TalkCardProps = {
   talk: Talk;
   language: Language;
   labels: TalkLabels;
-  currentYear: string;
+  today: string;
   isPast: boolean;
   inGroup?: boolean;
 };
 
-function TalkCard({ talk, language, labels, currentYear, isPast, inGroup = false }: TalkCardProps) {
-  const dateParts = talkDateParts(talk, language, currentYear);
+function TalkCard({ talk, language, labels, today, isPast, inGroup = false }: TalkCardProps) {
+  const dateParts = talkDateParts(talk, language, today.slice(0, 4));
   const time = formatTalkTime(talk);
   const place = formatTalkPlace(talk, language);
   const kicker = inGroup ? talk.track : [talk.event, talk.track].filter(Boolean).join(' · ');
   const Title = inGroup ? 'h4' : 'h3';
-  const slidesUrl = slidesHref(talk, todayInArgentina());
+  const slidesUrl = slidesHref(talk, today, language);
   const slidesOutside = slidesUrl?.startsWith('http');
 
   return (

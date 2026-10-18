@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { ArrowRight, ArrowUpRight, BookOpenText, Mail } from 'lucide-react';
 import coverFallback from './assets/libro-cover-540.jpg';
 import coverAvif360 from './assets/libro-cover-360.avif';
@@ -14,7 +13,7 @@ import portraitAvif264 from './assets/author-commons-264.avif';
 import portraitWebp176 from './assets/author-commons-176.webp';
 import portraitWebp264 from './assets/author-commons-264.webp';
 import { book, libroByLanguage, sourceTalkHref, waitlistForm, youtubeChannelUrl } from './libroContent';
-import { getInitialLanguage, setMetaContent } from './site';
+import { counterpartPath, localePath } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteFooter, SiteHeader } from './siteChrome';
 
@@ -22,35 +21,19 @@ const coverAvif = `${coverAvif360} 360w, ${coverAvif540} 540w, ${coverAvif720} 7
 const coverWebp = `${coverWebp360} 360w, ${coverWebp540} 540w, ${coverWebp720} 720w`;
 const coverSizes = '(min-width: 900px) 340px, 200px';
 
-function LibroPage() {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+function LibroPage({ language }: { language: Language }) {
   const page = libroByLanguage[language];
   const siteContent = siteChromeByLanguage[language];
   const { contents, waitlist, author } = page;
-
-  useEffect(() => {
-    // The canonical stays https://valentorassa.com/libro in both languages.
-    document.documentElement.lang = language;
-    document.title = page.documentTitle;
-    window.localStorage.setItem('vt-language', language);
-    setMetaContent('meta[name="description"]', page.seo.description);
-    setMetaContent('meta[property="og:title"]', page.documentTitle);
-    setMetaContent('meta[property="og:description"]', page.seo.description);
-    setMetaContent('meta[property="og:locale"]', page.seo.locale);
-    setMetaContent('meta[property="og:image:alt"]', page.coverAlt);
-    setMetaContent('meta[name="twitter:title"]', page.documentTitle);
-    setMetaContent('meta[name="twitter:description"]', page.seo.description);
-    setMetaContent('meta[name="twitter:image:alt"]', page.coverAlt);
-  }, [language, page.coverAlt, page.documentTitle, page.seo.description, page.seo.locale]);
 
   return (
     <div className="site-shell">
       <SiteHeader
         language={language}
-        onToggleLanguage={() => setLanguage(language === 'es' ? 'en' : 'es')}
+        languageHref={counterpartPath(localePath(language, '/libro'))}
         labels={siteContent.header}
         navItems={page.navItems}
-        brandHref="/"
+        brandHref={localePath(language, '/')}
         meta={siteContent.footer}
       />
 
@@ -173,7 +156,7 @@ function LibroPage() {
             <div className="book-author-body">
               <p>{author.text}</p>
               <div className="book-author-links">
-                <a href={sourceTalkHref}>
+                <a href={localePath(language, sourceTalkHref)}>
                   {author.talkLink}
                   <ArrowRight aria-hidden="true" />
                 </a>

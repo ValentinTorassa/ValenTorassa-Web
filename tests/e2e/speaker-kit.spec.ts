@@ -33,7 +33,7 @@ test.describe('/speaker-kit', () => {
     await page.clock.setFixedTime(DAY_AFTER_HACKING_DAY);
 
     for (const lang of ['es', 'en']) {
-      await page.goto(`/speaker-kit?lang=${lang}`);
+      await page.goto(lang === 'es' ? '/speaker-kit' : '/en/speaker-kit');
       const text = await page.locator('main').innerText();
       expect(text, `${lang}: em or en dashes`).not.toMatch(/[—–]/);
       expect(text, `${lang}: degree still in progress`).not.toMatch(/graduad|egresad|graduate|alumn/i);
@@ -155,8 +155,16 @@ test.describe('/speaker-kit', () => {
     }
     await expect(draft.locator('.kit-draft-text')).toContainText('Tema: Seguridad en agentes de IA');
 
-    // The draft follows the language toggle.
-    await page.locator('.language-toggle').click();
+    // The English page drafts it in English.
+    await page.goto('/en/speaker-kit');
+    const englishForm = page.locator('#invitar form');
+    await englishForm.getByRole('textbox', { name: 'Event', exact: true }).fill('Jornadas de Prueba');
+    await englishForm.getByRole('textbox', { name: 'Date', exact: true }).fill('2026-11-14');
+    await englishForm.getByRole('combobox', { name: 'Topic', exact: true }).selectOption('agents');
+    await englishForm.getByRole('textbox', { name: 'Audience', exact: true }).fill('200 students');
+    await englishForm.getByRole('textbox', { name: 'Your name', exact: true }).fill('Ana Pérez');
+    await englishForm.getByRole('textbox', { name: 'Your email', exact: true }).fill('ana@example.org');
+    await englishForm.getByRole('button', { name: 'Draft the email' }).click();
     await expect(draft.locator('.kit-draft-text')).toContainText('Speaking invitation: Jornadas de Prueba (November 14, 2026)');
     await expect(draft.locator('.kit-draft-text')).toContainText('Topic: AI agent security');
     expect(posts).toEqual([]);
@@ -167,6 +175,7 @@ test.describe('/speaker-kit', () => {
     await page.goto('/speaker-kit?lang=es');
 
     await page.getByRole('button', { name: 'Ver la bio en inglés' }).click();
+    await expect(page).toHaveURL(/\/en\/speaker-kit#bio$/);
     await expect(page.getByRole('heading', { level: 1, name: 'Speaker kit' })).toBeVisible();
     await expect(page).toHaveTitle('Speaker kit · Valentín Torassa');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');

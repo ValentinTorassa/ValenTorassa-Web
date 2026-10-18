@@ -1,12 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './analytics'
 import './index.css'
 import './speakerKit.css'
 import SpeakerKitPage from './SpeakerKitPage.tsx'
+import { mount } from './mount.tsx'
+import { languageFromPath } from './site'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <SpeakerKitPage />
-  </StrictMode>,
-)
+mount(<SpeakerKitPage language={languageFromPath(window.location.pathname)} />)

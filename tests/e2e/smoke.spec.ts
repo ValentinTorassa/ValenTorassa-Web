@@ -4,34 +4,38 @@ import { expect, test, type Page } from '@playwright/test';
 
 /**
  * Routes of the site, discovered from the source:
- * - The React app (src/main.tsx -> src/App.tsx) has no router: it is one page
- *   whose only "route" state is the `?lang=es|en` query param read in
- *   getInitialLanguage(). Without it the language comes from localStorage or
- *   the browser. In-page navigation is hash anchors (#profile, #experience...).
- * - eventos.html is a second Vite entry (src/eventos.tsx), built to
- *   dist/eventos.html and served at /eventos. It reads `?lang=` the same way.
+ * - Every page exists in Spanish at the root and in English under /en/, with
+ *   the same slugs. The path alone decides the language (src/site.ts); old
+ *   `?lang=` links still load (Vercel sends ?lang=en to /en/..., see vercel.json).
+ * - The build renders each page to HTML (src/entry-server.tsx, vite.config.ts)
+ *   and the client hydrates it. In-page navigation is hash anchors (#profile...).
+ * - index.html (src/main.tsx -> src/App.tsx) is the home page: dist/index.html
+ *   and dist/en/index.html.
+ * - eventos.html (src/eventos.tsx) is /eventos and /en/eventos.
+ * - charlas.html (src/charlas.tsx) is /charlas; the build also writes
+ *   dist/charlas/<id>.html (and dist/en/charlas/<id>.html) for every talk and paper.
+ * - speaker-kit.html (src/speakerKit.tsx) is /speaker-kit, the page for event organizers.
+ * - libro.html (src/libro.tsx) is /libro: the upcoming book and its waitlist form.
  * - public/*.html are standalone static pages. vercel.json sets cleanUrls, so
  *   production serves them without the .html suffix; `vite preview` does the same.
- * - charlas.html is a third entry (src/charlas.tsx), served at /charlas. The
- *   build also writes dist/charlas/<id>.html for every talk and paper.
- * - speaker-kit.html is a fourth entry (src/speakerKit.tsx), served at
- *   /speaker-kit: the page for event organizers.
- * - libro.html is a fifth entry (src/libro.tsx), served at /libro: the
- *   upcoming book and its waitlist form.
- * - the build sitemap lists the main pages and each /charlas/<id>; noindex
- *   static pages (the CreatorStack OAuth pages) are reachable but left out.
+ * - 404.html is served for any other path, with status 404.
+ * - the build sitemap lists every page in both languages; noindex static pages
+ *   (the CreatorStack OAuth pages) are reachable but left out.
  */
 const ROUTES = [
   { path: '/', name: 'home' },
-  { path: '/?lang=es', name: 'home-es' },
-  { path: '/?lang=en', name: 'home-en' },
+  { path: '/en/', name: 'home-en' },
+  { path: '/?lang=es', name: 'home-legacy-lang' },
   { path: '/eventos', name: 'eventos' },
+  { path: '/en/eventos', name: 'eventos-en' },
   { path: '/charlas', name: 'charlas' },
+  { path: '/en/charlas', name: 'charlas-en' },
   { path: '/charlas/hacking-day-2026', name: 'talk-hacking-day' },
+  { path: '/en/charlas/hacking-day-2026', name: 'talk-hacking-day-en' },
   { path: '/speaker-kit', name: 'speaker-kit' },
-  { path: '/speaker-kit?lang=en', name: 'speaker-kit-en' },
+  { path: '/en/speaker-kit', name: 'speaker-kit-en' },
   { path: '/libro', name: 'libro' },
-  { path: '/libro?lang=en', name: 'libro-en' },
+  { path: '/en/libro', name: 'libro-en' },
   { path: '/privacy', name: 'privacy' },
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
   { path: '/creatorstack', name: 'creatorstack' },
@@ -96,9 +100,9 @@ test.describe('route coverage', () => {
       .map((file) => `/${file.replace(/\.html$/, '')}`);
     for (const page of noindex) expect(locs, `noindex page ${page} is not in the sitemap`).not.toContain(page);
     for (const loc of locs) {
-      if (covered.has(loc)) continue;
-      expect(loc, `sitemap entry ${loc}`).toMatch(/^\/charlas\/[a-z0-9-]+$/);
-      expect(existsSync(path.join(repoRoot, 'dist', `${loc}.html`.slice(1))), `built page ${loc}`).toBe(true);
+      expect(loc, `sitemap entry ${loc}`).toMatch(/^(\/en)?(\/|\/(charlas|eventos|libro|speaker-kit)|\/charlas\/[a-z0-9-]+)$/);
+      const file = loc.endsWith('/') ? `${loc}index.html` : `${loc}.html`;
+      expect(existsSync(path.join(repoRoot, 'dist', file.slice(1))), `built page ${loc}`).toBe(true);
     }
   });
 });
@@ -142,9 +146,9 @@ for (const route of ROUTES) {
       );
 
       // Internal links: hash anchors must hit an element on the page; other
-      // same-site links must resolve to a real page. `vite preview` falls back
-      // to index.html for unknown paths, but Vercel (no rewrites in vercel.json)
-      // returns 404, so a non-root path that serves the home page counts as broken.
+      // same-site links must resolve to a real page. Like Vercel, the preview
+      // answers unknown paths with 404.html (vite.config.ts); a non-root path
+      // that serves the home page would count as broken too.
       const links = await page.$$eval('a[href]', (anchors) =>
         anchors.map((anchor) => ({ raw: anchor.getAttribute('href') ?? '', href: (anchor as HTMLAnchorElement).href })),
       );
@@ -189,7 +193,7 @@ test('home leads to six selected projects and the private case study without a G
   page.on('request', (request) => {
     if (request.url().startsWith('https://api.github.com/')) apiRequests.push(request.url());
   });
-  await page.goto('/?lang=en');
+  await page.goto('/en/');
 
   await expect(page.locator('.hero-avatar')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Explore projects' })).toHaveAttribute('href', '#research');
@@ -217,7 +221,7 @@ test('private work shows its synthetic preview without a public link', async ({ 
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
   for (const lang of ['es', 'en'] as const) {
-    await page.goto(`/?lang=${lang}`);
+    await page.goto(lang === 'es' ? '/' : '/en/');
     const label = lang === 'es' ? 'Acceso privado' : 'Private access';
     const card = page.locator('#research .repo-card.is-private');
 

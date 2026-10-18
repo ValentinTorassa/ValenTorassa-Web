@@ -1,11 +1,7 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './analytics'
 import './index.css'
 import App from './App.tsx'
+import { mount } from './mount.tsx'
+import { languageFromPath } from './site'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+mount(<App language={languageFromPath(window.location.pathname)} />)

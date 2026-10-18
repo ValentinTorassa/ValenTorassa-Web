@@ -1,59 +1,164 @@
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { execFileSync } from 'node:child_process'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { access, mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { defineConfig } from 'vite'
+import { build, defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import { talkPages, talkPageMeta } from './src/talkSeo'
 
-const dist = fileURLToPath(new URL('./dist', import.meta.url))
-const socialImages = fileURLToPath(new URL('./public/og-charlas', import.meta.url))
-const escapeHtml = (value: string) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+const root = fileURLToPath(new URL('.', import.meta.url))
+const dist = path.join(root, 'dist')
+const ssrOut = path.join(root, 'dist-ssr')
 
-function setTag(html: string, selector: string, value: string) {
-  const pattern = new RegExp(`(<meta ${selector} content=")[^"]*(")`)
-  if (!pattern.test(html)) throw new Error(`Missing metadata tag: ${selector}`)
-  return html.replace(pattern, (_match, before: string, after: string) => `${before}${escapeHtml(value)}${after}`)
+/** Files whose last commit dates a page's lastmod in the sitemap, next to its content date. */
+const pageSources: Record<string, string[]> = {
+  home: ['src/homeContent.ts', 'src/App.tsx', 'src/siteContent.ts'],
+  charlas: ['src/charlasContent.ts', 'src/CharlasPage.tsx', 'src/events.ts', 'src/research.ts', 'src/talkMedia.ts'],
+  eventos: ['src/eventsContent.ts', 'src/EventosPage.tsx', 'src/events.ts'],
+  libro: ['src/libroContent.ts', 'src/LibroPage.tsx', 'public/og-libro.png'],
+  'speaker-kit': ['src/speakerKitContent.ts', 'src/SpeakerKitPage.tsx'],
 }
 
-function talkPagesPlugin() {
+const git = (args: string[]) => execFileSync('git', args, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
+
+/**
+ * Whether the build can date files by their commits. A shallow clone (CI, and
+ * Vercel when it has a .git at all) would date every file at its oldest commit,
+ * so only a full history counts.
+ */
+function hasFullHistory() {
+  try {
+    return git(['rev-parse', '--is-shallow-repository']) === 'false'
+  } catch {
+    return false
+  }
+}
+
+/** Day of the last commit touching `files`. */
+function committedOn(files: string[]) {
+  try {
+    return git(['log', '-1', '--format=%cs', '--', ...files]) || undefined
+  } catch {
+    return undefined
+  }
+}
+
+/** What src/entry-server.tsx exports, as the build uses it. */
+type Route = { page: string; language: string; path: string; talkId?: string }
+type EntryServer = {
+  todayInArgentina(): string
+  talkPages: Array<{ id: string }>
+  socialImages: { talk(id: string): string }
+  routes: Route[]
+  renderRoute(route: Route, today: string): { file: string; template: string; lang: string; head: string; html: string }
+  renderNotFound(): string
+  sitemapXml(today: string, committedOn: Record<string, string | undefined>): string
+  llmsTxt(today: string): string
+}
+
+/**
+ * Static pages: after the client build, renders every page in both languages
+ * to HTML (Spanish at /, English under /en/), each with its own head, and
+ * writes the 404 page, sitemap.xml and llms.txt. The client then hydrates.
+ */
+function staticPagesPlugin(): Plugin {
+  let isBuild = false
   return {
-    name: 'static-talk-pages',
-    async closeBundle() {
-      await writeFile(path.join(dist, 'talk-seo.json'), JSON.stringify(talkPages, null, 2))
-      const template = await readFile(path.join(dist, 'charlas.html'), 'utf8')
-      const talkDir = path.join(dist, 'charlas')
-      await mkdir(talkDir, { recursive: true })
-      for (const page of talkPages) {
+    name: 'static-pages',
+    configResolved(config) {
+      isBuild = config.command === 'build' && !config.build.ssr
+    },
+    // `vite preview` like Vercel: /en serves en/index.html and a path with no
+    // page gets 404.html with status 404, instead of the home page.
+    configurePreviewServer(server) {
+      const out = path.resolve(server.config.root, server.config.build.outDir)
+      const isFile = (file: string) => existsSync(file) && statSync(file).isFile()
+      server.middlewares.use((req, res, next) => {
+        if (req.method !== 'GET' && req.method !== 'HEAD') return next()
+        const url = new URL(req.url ?? '/', 'http://preview')
+        let pathname: string
         try {
-          await access(path.join(socialImages, `${page.id}.png`))
+          pathname = decodeURIComponent(url.pathname)
+        } catch {
+          return next()
+        }
+        const file = path.join(out, pathname)
+        if (!file.startsWith(out)) return next()
+        if (isFile(file) || isFile(`${file}.html`)) return next()
+        if (isFile(path.join(file, 'index.html'))) {
+          if (!pathname.endsWith('/')) req.url = `${url.pathname}/index.html${url.search}`
+          return next()
+        }
+        const notFound = path.join(out, '404.html')
+        if (!isFile(notFound)) return next()
+        res.statusCode = 404
+        res.setHeader('Content-Type', 'text/html; charset=utf-8')
+        res.end(req.method === 'HEAD' ? undefined : readFileSync(notFound))
+      })
+    },
+    async closeBundle() {
+      if (!isBuild) return
+
+      // The same source, built for Node: renders the pages with the client's asset URLs.
+      await build({
+        configFile: false,
+        root,
+        logLevel: 'warn',
+        plugins: [react()],
+        build: {
+          ssr: 'src/entry-server.tsx',
+          outDir: ssrOut,
+          emptyOutDir: true,
+          rollupOptions: { output: { entryFileNames: 'entry-server.js' } },
+        },
+      })
+      const server: EntryServer = await import(`${pathToFileURL(path.join(ssrOut, 'entry-server.js')).href}?t=${Date.now()}`)
+      const today = server.todayInArgentina()
+
+      for (const page of server.talkPages) {
+        try {
+          await access(path.join(root, 'public', server.socialImages.talk(page.id)))
         } catch {
           throw new Error(`Missing social image for ${page.id}. Run npm run build:talks to draw it.`)
         }
-        const meta = talkPageMeta(page.id)!
-        let html = template.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(meta.title)}</title>`)
-        html = html.replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${meta.url}$2`)
-        for (const [kind, key, value] of [
-          ['name', 'description', meta.description],
-          ['property', 'og:title', meta.title],
-          ['property', 'og:description', meta.description],
-          ['property', 'og:url', meta.url],
-          ['property', 'og:image', meta.image],
-          ['property', 'og:image:alt', meta.imageAlt],
-          ['name', 'twitter:title', meta.title],
-          ['name', 'twitter:description', meta.description],
-          ['name', 'twitter:image', meta.image],
-          ['name', 'twitter:image:alt', meta.imageAlt],
-        ] as const) {
-          html = setTag(html, `${kind}="${key}"`, value)
-        }
-        await writeFile(path.join(talkDir, `${page.id}.html`), html)
+      }
+      await writeFile(path.join(dist, 'talk-seo.json'), JSON.stringify(server.talkPages, null, 2))
+
+      // Read every template before writing: index.html and charlas.html are also pages.
+      const pages = server.routes.map((route) => server.renderRoute(route, today))
+      const templates = new Map<string, string>()
+      for (const { template } of pages) {
+        if (!templates.has(template)) templates.set(template, await readFile(path.join(dist, template), 'utf8'))
       }
 
-      // The CreatorStack pages exist for Google's OAuth review: reachable, but noindex and not listed here.
-      const staticUrls = ['/', '/?lang=es', '/?lang=en', '/eventos', '/charlas', '/speaker-kit', '/libro']
-      const urls = [...staticUrls, ...talkPages.map((page) => `/charlas/${page.id}`)]
-      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>https://valentorassa.com${url.replaceAll('&', '&amp;')}</loc></url>`).join('\n')}\n</urlset>\n`
-      await writeFile(path.join(dist, 'sitemap.xml'), sitemap)
+      for (const page of pages) {
+        let html = templates.get(page.template)!
+        const replace = (pattern: RegExp, value: string) => {
+          if (!pattern.test(html)) throw new Error(`${page.template}: no match for ${pattern}`)
+          html = html.replace(pattern, () => value)
+        }
+        replace(/<html lang="es"/, `<html lang="${page.lang}" data-rendered-on="${today}"`)
+        replace(/<!-- The build replaces this title[^>]*-->\s*<title>[^<]*<\/title>/, page.head)
+        replace(/<div id="root"><\/div>/, `<div id="root">${page.html}</div>`)
+        const file = path.join(dist, page.file)
+        await mkdir(path.dirname(file), { recursive: true })
+        await writeFile(file, html)
+      }
+
+      const notFound = await readFile(path.join(dist, '404.html'), 'utf8')
+      if (!notFound.includes('<div id="root"></div>')) throw new Error('404.html: no root to render into')
+      await writeFile(path.join(dist, '404.html'), notFound.replace('<div id="root"></div>', () => `<div id="root">${server.renderNotFound()}</div>`))
+
+      // CreatorStack pages exist for Google's OAuth review: reachable, but noindex and left out of the sitemap.
+      const commits: Record<string, string | undefined> = {}
+      if (hasFullHistory()) {
+        for (const [page, files] of Object.entries(pageSources)) commits[page] = committedOn(files)
+        for (const page of server.talkPages) {
+          commits[`talk:${page.id}`] = committedOn([`public/charlas/${page.id}`, `public/og-charlas/${page.id}.png`])
+        }
+      }
+      await writeFile(path.join(dist, 'sitemap.xml'), server.sitemapXml(today, commits))
+      await writeFile(path.join(dist, 'llms.txt'), server.llmsTxt(today))
     },
   }
 }
@@ -63,7 +168,7 @@ function talkPagesPlugin() {
 // vercel.json `cleanUrls`, dist/eventos.html is served at /eventos (and
 // /eventos.html redirects there), like public/privacy.html at /privacy.
 export default defineConfig({
-  plugins: [react(), talkPagesPlugin()],
+  plugins: [react(), staticPagesPlugin()],
   build: {
     rollupOptions: {
       input: {
@@ -72,6 +177,7 @@ export default defineConfig({
         charlas: fileURLToPath(new URL('./charlas.html', import.meta.url)),
         'speaker-kit': fileURLToPath(new URL('./speaker-kit.html', import.meta.url)),
         libro: fileURLToPath(new URL('./libro.html', import.meta.url)),
+        'not-found': fileURLToPath(new URL('./404.html', import.meta.url)),
       },
     },
   },

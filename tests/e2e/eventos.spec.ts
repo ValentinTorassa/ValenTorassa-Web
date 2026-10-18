@@ -98,9 +98,10 @@ test.describe('/eventos', () => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
     await page.clock.setFixedTime(BEFORE_THE_TALKS);
-    await page.goto('/eventos?lang=es');
+    await page.goto('/eventos');
     await page.locator('.language-toggle').click();
 
+    await expect(page).toHaveURL(/\/en\/eventos$/);
     await expect(page.getByRole('heading', { level: 1, name: 'Events and talks' })).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page).toHaveTitle('Events and talks · Valentín Torassa');

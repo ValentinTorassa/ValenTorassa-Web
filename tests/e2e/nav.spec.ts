@@ -7,7 +7,7 @@ const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Contac
 test('the same navigation works across every page', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'shared navigation; run once');
   for (const path of pages) {
-    await page.goto(`${path}?lang=es`);
+    await page.goto(path);
     await expect(page.locator('.nav-links a')).toHaveText(spanish);
     await expect(page.locator('.social-actions a[aria-label="Blog"]')).toHaveAttribute('href', 'https://vtsecurity.com.ar');
     await expect(page.locator('.social-actions a')).toHaveCount(5);
@@ -19,17 +19,28 @@ test('the same navigation works across every page', async ({ page }) => {
     if (path === '/eventos') await expect(page.locator('.nav-links a[href="/eventos"]')).toHaveAttribute('aria-current', 'page');
   }
 
-  await page.getByRole('button', { name: /idioma/i }).click();
+  // The toggle is a link to the same page in the other language.
+  await expect(page.getByRole('link', { name: /idioma/i })).toHaveAttribute('href', '/en/libro');
+  await page.getByRole('link', { name: /idioma/i }).click();
+  await expect(page).toHaveURL(/\/en\/libro$/);
   await expect(page.locator('.nav-links a')).toHaveText(english);
-  await page.goto('/charlas');
-  await expect(page.locator('.nav-links a')).toHaveText(english);
+  expect(await page.locator('.nav-links a').evaluateAll((links) => links.map((link) => link.getAttribute('href'))))
+    .toEqual(['/en/#profile', '/en/#experience', '/en/#research', '/en/charlas', '/en/eventos', '/en/#contact']);
+  await expect(page.locator('.social-actions a[aria-label="Libro"]')).toHaveAttribute('href', '/en/libro');
   expect(await page.evaluate(() => localStorage.getItem('vt-language'))).toBe('en');
+
+  // The choice is remembered but never redirects: a Spanish URL stays Spanish.
+  await page.goto('/charlas');
+  await expect(page).toHaveURL(/\/charlas$/);
+  await expect(page.locator('.nav-links a')).toHaveText(spanish);
+  await page.goto('/en/charlas');
+  await expect(page.locator('.nav-links a')).toHaveText(english);
 });
 
 test('the phone menu is usable at 390 px on every page', async ({ page }) => {
   test.skip(test.info().project.name !== 'mobile', 'phone viewport; run once');
   for (const path of pages) {
-    await page.goto(`${path}?lang=es`);
+    await page.goto(path);
     if (process.env.CAPTURE_MOBILE) {
       await page.waitForTimeout(900);
       await page.screenshot({ path: `/tmp/valentorassa-${path === '/' ? 'home' : path.slice(1)}-390.png` });
@@ -58,7 +69,7 @@ test('the phone menu is usable at 390 px on every page', async ({ page }) => {
   }
 
   await page.setViewportSize({ width: 320, height: 700 });
-  await page.goto('/charlas?lang=es');
+  await page.goto('/charlas');
   await expect(page.locator('.mobile-menu-toggle')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
 });

@@ -1,5 +1,19 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "www\\.valentorassa\\.com" }],
+      "destination": "https://valentorassa.com/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!en(?:/|$)).*)",
+      "has": [{ "type": "query", "key": "lang", "value": "en" }],
+      "destination": "/en/:path*",
+      "permanent": true
+    }
+  ]
 }
