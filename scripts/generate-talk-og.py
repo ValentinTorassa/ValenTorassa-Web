@@ -4,8 +4,10 @@
 this script, then builds once. Pass the catalog path as the first argument;
 without it the script reads dist/talk-seo.json from a previous build.
 
-The PNGs are committed under public/ so the production build needs no Python.
-Run this whenever a talk or paper is added or its public title changes.
+Each card is written twice: a JPEG for the talk pages (well under 300 KB) and
+a PNG that the public decks (public/charlas/<id>/slides.html) point at. Both
+are committed under public/ so the production build needs no Python. Run this
+whenever a talk or paper is added or its public title changes.
 
 Fonts: DejaVu Sans is the reference face. TALK_OG_FONT and TALK_OG_FONT_BOLD
 override it; otherwise the usual Linux and macOS paths and `fc-match` are
@@ -123,5 +125,6 @@ for page in PAGES:
     draw.text((95, 514), page["date"], font=font(25), fill="#b5c4bf")
     draw.text((95, 568), "VALENTORASSA.COM / CHARLAS", font=font(18, True), fill="#83978f")
     image.save(OUTPUT / f'{page["id"]}.png', optimize=True)
+    image.save(OUTPUT / f'{page["id"]}.jpg', quality=82, optimize=True, progressive=True)
 
 print(f"Generated {len(PAGES)} social cards in {OUTPUT}")

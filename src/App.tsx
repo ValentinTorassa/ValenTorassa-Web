@@ -33,17 +33,15 @@ import {
 import { talkLabelsByLanguage } from './eventsContent';
 import { blogUrl, contactEmail, headerSocialLinks, isExternalLink, socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
-import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks, todayInArgentina } from './eventSchedule';
-import { getInitialLanguage, setMetaContent } from './site';
+import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks } from './eventSchedule';
+import { localePath, useToday } from './site';
 import { SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
 import { TalkChips } from './talkComponents';
 import { talkMedia } from './talkMedia';
 
-const canonicalBaseUrl = 'https://valentorassa.com/';
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
 
-function App() {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+function App({ language }: { language: Language }) {
   const [activeSection, setActiveSection] = useState('');
   const [activeExperienceIndex, setActiveExperienceIndex] = useState(-1);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -66,22 +64,6 @@ function App() {
     details: content.research.projectDetailsLabel,
     privateCode: content.research.privateCodeLabel,
   };
-
-  useEffect(() => {
-    const canonicalUrl = `${canonicalBaseUrl}?lang=${language}`;
-
-    document.documentElement.lang = language;
-    document.title = content.documentTitle;
-    window.localStorage.setItem('vt-language', language);
-    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
-    setMetaContent('meta[name="description"]', content.seo.description);
-    setMetaContent('meta[property="og:title"]', content.documentTitle);
-    setMetaContent('meta[property="og:description"]', content.seo.description);
-    setMetaContent('meta[property="og:locale"]', content.seo.locale);
-    setMetaContent('meta[property="og:url"]', canonicalUrl);
-    setMetaContent('meta[name="twitter:title"]', content.documentTitle);
-    setMetaContent('meta[name="twitter:description"]', content.seo.description);
-  }, [content.documentTitle, content.seo.description, content.seo.locale, language]);
 
   useEffect(() => () => {
     if (copyResetTimer.current !== undefined) {
@@ -192,7 +174,8 @@ function App() {
   // Talks come from src/events.ts: the next three open to the public, then the
   // past talks flagged as highlights. /eventos lists all of them.
   const talkLabels = talkLabelsByLanguage[language];
-  const today = todayInArgentina();
+  const today = useToday();
+  const href = (path: string) => localePath(language, path);
   const currentYear = today.slice(0, 4);
   const { upcoming: upcomingTalks, past: pastTalks } = splitTalks(talks, today);
   const [featuredTalk, ...moreUpcomingTalks] = upcomingTalks.filter((talk) => talk.status !== 'closed').slice(0, 3);
@@ -207,7 +190,7 @@ function App() {
     <div className="site-shell">
       <SiteHeader
         language={language}
-        onToggleLanguage={() => setLanguage((current) => current === 'es' ? 'en' : 'es')}
+        languageHref={language === 'es' ? '/en/' : '/'}
         labels={content.header}
         navItems={content.navItems}
         brandHref="#top"
@@ -220,7 +203,7 @@ function App() {
         <section className="hero" id="top">
           <HeroScene />
           <div className="hero-inner">
-            <a className="hero-announce" href="/libro">
+            <a className="hero-announce" href={href('/libro')}>
               <span className="hero-announce-tag">{content.heroBookTag}</span>
               <span>{content.heroBookLabel}</span>
               <ArrowRight aria-hidden="true" />
@@ -448,7 +431,7 @@ function App() {
           {featuredTalk ? (
             <div className="talks-now">
               <Reveal as="article" className="talk-feature">
-                <a className="talk-feature-media" href={`/charlas/${featuredTalk.id}`} tabIndex={-1} aria-hidden="true">
+                <a className="talk-feature-media" href={href(`/charlas/${featuredTalk.id}`)} tabIndex={-1} aria-hidden="true">
                   {talkMedia[featuredTalk.id]?.still ? (
                     <img src={talkMedia[featuredTalk.id]?.still} alt="" loading="lazy" decoding="async" />
                   ) : null}
@@ -459,7 +442,7 @@ function App() {
                     <strong>{content.research.nextTalkLabel}</strong>
                   </div>
                   <h3>
-                    <a href={`/charlas/${featuredTalk.id}`}>{featuredTalk.title[language]}</a>
+                    <a href={href(`/charlas/${featuredTalk.id}`)}>{featuredTalk.title[language]}</a>
                   </h3>
                   <p className="talk-when">{talkWhen(featuredTalk)}</p>
                   {featuredTalk.note ? <p className="talk-note">{featuredTalk.note[language]}</p> : null}
@@ -482,7 +465,7 @@ function App() {
                       <div>
                         <span className="talk-row-meta">{[talk.event, talk.track].filter(Boolean).join(' · ')}</span>
                         <h4>
-                          <a href={`/charlas/${talk.id}`}>{talk.title[language]}</a>
+                          <a href={href(`/charlas/${talk.id}`)}>{talk.title[language]}</a>
                         </h4>
                         <p className="talk-when">{talkWhen(talk)}</p>
                         <TalkChips talk={talk} labels={talkLabels} showStatus />
@@ -508,7 +491,7 @@ function App() {
                           : `${talk.event} · ${formatTalkDate(talk, language, currentYear)}`}
                       </span>
                       <h4>
-                        <a href={`/charlas/${talk.id}`}>{talk.title[language]}</a>
+                        <a href={href(`/charlas/${talk.id}`)}>{talk.title[language]}</a>
                       </h4>
                       {talk.recognition ? (
                         <p className="recognition-award">
@@ -525,22 +508,22 @@ function App() {
           ) : null}
 
           <div className="talks-page-links">
-            <a className="talks-page-link is-hub" href="/charlas">
+            <a className="talks-page-link is-hub" href={href('/charlas')}>
               <Presentation aria-hidden="true" />
               {content.research.hubLabel}
               <ArrowRight aria-hidden="true" />
             </a>
-            <a className="talks-page-link" href="/eventos">
+            <a className="talks-page-link" href={href('/eventos')}>
               <Calendar aria-hidden="true" />
               {content.research.allTalksLabel}
               <ArrowRight aria-hidden="true" />
             </a>
-            <a className="talks-page-link" href="/speaker-kit">
+            <a className="talks-page-link" href={href('/speaker-kit')}>
               <MicVocal aria-hidden="true" />
               {content.research.speakerKitLabel}
               <ArrowRight aria-hidden="true" />
             </a>
-            <a className="talks-page-link" href="/libro">
+            <a className="talks-page-link" href={href('/libro')}>
               <BookOpenText aria-hidden="true" />
               {content.research.bookLabel}
               <ArrowRight aria-hidden="true" />

@@ -5,13 +5,25 @@ import vtMarkAvif160 from './assets/vt-mark-160.avif';
 import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
+import { localePath, useToday } from './site';
 import { bookLink, headerSocialLinks, isExternalLink, linkTargetProps, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
+
+/**
+ * Profiles left out of the phone menu: its icons fit one row at 390 px, and
+ * that row is in the screenshots of the redesign. The home contact section and
+ * the speaker kit list them.
+ */
+const phoneMenuHidden = new Set(['Bluesky', 'Threads']);
 
 /** The blog appears with the other profiles below the phone menu. */
 const panelSocialLinks = [
   ...headerSocialLinks.filter(isExternalLink),
-  ...socialLinks.filter((link) => link.name !== 'Email' && !headerSocialLinks.some((primary) => primary.name === link.name)),
+  ...socialLinks.filter((link) => link.name !== 'Email' && !phoneMenuHidden.has(link.name) && !headerSocialLinks.some((primary) => primary.name === link.name)),
 ];
+
+/** Site links (like /libro) in the page's language; profiles stay as they are. */
+const localeLink = (link: SocialLink, language: Language): SocialLink =>
+  isExternalLink(link) ? link : { ...link, href: localePath(language, link.href) };
 
 const vtMarkAvifSrcSet = `${vtMarkAvif96} 96w, ${vtMarkAvif160} 160w`;
 const vtMarkWebpSrcSet = `${vtMarkWebp96} 96w, ${vtMarkWebp160} 160w`;
@@ -49,7 +61,8 @@ export function SocialIcon({ link }: { link: SocialLink }) {
 
 type SiteHeaderProps = {
   language: Language;
-  onToggleLanguage: () => void;
+  /** The same page in the other language: the ES/EN toggle is a link to it. */
+  languageHref: string;
   labels: HeaderLabels;
   navItems: NavItem[];
   /** Where the brand mark points: `#top` on the home page, `/` elsewhere. */
@@ -65,7 +78,7 @@ type SiteHeaderProps = {
 
 export function SiteHeader({
   language,
-  onToggleLanguage,
+  languageHref,
   labels,
   navItems,
   brandHref,
@@ -132,7 +145,7 @@ export function SiteHeader({
           {headerSocialLinks.map((link) => (
             <a
               key={link.name}
-              href={link.href}
+              href={localeLink(link, language).href}
               {...linkTargetProps(link)}
               aria-label={link.name}
               title={link.name}
@@ -142,12 +155,21 @@ export function SiteHeader({
           ))}
         </div>
 
-        <button
-          type="button"
+        <a
           className="language-toggle"
-          onClick={() => {
-            onToggleLanguage();
-            setMobileMenuOpen(false);
+          href={languageHref}
+          hrefLang={language === 'es' ? 'en' : 'es'}
+          onClick={(event) => {
+            // The choice is remembered, but nothing redirects on it: the URL decides the language.
+            try {
+              window.localStorage.setItem('vt-language', language === 'es' ? 'en' : 'es');
+            } catch {
+              // Storage can be off (private mode); the link works the same.
+            }
+            // Keep the section in view, e.g. /#contact -> /en/#contact.
+            if (window.location.hash && !languageHref.includes('#')) {
+              event.currentTarget.href = `${languageHref}${window.location.hash}`;
+            }
           }}
           aria-label={`${labels.languageLabel}: ${
             language === 'es' ? labels.englishLabel : labels.spanishLabel
@@ -156,7 +178,7 @@ export function SiteHeader({
         >
           <span className={language === 'es' ? 'is-on' : undefined}>ES</span>
           <span className={language === 'en' ? 'is-on' : undefined}>EN</span>
-        </button>
+        </a>
 
         <button
           type="button"
@@ -194,7 +216,7 @@ export function SiteHeader({
               </a>
             ))}
           </div>
-          <a className="mobile-nav-book" href={bookLink.href} onClick={() => setMobileMenuOpen(false)}>
+          <a className="mobile-nav-book" href={localePath(language, bookLink.href)} onClick={() => setMobileMenuOpen(false)}>
             <SocialIcon link={bookLink} />
             <span>{labels.bookLabel}</span>
             <ChevronRight aria-hidden="true" />
@@ -216,11 +238,12 @@ export function SiteHeader({
 }
 
 export function SiteFooter({ backToTopLabel }: { backToTopLabel: string }) {
+  const year = useToday().slice(0, 4);
   return (
     <footer className="site-footer">
       <div className="footer-shell">
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Valentin Torassa Colombero</span>
+          <span>© {year} Valentin Torassa Colombero</span>
           <a href="#top">
             {backToTopLabel}
             <ArrowUp aria-hidden="true" />

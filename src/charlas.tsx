@@ -1,12 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './analytics'
 import './index.css'
 import './charlas.css'
 import CharlasPage from './CharlasPage.tsx'
+import { mount } from './mount.tsx'
+import { languageFromPath } from './site'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <CharlasPage />
-  </StrictMode>,
+// /charlas/<id> and /en/charlas/<id> are the same page with that talk selected.
+const talkPath = /^(?:\/en)?\/charlas\/([^/]+)\/?$/.exec(window.location.pathname)
+
+mount(
+  <CharlasPage
+    language={languageFromPath(window.location.pathname)}
+    talkId={talkPath ? decodeURIComponent(talkPath[1]) : undefined}
+  />,
 )

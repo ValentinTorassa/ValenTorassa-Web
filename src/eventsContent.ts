@@ -49,6 +49,8 @@ type EventsPageContent = {
     description: string;
     locale: 'es_AR' | 'en_US';
   };
+  /** Text alternative of the page's share image. */
+  socialImageAlt: string;
   navItems: NavItem[];
   eyebrow: string;
   title: string;
@@ -70,6 +72,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
       description: 'Charlas, clases y presentaciones de Valentín Torassa Colombero sobre ciberseguridad, backend y agentes de IA: próximas fechas y charlas anteriores.',
       locale: 'es_AR',
     },
+    socialImageAlt: 'Eventos y charlas de Valentín Torassa Colombero',
     navItems: siteNav('eventos', 'es'),
     eyebrow: '// eventos',
     title: 'Eventos y charlas',
@@ -88,6 +91,7 @@ export const eventsPageByLanguage: Record<Language, EventsPageContent> = {
       description: 'Talks, classes, and paper presentations by Valentin Torassa Colombero on cybersecurity, backend systems, and AI agents: upcoming dates and past talks.',
       locale: 'en_US',
     },
+    socialImageAlt: 'Events and talks by Valentín Torassa Colombero',
     navItems: siteNav('eventos', 'en'),
     eyebrow: '// events',
     title: 'Events and talks',

@@ -1,7 +1,7 @@
 import { talks } from './events';
 import { papers } from './research';
-
-export const SITE_ORIGIN = 'https://valentorassa.com';
+import { absoluteUrl, SITE_ORIGIN } from './site';
+import { socialImages } from './socialImages';
 
 export const talkPages = [
   ...talks.map((talk) => ({
@@ -31,12 +31,12 @@ export const talkPageById = new Map(talkPages.map((page) => [page.id, page]));
 export function talkPageMeta(id: string, language: 'es' | 'en' = 'es') {
   const page = talkPageById.get(id);
   if (!page) return undefined;
-  const url = `${SITE_ORIGIN}/charlas/${page.id}`;
+  const url = absoluteUrl(language, `/charlas/${page.id}`);
   return {
     title: `${page.title[language]} · Valentín Torassa`,
     description: page.description[language],
     url,
-    image: `${SITE_ORIGIN}/og-charlas/${page.id}.png`,
+    image: `${SITE_ORIGIN}${socialImages.talk(page.id)}`,
     imageAlt: `${page.title[language]} · ${page.event}`,
   };
 }

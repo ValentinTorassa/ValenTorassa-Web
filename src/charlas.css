@@ -106,7 +106,8 @@
   color: var(--paper);
 }
 
-.hub-info h1 {
+/* «Charlas»: the h1 of /charlas, and a plain line on /charlas/<id>, where the talk's title is the h1. */
+.hub-info .hub-title {
   margin: 0;
   font-family: var(--display);
   font-size: clamp(3.4rem, 7vw, 6.6rem);
@@ -710,7 +711,7 @@ a.hub-open:focus-visible {
     margin-bottom: 10px;
   }
 
-  .hub-info h1 {
+  .hub-info .hub-title {
     font-size: clamp(2.8rem, 5vw, 4.2rem);
   }
 

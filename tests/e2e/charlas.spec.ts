@@ -97,6 +97,8 @@ test.describe('/charlas', () => {
 
     await page.clock.setFixedTime(OWASP_DAY);
     await page.goto('/charlas?lang=es#ekoparty-2026-owasp-village');
+    // The page is HTML before it is interactive: wait until it picked the talk from the hash.
+    await expect(page.locator('#card-ekoparty-2026-owasp-village')).toHaveAttribute('aria-selected', 'true');
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/charlas\/ekoparty-2026-owasp-village\/slides/);
     await expect(page.locator('section.slide').first()).toBeAttached();

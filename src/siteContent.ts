@@ -1,6 +1,7 @@
 import type { IconType } from 'react-icons';
 import { FaBookOpen, FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
-import { SiGithub, SiInstagram, SiOrcid, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
+import { SiBluesky, SiGithub, SiInstagram, SiOrcid, SiThreads, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
+import { localePath } from './site';
 
 export type Language = 'es' | 'en';
 
@@ -39,17 +40,18 @@ export const blogUrl = 'https://vtsecurity.com.ar';
 
 /**
  * One menu for every page, same items in the same order. On the home page the
- * sections are anchors; on the others they point back to the home page.
+ * sections are anchors; on the others they point back to the home page of the
+ * same language (/ or /en/).
  */
 export function siteNav(page: SitePage, language: Language): NavItem[] {
-  const home = page === 'home' ? '' : '/';
+  const home = page === 'home' ? '' : localePath(language, '/');
   const label = navLabels[language];
   return [
     { label: label.profile, href: `${home}#profile` },
     { label: label.experience, href: `${home}#experience` },
     { label: label.projects, href: `${home}#research` },
-    { label: label.talks, href: '/charlas', current: page === 'charlas', section: page === 'home' ? 'talks' : undefined },
-    { label: label.agenda, href: '/eventos', current: page === 'eventos' },
+    { label: label.talks, href: localePath(language, '/charlas'), current: page === 'charlas', section: page === 'home' ? 'talks' : undefined },
+    { label: label.agenda, href: localePath(language, '/eventos'), current: page === 'eventos' },
     { label: label.contact, href: `${home}#contact` },
   ];
 }
@@ -96,6 +98,16 @@ export const socialLinks: SocialLink[] = [
     name: 'X',
     href: 'https://x.com/ValenSecurity',
     icon: SiX,
+  },
+  {
+    name: 'Bluesky',
+    href: 'https://bsky.app/profile/vtsecurity.bsky.social',
+    icon: SiBluesky,
+  },
+  {
+    name: 'Threads',
+    href: 'https://www.threads.com/@vt_security_',
+    icon: SiThreads,
   },
   {
     name: 'Email',

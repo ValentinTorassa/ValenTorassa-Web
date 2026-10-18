@@ -1,5 +1,7 @@
 import type { Talk } from './events';
 import { slidesReleased } from './eventSchedule';
+import { localePath } from './site';
+import type { Language } from './siteContent';
 
 /**
  * What /charlas shows for each talk, keyed by the talk's id in events.ts.
@@ -206,7 +208,7 @@ export const talkMedia: Record<string, TalkMedia> = {
  * Where a talk's "Slides" link points from its release day: the talk in /charlas when
  * the deck is hosted there (with its animations), else the PDF in Drive.
  */
-export function slidesHref(talk: Talk, today: string): string | undefined {
+export function slidesHref(talk: Talk, today: string, language: Language = 'es'): string | undefined {
   if (!slidesReleased(talk, today)) return undefined;
-  return talkMedia[talk.id]?.deck ? `/charlas/${talk.id}` : talk.slidesUrl;
+  return talkMedia[talk.id]?.deck ? localePath(language, `/charlas/${talk.id}`) : talk.slidesUrl;
 }

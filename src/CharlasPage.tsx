@@ -32,11 +32,12 @@ import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, isPastTalk, slidesAvailable, slidesReleased, todayInArgentina } from './eventSchedule';
 import type { HubScene } from './hubScene';
 import { paperMedia, paperOfTalk, papers, type Paper } from './research';
-import { getInitialLanguage, setMetaContent } from './site';
+import { absoluteUrl, counterpartPath, localePath, setMetaContent, SITE_ORIGIN, useToday } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteHeader } from './siteChrome';
 import { talkMedia, type TalkIcon, type TalkMedia } from './talkMedia';
-import { SITE_ORIGIN, talkPageMeta } from './talkSeo';
+import { socialImages } from './socialImages';
+import { talkPageMeta } from './talkSeo';
 
 const ICONS: Record<TalkIcon, ComponentType<LucideProps>> = {
   terminal: Terminal, lock: Lock, shield: Shield, 'pull-request': GitPullRequest, key: KeyRound, castle: Castle,
@@ -87,28 +88,41 @@ function openUrlOf(entry: Entry, today: string): string | undefined {
   return slides ?? entry.paper?.url;
 }
 
-/** `/charlas/<id>` has its own static HTML, with hash and query links kept for compatibility. */
+const rosterIds = roster.map((entry) => entry.id);
+
+/**
+ * `/charlas/<id>` (and `/en/charlas/<id>`) has its own static HTML, with hash and
+ * query links kept for compatibility.
+ */
 function idFromLocation(): string | null {
-  const path = /^\/charlas\/([^/]+)\/?$/.exec(window.location.pathname);
+  const path = /^(?:\/en)?\/charlas\/([^/]+)\/?$/.exec(window.location.pathname);
   if (path) return decodeURIComponent(path[1]);
   if (window.location.hash.length > 1) return decodeURIComponent(window.location.hash.slice(1));
   return new URLSearchParams(window.location.search).get('c');
 }
 
-function writeLocation(id: string) {
+/** Whether the address names one talk by its path, so the talk is the page's subject. */
+const pathNamesTalk = () => /^(?:\/en)?\/charlas\/[^/]+\/?$/.test(window.location.pathname);
+
+function writeLocation(id: string, language: Language) {
   const { pathname, search } = window.location;
+  const hub = localePath(language, '/charlas');
   // Vite dev uses charlas.html; production and preview have a static page for every id.
-  const url = pathname.startsWith('/charlas') && !pathname.endsWith('.html')
-    ? `/charlas/${encodeURIComponent(id)}${search}`
+  const url = pathname.startsWith(hub) && !pathname.endsWith('.html')
+    ? `${hub}/${encodeURIComponent(id)}${search}`
     : `${pathname}${search}#${encodeURIComponent(id)}`;
   window.history.replaceState(null, '', url);
 }
 
-function defaultIndex(today: string) {
-  const byUrl = roster.findIndex((talk) => talk.id === idFromLocation());
-  if (byUrl >= 0) return byUrl;
+/** The next talk from `today`, or the last entry once every talk is past. */
+function nextIndex(today: string) {
   const next = roster.findIndex((talk) => !isPastTalk(talk, today));
   return next >= 0 ? next : roster.length - 1;
+}
+
+function initialIndex(talkId: string | undefined, today: string) {
+  const byId = roster.findIndex((talk) => talk.id === talkId);
+  return byId >= 0 ? byId : nextIndex(today);
 }
 
 /** Letters for talks with no picture, like a save file with a default icon. */
@@ -121,13 +135,33 @@ function glyph(talk: Talk) {
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 const pad = (value: number) => String(value).padStart(2, '0');
 
-function CharlasPage() {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+/**
+ * Whether the reel may play. The static HTML shows the poster; once the page is
+ * live, the reel takes its place unless the visitor asked for reduced motion.
+ */
+function useMotionAllowed() {
+  const [allowed, setAllowed] = useState(false);
+  useEffect(() => {
+    setAllowed(!reducedMotion());
+  }, []);
+  return allowed;
+}
+
+type CharlasPageProps = {
+  language: Language;
+  /** The talk or paper of a /charlas/<id> page; the hub (/charlas) has none. */
+  talkId?: string;
+};
+
+function CharlasPage({ language, talkId }: CharlasPageProps) {
   const copy = charlasPageByLanguage[language];
   const siteContent = siteChromeByLanguage[language];
-  const today = todayInArgentina();
+  const today = useToday();
   const currentYear = today.slice(0, 4);
-  const [selected, setSelected] = useState(() => defaultIndex(today));
+  const [selected, setSelected] = useState(() => initialIndex(talkId, today));
+  // On /charlas/<id> the talk's title is the page heading; on the hub, «Charlas» is.
+  const [talkIsSubject, setTalkIsSubject] = useState(() => rosterIds.includes(talkId ?? ''));
+  const motionAllowed = useMotionAllowed();
   const selectedRef = useRef(selected);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const iconsRef = useRef<HTMLDivElement | null>(null);
@@ -147,7 +181,7 @@ function CharlasPage() {
   const openUrl = openUrlOf(talk, today);
   const hasSlides = Boolean(media.deck || talk.slidesUrl);
   const coauthors = talk.kind !== 'talk' && talk.paper ? talk.paper.authors.slice(1) : [];
-  const showReel = Boolean(media.reel) && deckHasReleased && !reducedMotion();
+  const showReel = Boolean(media.reel) && deckHasReleased && motionAllowed;
   const date = formatTalkDate(talk, language, currentYear);
   const meta = [
     formatTalkPlace(talk, language) || talk.city,
@@ -157,29 +191,40 @@ function CharlasPage() {
     coauthors.length ? copy.coauthors(coauthors) : '',
   ].filter(Boolean);
 
+  // The static HTML of each page already has its head; picking another talk moves
+  // the address to that talk's page, so the head follows it.
   useEffect(() => {
     const entryMeta = idFromLocation() ? talkPageMeta(talk.id, language) : undefined;
     const title = entryMeta?.title ?? copy.documentTitle;
     const description = entryMeta?.description ?? copy.seo.description;
-    document.documentElement.lang = language;
+    const path = entryMeta ? `/charlas/${talk.id}` : '/charlas';
     document.title = title;
-    window.localStorage.setItem('vt-language', language);
     setMetaContent('meta[name="description"]', description);
     setMetaContent('meta[property="og:title"]', title);
     setMetaContent('meta[property="og:description"]', description);
-    setMetaContent('meta[property="og:locale"]', copy.seo.locale);
     setMetaContent('meta[name="twitter:title"]', title);
     setMetaContent('meta[name="twitter:description"]', description);
-    const url = entryMeta?.url ?? `${SITE_ORIGIN}/charlas`;
-    const image = entryMeta?.image ?? `${SITE_ORIGIN}/og-charlas.png`;
-    const imageAlt = entryMeta?.imageAlt ?? 'Charlas de Valentín Torassa Colombero';
+    const url = absoluteUrl(language, path);
+    const image = entryMeta?.image ?? `${SITE_ORIGIN}${socialImages.charlas}`;
+    const imageAlt = entryMeta?.imageAlt ?? copy.socialImageAlt;
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', url);
+    for (const [hreflang, version] of [['es', 'es'], ['en', 'en'], ['x-default', 'es']] as const) {
+      document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${hreflang}"]`)?.setAttribute('href', absoluteUrl(version, path));
+    }
     setMetaContent('meta[property="og:url"]', url);
     setMetaContent('meta[property="og:image"]', image);
     setMetaContent('meta[property="og:image:alt"]', imageAlt);
     setMetaContent('meta[name="twitter:image"]', image);
     setMetaContent('meta[name="twitter:image:alt"]', imageAlt);
-  }, [copy.documentTitle, copy.seo.description, copy.seo.locale, language, talk.id]);
+  }, [copy.documentTitle, copy.seo.description, copy.socialImageAlt, language, talk.id]);
+
+  // After hydration: an old #<id> or ?c=<id> link picks its talk, and the hub
+  // opens on the next talk from the real date (the HTML used the build date).
+  useEffect(() => {
+    const id = idFromLocation();
+    const byId = id ? roster.findIndex((item) => item.id === id) : -1;
+    setSelected(byId >= 0 ? byId : nextIndex(today));
+  }, [today]);
 
   const iconMarkup = (index: number) =>
     iconsRef.current?.querySelector(`[data-icon="${iconOf(roster[index])}"]`)?.outerHTML;
@@ -221,9 +266,10 @@ function CharlasPage() {
   const select = useCallback((index: number, focus = false) => {
     const next = Math.max(0, Math.min(roster.length - 1, index));
     setSelected(next);
-    writeLocation(roster[next].id);
+    writeLocation(roster[next].id, language);
+    setTalkIsSubject(pathNamesTalk());
     if (focus) cardRefs.current[next]?.focus({ preventScroll: true });
-  }, []);
+  }, [language]);
 
   // A link to #<id> on this page, or back/forward, changes the talk without a reload.
   useEffect(() => {
@@ -290,10 +336,10 @@ function CharlasPage() {
 
       <SiteHeader
         language={language}
-        onToggleLanguage={() => setLanguage((current) => (current === 'es' ? 'en' : 'es'))}
+        languageHref={counterpartPath(localePath(language, talkIsSubject ? `/charlas/${talk.id}` : '/charlas'))}
         labels={siteContent.header}
         navItems={copy.navItems}
-        brandHref="/"
+        brandHref={localePath(language, '/')}
         meta={siteContent.footer}
         variant="inline"
       />
@@ -320,10 +366,21 @@ function CharlasPage() {
               </button>
             </div>
           </div>
-          <h1>{copy.title}</h1>
-          <h2 className={`hub-name${talk.title[language].length > 90 ? ' is-long' : ''}`} key={talk.id}>
-            {talk.title[language]}
-          </h2>
+          {talkIsSubject ? (
+            <>
+              <p className="hub-title">{copy.title}</p>
+              <h1 className={`hub-name${talk.title[language].length > 90 ? ' is-long' : ''}`} key={talk.id}>
+                {talk.title[language]}
+              </h1>
+            </>
+          ) : (
+            <>
+              <h1 className="hub-title">{copy.title}</h1>
+              <h2 className={`hub-name${talk.title[language].length > 90 ? ' is-long' : ''}`} key={talk.id}>
+                {talk.title[language]}
+              </h2>
+            </>
+          )}
           <p className="hub-meta">{meta.join(' · ')}</p>
           {talk.recognition ? <p className="hub-note">{talk.recognition[language]}</p> : null}
 
@@ -395,11 +452,11 @@ function CharlasPage() {
                 {reelPaused ? copy.playReelLabel : copy.pauseReelLabel}
               </button>
             ) : null}
-            <a className="hub-link" href="/eventos">
+            <a className="hub-link" href={localePath(language, '/eventos')}>
               {copy.eventsLabel}
               <ArrowUpRight aria-hidden="true" />
             </a>
-            <a className="hub-link" href="/speaker-kit">
+            <a className="hub-link" href={localePath(language, '/speaker-kit')}>
               {copy.speakerKitLabel}
               <ArrowUpRight aria-hidden="true" />
             </a>

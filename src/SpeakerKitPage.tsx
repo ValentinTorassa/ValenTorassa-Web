@@ -10,9 +10,9 @@ import headshotWebp384 from './assets/portrait-dark-384.webp';
 import headshotWebp512 from './assets/portrait-dark-512.webp';
 import { talks, type Talk, type TalkMode } from './events';
 import { talkLabelsByLanguage } from './eventsContent';
-import { formatTalkDate, formatTalkPlace, splitTalks, todayInArgentina } from './eventSchedule';
+import { formatTalkDate, formatTalkPlace, splitTalks } from './eventSchedule';
 import { papers } from './research';
-import { getInitialLanguage, setMetaContent } from './site';
+import { counterpartPath, localePath, useToday } from './site';
 import { contactEmail, siteChromeByLanguage, socialLinks, type Language } from './siteContent';
 import { SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
 import {
@@ -177,7 +177,7 @@ function TalkRows({ list, language, currentYear }: TalkRowsProps) {
             <time dateTime={talk.date}>{formatTalkDate(talk, language, currentYear)}</time>
             <div>
               <p className="kit-talk-event">{[talk.event, talk.track].filter(Boolean).join(' · ')}</p>
-              <a className="kit-talk-title" href={`/charlas/${talk.id}`}>{talk.title[language]}</a>
+              <a className="kit-talk-title" href={localePath(language, `/charlas/${talk.id}`)}>{talk.title[language]}</a>
               {place ? <p className="kit-talk-place">{place}</p> : null}
               {talk.recognition ? (
                 <p className="kit-talk-award">
@@ -193,8 +193,7 @@ function TalkRows({ list, language, currentYear }: TalkRowsProps) {
   );
 }
 
-function SpeakerKitPage() {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+function SpeakerKitPage({ language }: { language: Language }) {
   const [fields, setFields] = useState<InviteFields>(emptyInvite);
   const [drafted, setDrafted] = useState(false);
   const draftRef = useRef<HTMLDivElement | null>(null);
@@ -202,25 +201,12 @@ function SpeakerKitPage() {
   const kit = speakerKitByLanguage[language];
   const siteContent = siteChromeByLanguage[language];
   const modeLabels = talkLabelsByLanguage[language].mode;
-  const today = todayInArgentina();
+  const today = useToday();
   const currentYear = today.slice(0, 4);
   const { upcoming, past } = splitTalks(talks, today);
   const longBio = kit.bio.long.join('\n\n');
   const draft = draftInvitation(fields, language);
-  const otherLanguage: Language = language === 'es' ? 'en' : 'es';
-
-  useEffect(() => {
-    // The canonical stays https://valentorassa.com/speaker-kit in both languages.
-    document.documentElement.lang = language;
-    document.title = kit.documentTitle;
-    window.localStorage.setItem('vt-language', language);
-    setMetaContent('meta[name="description"]', kit.seo.description);
-    setMetaContent('meta[property="og:title"]', kit.documentTitle);
-    setMetaContent('meta[property="og:description"]', kit.seo.description);
-    setMetaContent('meta[property="og:locale"]', kit.seo.locale);
-    setMetaContent('meta[name="twitter:title"]', kit.documentTitle);
-    setMetaContent('meta[name="twitter:description"]', kit.seo.description);
-  }, [kit.documentTitle, kit.seo.description, kit.seo.locale, language]);
+  const otherLanguageHref = counterpartPath(localePath(language, '/speaker-kit'));
 
   const update = <K extends keyof InviteFields>(key: K, value: InviteFields[K]) =>
     setFields((current) => ({ ...current, [key]: value }));
@@ -240,10 +226,10 @@ function SpeakerKitPage() {
     <div className="site-shell">
       <SiteHeader
         language={language}
-        onToggleLanguage={() => setLanguage(otherLanguage)}
+        languageHref={otherLanguageHref}
         labels={siteContent.header}
         navItems={kit.navItems}
-        brandHref="/"
+        brandHref={localePath(language, '/')}
         meta={siteContent.footer}
       />
 
@@ -328,7 +314,7 @@ function SpeakerKitPage() {
                   </li>
                 ))}
               </ul>
-              <button type="button" className="kit-text-button" onClick={() => setLanguage(otherLanguage)}>
+              <button type="button" className="kit-text-button" onClick={() => window.location.assign(`${otherLanguageHref}#bio`)}>
                 <Languages aria-hidden="true" />
                 {kit.bio.otherLanguage}
               </button>
@@ -349,7 +335,7 @@ function SpeakerKitPage() {
                   <ul>
                     {backing.map((talk) => (
                       <li key={talk.id}>
-                        <a href={`/charlas/${talk.id}`}>{talk.title[language]}</a>
+                        <a href={localePath(language, `/charlas/${talk.id}`)}>{talk.title[language]}</a>
                         <span>{talk.event}</span>
                       </li>
                     ))}
@@ -383,11 +369,11 @@ function SpeakerKitPage() {
           </div>
           <p className="kit-talks-more">
             {kit.talks.papers(publishedPapers)}{' '}
-            <a href="/charlas">
+            <a href={localePath(language, '/charlas')}>
               {kit.talks.hubLink}
               <ArrowRight aria-hidden="true" />
             </a>
-            <a href="/eventos">
+            <a href={localePath(language, '/eventos')}>
               {kit.talks.agendaLink}
               <ArrowRight aria-hidden="true" />
             </a>
