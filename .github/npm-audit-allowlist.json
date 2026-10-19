@@ -1,5 +1,5 @@
 {
-  "_doc": "Advisories .github/scripts/npm-audit.mjs reports as warnings instead of failing the Security workflow. Each entry needs id, package, added (YYYY-MM-DD) and reason. Remove an entry once a release without the advisory is in the lockfile; the script flags entries that no longer match anything.",
+  "_doc": "Advisories the shared Security workflow (scripts/npm-audit.mjs in ValentinTorassa/.github) reports as warnings instead of failing. Each entry needs id, package, added (YYYY-MM-DD) and reason. Remove an entry once a release without the advisory is in the lockfile; the script flags entries that no longer match anything.",
   "allow": [
     {
       "id": "GHSA-vfj7-8cjw-p6xm",
