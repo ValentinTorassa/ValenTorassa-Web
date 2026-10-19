@@ -2445,6 +2445,14 @@ p {
   --network-glow: rgba(255, 255, 255, 0.46);
 }
 
+.contact-network-links a[data-network='facebook'] {
+  --network-icon: #4d8eff;
+  --network-border: rgba(8, 102, 255, 0.5);
+  --network-border-hover: rgba(77, 142, 255, 0.72);
+  --network-bg: linear-gradient(135deg, rgba(8, 102, 255, 0.12), rgba(8, 102, 255, 0.03)), rgba(16, 23, 33, 0.58);
+  --network-glow: rgba(8, 102, 255, 0.72);
+}
+
 .contact-network-links svg,
 .contact-network-links img {
   flex: none;
