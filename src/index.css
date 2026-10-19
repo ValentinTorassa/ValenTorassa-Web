@@ -2453,6 +2453,14 @@ p {
   --network-glow: rgba(8, 102, 255, 0.72);
 }
 
+.contact-network-links a[data-network='dev'] {
+  --network-icon: #ffffff;
+  --network-border: rgba(255, 255, 255, 0.3);
+  --network-border-hover: rgba(255, 255, 255, 0.54);
+  --network-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015)), rgba(5, 5, 5, 0.68);
+  --network-glow: rgba(255, 255, 255, 0.46);
+}
+
 .contact-network-links svg,
 .contact-network-links img {
   flex: none;

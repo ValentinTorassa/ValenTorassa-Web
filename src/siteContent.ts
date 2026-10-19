@@ -1,6 +1,6 @@
 import type { IconType } from 'react-icons';
 import { FaBookOpen, FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
-import { SiBluesky, SiFacebook, SiGithub, SiInstagram, SiOrcid, SiThreads, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
+import { SiBluesky, SiDevdotto, SiFacebook, SiGithub, SiInstagram, SiOrcid, SiThreads, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
 import { localePath } from './site';
 
 export type Language = 'es' | 'en';
@@ -113,6 +113,11 @@ export const socialLinks: SocialLink[] = [
     name: 'Facebook',
     href: 'https://www.facebook.com/vtsecurity',
     icon: SiFacebook,
+  },
+  {
+    name: 'DEV',
+    href: 'https://dev.to/vtsecurity',
+    icon: SiDevdotto,
   },
   {
     name: 'Email',

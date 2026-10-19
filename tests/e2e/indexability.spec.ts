@@ -97,6 +97,7 @@ test.describe('structured data', () => {
         'https://bsky.app/profile/vtsecurity.bsky.social',
         'https://www.threads.com/@vt_security_',
         'https://www.facebook.com/vtsecurity',
+        'https://dev.to/vtsecurity',
         'https://es.everybodywiki.com/Valent%C3%ADn_Torassa_Colombero',
       ]));
       const image = new URL(full.image as string);
@@ -242,12 +243,13 @@ test.describe('site files', () => {
   });
 });
 
-test('Bluesky, Threads and Facebook are with the other profiles, but the phone menu row stays as it was', async ({ page }) => {
+test('Bluesky, Threads, Facebook and DEV are with the other profiles, but the phone menu row stays as it was', async ({ page }) => {
   once();
   const profiles = [
     ['Bluesky', 'https://bsky.app/profile/vtsecurity.bsky.social'],
     ['Threads', 'https://www.threads.com/@vt_security_'],
     ['Facebook', 'https://www.facebook.com/vtsecurity'],
+    ['DEV', 'https://dev.to/vtsecurity'],
   ];
   await page.goto('/');
   for (const [name, href] of profiles) {
