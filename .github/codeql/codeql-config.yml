@@ -1,0 +1,9 @@
+name: ValenTorassa-Web
+
+# The talk decks in public/charlas are self-contained HTML files. Their
+# animation code only reads the page's own static markup: Math.random drives
+# visual effects, and textContent is re-inserted to animate words. Nothing there
+# takes input from the URL or the visitor, and the ~67 findings they produced
+# hid the alerts that matter for the rest of the site.
+paths-ignore:
+  - public/charlas

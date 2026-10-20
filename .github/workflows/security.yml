@@ -21,9 +21,10 @@ concurrency:
 
 jobs:
   security:
-    uses: ValentinTorassa/.github/.github/workflows/security-node.yml@14e9c182d284ef6a0390c5e3842cd67f048f9451 # main, 2026-10-19
+    uses: ValentinTorassa/.github/.github/workflows/security-node.yml@649aae00dddf19c68675d8a031b0df6d2b5aeb65 # main, 2026-10-20
     permissions:
       contents: read
       security-events: write
     with:
       codeql-languages: '["javascript-typescript", "python", "actions"]'
+      codeql-config-file: .github/codeql/codeql-config.yml
