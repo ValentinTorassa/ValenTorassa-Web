@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@tailwindcss/cli": "^4.3.3",
     "@vercel/analytics": "^2.0.1",
     "country-flag-icons": "^1.6.20",
     "framer-motion": "^12.19.2",
