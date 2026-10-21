@@ -634,6 +634,7 @@ function App({ language }: { language: Language }) {
                 <div className="repo-more-links">
                   <a href="https://github.com/ValentinTorassa/VT-Terminal-Project" target="_blank" rel="noopener noreferrer">VT Terminal <ExternalLink aria-hidden="true" /></a>
                   <a href="https://github.com/ValentinTorassa/VT-Terminal-Project/tree/main/ide" target="_blank" rel="noopener noreferrer">VT IDE <ExternalLink aria-hidden="true" /></a>
+                  <a href="https://comandle.valentorassa.com/?ref=portfolio" target="_blank" rel="noopener noreferrer">comandle <ExternalLink aria-hidden="true" /></a>
                 </div>
               </div>
             </div>

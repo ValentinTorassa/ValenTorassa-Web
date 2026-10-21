@@ -134,49 +134,71 @@ const attendance = {
   virtual: 'https://schema.org/OnlineEventAttendanceMode',
 } as const;
 
-/** The talk or paper of /charlas/<id> as an Event, in the page's language. */
+/** A dated, located presentation is an Event; incomplete records remain CreativeWorks. */
 export function talkEvent(id: string, language: Language) {
   const meta = talkPageMeta(id, language);
   if (!meta) throw new Error(`Unknown talk ${id}`);
   const talk = talks.find((item) => item.id === id);
   const paper = talk ? paperOfTalk(talk.id) : papers.find((item) => item.id === id);
   const common = {
-    '@type': 'Event',
     '@id': `${meta.url}#event`,
     url: meta.url,
     description: meta.description,
     image: meta.image,
-    performer: personRef,
     // The speaker kit: talks are given in Spanish.
     inLanguage: 'es',
   };
 
   if (talk) {
+    const location = talk.mode === 'virtual'
+      ? talk.url ? { '@type': 'VirtualLocation', url: talk.url } : undefined
+      : place(talk.place?.[language], talk.city);
+    // A placeholder first-of-month/year is not the presentation's actual day.
+    // Do not invent dates or venues to qualify for Google's Event results.
+    if (talk.datePrecision || !location) {
+      return {
+        ...common,
+        '@type': 'CreativeWork',
+        name: talk.title[language],
+        creator: personRef,
+        ...(paper ? { citation: scholarlyArticle(paper) } : {}),
+      };
+    }
     return {
       ...common,
+      '@type': 'Event',
       name: talk.title[language],
+      performer: personRef,
       startDate: isoDate(talk.date, talk.datePrecision, talk.time),
       ...(talk.endTime
         ? { endDate: isoDate(talk.endDate ?? talk.date, undefined, talk.endTime) }
         : talk.endDate ? { endDate: talk.endDate } : {}),
       ...(talk.status === 'tentative' ? {} : { eventStatus: 'https://schema.org/EventScheduled' }),
       ...(talk.mode ? { eventAttendanceMode: attendance[talk.mode] } : {}),
-      ...(talk.mode === 'virtual'
-        ? talk.url ? { location: { '@type': 'VirtualLocation', url: talk.url } } : {}
-        : { location: place(talk.place?.[language], talk.city) }),
-      superEvent: { '@type': 'Event', name: talk.event },
+      location,
       ...(paper ? { workFeatured: scholarlyArticle(paper) } : {}),
     };
   }
 
   if (!paper) throw new Error(`No talk or paper ${id}`);
+  const location = place(undefined, paper.city);
+  if (paper.datePrecision || !location) {
+    return {
+      ...common,
+      '@type': 'CreativeWork',
+      name: paper.title[language],
+      creator: personRef,
+      citation: scholarlyArticle(paper),
+    };
+  }
   return {
     ...common,
+    '@type': 'Event',
     name: paper.title[language],
+    performer: personRef,
     startDate: isoDate(paper.date, paper.datePrecision),
     eventStatus: 'https://schema.org/EventScheduled',
-    location: place(undefined, paper.city),
-    superEvent: { '@type': 'Event', name: paper.venue },
+    location,
     workFeatured: scholarlyArticle(paper),
   };
 }
@@ -294,7 +316,12 @@ export function pageHead(route: Route, today: string): PageHead {
           itemListElement: [...upcoming, ...past].map((talk, index) => ({
             '@type': 'ListItem',
             position: index + 1,
-            item: talkEvent(talk.id, language),
+            // Rich Event data belongs on the presentation's own page.
+            item: {
+              '@type': 'WebPage',
+              url: talkPageMeta(talk.id, language)!.url,
+              name: talk.title[language],
+            },
           })),
         },
       };

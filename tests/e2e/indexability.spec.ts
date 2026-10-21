@@ -127,16 +127,48 @@ test.describe('structured data', () => {
     expect(paper).toMatchObject({ '@type': 'Event', startDate: '2025-04-10', workFeatured: { '@type': 'ScholarlyArticle', url: 'https://sedici.unlp.edu.ar/handle/10915/183861' } });
   });
 
-  test('/eventos lists its talks as Events and /libro is a Book by the person', async ({ request }) => {
+  test('/eventos links to presentation pages and /libro is a Book by the person', async ({ request }) => {
     once();
     const [list] = jsonLd(await rawHtml(request, '/eventos'));
     expect(list['@type']).toBe('ItemList');
     expect(list.itemListElement.length).toBe(list.numberOfItems);
     expect(list.itemListElement.length).toBeGreaterThan(15);
-    for (const item of list.itemListElement) expect(item.item).toMatchObject({ '@type': 'Event', performer: person });
+    for (const item of list.itemListElement) {
+      expect(item.item['@type']).toBe('WebPage');
+      expect(item.item.url).toMatch(/^https:\/\/valentorassa\.com\/charlas\//);
+      expect(item.item.name).toBeTruthy();
+    }
 
     const [book] = jsonLd(await rawHtml(request, '/en/libro'));
     expect(book).toMatchObject({ '@type': 'Book', inLanguage: 'es', author: person, url: `${ORIGIN}/libro` });
+  });
+
+  test('every published Event has a known day and location, including nested objects', async ({ request }) => {
+    once();
+    let eventCount = 0;
+    let workCount = 0;
+    const visit = (value: unknown, pathname: string) => {
+      if (!value || typeof value !== 'object') return;
+      if (Array.isArray(value)) { value.forEach((item) => visit(item, pathname)); return; }
+      const item = value as Record<string, unknown>;
+      if (item['@type'] === 'Event') {
+        eventCount++;
+        expect(item.startDate, pathname).toMatch(/^\d{4}-\d{2}-\d{2}(?:T|$)/);
+        const location = item.location as Record<string, unknown>;
+        expect(location, pathname).toBeTruthy();
+        if (location['@type'] === 'VirtualLocation') expect(location.url, pathname).toMatch(/^https:\/\//);
+        else expect(location).toMatchObject({ '@type': 'Place', name: expect.any(String), address: { '@type': 'PostalAddress' } });
+      }
+      if (item['@type'] === 'CreativeWork') {
+        workCount++;
+        expect(item).not.toHaveProperty('startDate');
+        expect(item).not.toHaveProperty('superEvent');
+      }
+      Object.values(item).forEach((child) => visit(child, pathname));
+    };
+    for (const pathname of sitemapPaths()) visit(jsonLd(await rawHtml(request, pathname)), pathname);
+    expect(eventCount).toBeGreaterThan(0);
+    expect(workCount).toBeGreaterThan(0);
   });
 });
 
