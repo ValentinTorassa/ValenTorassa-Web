@@ -163,7 +163,7 @@ export const talkMedia: Record<string, TalkMedia> = {
     thumb: `${base('jcc-2026')}/thumb.webp`,
     reel: `${base('jcc-2026')}/reel.mp4`,
     poster: `${base('jcc-2026')}/poster.webp`,
-    slides: 15,
+    slides: 16,
   },
   'uai-webinar-2026-08': {
     deck: `${base('uai-webinar-2026-08')}/slides`,

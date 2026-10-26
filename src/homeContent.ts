@@ -368,7 +368,7 @@ const esRepos: FeaturedRepo[] = [
     previewAlt: 'Foto del control deck real funcionando con el daemon de Ragnaros',
     stage: 'Daemon Linux',
     proof: 'Protocolo USB reconstruido · controles y pantallas vía libusb',
-    description: 'Daemon Linux y perfiles configurables para un control deck USB cuyo software oficial funciona en Windows.',
+    description: 'Daemon Linux y perfiles configurables para un control deck USB, con transporte libusb y controles en espacio de usuario.',
     caseStudy: {
       problem: 'El dispositivo no ofrecía una integración Linux nativa para sus teclas, perillas y pantalla táctil.',
       architecture: 'Un servicio de usuario decodifica eventos USB, dibuja pantallas y enlaza acciones a perfiles YAML; el transporte usa libusb.',
@@ -443,7 +443,7 @@ const enRepos: FeaturedRepo[] = [
     previewAlt: 'Photo of the real USB control deck running the Ragnaros daemon',
     stage: 'Linux daemon',
     proof: 'Reverse-engineered USB protocol · libusb controls and displays',
-    description: 'Linux daemon and configurable profiles for a USB control deck whose official software runs on Windows.',
+    description: 'Linux daemon and configurable profiles for a USB control deck, with libusb transport and user-space controls.',
     caseStudy: {
       problem: 'The device lacked a native Linux integration for its keys, knobs, and touch display.',
       architecture: 'A user service decodes USB events, renders displays, and maps actions through YAML profiles; transport uses libusb.',
