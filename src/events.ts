@@ -67,6 +67,26 @@ const cec = 'CEC Buenos Aires';
 export const talks: Talk[] = [
   // Upcoming
   {
+    id: 'rossec-2026',
+    date: '2026-11-06',
+    event: 'ROS:SEC 2026',
+    track: 'OWASP Rosario',
+    title: {
+      es: 'Dónde se rompe OAuth cuando el que llama es un agente',
+      en: 'Where OAuth breaks when the caller is an agent',
+    },
+    place: { es: 'Sede de Gobierno de Santa Fe', en: 'Santa Fe Government Headquarters' },
+    city: 'Rosario',
+    mode: 'presencial',
+    status: 'tbd',
+    url: 'https://rosariosecurity.com/',
+    note: {
+      es: 'Participación confirmada. Horario y duración de la charla a confirmar.',
+      en: 'Participation confirmed. Speaking time and duration to be announced.',
+    },
+  },
+  // Past
+  {
     id: 'cacic-2026-podman',
     date: '2026-10-06',
     event: 'CACIC 2026',
@@ -76,12 +96,12 @@ export const talks: Talk[] = [
       en: 'Contribuciones a Proyectos de Software Libre como Estrategia de Formación en Ingeniería de Software: un Marco Metodológico Aplicado al Ecosistema Podman',
     },
     mode: 'virtual',
-    status: 'tbd',
+    status: 'confirmed',
     url: 'https://www.frcu.utn.edu.ar/cacic-2026',
     slidesUrl: 'https://drive.google.com/file/d/1mPDE4FnB6czxPlq86ihIzeVnuskxvRTZ/view',
     note: {
-      es: 'Presentación de paper. Los workshops se dan de 14:30 a 19:00.',
-      en: 'Paper presentation. Workshops run from 14:30 to 19:00.',
+      es: 'Paper presentado en modalidad virtual.',
+      en: 'Paper presented virtually.',
     },
   },
   {
@@ -94,12 +114,12 @@ export const talks: Talk[] = [
       en: 'Marco Metodológico para Parches de Seguridad Comunitarios en Ubuntu Universe: Trazabilidad de CVEs, Backports y Aportes SRU',
     },
     mode: 'virtual',
-    status: 'tbd',
+    status: 'confirmed',
     url: 'https://www.frcu.utn.edu.ar/cacic-2026',
     slidesUrl: 'https://drive.google.com/file/d/1gLp4l69ylvFnNOVsMU_btKjvUgpi0Qpf/view',
     note: {
-      es: 'Presentación de paper. Los workshops se dan de 14:30 a 19:00.',
-      en: 'Paper presentation. Workshops run from 14:30 to 19:00.',
+      es: 'Paper presentado en modalidad virtual.',
+      en: 'Paper presented virtually.',
     },
   },
   {
@@ -214,7 +234,6 @@ export const talks: Talk[] = [
     highlight: true,
   },
 
-  // Past
   {
     id: 'hacking-day-2026',
     date: '2026-10-02',
