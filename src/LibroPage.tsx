@@ -12,7 +12,7 @@ import portraitAvif176 from './assets/author-commons-176.avif';
 import portraitAvif264 from './assets/author-commons-264.avif';
 import portraitWebp176 from './assets/author-commons-176.webp';
 import portraitWebp264 from './assets/author-commons-264.webp';
-import { book, libroByLanguage, sourceTalkHref, waitlistForm, youtubeChannelUrl } from './libroContent';
+import { book, libroByLanguage, sourceTalkHref, waitlistUrl, youtubeChannelUrl } from './libroContent';
 import { counterpartPath, localePath } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteFooter, SiteHeader } from './siteChrome';
@@ -124,24 +124,15 @@ function LibroPage({ language }: { language: Language }) {
               <h2 id="lista-title">{waitlist.title}</h2>
               <p>{waitlist.text}</p>
             </div>
-            <form className="book-form" method="post" action={waitlistForm.action} aria-labelledby="lista-title">
-              {/* listmonk's embed form: an empty honeypot and the list UUID. */}
-              <input type="hidden" name="nonce" />
-              <input type="hidden" name="l" value={waitlistForm.listUuid} />
-              <label className="book-field">
-                <span>{waitlist.email}</span>
-                <input type="email" name="email" required autoComplete="email" inputMode="email" spellCheck={false} />
-              </label>
-              <label className="book-field">
-                <span>{waitlist.name}</span>
-                <input type="text" name="name" autoComplete="name" />
-              </label>
-              <button type="submit" className="btn btn-primary">
+            <div className="book-waitlist-action">
+              {/* The form itself is on vtsecurity.com.ar, with its anti-bot check and per-ref counts. */}
+              <a className="btn btn-primary" href={waitlistUrl} target="_blank" rel="noopener noreferrer">
                 <Mail aria-hidden="true" />
-                {waitlist.submit}
-              </button>
-              <p className="book-form-note">{waitlist.privacy}</p>
-            </form>
+                {waitlist.cta}
+                <ArrowUpRight aria-hidden="true" />
+              </a>
+              <p className="book-waitlist-note">{waitlist.privacy}</p>
+            </div>
           </div>
         </section>
 

@@ -1,25 +1,14 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 /**
  * /libro is the page for the upcoming book (src/LibroPage.tsx). Its waitlist
- * is a plain form that posts to listmonk's public subscription endpoint; the
- * tests intercept that host so nothing ever reaches the real list.
+ * section links to the form on vtsecurity.com.ar/libro, which has the anti-bot
+ * check and counts sign-ups per ?ref=; nothing here posts to listmonk.
  */
-const LISTMONK = 'https://news.valentorassa.com/subscription/form';
-const LIST_UUID = '4a7c84a8-62ff-410a-b474-f6f6064ce324';
+const WAITLIST = 'https://vtsecurity.com.ar/libro?ref=web-libro';
 const desktopOnly = () => test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
-
-async function blockListmonk(page: Page) {
-  const posts: Array<{ method: string; url: string; body: string }> = [];
-  await page.route('https://news.valentorassa.com/**', async (route) => {
-    const request = route.request();
-    posts.push({ method: request.method(), url: request.url(), body: request.postData() ?? '' });
-    await route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>stub</title><h1>stub</h1>' });
-  });
-  return posts;
-}
 
 test.describe('/libro', () => {
   test('shows the book, its contents and the waitlist, and fits the viewport', async ({ page }) => {
@@ -44,52 +33,21 @@ test.describe('/libro', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
   });
 
-  test('the waitlist is a plain listmonk form for the book list', async ({ page }) => {
+  test('the waitlist links to the form on vtsecurity.com.ar with its own ref', async ({ page }) => {
     desktopOnly();
     await page.goto('/libro?lang=es');
 
-    const form = page.locator('#lista form');
-    await expect(form).toHaveAttribute('method', 'post');
-    await expect(form).toHaveAttribute('action', LISTMONK);
-    await expect(form.locator('input[type="hidden"][name="l"]')).toHaveAttribute('value', LIST_UUID);
-    const nonce = form.locator('input[type="hidden"][name="nonce"]');
-    await expect(nonce).toHaveCount(1);
-    expect(await nonce.inputValue()).toBe('');
-
-    const email = form.getByRole('textbox', { name: 'Tu mail' });
-    await expect(email).toHaveAttribute('type', 'email');
-    await expect(email).toHaveAttribute('name', 'email');
-    await expect(email).toHaveAttribute('required', '');
-    await expect(email).toHaveAttribute('autocomplete', 'email');
-    const name = form.getByRole('textbox', { name: 'Tu nombre (opcional)' });
-    await expect(name).toHaveAttribute('name', 'name');
-    expect(await name.getAttribute('required')).toBeNull();
-    await expect(form.getByRole('button', { name: 'Anotarme' })).toHaveAttribute('type', 'submit');
+    const cta = page.locator('#lista').getByRole('link', { name: 'Anotarme en VT Security' });
+    await expect(cta).toHaveAttribute('href', WAITLIST);
+    await expect(cta).toHaveAttribute('target', '_blank');
+    await expect(cta).toHaveAttribute('rel', /noopener/);
     await expect(page.locator('#lista')).toContainText('Te podés dar de baja con un clic desde cualquier mail.');
-  });
 
-  test('an empty email is stopped in the browser and a filled one posts the listmonk fields', async ({ page }) => {
-    desktopOnly();
-    const posts = await blockListmonk(page);
-    await page.goto('/libro?lang=es');
-
-    const form = page.locator('#lista form');
-    await form.getByRole('button', { name: 'Anotarme' }).click();
-    expect(await form.getByRole('textbox', { name: 'Tu mail' }).evaluate((input) => (input as HTMLInputElement).validity.valueMissing)).toBe(true);
-    await page.waitForTimeout(300);
-    expect(posts).toEqual([]);
-
-    await form.getByRole('textbox', { name: 'Tu mail' }).fill('ana@example.org');
-    await form.getByRole('textbox', { name: 'Tu nombre (opcional)' }).fill('Ana');
-    await Promise.all([page.waitForURL(LISTMONK), form.getByRole('button', { name: 'Anotarme' }).click()]);
-
-    expect(posts).toHaveLength(1);
-    expect(posts[0].method).toBe('POST');
-    const fields = new URLSearchParams(posts[0].body);
-    expect(fields.get('email')).toBe('ana@example.org');
-    expect(fields.get('name')).toBe('Ana');
-    expect(fields.get('l')).toBe(LIST_UUID);
-    expect(fields.get('nonce')).toBe('');
+    // The mailing list is only reached through that form, never posted to from here.
+    await expect(page.locator('form')).toHaveCount(0);
+    for (const file of ['dist/libro.html', 'dist/en/libro.html']) {
+      expect(readFileSync(path.join(process.cwd(), file), 'utf8'), file).not.toMatch(/news\.valentorassa\.com|subscription\/form/);
+    }
   });
 
   test('has no horizontal overflow at 375 px', async ({ page }) => {
@@ -122,7 +80,7 @@ test.describe('/libro', () => {
     await expect(page.locator('.book-language-note')).toContainText('The book is in Spanish.');
     await expect(page.locator('h1')).toHaveAttribute('lang', 'es');
     await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', 'en_US');
-    await expect(page.locator('#lista form').getByRole('textbox', { name: 'Your email' })).toBeVisible();
+    await expect(page.locator('#lista').getByRole('link', { name: 'Join on VT Security' })).toHaveAttribute('href', WAITLIST);
 
     await page.locator('.language-toggle').click();
     await expect(page).toHaveURL(/\/libro$/);

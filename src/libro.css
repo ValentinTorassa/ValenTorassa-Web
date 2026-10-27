@@ -73,7 +73,7 @@
 }
 
 .book-hero-actions .btn svg,
-.book-form .btn svg {
+.book-waitlist-action .btn svg {
   width: 17px;
   height: 17px;
 }
@@ -293,51 +293,17 @@
   line-height: 1.7;
 }
 
-.book-form {
+.book-waitlist-action {
   display: grid;
   gap: 14px;
   min-width: 0;
 }
 
-.book-field {
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-}
-
-.book-field span {
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 0.76rem;
-  font-weight: 600;
-}
-
-.book-field input {
-  width: 100%;
-  min-height: 46px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--text);
-  background: rgba(5, 7, 11, 0.72);
-  font: inherit;
-  font-size: 1rem;
-  color-scheme: dark;
-}
-
-.book-field input:focus-visible {
-  border-color: var(--line-strong);
-  outline: 2px solid var(--accent-2);
-  outline-offset: 1px;
-}
-
-.book-form .btn {
+.book-waitlist-action .btn {
   justify-self: start;
-  border: 0;
-  cursor: pointer;
 }
 
-.book-form-note {
+.book-waitlist-note {
   max-width: 52ch;
   margin: 0;
   color: var(--faint);
@@ -509,7 +475,7 @@
   }
 
   .book-hero-actions .btn,
-  .book-form .btn {
+  .book-waitlist-action .btn {
     flex: 1 1 100%;
     justify-self: stretch;
   }
