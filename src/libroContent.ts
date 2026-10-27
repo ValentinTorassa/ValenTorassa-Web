@@ -10,11 +10,12 @@ import { siteNav, type Language, type NavItem } from './siteContent';
  * ISBN or presale until the owner announces them.
  */
 
-/** listmonk public subscription endpoint and the «Libro: lista de espera» list (double opt-in). */
-export const waitlistForm = {
-  action: 'https://news.valentorassa.com/subscription/form',
-  listUuid: '4a7c84a8-62ff-410a-b474-f6f6064ce324',
-};
+/**
+ * The waitlist form lives on vtsecurity.com.ar/libro: it has the anti-bot
+ * check and counts sign-ups per ?ref=. This page only links to it, with its
+ * own ref, so nothing here posts to the mailing list directly.
+ */
+export const waitlistUrl = 'https://vtsecurity.com.ar/libro?ref=web-libro';
 
 export const book = {
   title: 'No podés defender lo que no entendés',
@@ -51,9 +52,8 @@ type LibroContent = {
   waitlist: {
     title: string;
     text: string;
-    email: string;
-    name: string;
-    submit: string;
+    /** Label of the button that opens the form on vtsecurity.com.ar. */
+    cta: string;
     privacy: string;
   };
   author: { title: string; text: string; talkLink: string; channelLink: string };
@@ -126,10 +126,8 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     },
     waitlist: {
       title: 'Anotate en la lista de espera',
-      text: 'Te aviso una sola vez cuando haya fecha, precio y dónde conseguirlo. Vas a recibir un mail para confirmar.',
-      email: 'Tu mail',
-      name: 'Tu nombre (opcional)',
-      submit: 'Anotarme',
+      text: 'Te aviso una sola vez cuando haya fecha, precio y dónde conseguirlo. Para anotarte, dejá tu mail en VT Security, mi blog. Vas a recibir un mail para confirmar.',
+      cta: 'Anotarme en VT Security',
       privacy: 'La lista es mía, en un servidor propio. Te podés dar de baja con un clic desde cualquier mail.',
     },
     author: {
@@ -207,10 +205,8 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     },
     waitlist: {
       title: 'Join the waitlist',
-      text: 'I will write once, when there is a date, a price and a place to get it. You will receive an email to confirm first.',
-      email: 'Your email',
-      name: 'Your name (optional)',
-      submit: 'Sign me up',
+      text: 'I will write once, when there is a date, a price and a place to get it. To join, leave your email on VT Security, my blog (in Spanish). You will receive an email to confirm first.',
+      cta: 'Join on VT Security',
       privacy: 'The list is mine, on my own server. You can unsubscribe with one click from any email.',
     },
     author: {
