@@ -85,6 +85,24 @@ export const talks: Talk[] = [
       en: 'Participation confirmed. Speaking time and duration to be announced.',
     },
   },
+  {
+    id: 'uai-auditoria-controles-2026',
+    date: '2026-10-28',
+    time: '08:30',
+    endTime: '09:30',
+    event: 'UAI',
+    track: 'Auditoría y Seguridad',
+    title: {
+      es: 'Cómo comprobar que los controles funcionan',
+      en: 'How to check that controls actually work',
+    },
+    mode: 'virtual',
+    status: 'closed',
+    note: {
+      es: 'Clase invitada: los casos de Airbus A320 y Boeing 737 MAX, y cinco controles de un caso académico de semáforos inteligentes, cada uno con su prueba y su evidencia.',
+      en: 'Guest lecture: the Airbus A320 and Boeing 737 MAX cases, and five controls from an academic smart traffic light case, each with its test and its evidence.',
+    },
+  },
   // Past
   {
     id: 'cacic-2026-podman',
