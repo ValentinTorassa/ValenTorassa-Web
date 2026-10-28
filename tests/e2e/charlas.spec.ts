@@ -253,6 +253,7 @@ test('the public decks carry no speaker notes', () => {
   for (const id of decks) {
     const html = readFileSync(path.join(root, id, 'slides.html'), 'utf8');
     expect(html, `${id}: notes in the scene data`).not.toMatch(/notes\s*:\s*'[^']/);
+    expect(html, `${id}: notes in the scene JSON`).not.toMatch(/"notes"\s*:\s*"[^"]/);
     expect(html, `${id}: notes in data-notes`).not.toMatch(/data-notes="[^"]/);
   }
 });
