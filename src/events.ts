@@ -96,11 +96,12 @@ export const talks: Talk[] = [
       es: 'Cómo comprobar que los controles funcionan',
       en: 'How to check that controls actually work',
     },
+    place: { es: 'Charla invitada en la UAI', en: 'Guest talk at UAI' },
     mode: 'virtual',
     status: 'closed',
     note: {
-      es: 'Clase invitada: los casos de Airbus A320 y Boeing 737 MAX, y cinco controles de un caso académico de semáforos inteligentes, cada uno con su prueba y su evidencia.',
-      en: 'Guest lecture: the Airbus A320 and Boeing 737 MAX cases, and five controls from an academic smart traffic light case, each with its test and its evidence.',
+      es: 'Los casos de Airbus A320 y Boeing 737 MAX, y cinco controles de un caso académico de semáforos inteligentes, cada uno con su prueba y su evidencia.',
+      en: 'The Airbus A320 and Boeing 737 MAX cases, and five controls from an academic smart traffic light case, each with its test and its evidence.',
     },
   },
   // Past
