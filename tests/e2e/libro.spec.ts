@@ -28,9 +28,53 @@ test.describe('/libro', () => {
     await expect(page.locator('#autor a[href="/charlas/debconf26"]')).toBeVisible();
     await expect(page.locator('#autor a[href="https://www.youtube.com/@vtcibersecurity"]')).toBeVisible();
 
-    // The call to action near the top leads to the waitlist.
+    // Reading the sample is available without joining the optional waitlist.
+    await expect(page.locator('.book-hero-actions a[href="/libro/muestra-capitulo-1.pdf"]')).toHaveText('Leer el capítulo gratis');
     await expect(page.locator('.book-hero-actions a[href="#lista"]')).toBeVisible();
+    await expect(page.locator('#muestra')).toContainText('PDF · 15 páginas · sin registro');
+    await expect(page.locator('#muestra')).toContainText('Podés leer la muestra sin anotarte.');
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  });
+
+  test('preserves a campaign ref through the language switch and the waitlist link', async ({ page }) => {
+    desktopOnly();
+    await page.goto('/libro?ref=muestra-linkedin');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-linkedin');
+    await page.locator('.language-toggle').click();
+    await expect(page).toHaveURL(/\/en\/libro\?ref=muestra-linkedin$/);
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-linkedin');
+
+    await page.goto('/libro?ref=reader%40example.com');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', WAITLIST);
+  });
+
+  test('serves the actual sample and records attributed clicks without submitting a form', async ({ page, request }) => {
+    desktopOnly();
+    const pdf = await request.get('/libro/muestra-capitulo-1.pdf');
+    expect(pdf.ok()).toBeTruthy();
+    expect(pdf.headers()['content-type']).toMatch(/application\/pdf/);
+    expect((await pdf.body()).subarray(0, 5).toString()).toBe('%PDF-');
+
+    await page.goto('/libro?ref=muestra-instagram');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-instagram');
+    const preview = page.locator('.book-sample-preview img');
+    await expect.poll(() => preview.evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBe(1440);
+    await page.evaluate(() => {
+      const w = window as typeof window & { bookEvents: unknown[][]; va: (...args: unknown[]) => void };
+      w.bookEvents = [];
+      w.va = (...args) => w.bookEvents.push(args);
+      for (const selector of ['.book-hero-actions a[href$=".pdf"]', '#lista a']) {
+        const link = document.querySelector<HTMLAnchorElement>(selector)!;
+        link.addEventListener('click', (event) => event.preventDefault());
+        link.click();
+      }
+    });
+    const events = await page.evaluate(() => (window as typeof window & { bookEvents: unknown[][] }).bookEvents);
+    expect(events).toEqual([
+      ['event', { name: 'book_sample_click', data: { ref: 'muestra-instagram', language: 'es', placement: 'hero' } }],
+      ['event', { name: 'book_waitlist_click', data: { ref: 'muestra-instagram', language: 'es', placement: 'waitlist' } }],
+    ]);
+    await expect(page.locator('form')).toHaveCount(0);
   });
 
   test('the waitlist links to the form on vtsecurity.com.ar with its own ref', async ({ page }) => {
@@ -73,7 +117,9 @@ test.describe('/libro', () => {
       expect(text, `${lang}: em or en dashes`).not.toMatch(/[—–]/);
       expect(text, `${lang}: exclamation marks`).not.toMatch(/[!¡]/);
       expect(text, `${lang}: AI as a method`).not.toMatch(/\b(IA|AI)\b|inteligencia artificial|artificial intelligence/i);
-      expect(text, `${lang}: commercial details`).not.toMatch(/ISBN|editorial|imprenta|publisher|preventa|presale|páginas|pages/i);
+      // Only the approved sample has a public page count, not the upcoming book.
+      const commercialText = text.replaceAll('PDF · 15 páginas · sin registro', '').replaceAll('PDF · 15 pages · no signup', '');
+      expect(commercialText, `${lang}: commercial details`).not.toMatch(/ISBN|editorial|imprenta|publisher|preventa|presale|páginas|pages/i);
     }
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');

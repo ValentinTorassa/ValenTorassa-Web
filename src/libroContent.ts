@@ -7,15 +7,18 @@ import { siteNav, type Language, type NavItem } from './siteContent';
  * Spanish originals; the English page translates the chapters for reference.
  * Public copy rules: plain hyphens at most (no em or en dashes), no hype, no
  * exclamation marks, and nothing about publishers, page count, price, dates,
- * ISBN or presale until the owner announces them.
+ * ISBN or presale until the owner announces them. The approved sample PDF
+ * is 15 pages; that is not the page count of the upcoming book.
  */
 
 /**
  * The waitlist form lives on vtsecurity.com.ar/libro: it has the anti-bot
  * check and counts sign-ups per ?ref=. This page only links to it, with its
- * own ref, so nothing here posts to the mailing list directly.
+ * incoming campaign ref (or web-libro by default), so nothing here posts to
+ * the mailing list directly.
  */
 export const waitlistUrl = 'https://vtsecurity.com.ar/libro?ref=web-libro';
+export const samplePdfUrl = '/libro/muestra-capitulo-1.pdf';
 
 export const book = {
   title: 'No podés defender lo que no entendés',
@@ -39,6 +42,15 @@ type LibroContent = {
   coverAlt: string;
   waitlistCta: string;
   contentsCta: string;
+  sample: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    cta: string;
+    meta: string;
+    optional: string;
+    previewAlt: string;
+  };
   features: { title: string; items: string[] };
   contents: {
     title: string;
@@ -64,7 +76,7 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     documentTitle: `${book.title} · Valentín Torassa`,
     seo: {
       description:
-        'Un libro de Valentín Torassa Colombero sobre Linux, las abstracciones que fallan y el camino a la ciberseguridad. Está en preparación: anotate en la lista de espera.',
+        'Un libro de Valentín Torassa Colombero sobre Linux, las abstracciones que fallan y el camino a la ciberseguridad. Leé el primer capítulo gratis, sin registro.',
       locale: 'es_AR',
     },
     navItems: siteNav('libro', 'es'),
@@ -76,6 +88,15 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     coverAlt: `Tapa de ${book.title}: un iceberg con capas, cada una con un objeto`,
     waitlistCta: 'Anotarme en la lista de espera',
     contentsCta: 'Ver el índice',
+    sample: {
+      eyebrow: 'Capítulo de muestra',
+      title: 'Leé el capítulo 1 completo',
+      text: '«Toda abstracción filtra»: un tablero en verde, un proceso que muere y una prueba para entender qué se estaba mirando mal. Con el texto, los dibujos y los ejemplos tal como están en el libro.',
+      cta: 'Leer el capítulo gratis',
+      meta: 'PDF · 15 páginas · sin registro',
+      optional: 'La lista del libro es opcional. Podés leer la muestra sin anotarte.',
+      previewAlt: 'Página de apertura del capítulo 1, Toda abstracción filtra. Abrir la muestra completa en PDF.',
+    },
     features: {
       title: 'Qué vas a encontrar',
       items: [
@@ -141,7 +162,7 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     documentTitle: `${book.title} · Valentín Torassa`,
     seo: {
       description:
-        'A book in Spanish by Valentín Torassa Colombero about Linux, the abstractions that fail and the road into cybersecurity. It is in progress: join the waitlist.',
+        'A book in Spanish by Valentín Torassa Colombero about Linux, the abstractions that fail and the road into cybersecurity. Read the first chapter for free, with no signup.',
       locale: 'en_US',
     },
     navItems: siteNav('libro', 'en'),
@@ -154,6 +175,15 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     coverAlt: `Cover of ${book.title}: an iceberg in layers, each one holding an object`,
     waitlistCta: 'Join the waitlist',
     contentsCta: 'See the contents',
+    sample: {
+      eyebrow: 'Sample chapter · in Spanish',
+      title: 'Read the complete first chapter',
+      text: '“Toda abstracción filtra”: a green dashboard, a process that dies, and a test to understand what was being overlooked. The text, illustrations and examples are exactly as they appear in the book.',
+      cta: 'Read the free chapter',
+      meta: 'PDF · 15 pages · no signup',
+      optional: 'The book waitlist is optional. You can read the sample without joining.',
+      previewAlt: 'Opening page of chapter 1, Toda abstracción filtra. Open the complete sample PDF in Spanish.',
+    },
     features: {
       title: 'What you will find',
       items: [

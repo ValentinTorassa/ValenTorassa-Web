@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { track } from '@vercel/analytics';
 import { ArrowRight, ArrowUpRight, BookOpenText, Mail } from 'lucide-react';
 import coverFallback from './assets/libro-cover-540.jpg';
 import coverAvif360 from './assets/libro-cover-360.avif';
@@ -12,7 +14,7 @@ import portraitAvif176 from './assets/author-commons-176.avif';
 import portraitAvif264 from './assets/author-commons-264.avif';
 import portraitWebp176 from './assets/author-commons-176.webp';
 import portraitWebp264 from './assets/author-commons-264.webp';
-import { book, libroByLanguage, sourceTalkHref, waitlistUrl, youtubeChannelUrl } from './libroContent';
+import { book, libroByLanguage, samplePdfUrl, sourceTalkHref, waitlistUrl, youtubeChannelUrl } from './libroContent';
 import { counterpartPath, localePath } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteFooter, SiteHeader } from './siteChrome';
@@ -24,13 +26,25 @@ const coverSizes = '(min-width: 900px) 340px, 200px';
 function LibroPage({ language }: { language: Language }) {
   const page = libroByLanguage[language];
   const siteContent = siteChromeByLanguage[language];
-  const { contents, waitlist, author } = page;
+  const { contents, sample, waitlist, author } = page;
+  // Keep the server render stable, then carry the campaign tag to the external form.
+  const [referral, setReferral] = useState<string | null>(null);
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (ref && /^[a-zA-Z0-9_-]{1,80}$/.test(ref)) setReferral(ref);
+  }, []);
+  const formUrl = referral ? `https://vtsecurity.com.ar/libro?ref=${encodeURIComponent(referral)}` : waitlistUrl;
+  const languagePath = counterpartPath(localePath(language, '/libro'));
+  const languageHref = referral ? `${languagePath}?ref=${encodeURIComponent(referral)}` : languagePath;
+  const recordClick = (event: 'book_sample_click' | 'book_waitlist_click', placement: string) => {
+    track(event, { ref: referral ?? 'web-libro', language, placement });
+  };
 
   return (
     <div className="site-shell">
       <SiteHeader
         language={language}
-        languageHref={counterpartPath(localePath(language, '/libro'))}
+        languageHref={languageHref}
         labels={siteContent.header}
         navItems={page.navItems}
         brandHref={localePath(language, '/')}
@@ -48,7 +62,11 @@ function LibroPage({ language }: { language: Language }) {
               {page.lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
             <div className="book-hero-actions">
-              <a className="btn btn-primary" href="#lista">
+              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_sample_click', 'hero')}>
+                <BookOpenText aria-hidden="true" />
+                {sample.cta}
+              </a>
+              <a className="btn btn-secondary" href="#lista">
                 <Mail aria-hidden="true" />
                 {page.waitlistCta}
               </a>
@@ -57,6 +75,7 @@ function LibroPage({ language }: { language: Language }) {
                 {page.contentsCta}
               </a>
             </div>
+            <p className="book-sample-meta">{sample.meta}</p>
           </div>
 
           <figure className="book-cover">
@@ -67,6 +86,26 @@ function LibroPage({ language }: { language: Language }) {
             </picture>
           </figure>
         </header>
+
+        <section className="book-section" id="muestra" aria-labelledby="muestra-title">
+          <div className="book-card book-sample">
+            <a className="book-sample-preview" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_sample_click', 'preview')} aria-label={sample.previewAlt}>
+              <img src="/libro/muestra/page-02.png" alt={sample.previewAlt} width={1440} height={2032} loading="lazy" decoding="async" />
+            </a>
+            <div className="book-sample-text">
+              <span className="eyebrow">{sample.eyebrow}</span>
+              <h2 id="muestra-title">{sample.title}</h2>
+              <p>{sample.text}</p>
+              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_sample_click', 'sample')}>
+                <BookOpenText aria-hidden="true" />
+                {sample.cta}
+                <ArrowUpRight aria-hidden="true" />
+              </a>
+              <p className="book-sample-meta">{sample.meta}</p>
+              <p className="book-sample-optional">{sample.optional}</p>
+            </div>
+          </div>
+        </section>
 
         <section className="book-section" id="contenido" aria-labelledby="contenido-title">
           <h2 id="contenido-title">{page.features.title}</h2>
@@ -126,7 +165,7 @@ function LibroPage({ language }: { language: Language }) {
             </div>
             <div className="book-waitlist-action">
               {/* The form itself is on vtsecurity.com.ar, with its anti-bot check and per-ref counts. */}
-              <a className="btn btn-primary" href={waitlistUrl} target="_blank" rel="noopener noreferrer">
+              <a className="btn btn-primary" href={formUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_waitlist_click', 'waitlist')}>
                 <Mail aria-hidden="true" />
                 {waitlist.cta}
                 <ArrowUpRight aria-hidden="true" />

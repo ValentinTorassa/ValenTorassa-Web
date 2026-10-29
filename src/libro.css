@@ -73,9 +73,57 @@
 }
 
 .book-hero-actions .btn svg,
+.book-sample-text .btn svg,
 .book-waitlist-action .btn svg {
   width: 17px;
   height: 17px;
+}
+
+.book-sample-meta {
+  margin: 14px 0 0;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.book-sample {
+  display: grid;
+  gap: 28px;
+  align-items: center;
+  border-color: var(--line-strong);
+}
+
+.book-sample-preview {
+  display: block;
+  width: min(100%, 260px);
+  justify-self: center;
+}
+
+.book-sample-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.6);
+}
+
+.book-sample-text {
+  min-width: 0;
+}
+
+.book-sample-text > p:not(.book-sample-meta) {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.book-sample-text .btn {
+  margin-top: 10px;
+}
+
+.book-sample-optional {
+  margin-bottom: 0;
+  font-size: 0.9rem;
 }
 
 .book-cover {
@@ -385,6 +433,10 @@
 }
 
 @media (min-width: 640px) {
+  .book-sample {
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    padding: 28px;
+  }
   .book-features {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
