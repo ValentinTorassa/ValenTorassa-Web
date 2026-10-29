@@ -46,6 +46,8 @@ Each talk and paper has its own 1200×630 social card in `public/og-charlas/`: a
 
 Public decks in `public/charlas/<id>/slides.html` carry a canonical URL and a link back to the talk. `VT-Knowledge-Engine-Brain/events/charlas-2026-decks/hub/public_decks.py` adds those when creating the public copies. Its `--decorate-existing <public/charlas>` mode updates already published copies.
 
+Activation, migration and production verification: [book click operations](docs/book-clicks-operation.md). The client must wait for the new Turso table before deployment.
+
 ## Verificación de regresiones - 2026-09-14
 
 ```bash
