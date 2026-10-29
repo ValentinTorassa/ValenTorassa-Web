@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { track } from '@vercel/analytics';
 import { ArrowRight, ArrowUpRight, BookOpenText, Mail } from 'lucide-react';
 import coverFallback from './assets/libro-cover-540.jpg';
 import coverAvif360 from './assets/libro-cover-360.avif';
@@ -18,6 +17,7 @@ import { book, libroByLanguage, samplePdfUrl, sourceTalkHref, waitlistUrl, youtu
 import { counterpartPath, localePath } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteFooter, SiteHeader } from './siteChrome';
+import { countBookClick } from './bookMetrics';
 
 const coverAvif = `${coverAvif360} 360w, ${coverAvif540} 540w, ${coverAvif720} 720w`;
 const coverWebp = `${coverWebp360} 360w, ${coverWebp540} 540w, ${coverWebp720} 720w`;
@@ -36,8 +36,8 @@ function LibroPage({ language }: { language: Language }) {
   const formUrl = referral ? `https://vtsecurity.com.ar/libro?ref=${encodeURIComponent(referral)}` : waitlistUrl;
   const languagePath = counterpartPath(localePath(language, '/libro'));
   const languageHref = referral ? `${languagePath}?ref=${encodeURIComponent(referral)}` : languagePath;
-  const recordClick = (event: 'book_sample_click' | 'book_waitlist_click', placement: string) => {
-    track(event, { ref: referral ?? 'web-libro', language, placement });
+  const recordClick = (event: 'pdf' | 'lista') => {
+    countBookClick(event, referral ?? 'web-libro');
   };
 
   return (
@@ -62,7 +62,7 @@ function LibroPage({ language }: { language: Language }) {
               {page.lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
             <div className="book-hero-actions">
-              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_sample_click', 'hero')}>
+              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('pdf')}>
                 <BookOpenText aria-hidden="true" />
                 {sample.cta}
               </a>
@@ -89,14 +89,14 @@ function LibroPage({ language }: { language: Language }) {
 
         <section className="book-section" id="muestra" aria-labelledby="muestra-title">
           <div className="book-card book-sample">
-            <a className="book-sample-preview" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_sample_click', 'preview')} aria-label={sample.previewAlt}>
+            <a className="book-sample-preview" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('pdf')} aria-label={sample.previewAlt}>
               <img src="/libro/muestra/page-02.png" alt={sample.previewAlt} width={1440} height={2032} loading="lazy" decoding="async" />
             </a>
             <div className="book-sample-text">
               <span className="eyebrow">{sample.eyebrow}</span>
               <h2 id="muestra-title">{sample.title}</h2>
               <p>{sample.text}</p>
-              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_sample_click', 'sample')}>
+              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('pdf')}>
                 <BookOpenText aria-hidden="true" />
                 {sample.cta}
                 <ArrowUpRight aria-hidden="true" />
@@ -165,7 +165,7 @@ function LibroPage({ language }: { language: Language }) {
             </div>
             <div className="book-waitlist-action">
               {/* The form itself is on vtsecurity.com.ar, with its anti-bot check and per-ref counts. */}
-              <a className="btn btn-primary" href={formUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('book_waitlist_click', 'waitlist')}>
+              <a className="btn btn-primary" href={formUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('lista')}>
                 <Mail aria-hidden="true" />
                 {waitlist.cta}
                 <ArrowUpRight aria-hidden="true" />

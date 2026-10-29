@@ -55,24 +55,27 @@ test.describe('/libro', () => {
     expect(pdf.headers()['content-type']).toMatch(/application\/pdf/);
     expect((await pdf.body()).subarray(0, 5).toString()).toBe('%PDF-');
 
-    await page.goto('/libro?ref=muestra-instagram');
-    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-instagram');
+    await page.goto('/libro?ref=muestra-instagram-stories');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-instagram-stories');
     const preview = page.locator('.book-sample-preview img');
     await expect.poll(() => preview.evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBe(1440);
+    const events: unknown[] = [];
+    await page.route('https://vtsecurity.com.ar/api/book-click', async (route) => {
+      events.push(route.request().postDataJSON());
+      expect(route.request().headers()['content-type']).toBe('text/plain;charset=UTF-8');
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true,"counted":true}' });
+    });
     await page.evaluate(() => {
-      const w = window as typeof window & { bookEvents: unknown[][]; va: (...args: unknown[]) => void };
-      w.bookEvents = [];
-      w.va = (...args) => w.bookEvents.push(args);
       for (const selector of ['.book-hero-actions a[href$=".pdf"]', '#lista a']) {
         const link = document.querySelector<HTMLAnchorElement>(selector)!;
         link.addEventListener('click', (event) => event.preventDefault());
         link.click();
       }
     });
-    const events = await page.evaluate(() => (window as typeof window & { bookEvents: unknown[][] }).bookEvents);
+    await expect.poll(() => events.length).toBe(2);
     expect(events).toEqual([
-      ['event', { name: 'book_sample_click', data: { ref: 'muestra-instagram', language: 'es', placement: 'hero' } }],
-      ['event', { name: 'book_waitlist_click', data: { ref: 'muestra-instagram', language: 'es', placement: 'waitlist' } }],
+      { event: 'pdf', ref: 'muestra-instagram-stories' },
+      { event: 'lista', ref: 'muestra-instagram-stories' },
     ]);
     await expect(page.locator('form')).toHaveCount(0);
   });
