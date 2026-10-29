@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-29",
+  "database": "pluma-vt",
+  "migration": "0010_book_clicks.sql",
+  "backendCommit": "3c45e7586115191f0394b2ffdc8509760509ae4d",
+  "clientCommit": "f26e033c4065b63be2219fa31f9220249b4020eb",
+  "clientPullRequest": "https://github.com/ValentinTorassa/ValenTorassa-Web/pull/33",
+  "deploymentId": "dpl_3RU46TFV2tGbGRT5XYdhqtNFtQJp",
+  "deploymentUrl": "https://pagina-cv-iiogqgw52-vts-projects-cd213a57.vercel.app",
+  "productionUrl": "https://valentorassa.com/libro",
+  "baseline": {
+    "checkedAt": "2026-10-29T13:51:52.974336+00:00",
+    "database": "pluma-vt",
+    "migration": "0010_book_clicks.sql",
+    "table": "book_clicks",
+    "columns": [
+      "day",
+      "event",
+      "ref",
+      "count"
+    ],
+    "primaryKey": [
+      "day",
+      "event",
+      "ref"
+    ],
+    "total": 0,
+    "rows": []
+  },
+  "browserAttempts": [
+    {
+      "startedAt": "2026-10-29T13:53:10.383Z",
+      "url": "https://valentorassa.com/libro?ref=muestra-pdf",
+      "events": [
+        {
+          "event": "pdf",
+          "ref": "muestra-pdf",
+          "sentAt": "2026-10-29T13:53:12.599Z",
+          "status": 200,
+          "request": {
+            "event": "pdf",
+            "ref": "muestra-pdf"
+          }
+        }
+      ],
+      "formsSubmitted": 0,
+      "waitlistHref": "https://vtsecurity.com.ar/libro?ref=muestra-pdf",
+      "horizontalOverflow": false,
+      "interruptedAt": "2026-10-29T13:55:42.742316+00:00",
+      "diagnostic": "Browser response collection stalled after the PDF click; database read independently confirmed exactly one PDF increment. No retry sent."
+    },
+    {
+      "startedAt": "2026-10-29T13:57:37.579Z",
+      "url": "https://valentorassa.com/libro?ref=muestra-pdf",
+      "events": [
+        {
+          "event": "lista",
+          "ref": "muestra-pdf",
+          "sentAt": "2026-10-29T13:57:38.885Z",
+          "status": 200,
+          "request": {
+            "event": "lista",
+            "ref": "muestra-pdf"
+          },
+          "responseReadError": "Response body timed out; inspect the database before retrying"
+        }
+      ],
+      "formsSubmitted": 0,
+      "waitlistHref": "https://vtsecurity.com.ar/libro?ref=muestra-pdf",
+      "horizontalOverflow": false
+    }
+  ],
+  "serverConfirmation": {
+    "checkedAt": "2026-10-29T13:58:22.961038+00:00",
+    "basis": "Independent Turso SQL read after exactly two browser click attempts; both requests returned HTTP 200. Playwright response body reads stalled; no repeated clicks were sent.",
+    "baselineTotal": 0,
+    "totalBeforeCleanup": 2,
+    "rows": [
+      {
+        "day": "2026-10-29",
+        "event": "pdf",
+        "ref": "muestra-pdf",
+        "count": 1
+      },
+      {
+        "day": "2026-10-29",
+        "event": "lista",
+        "ref": "muestra-pdf",
+        "count": 1
+      }
+    ],
+    "formsSubmitted": 0
+  },
+  "afterCleanup": {
+    "checkedAt": "2026-10-29T14:00:34.750013+00:00",
+    "total": 0,
+    "rows": [],
+    "technicalIncrementsRemoved": {
+      "pdf": 1,
+      "lista": 1
+    },
+    "cleanupFile": "cleanup-server-confirmed.sql",
+    "cleanupAppliedExactlyOnce": true
+  },
+  "httpEvidence": {
+    "pdf": {
+      "status": 200,
+      "source": "Vercel request log",
+      "timestamp": "2026-10-29T13:53:12.775Z"
+    },
+    "lista": {
+      "status": 200,
+      "source": "Playwright response metadata"
+    }
+  },
+  "limitation": "Playwright response.json did not finish. Persistence was independently verified in Turso before cleanup; no duplicate click was sent to recover a JSON body.",
+  "formsSubmitted": 0,
+  "subscribersCreated": 0
+}
