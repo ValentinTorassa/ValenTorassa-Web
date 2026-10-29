@@ -86,6 +86,27 @@ export const talks: Talk[] = [
     },
   },
   {
+    id: 'instituto-san-pablo-2026',
+    date: '2026-11-04',
+    time: '19:00',
+    endTime: '20:00',
+    event: 'Instituto Superior San Pablo',
+    track: 'Analista Funcional',
+    title: {
+      es: 'Funciona, pero ¿es seguro?',
+      en: 'It works, but is it secure?',
+    },
+    place: { es: 'Instituto Superior San Pablo', en: 'Instituto Superior San Pablo' },
+    city: 'Villa Constitución',
+    mode: 'presencial',
+    status: 'closed',
+    slidesReleaseDate: '2026-10-28',
+    note: {
+      es: 'Programar con IA entendiendo el contexto: lo que el pedido no dice, cómo se revisa antes de producción y por qué la seguridad empieza en el relevamiento. Para alumnos y ex alumnos de Analista Funcional.',
+      en: 'Coding with AI while understanding the context: what the request does not say, how to review before production, and why security starts at requirements gathering. For students and alumni of the Functional Analyst program.',
+    },
+  },
+  {
     id: 'uai-auditoria-controles-2026',
     date: '2026-10-28',
     time: '08:30',

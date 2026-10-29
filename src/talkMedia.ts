@@ -51,6 +51,15 @@ const base = (id: string) => `/charlas/${id}`;
 const firewall = 'https://github.com/ValentinTorassa/VT-Agent-Firewall';
 
 export const talkMedia: Record<string, TalkMedia> = {
+  'instituto-san-pablo-2026': {
+    deck: `${base('instituto-san-pablo-2026')}/slides`,
+    icon: 'layers',
+    still: `${base('instituto-san-pablo-2026')}/still.webp`,
+    thumb: `${base('instituto-san-pablo-2026')}/thumb.webp`,
+    reel: `${base('instituto-san-pablo-2026')}/reel.mp4`,
+    poster: `${base('instituto-san-pablo-2026')}/poster.webp`,
+    slides: 15,
+  },
   'uai-auditoria-controles-2026': {
     deck: `${base('uai-auditoria-controles-2026')}/slides`,
     icon: 'shield',
