@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from '@playwright/test';
 
@@ -8,6 +8,14 @@ if (!process.argv.includes('--acknowledge-two-production-clicks')) {
 }
 const outputDirectory='test-results/book-click-live';
 mkdirSync(outputDirectory,{recursive:true});
+if (existsSync(join(outputDirectory,'receipt.json'))) throw Error('An earlier receipt exists. Review and preserve it before any further production click.');
+const events=(process.argv.find(arg=>arg.startsWith('--events='))?.slice('--events='.length) ?? 'pdf,lista').split(',');
+if (!events.length || new Set(events).size!==events.length || events.some(event=>!['pdf','lista'].includes(event))) throw Error('Events must be pdf, lista, or pdf,lista.');
+async function withTimeout(promise, milliseconds) {
+ let timer;
+ try { return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Response body timed out; inspect the database before retrying')),milliseconds);})]); }
+ finally { clearTimeout(timer); }
+}
 const receipt={startedAt:new Date().toISOString(),url:'https://valentorassa.com/libro?ref=muestra-pdf',events:[],formsSubmitted:0};
 const save=()=>{
  writeFileSync(join(outputDirectory,'receipt.json'),JSON.stringify(receipt,null,2));
@@ -25,12 +33,15 @@ try {
  receipt.horizontalOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
  if(receipt.waitlistHref!=='https://vtsecurity.com.ar/libro?ref=muestra-pdf')throw Error('Attribution lost');
  if(await page.locator('form').count()!==0)throw Error('Unexpected form');
- for(const [event,selector] of [['pdf','.book-hero-actions a[href$=".pdf"]'],['lista','#lista a']]){
+ for(const [event,selector] of [['pdf','.book-hero-actions a[href$=".pdf"]'],['lista','#lista a']].filter(([event])=>events.includes(event))){
   const pending={event,ref:'muestra-pdf',sentAt:new Date().toISOString()};receipt.events.push(pending);save();
-  const responsePromise=page.waitForResponse(r=>r.url()==='https://vtsecurity.com.ar/api/book-click'&&r.request().method()==='POST'&&r.request().postDataJSON()?.event===event,{timeout:15000});
+  const responsePromise=page.waitForResponse(r=>r.url()==='https://vtsecurity.com.ar/api/book-click'&&r.request().method()==='POST',{timeout:15000});
   await page.locator(selector).evaluate(link=>{link.addEventListener('click',e=>e.preventDefault(),{once:true});link.click();});
-  const response=await responsePromise;pending.status=response.status();pending.request=response.request().postDataJSON();pending.result=await response.json();save();
+  const response=await responsePromise;pending.status=response.status();pending.request=response.request().postDataJSON();save();
+  try { pending.result=await withTimeout(response.json(),5000); }
+  catch(error) { pending.responseReadError=error.message;save();throw error; }
+  save();
   if(pending.status!==200||pending.result.counted!==true)throw Error('Click not counted');
  }
  receipt.finishedAt=new Date().toISOString();save();console.log(JSON.stringify(receipt));
-}finally{await browser.close();save();}
+}finally{save();await withTimeout(browser.close(),5000);}
