@@ -6,8 +6,17 @@ import type { Language } from './siteContent';
  * the destination can tell which network the visit came from.
  */
 
-/** Tags the bios use. Anything else counts as "links" alone. */
-export const bioRefs = ['ig', 'tt', 'x', 'th', 'yt', 'li', 'bs', 'fb', 'md', 'dc', 'gh', 'wa'] as const;
+/**
+ * Tags the page accepts; anything else counts as "links" alone. The short ones
+ * are for the bios. The long ones are what AutoMediaPoster, StudioOS and the
+ * launches add to a post's own links (NETWORK_REFS in VT-CreatorStack's
+ * publishing-core, approved 29/10/2026), so a post that links here keeps its
+ * network too.
+ */
+export const bioRefs = [
+  'ig', 'tt', 'x', 'th', 'yt', 'li', 'bs', 'fb', 'md', 'dc', 'gh', 'wa',
+  'tiktok', 'threads', 'bluesky', 'mastodon', 'linkedin', 'yt-short', 'yt-desc', 'whatsapp', 'discord',
+] as const;
 
 export function outboundRef(search: string): string {
   const ref = new URLSearchParams(search).get('ref')?.toLowerCase();

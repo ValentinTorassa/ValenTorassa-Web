@@ -15,6 +15,11 @@ test.describe('links page', () => {
     await expect(page.locator('.w-book')).toHaveAttribute('href', 'https://valentorassa.com/libro?ref=links-ig');
   });
 
+  test('keeps the network refs that AutoMediaPoster adds to its posts', async ({ page }) => {
+    await page.goto('/links?ref=threads');
+    await expect(page.locator('.w-comandle')).toHaveAttribute('href', 'https://comandle.valentorassa.com/?ref=links-threads');
+  });
+
   test('an unknown tag falls back to plain "links"', async ({ page }) => {
     await page.goto('/links?ref=<script>');
     await expect(page.locator('.w-comandle')).toHaveAttribute('href', 'https://comandle.valentorassa.com/?ref=links');
