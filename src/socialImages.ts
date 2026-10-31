@@ -7,6 +7,8 @@ export const socialImages = {
   charlas: '/og-charlas-2026-10.jpg',
   eventos: '/og-eventos-2026-10.jpg',
   libro: '/og-libro.png',
+  /** Drawn by scripts/generate-links-og.mjs from scripts/links-og/card.html. */
+  links: '/og-links-2026-10.jpg',
   /** Drawn by scripts/generate-talk-og.py. The PNG twins stay for the public decks, which point at them. */
   talk: (id: string) => `/og-charlas/${id}.jpg`,
 } as const;

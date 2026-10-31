@@ -66,7 +66,7 @@ export type LinksCopy = {
   documentTitle: string;
   /** The page's h1, for screen readers: the terminal stands in for a headline. */
   heading: string;
-  seo: { description: string };
+  seo: { description: string; imageAlt: string };
   topBar: { home: string; language: string; languageLabel: string };
   news: { label: string; body: string; cta: string };
   leader: { left: string; right: string };
@@ -108,6 +108,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     seo: {
       description:
         'Todo lo de Valentín Torassa en un solo lugar: el canal VT Security, su libro, comandle, la próxima charla, Open Security Labs, el blog y sus redes.',
+      imageAlt: 'Una terminal corre neofetch junto a Tux, al lado de ventanas del canal, el libro y comandle sobre un fondo amarillo: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'EN', languageLabel: 'Ver en inglés' },
     news: {
@@ -201,6 +202,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     seo: {
       description:
         'Everything from Valentín Torassa in one place: the VT Security channel, his book, comandle, the next talk, Open Security Labs, the blog and his profiles.',
+      imageAlt: 'A terminal runs neofetch next to Tux, beside windows for the channel, the book and comandle on a yellow background: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'ES', languageLabel: 'Ver en español' },
     news: {
