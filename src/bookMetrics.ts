@@ -5,6 +5,10 @@ const refs = new Set([
   'muestra-bluesky', 'muestra-threads', 'muestra-facebook', 'muestra-discord',
   'muestra-mastodon', 'muestra-whatsapp', 'muestra-apuntes', 'muestra-ejemplos',
   'muestra-pdf',
+  // links.vtsecurity.com.ar passes its own ?ref= on as links-<ref> (bioRefs in linksContent.ts).
+  'links', 'links-ig', 'links-tt', 'links-x', 'links-th', 'links-yt', 'links-li', 'links-bs', 'links-fb',
+  'links-md', 'links-dc', 'links-gh', 'links-wa', 'links-tiktok', 'links-threads', 'links-bluesky',
+  'links-mastodon', 'links-linkedin', 'links-yt-short', 'links-yt-desc', 'links-whatsapp', 'links-discord',
 ]);
 
 /** An aggregate click, not a completed download, reader or subscription. */

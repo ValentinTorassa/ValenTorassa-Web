@@ -80,6 +80,24 @@ test.describe('/libro', () => {
     await expect(page.locator('form')).toHaveCount(0);
   });
 
+  test('a click that came from the links page keeps its links-* ref', async ({ page }) => {
+    desktopOnly();
+    await page.goto('/libro?ref=links-ig');
+    const events: unknown[] = [];
+    await page.route('https://vtsecurity.com.ar/api/book-click', async (route) => {
+      events.push(route.request().postDataJSON());
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true,"counted":true}' });
+    });
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=links-ig');
+    await page.evaluate(() => {
+      const link = document.querySelector<HTMLAnchorElement>('.book-hero-actions a[href$=".pdf"]')!;
+      link.addEventListener('click', (event) => event.preventDefault());
+      link.click();
+    });
+    await expect.poll(() => events.length).toBe(1);
+    expect(events).toEqual([{ event: 'pdf', ref: 'links-ig' }]);
+  });
+
   test('the waitlist links to the form on vtsecurity.com.ar with its own ref', async ({ page }) => {
     desktopOnly();
     await page.goto('/libro?lang=es');
