@@ -30,10 +30,8 @@ import {
   type PrivateProject,
   type StackTag,
 } from './homeContent';
-import { FaLink } from 'react-icons/fa6';
 import { talkLabelsByLanguage } from './eventsContent';
-import { linksPageUrl } from './linksContent';
-import { blogUrl, contactEmail, headerSocialLinks, isExternalLink, socialLinks, type Language, type SocialLink } from './siteContent';
+import { blogUrl, contactEmail, headerSocialLinks, isExternalLink, linksPageLink, socialLinks, type Language } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks } from './eventSchedule';
 import { localePath, useToday } from './site';
@@ -42,8 +40,6 @@ import { TalkChips } from './talkComponents';
 import { talkMedia } from './talkMedia';
 
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
-/** The links page (the one every social bio points to), in the page's language. */
-const linksPageLink = (language: Language): SocialLink => ({ name: 'Links', href: linksPageUrl(language), icon: FaLink });
 
 function App({ language }: { language: Language }) {
   const [activeSection, setActiveSection] = useState('');
@@ -607,7 +603,7 @@ function App({ language }: { language: Language }) {
 
             {content.research.privateProjects.length > 0 ? (
               <div className="repo-private">
-                <span className="eyebrow">// {content.research.privateWorkLabel}</span>
+                <span className="eyebrow">{content.research.privateWorkLabel}</span>
                 <Reveal className="repo-grid repo-grid-private">
                   {content.research.privateProjects.map((project) => (
                     <ProjectCard
@@ -624,7 +620,7 @@ function App({ language }: { language: Language }) {
 
             <div className="repo-more">
               <div className="repo-more-heading">
-                <span className="eyebrow">// {content.research.additionalLabel}</span>
+                <span className="eyebrow">{content.research.additionalLabel}</span>
               </div>
               <div className="repo-more-item">
                 <span>{content.research.contributionLabel}</span>

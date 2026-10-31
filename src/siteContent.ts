@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons';
-import { FaBookOpen, FaEnvelope, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
+import { FaBookOpen, FaEnvelope, FaLink, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
 import { SiBluesky, SiDevdotto, SiFacebook, SiGithub, SiInstagram, SiOrcid, SiThreads, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
 import { localePath } from './site';
 
@@ -128,6 +128,17 @@ export const socialLinks: SocialLink[] = [
     icon: FaEnvelope,
   },
 ];
+
+/**
+ * The links page lives on its own host. Vercel serves it at the root of that
+ * host with a project routing rule (docs/links-domain.md); the site's own
+ * /links paths redirect there (vercel.json).
+ */
+export const LINKS_ORIGIN = 'https://links.vtsecurity.com.ar';
+export const linksPageUrl = (language: Language) => (language === 'es' ? `${LINKS_ORIGIN}/` : `${LINKS_ORIGIN}/en`);
+
+/** The links page (the one every social bio points to), in the page's language. */
+export const linksPageLink = (language: Language): SocialLink => ({ name: 'Links', href: linksPageUrl(language), icon: FaLink });
 
 /** The book page on this site; it sits next to the blog icon in every header. */
 export const bookLink: SocialLink = { name: 'Libro', href: '/libro', icon: FaBookOpen };

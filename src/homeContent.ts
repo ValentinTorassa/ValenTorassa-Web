@@ -538,7 +538,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       },
     ],
     profile: {
-      eyebrow: '// perfil',
+      eyebrow: 'perfil',
       title: 'Arquitectura de software, backend, seguridad cloud y compliance técnico.',
       intro:
         'Combino arquitectura de software, desarrollo backend, seguridad cloud, Linux, redes y compliance para construir y operar sistemas seguros desde el diseño. Trabajo especialmente sobre identidad, permisos, datos sensibles, auditoría, observabilidad, infraestructura y confiabilidad operativa.',
@@ -563,7 +563,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     experience: {
-      eyebrow: '// experiencia',
+      eyebrow: 'experiencia',
       title: 'Trayectoria profesional',
       items: [
         {
@@ -611,7 +611,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     education: {
-      eyebrow: '// formación',
+      eyebrow: 'formación',
       title: 'Academia y certificaciones',
       academicTitle: 'Formación académica',
       certificationsTitle: 'Certificaciones',
@@ -668,7 +668,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     stack: {
-      eyebrow: '// stack',
+      eyebrow: 'stack',
       title: 'Stack operativo',
       intro: 'Tecnologías y prácticas presentes en producto, seguridad cloud, auditorías y operación en producción.',
       groups: [
@@ -699,9 +699,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     research: {
-      eyebrow: '// open source',
+      eyebrow: 'open source',
       title: 'Proyectos seleccionados',
-      talksEyebrow: '// charlas',
+      talksEyebrow: 'charlas',
       talksTitle: 'Charlas y reconocimiento',
       talksIntro: 'Charlas, clases y papers. Cada una tiene su página en valentorassa.com/charlas, con las slides desde el día que la doy.',
       speakingTitle: 'Speaking y reconocimiento',
@@ -735,7 +735,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       privateProjects: esPrivateProjects,
     },
     contact: {
-      eyebrow: '// contacto',
+      eyebrow: 'contacto',
       title: 'Contacto profesional.',
       text: 'Rosario, Argentina · conversaciones técnicas sobre seguridad cloud, backend, compliance, agentes de IA, Linux y arquitectura de sistemas.',
       emailLabel: 'Enviar email',
@@ -778,7 +778,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       },
     ],
     profile: {
-      eyebrow: '// profile',
+      eyebrow: 'profile',
       title: 'Software architecture, backend, cloud security, and technical compliance.',
       intro:
         'I combine software architecture, backend development, cloud security, Linux, networking, and compliance to build and operate secure-by-design systems. My work focuses on identity, permissions, sensitive data, auditability, observability, infrastructure, and operational reliability.',
@@ -803,7 +803,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     experience: {
-      eyebrow: '// experience',
+      eyebrow: 'experience',
       title: 'Professional experience',
       items: [
         {
@@ -851,7 +851,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     education: {
-      eyebrow: '// education',
+      eyebrow: 'education',
       title: 'Education and certifications',
       academicTitle: 'Academic background',
       certificationsTitle: 'Certifications',
@@ -908,7 +908,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     stack: {
-      eyebrow: '// stack',
+      eyebrow: 'stack',
       title: 'Operational stack',
       intro: 'Technologies and practices used across product engineering, cloud security, audits, and production operations.',
       groups: [
@@ -939,9 +939,9 @@ export const contentByLanguage: Record<Language, PageContent> = {
       ],
     },
     research: {
-      eyebrow: '// open source',
+      eyebrow: 'open source',
       title: 'Selected work',
-      talksEyebrow: '// talks',
+      talksEyebrow: 'talks',
       talksTitle: 'Talks and recognition',
       talksIntro: 'Talks, classes, and papers. Each one has its own page at valentorassa.com/charlas, with the slides from the day I give it.',
       speakingTitle: 'Speaking and recognition',
@@ -975,7 +975,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       privateProjects: enPrivateProjects,
     },
     contact: {
-      eyebrow: '// contact',
+      eyebrow: 'contact',
       title: 'Professional contact.',
       text: 'Rosario, Argentina · technical conversations about cloud security, backend systems, compliance, AI agents, Linux, and systems architecture.',
       emailLabel: 'Send email',

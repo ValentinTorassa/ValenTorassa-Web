@@ -6,7 +6,7 @@ import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
 import { localePath, useToday } from './site';
-import { bookLink, headerSocialLinks, isExternalLink, linkTargetProps, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
+import { bookLink, headerSocialLinks, isExternalLink, linksPageLink, linkTargetProps, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
 
 /**
  * Profiles left out of the phone menu: its icons fit one row at 390 px, and
@@ -142,7 +142,7 @@ export function SiteHeader({
 
       <div className="header-actions">
         <div className="social-actions">
-          {headerSocialLinks.map((link) => (
+          {[...headerSocialLinks, linksPageLink(language)].map((link) => (
             <a
               key={link.name}
               href={localeLink(link, language).href}
