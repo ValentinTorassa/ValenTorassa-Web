@@ -5,6 +5,7 @@ import { talks, type Talk } from './events';
 import { eventsPageByLanguage } from './eventsContent';
 import { contentByLanguage } from './homeContent';
 import { book, libroByLanguage } from './libroContent';
+import { linksByLanguage, linksPageUrl } from './linksContent';
 import { paperOfTalk, papers, type Paper } from './research';
 import { absoluteUrl, SITE_ORIGIN } from './site';
 import type { Language } from './siteContent';
@@ -17,7 +18,7 @@ import { talkPageMeta, talkPages } from './talkSeo';
  * hreflang, Open Graph, Twitter and JSON-LD. One list feeds the prerender, the
  * sitemap and llms.txt.
  */
-export type PageKey = 'home' | 'charlas' | 'talk' | 'eventos' | 'libro' | 'speaker-kit';
+export type PageKey = 'home' | 'charlas' | 'talk' | 'eventos' | 'libro' | 'speaker-kit' | 'links';
 
 export type Route = {
   page: PageKey;
@@ -34,6 +35,7 @@ const spanishRoutes: Array<Omit<Route, 'language'>> = [
   { page: 'eventos', path: '/eventos' },
   { page: 'libro', path: '/libro' },
   { page: 'speaker-kit', path: '/speaker-kit' },
+  { page: 'links', path: '/links' },
 ];
 
 export const routes: Route[] = (['es', 'en'] as const).flatMap((language) =>
@@ -345,6 +347,30 @@ export function pageHead(route: Route, today: string): PageHead {
           image: `${SITE_ORIGIN}${socialImages.libro}`,
           url: `${SITE_ORIGIN}/libro`,
           isPartOf: websiteRef,
+        },
+      };
+    }
+    case 'links': {
+      // Served from its own host, not from this site's /links.
+      const page = linksByLanguage[language];
+      const url = linksPageUrl(language);
+      return {
+        ...base,
+        url,
+        alternates: { es: linksPageUrl('es'), en: linksPageUrl('en') },
+        title: page.documentTitle,
+        description: page.seo.description,
+        image: `${SITE_ORIGIN}${socialImages.home}`,
+        imageAlt: contentByLanguage[language].documentTitle,
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'ProfilePage',
+          '@id': `${url}#page`,
+          url,
+          name: page.documentTitle,
+          inLanguage: language,
+          isPartOf: websiteRef,
+          mainEntity: personRef,
         },
       };
     }

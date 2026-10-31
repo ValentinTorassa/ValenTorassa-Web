@@ -4,6 +4,7 @@ import App from './App';
 import CharlasPage from './CharlasPage';
 import EventosPage from './EventosPage';
 import LibroPage from './LibroPage';
+import LinksPage from './LinksPage';
 import NotFoundPage from './NotFoundPage';
 import SpeakerKitPage from './SpeakerKitPage';
 import { todayInArgentina } from './eventSchedule';
@@ -27,6 +28,7 @@ const templates: Record<PageKey, string> = {
   talk: 'charlas.html',
   eventos: 'eventos.html',
   libro: 'libro.html',
+  links: 'links.html',
   'speaker-kit': 'speaker-kit.html',
 };
 
@@ -42,6 +44,8 @@ function page(route: Route): ReactElement {
       return <EventosPage language={language} />;
     case 'libro':
       return <LibroPage language={language} />;
+    case 'links':
+      return <LinksPage language={language} />;
     case 'speaker-kit':
       return <SpeakerKitPage language={language} />;
   }
