@@ -7,12 +7,12 @@ import coverAvif720 from './assets/libro-cover-720.avif';
 import coverWebp360 from './assets/libro-cover-360.webp';
 import coverWebp540 from './assets/libro-cover-540.webp';
 import coverWebp720 from './assets/libro-cover-720.webp';
-// Same photo as Wikimedia Commons "Valentin Torassa Colombero.jpg" (CC0), cropped to the face.
-import portraitFallback from './assets/author-commons-264.jpg';
-import portraitAvif176 from './assets/author-commons-176.avif';
-import portraitAvif264 from './assets/author-commons-264.avif';
-import portraitWebp176 from './assets/author-commons-176.webp';
-import portraitWebp264 from './assets/author-commons-264.webp';
+// Same photo as the speaker kit headshot, cropped tighter to the face.
+import portraitFallback from './assets/author-264.jpg';
+import portraitAvif176 from './assets/author-176.avif';
+import portraitAvif264 from './assets/author-264.avif';
+import portraitWebp176 from './assets/author-176.webp';
+import portraitWebp264 from './assets/author-264.webp';
 import { book, libroByLanguage, samplePdfUrl, sourceTalkHref, waitlistUrl, youtubeChannelUrl } from './libroContent';
 import { counterpartPath, localePath } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
