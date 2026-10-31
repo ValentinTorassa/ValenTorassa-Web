@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowRight, ArrowUpRight, Award, Check, Copy, Download, Languages, Mail, MicVocal } from 'lucide-react';
-import headshotPng from './assets/portrait-dark.png';
-import headshotFallback from './assets/portrait-dark-384.png';
-import headshotAvif256 from './assets/portrait-dark-256.avif';
-import headshotAvif384 from './assets/portrait-dark-384.avif';
-import headshotAvif512 from './assets/portrait-dark-512.avif';
-import headshotWebp256 from './assets/portrait-dark-256.webp';
-import headshotWebp384 from './assets/portrait-dark-384.webp';
-import headshotWebp512 from './assets/portrait-dark-512.webp';
+import headshotFull from './assets/headshot.jpg';
+import headshotFallback from './assets/headshot-384.jpg';
+import headshotAvif256 from './assets/headshot-256.avif';
+import headshotAvif384 from './assets/headshot-384.avif';
+import headshotAvif512 from './assets/headshot-512.avif';
+import headshotWebp256 from './assets/headshot-256.webp';
+import headshotWebp384 from './assets/headshot-384.webp';
+import headshotWebp512 from './assets/headshot-512.webp';
 import { talks, type Talk, type TalkMode } from './events';
 import { talkLabelsByLanguage } from './eventsContent';
 import { formatTalkDate, formatTalkPlace, splitTalks } from './eventSchedule';
@@ -33,7 +33,7 @@ const publishedPapers = papers.length;
 const programProfiles = socialLinks.filter((link) => link.name !== 'Email');
 const headshotAvif = `${headshotAvif256} 256w, ${headshotAvif384} 384w, ${headshotAvif512} 512w`;
 const headshotWebp = `${headshotWebp256} 256w, ${headshotWebp384} 384w, ${headshotWebp512} 512w`;
-const headshotFileName = 'valentin-torassa-colombero.png';
+const headshotFileName = 'valentin-torassa-colombero.jpg';
 
 type InviteFields = {
   event: string;
@@ -259,7 +259,7 @@ function SpeakerKitPage({ language }: { language: Language }) {
               <img src={headshotFallback} alt={kit.photo.alt} width={384} height={384} decoding="async" />
             </picture>
             <figcaption>
-              <a href={headshotPng} download={headshotFileName}>
+              <a href={headshotFull} download={headshotFileName}>
                 <Download aria-hidden="true" />
                 {kit.photo.download}
               </a>
