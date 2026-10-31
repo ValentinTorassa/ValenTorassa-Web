@@ -22,13 +22,21 @@ import consultingItLogo from './assets/companies/consulting-it.png';
 import teramotLogo from './assets/companies/teramot.png';
 import uaiLogo from './assets/companies/uai.png';
 import uaiCrest from './assets/companies/uai-crest.png';
-import openSecurityLabsPreview from './assets/projects/open-security-labs-live.png';
-import lensScreenshot from './assets/projects/lens-demo.png';
-import plumaScreenshot from './assets/projects/pluma-homepage.png';
+// Project previews: live pages captured in dark mode at 1280×800, except
+// VT-Lens (the app's own screenshot, synthetic data), Ragnaros (a photo of the
+// device) and the firewall (the last frame of the repo's demo GIF).
+import openSecurityLabsPreview from './assets/projects/open-security-labs.webp';
+import lensScreenshot from './assets/projects/vt-lens.webp';
+import plumaScreenshot from './assets/projects/pluma.webp';
 import ragnarosPhoto from './assets/projects/ragnaros-device.jpg';
-import secretShareScreenshot from './assets/projects/secretshare-homepage.png';
-import securityFixesScreenshot from './assets/projects/security-fixes-repo.png';
+import secretShareScreenshot from './assets/projects/secretshare.webp';
+import securityFixesScreenshot from './assets/projects/security-fixes.webp';
 import radarAudienceScreenshot from './assets/projects/vt-radar-audience-demo.webp';
+import agentFirewallDemo from './assets/projects/agent-firewall.webp';
+import comandleScreenshot from './assets/projects/comandle.webp';
+import quartermasterScreenshot from './assets/projects/quartermaster.webp';
+import archivistScreenshot from './assets/projects/archivist.webp';
+import tidbitScreenshot from './assets/projects/tidbit.webp';
 
 import { siteChromeByLanguage, siteNav, type HeaderLabels, type Language, type NavItem } from './siteContent';
 
@@ -109,6 +117,8 @@ type PageContent = {
       logo: string;
       logoMode: 'symbol' | 'wordmark' | 'institution';
       hideCompanyLabel?: boolean;
+      /** Public writing about this role, shown under the description. */
+      writing?: { label: string; links: Array<{ label: string; href: string }> };
     }>;
   };
   education: {
@@ -125,6 +135,8 @@ type PageContent = {
       icon: IconType;
       tone: string;
     }>;
+    /** A community programme, shown under the certifications: it is not one. */
+    community: { label: string; name: string; text: string; href: string };
   };
   stack: {
     eyebrow: string;
@@ -176,6 +188,15 @@ type PageContent = {
     /** Shown where a public card links its repository. */
     privateCodeLabel: string;
     privateProjects: PrivateProject[];
+    /** Legios, the open source studio with Sol Soletti, below the featured grid. */
+    legios: {
+      label: string;
+      intro: string;
+      links: Array<{ label: string; href: string }>;
+      projects: Array<{ name: string; href: string; repo: string; image: string; alt: string; text: string }>;
+    };
+    /** Extra rows in "More work", after the Podman contribution and the developer setup. */
+    moreWork: Array<{ label: string; text: string; links: Array<{ label: string; href: string }> }>;
   };
   contact: {
     eyebrow: string;
@@ -261,8 +282,6 @@ const repoFacts = {
     previewImage: securityFixesScreenshot,
     previewKind: 'screenshot' as const,
     previewAddress: 'github.com/ValentinTorassa/VT-Security-Fixes',
-    previewDarkAdapt: true,
-    previewCrop: 'bottom' as const,
   },
   secretShare: {
     name: 'VT-SecretShare',
@@ -287,7 +306,6 @@ const repoFacts = {
     previewImage: plumaScreenshot,
     previewKind: 'screenshot' as const,
     previewAddress: 'vtsecurity.com.ar',
-    previewDarkAdapt: true,
   },
   ragnaros: {
     name: 'VT-Ragnaros',
@@ -310,7 +328,29 @@ const repoFacts = {
     previewImage: lensScreenshot,
     previewKind: 'screenshot' as const,
     previewAddress: 'VT-Lens / demo',
-    previewDarkAdapt: true,
+  },
+  agentFirewall: {
+    name: 'VT-Agent-Firewall',
+    href: 'https://github.com/ValentinTorassa/VT-Agent-Firewall',
+    language: 'Python',
+    languageColor: '#f7c95a',
+    tags: ['MCP', 'Prompt injection', 'Default-deny', 'Audit log'],
+    tone: 'security',
+    previewImage: agentFirewallDemo,
+    previewKind: 'screenshot' as const,
+    previewAddress: 'VT-Agent-Firewall / demo',
+  },
+  comandle: {
+    name: 'comandle',
+    href: 'https://github.com/legiosai/comandle',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    tags: ['Linux', 'Terminal', 'Web', 'Legios'],
+    tone: 'learning',
+    siteHref: 'https://comandle.valentorassa.com/?ref=portfolio',
+    previewImage: comandleScreenshot,
+    previewKind: 'screenshot' as const,
+    previewAddress: 'comandle.valentorassa.com',
   },
 };
 
@@ -328,8 +368,32 @@ const esRepos: FeaturedRepo[] = [
     },
   },
   {
+    ...repoFacts.agentFirewall,
+    previewAlt: 'Demo de VT-Agent-Firewall en la terminal: cada pedido del agente, permitido o bloqueado, con su regla',
+    stage: 'Laboratorio de seguridad',
+    proof: 'Demo de prompt injection: cero exfiltraciones y cada decisión auditada',
+    description: 'Gateway local entre un agente de IA y sus herramientas: archivos, shell, red y MCP. Bloquea lo que la política no permite, pide aprobación humana y deja un registro de auditoría.',
+    caseStudy: {
+      problem: 'Un agente con herramientas puede leer un archivo con instrucciones maliciosas y usarlas para sacar secretos de la máquina.',
+      architecture: 'Cada pedido del agente pasa por un motor de políticas default-deny antes de tocar archivos, shell, red, APIs o un servidor MCP. Python con la biblioteca estándar, probado contra 58 casos sintéticos de inyección.',
+      security: 'Es un laboratorio y no está listo para producción. Si no puede escribir el registro de auditoría, bloquea todo. La demo usa un .env falso y un receptor local.',
+    },
+  },
+  {
+    ...repoFacts.comandle,
+    previewAlt: 'Pantalla de comandle con el tablero vacío del comando del día y el teclado',
+    stage: 'Juego en vivo · Legios',
+    proof: 'Más de 1.500 partidas · versión de terminal y web',
+    description: 'Adiviná el comando de Linux o de seguridad del día en seis intentos, desde la terminal o el navegador. Al final te explica qué hace.',
+    caseStudy: {
+      problem: 'Los comandos de Linux y de seguridad se suelen aprender de memoria, con listas. Un juego diario da una razón para volver y aprender uno por día.',
+      architecture: 'Un cliente de terminal y una versión web comparten la lista de comandos. El contador de partidas y las salas para jugar en una clase usan la API de pluma.',
+      security: 'No hace falta crear cuenta ni elegir nombre. En una sala, la pantalla muestra cuántos terminaron y en cuántos intentos, sin nombres.',
+    },
+  },
+  {
     ...repoFacts.securityFixes,
-    previewAlt: 'Vista del registro fixes.yaml de VT Security Fixes, adaptada a una paleta oscura',
+    previewAlt: 'El registro fixes.yaml de VT-Security-Fixes en GitHub',
     stage: 'Candidatos de parche',
     proof: 'Tres parches DEP-3 con trazabilidad de CVE y upstream',
     description: 'Parches para CVEs de paquetes Ubuntu universe, con procedencia y estado documentados por paquete.',
@@ -353,7 +417,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.pluma,
-    previewAlt: 'Vista del blog VT Security publicado con Pluma, adaptada a una paleta oscura',
+    previewAlt: 'El blog de VT Security, publicado con pluma',
     stage: 'Aplicación en uso',
     proof: 'Un código · dos sitios públicos · API con permisos',
     description: 'Plataforma de publicación con editor, imágenes y comentarios, desplegada para sitios independientes desde un mismo código.',
@@ -377,7 +441,7 @@ const esRepos: FeaturedRepo[] = [
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Vista de VT Lens con datos sintéticos, adaptada a una paleta oscura',
+    previewAlt: 'VT Lens con datos sintéticos: procesos a la izquierda y sus conexiones a la derecha',
     stage: 'Aplicación de escritorio',
     proof: 'GUI Rust · procesos, conexiones y exportación de evidencia',
     description: 'Interfaz nativa para inspeccionar procesos y conexiones de Linux y convertir una selección en evidencia legible.',
@@ -400,6 +464,30 @@ const enRepos: FeaturedRepo[] = [
       problem: 'Spanish-language technical education often stops at theory or depends on closed learning platforms.',
       architecture: 'Static Astro site with themed paths, GitHub-versioned labs, and progress stored locally in the browser.',
       security: 'No accounts or remote progress tracking; exercises run on the learner’s machine and the content remains auditable as code.',
+    },
+  },
+  {
+    ...repoFacts.agentFirewall,
+    previewAlt: 'VT-Agent-Firewall demo in the terminal: each agent request, allowed or blocked, with its rule',
+    stage: 'Security lab',
+    proof: 'Prompt injection demo: zero exfiltration and every decision audited',
+    description: 'A local gateway between an AI agent and its tools: files, shell, network, and MCP. It blocks whatever the policy does not allow, asks a human for approval, and keeps an audit log.',
+    caseStudy: {
+      problem: 'An agent with tools can read a file that carries malicious instructions and use them to pull secrets off the machine.',
+      architecture: 'Every agent request goes through a default-deny policy engine before it reaches files, the shell, the network, APIs, or an MCP server. Python standard library only, tested against 58 synthetic injection cases.',
+      security: 'It is a lab and not production-ready. If it cannot write the audit log, it blocks everything. The demo uses a fake .env and a local receiver.',
+    },
+  },
+  {
+    ...repoFacts.comandle,
+    previewAlt: 'comandle with the empty board for the command of the day and the keyboard',
+    stage: 'Live game · Legios',
+    proof: 'More than 1,500 games played · terminal and web',
+    description: 'Guess the Linux or security command of the day in six tries, from the terminal or the browser. At the end it explains what the command does.',
+    caseStudy: {
+      problem: 'Linux and security commands are usually learned by memorizing lists. A daily game gives a reason to come back and learn one a day.',
+      architecture: 'A terminal client and a web version share the command list. The game counter and the rooms for playing in a class use the pluma API.',
+      security: 'No account or player name needed. In a room, the screen shows how many finished and in how many tries, with no names.',
     },
   },
   {
@@ -507,29 +595,48 @@ const enPrivateProjects: PrivateProject[] = [
   },
 ];
 
+/** Public posts on Teramot's engineering blog, both written by Valentín. */
+const teramotPosts = [
+  { label: 'How to Get SOC 2 Certified Without Dying in the Attempt', href: 'https://docs.teramot.com/blog/soc-2-without-dying/' },
+  { label: 'When Can Software Honestly Say Done?', href: 'https://docs.teramot.com/blog/when-can-software-say-done/' },
+];
+
+const awsBuilderProfile = 'https://builder.aws.com/community/vtsecurity';
+const legiosApps = {
+  quartermaster: { name: 'quartermaster', href: 'https://quartermaster.legios.com.ar/', repo: 'https://github.com/legiosai/quartermaster', image: quartermasterScreenshot },
+  archivist: { name: 'archivist', href: 'https://archivist.legios.com.ar/', repo: 'https://github.com/legiosai/archivist', image: archivistScreenshot },
+  tidbit: { name: 'tidbit', href: 'https://tidbit.legios.com.ar/', repo: 'https://github.com/legiosai/tidbit', image: tidbitScreenshot },
+};
+const legiosLinks = [
+  { label: 'legios.com.ar', href: 'https://legios.com.ar/' },
+  { label: 'github.com/legiosai', href: 'https://github.com/legiosai' },
+];
+const awsStandbyArticle =
+  'https://builder.aws.com/content/3KsTKSPIcI2vPjk1pr5gAQPPdTE/un-standby-frio-en-aws-para-mi-servidor-casero-que-medi-y-que-falta-probar';
+
 export const contentByLanguage: Record<Language, PageContent> = {
   es: {
     documentTitle: 'Valentín Torassa Colombero · Ciberseguridad y Backend',
     seo: {
-      description: 'Ingeniero en ciberseguridad y backend especializado en seguridad cloud, arquitectura Go, Linux, compliance técnico y sistemas para agentes de IA.',
+      description: 'Valentín Torassa Colombero, ingeniero en ciberseguridad y arquitecto de software en Rosario. Seguridad cloud, agentes de IA, Go y Linux, con charlas, proyectos open source y un libro en preparación.',
       locale: 'es_AR',
     },
     header: siteChromeByLanguage.es.header,
     navItems: siteNav('home', 'es'),
-    heroEyebrow: 'SEGURIDAD / BACKEND / SISTEMAS',
+    heroEyebrow: 'CIBERSEGURIDAD · BACKEND · LINUX',
     heroBookTag: 'Nuevo',
-    heroBookLabel: 'Estoy escribiendo un libro',
+    heroBookLabel: 'Leé gratis el capítulo 1 de mi libro',
     heroStatement: 'Diseño sistemas, creo herramientas para Linux y comparto lo que aprendo.',
     heroSocialLabel: 'Redes y contacto',
     heroProjectsLabel: 'Ver proyectos',
     heroBlogLabel: 'Leer el blog',
     heroContactLabel: 'Contacto',
     terminalLines: [
-      { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
+      { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer & Software Architect' },
       {
         prompt: '$',
         command: 'grep -i focus ./stack.log',
-        output: 'Go, Cloud Security, Linux, Networking, OAuth/OIDC, MCP, AWS IAM',
+        output: 'AI agent authorization, MCP, OAuth/OIDC, AWS IAM, Go, Linux',
       },
       {
         prompt: '$',
@@ -539,21 +646,21 @@ export const contentByLanguage: Record<Language, PageContent> = {
     ],
     profile: {
       eyebrow: 'perfil',
-      title: 'Arquitectura de software, backend, seguridad cloud y compliance técnico.',
+      title: 'Entender los sistemas a fondo para construirlos, protegerlos y explicarlos.',
       intro:
-        'Combino arquitectura de software, desarrollo backend, seguridad cloud, Linux, redes y compliance para construir y operar sistemas seguros desde el diseño. Trabajo especialmente sobre identidad, permisos, datos sensibles, auditoría, observabilidad, infraestructura y confiabilidad operativa.',
+        'Trabajo en seguridad cloud y en backend. Me ocupo de permisos, identidad, datos sensibles y de la evidencia que piden las auditorías, y escribo buena parte del código que implementa esos controles. Mi base son Linux y las redes, de cuando hacía seguridad de redes y operación de SOC en Consulting IT.',
       statement:
-        'En Teramot desarrollo el backend en Go de Aleph, trabajo sobre arquitectura y seguridad en AWS, y convierto requisitos SOC 2 e ISO/IEC 27001 en implementaciones técnicas verificables.',
+        'En Teramot lidero ciberseguridad y compliance. Coordiné la auditoría SOC 2, del Tipo 1 al informe final del Tipo 2, y diseño Aleph, el backend en Go que les da a agentes de IA acceso controlado a datos de empresa.',
       facts: [
         {
           key: 'sec',
-          title: 'Seguridad cloud y compliance',
-          text: 'Lidero la estrategia técnica de ciberseguridad y compliance en Teramot, integrando controles SOC 2 e ISO/IEC 27001 en infraestructura y producto.',
+          title: 'Seguridad en agentes de IA',
+          text: 'OAuth y permisos cuando el que llama es un agente, servidores MCP y controles que viven fuera del modelo. Es el tema de mis charlas de 2026 en Ekoparty, JCC y ROS:SEC.',
         },
         {
           key: 'arch',
-          title: 'Arquitectura backend en Go',
-          text: 'Soy arquitecto principal de Aleph, una plataforma backend que expone datos empresariales de forma segura a agentes de IA: archivos, bases de datos y APIs.',
+          title: 'Arquitectura backend',
+          text: 'Servicios en Go con APIs, eventos en NATS, PostgreSQL y OAuth 2.1, instrumentados con OpenTelemetry. Es el stack de Aleph en Teramot.',
         },
         {
           key: 'ops',
@@ -571,10 +678,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'nov. 2025 - actualidad',
           description:
-            'Liderazgo técnico de ciberseguridad y compliance en una startup de IA. Coordiné la auditoría SOC 2 de Teramot, del Tipo 1 (dic. 2025) al informe final del Tipo 2 (sep. 2026). Arquitectura principal de Aleph, un backend en Go para el acceso seguro y escalable a datos empresariales consumidos por agentes de IA.',
+            'Lidero ciberseguridad y compliance en una startup de IA. Coordiné la auditoría SOC 2 de Teramot, del Tipo 1 (dic. 2025) al informe final del Tipo 2 (sep. 2026). Soy arquitecto principal de Aleph, un backend en Go para que agentes de IA accedan a datos empresariales de forma segura y escalable.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
           logo: teramotLogo,
           logoMode: 'symbol',
+          writing: { label: 'En el blog de ingeniería de Teramot', links: teramotPosts },
         },
         {
           role: 'Analista de Ciberseguridad y Compliance',
@@ -636,6 +744,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
           status: 'Certificado obtenido',
         },
       ],
+      community: {
+        label: 'Comunidad',
+        name: 'AWS Community Builder',
+        text: 'Primer año en el programa.',
+        href: awsBuilderProfile,
+      },
       certifications: [
         {
           name: 'CompTIA Security+',
@@ -703,7 +817,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Proyectos seleccionados',
       talksEyebrow: 'charlas',
       talksTitle: 'Charlas y reconocimiento',
-      talksIntro: 'Charlas, clases y papers. Cada una tiene su página en valentorassa.com/charlas, con las slides desde el día que la doy.',
+      talksIntro: 'En 2026 hablé en Ekoparty, DebConf26, CACIC, JCC y Hacking Day, y di clases invitadas en la UAI. Cada charla tiene su página con las slides.',
       speakingTitle: 'Speaking y reconocimiento',
       repositoriesTitle: 'Repositorios destacados',
       featuredLabel: 'Proyecto destacado',
@@ -713,7 +827,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       allTalksLabel: 'Ver todas las charlas',
       hubLabel: 'Explorar las charlas y sus slides',
       speakerKitLabel: 'Invitarme a tu evento',
-      bookLabel: 'El libro, en preparación',
+      bookLabel: 'El libro: leé el capítulo 1',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
       openRepoLabel: 'Abrir repositorio',
@@ -733,11 +847,31 @@ export const contentByLanguage: Record<Language, PageContent> = {
       privateWorkLabel: 'trabajo privado',
       privateCodeLabel: 'Acceso privado',
       privateProjects: esPrivateProjects,
+      legios: {
+        label: 'Legios',
+        intro: 'Con Sol Soletti armamos Legios. Publicamos como open source las herramientas que primero necesitábamos nosotros. comandle, entre los destacados, también es de Legios.',
+        links: legiosLinks,
+        projects: [
+          { ...legiosApps.quartermaster, alt: 'Página de quartermaster con el panel de cuota de cada cuenta', text: 'Cuánta cuota te queda en todas tus cuentas de agentes: cada perfil de Claude Code, Codex y opencode, sin red y sin credenciales.' },
+          { ...legiosApps.archivist, alt: 'Página de archivist con la vista de la biblioteca', text: 'Manga, cómics, películas y series desde tu propio disco, con lector, reproductor, API y servidor MCP. Se acuerda de dónde te quedaste.' },
+          { ...legiosApps.tidbit, alt: 'Portada de tidbit con el buscador de términos', text: 'Términos de tecnología explicados en palabras simples, en español e inglés, con API JSON y servidor MCP.' },
+        ],
+      },
+      moreWork: [
+        {
+          label: 'Homelab',
+          text: 'Mi servidor casero como plano reproducible: monitoreo, restore probado cada semana y un standby frío en AWS.',
+          links: [
+            { label: 'Repositorio', href: 'https://github.com/ValentinTorassa/homelab-blueprint' },
+            { label: 'Artículo en AWS Builder Center', href: awsStandbyArticle },
+          ],
+        },
+      ],
     },
     contact: {
       eyebrow: 'contacto',
-      title: 'Contacto profesional.',
-      text: 'Rosario, Argentina · conversaciones técnicas sobre seguridad cloud, backend, compliance, agentes de IA, Linux y arquitectura de sistemas.',
+      title: 'Escribime.',
+      text: 'Estoy en Rosario, Argentina. Respondo mails sobre seguridad cloud, backend, agentes de IA y Linux, e invitaciones a charlas y clases.',
       emailLabel: 'Enviar email',
       copyEmailLabel: 'Copiar email',
       copiedEmailLabel: 'Email copiado',
@@ -751,25 +885,25 @@ export const contentByLanguage: Record<Language, PageContent> = {
   en: {
     documentTitle: 'Valentin Torassa Colombero · Cybersecurity & Backend',
     seo: {
-      description: 'Cybersecurity and backend engineer focused on cloud security, Go architecture, Linux, technical compliance, and systems for AI agents.',
+      description: 'Valentín Torassa Colombero, cybersecurity engineer and software architect in Rosario, Argentina. Cloud security, AI agents, Go, and Linux, with talks, open source projects, and an upcoming book.',
       locale: 'en_US',
     },
     header: siteChromeByLanguage.en.header,
     navItems: siteNav('home', 'en'),
-    heroEyebrow: 'SECURITY / BACKEND / SYSTEMS',
+    heroEyebrow: 'CYBERSECURITY · BACKEND · LINUX',
     heroBookTag: 'New',
-    heroBookLabel: 'I am writing a book',
+    heroBookLabel: 'Read chapter 1 of my book, free',
     heroStatement: 'I design systems, build tools for Linux, and share what I learn.',
     heroSocialLabel: 'Social profiles and contact',
     heroProjectsLabel: 'Explore projects',
     heroBlogLabel: 'Read the blog',
     heroContactLabel: 'Contact',
     terminalLines: [
-      { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer + Backend Engineer' },
+      { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer & Software Architect' },
       {
         prompt: '$',
         command: 'grep -i focus ./stack.log',
-        output: 'Go, Cloud Security, Linux, Networking, OAuth/OIDC, MCP, AWS IAM',
+        output: 'AI agent authorization, MCP, OAuth/OIDC, AWS IAM, Go, Linux',
       },
       {
         prompt: '$',
@@ -779,21 +913,21 @@ export const contentByLanguage: Record<Language, PageContent> = {
     ],
     profile: {
       eyebrow: 'profile',
-      title: 'Software architecture, backend, cloud security, and technical compliance.',
+      title: 'Understanding systems well enough to build them, secure them, and explain them.',
       intro:
-        'I combine software architecture, backend development, cloud security, Linux, networking, and compliance to build and operate secure-by-design systems. My work focuses on identity, permissions, sensitive data, auditability, observability, infrastructure, and operational reliability.',
+        'I work on cloud security and backend systems. I handle permissions, identity, sensitive data, and the evidence audits ask for, and I write much of the code that implements those controls. My background is Linux and networking, from my time doing network security and SOC operations at Consulting IT.',
       statement:
-        'At Teramot, I develop Aleph’s Go backend, work across AWS architecture and security, and translate SOC 2 and ISO/IEC 27001 requirements into verifiable technical implementations.',
+        'At Teramot I lead cybersecurity and compliance. I coordinated the SOC 2 audit, from Type 1 to the final Type 2 report, and I design Aleph, the Go backend that gives AI agents controlled access to company data.',
       facts: [
         {
           key: 'sec',
-          title: 'Cloud security and compliance',
-          text: 'I lead Teramot’s technical cybersecurity and compliance strategy, embedding SOC 2 and ISO/IEC 27001 controls into infrastructure and product.',
+          title: 'Security for AI agents',
+          text: 'OAuth and permissions when the caller is an agent, MCP servers, and controls that live outside the model. It is the subject of my 2026 talks at Ekoparty, JCC, and ROS:SEC.',
         },
         {
           key: 'arch',
-          title: 'Backend architecture in Go',
-          text: 'I am the principal architect of Aleph, a backend platform that securely exposes enterprise data to AI agents across files, databases, and APIs.',
+          title: 'Backend architecture',
+          text: 'Go services with APIs, NATS events, PostgreSQL, and OAuth 2.1, instrumented with OpenTelemetry. It is the stack behind Aleph at Teramot.',
         },
         {
           key: 'ops',
@@ -811,10 +945,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'Nov. 2025 - present',
           description:
-            'Technical cybersecurity and compliance leadership at an AI startup. I coordinated Teramot’s SOC 2 audit, from the Type 1 (Dec. 2025) to the final Type 2 report (Sep. 2026). Principal architecture of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
+            'I lead cybersecurity and compliance at an AI startup. I coordinated Teramot’s SOC 2 audit, from the Type 1 (Dec. 2025) to the final Type 2 report (Sep. 2026). I am the principal architect of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
           tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
           logo: teramotLogo,
           logoMode: 'symbol',
+          writing: { label: 'On the Teramot engineering blog', links: teramotPosts },
         },
         {
           role: 'Cybersecurity & Compliance Analyst',
@@ -876,6 +1011,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
           status: 'Certificate obtained',
         },
       ],
+      community: {
+        label: 'Community',
+        name: 'AWS Community Builder',
+        text: 'First year in the programme.',
+        href: awsBuilderProfile,
+      },
       certifications: [
         {
           name: 'CompTIA Security+',
@@ -943,7 +1084,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Selected work',
       talksEyebrow: 'talks',
       talksTitle: 'Talks and recognition',
-      talksIntro: 'Talks, classes, and papers. Each one has its own page at valentorassa.com/charlas, with the slides from the day I give it.',
+      talksIntro: 'In 2026 I spoke at Ekoparty, DebConf26, CACIC, JCC, and Hacking Day, and gave guest classes at UAI. Each talk has its own page with the slides.',
       speakingTitle: 'Speaking and recognition',
       repositoriesTitle: 'Featured repositories',
       featuredLabel: 'Featured project',
@@ -953,7 +1094,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
       allTalksLabel: 'See all talks',
       hubLabel: 'Browse the talks and their slides',
       speakerKitLabel: 'Invite me to your event',
-      bookLabel: 'The upcoming book',
+      bookLabel: 'The book: read chapter 1',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
       openRepoLabel: 'Open repository',
@@ -973,11 +1114,31 @@ export const contentByLanguage: Record<Language, PageContent> = {
       privateWorkLabel: 'private work',
       privateCodeLabel: 'Private access',
       privateProjects: enPrivateProjects,
+      legios: {
+        label: 'Legios',
+        intro: 'Sol Soletti and I started Legios. We publish as open source the tools we first needed ourselves. comandle, among the featured projects, is also a Legios project.',
+        links: legiosLinks,
+        projects: [
+          { ...legiosApps.quartermaster, alt: 'The quartermaster page with the quota panel for each account', text: 'How much quota you have left across all your agent accounts: every Claude Code profile, Codex, and opencode, offline and without credentials.' },
+          { ...legiosApps.archivist, alt: 'The archivist page with the library view', text: 'Manga, comics, films, and series from your own disk, with a reader, a player, an API, and an MCP server. It remembers where you stopped.' },
+          { ...legiosApps.tidbit, alt: 'The tidbit home page with the term search', text: 'Technology terms explained in plain words, in Spanish and English, with a JSON API and an MCP server.' },
+        ],
+      },
+      moreWork: [
+        {
+          label: 'Homelab',
+          text: 'My home server as a reproducible blueprint: monitoring, a restore tested every week, and a cold standby in AWS.',
+          links: [
+            { label: 'Repository', href: 'https://github.com/ValentinTorassa/homelab-blueprint' },
+            { label: 'Article on AWS Builder Center', href: awsStandbyArticle },
+          ],
+        },
+      ],
     },
     contact: {
       eyebrow: 'contact',
-      title: 'Professional contact.',
-      text: 'Rosario, Argentina · technical conversations about cloud security, backend systems, compliance, AI agents, Linux, and systems architecture.',
+      title: 'Get in touch.',
+      text: 'I am in Rosario, Argentina. I answer email about cloud security, backend systems, AI agents, and Linux, and invitations to talks and classes.',
       emailLabel: 'Send email',
       copyEmailLabel: 'Copy email',
       copiedEmailLabel: 'Email copied',

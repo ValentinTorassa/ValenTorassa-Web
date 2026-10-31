@@ -23,6 +23,7 @@ import {
   Shield,
   Terminal,
   Users,
+  Video,
   Webhook,
   Workflow,
   type LucideProps,
@@ -425,6 +426,12 @@ function CharlasPage({ language, talkId }: CharlasPageProps) {
               <a className="hub-link" href={media.code} target="_blank" rel="noopener noreferrer">
                 <Code2 aria-hidden="true" />
                 {copy.codeLabel}
+              </a>
+            ) : null}
+            {talk.recordingUrl ? (
+              <a className="hub-link" href={talk.recordingUrl} target="_blank" rel="noopener noreferrer">
+                <Video aria-hidden="true" />
+                {copy.recordingLabel}
               </a>
             ) : null}
             {talk.url ? (
