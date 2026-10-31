@@ -17,6 +17,7 @@ const pageSources: Record<string, string[]> = {
   eventos: ['src/eventsContent.ts', 'src/EventosPage.tsx', 'src/events.ts'],
   libro: ['src/libroContent.ts', 'src/LibroPage.tsx', 'public/og-libro.png'],
   'speaker-kit': ['src/speakerKitContent.ts', 'src/SpeakerKitPage.tsx'],
+  links: ['src/linksContent.ts', 'src/LinksPage.tsx', 'src/links.css'],
 }
 
 const git = (args: string[]) => execFileSync('git', args, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
@@ -177,6 +178,7 @@ export default defineConfig({
         charlas: fileURLToPath(new URL('./charlas.html', import.meta.url)),
         'speaker-kit': fileURLToPath(new URL('./speaker-kit.html', import.meta.url)),
         libro: fileURLToPath(new URL('./libro.html', import.meta.url)),
+        links: fileURLToPath(new URL('./links.html', import.meta.url)),
         'not-found': fileURLToPath(new URL('./404.html', import.meta.url)),
       },
     },
