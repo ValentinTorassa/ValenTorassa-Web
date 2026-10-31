@@ -4951,3 +4951,123 @@ p {
   --network-glow: transparent;
   border-radius: var(--radius);
 }
+
+/* Talk chips are words now, so they need room between them. */
+.talk-chips {
+  gap: 4px 14px;
+}
+
+/* The stage label's square sits on the text line. */
+.repo-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repo-stage::before {
+  flex: none;
+  margin-right: 0;
+  vertical-align: baseline;
+}
+
+/* Contact: the same card as everything else; presence notes as text. */
+.contact-card {
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+
+.contact-presence > span {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.availability-indicator i,
+.mobile-nav-meta i {
+  box-shadow: none;
+}
+
+.site-footer::before {
+  background: var(--line);
+}
+
+/* Phone menu: a plain panel. */
+.mobile-nav-panel {
+  border-radius: var(--radius);
+}
+
+.mobile-nav-panel::before {
+  content: none;
+}
+
+.mobile-menu-toggle,
+.mobile-nav-panel nav a,
+.mobile-nav-social a,
+.mobile-nav-book {
+  border-radius: var(--radius);
+}
+
+.mobile-menu-toggle,
+.mobile-nav-social a {
+  background: transparent;
+}
+
+.mobile-menu-toggle:hover {
+  transform: none;
+}
+
+.mobile-menu-toggle:hover,
+.mobile-menu-toggle:focus-visible,
+.mobile-menu-toggle[aria-expanded='true'] {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* /eventos: groups and cards like the home page's. */
+.talk-group {
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+
+.talk-card:hover,
+.talk-card:target {
+  border-color: var(--line-strong);
+  box-shadow: none;
+}
+
+.events-count,
+.events-empty {
+  border-radius: var(--radius);
+}
+
+/* The archive links are the page's way out; give them a thumb-sized target. */
+.events-hero .events-archive-link {
+  min-height: 44px;
+  margin-top: 0;
+}
+
+/* /speaker-kit and /libro share the corners and lose the inner highlights. */
+.kit-card,
+.book-card {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+.kit-photo img,
+.book-author img,
+.kit-profiles a,
+.kit-field input:not([type='radio']),
+.kit-field select,
+.kit-field textarea,
+.kit-draft-text,
+.book-badge {
+  border-radius: var(--radius);
+}
+
+.kit-profiles a {
+  background: transparent;
+}
