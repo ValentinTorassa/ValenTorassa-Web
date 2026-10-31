@@ -237,10 +237,8 @@ function LinksPage({ language }: { language: Language }) {
               </span>
             </span>
             <span className="win-body news-body">
-              <span className="pixel-text">
-                {stats ? copy.news.withCount(number.format(stats.total)) : copy.news.withoutCount}
-              </span>
-              <a className="pixel-text news-cta" href={comandleHref} target="_blank" rel="noopener noreferrer">
+              <span className="pixel-text">{copy.news.body}</span>
+              <a className="pixel-text news-cta" href={bookHref}>
                 {copy.news.cta}
               </a>
             </span>
@@ -253,14 +251,13 @@ function LinksPage({ language }: { language: Language }) {
           </p>
 
           <h1 className="mega">{copy.title}</h1>
+          <p className="subtitle">{copy.subtitle}</p>
 
           <div className="mega-ctas">
-            <a href={comandleHref} target="_blank" rel="noopener noreferrer">
-              {copy.ctas.comandle}
-            </a>
             <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
               {copy.ctas.youtube}
             </a>
+            <a href={bookHref}>{copy.ctas.book}</a>
           </div>
 
           <span className="margin-code" aria-hidden="true">
@@ -279,6 +276,26 @@ function LinksPage({ language }: { language: Language }) {
           </span>
 
           <div className="desk-grid">
+            <Window title={copy.youtube.title} href={youtubeUrl} className="w-youtube">
+              <span className="win-name">{copy.youtube.name}</span>
+              <span className="tag">{copy.youtube.stats(audience.youtube, audience.youtubeVideos)}</span>
+              <span className="win-text">{copy.youtube.body}</span>
+              <span className="win-cta">{copy.youtube.cta} →</span>
+            </Window>
+
+            <Window title={copy.book.title} href={bookHref} external={false} className="w-book">
+              <picture className="book-cover">
+                <source type="image/webp" srcSet={`${coverWebp360} 360w, ${coverWebp540} 540w`} sizes="140px" />
+                <img src={coverFallback} alt={copy.book.coverAlt} width={540} height={720} loading="lazy" decoding="async" />
+              </picture>
+              <span className="book-copy">
+                <span className="win-name">{copy.book.name}</span>
+                <span className="win-text">{copy.book.body}</span>
+                <span className="tag">{copy.book.meta}</span>
+                <span className="win-cta">{copy.book.cta} →</span>
+              </span>
+            </Window>
+
             <Window title={copy.comandle.title} href={comandleHref} className="w-comandle">
               <span className="tiles" aria-hidden="true">
                 <span className="tile tile-hit">c</span>
@@ -310,33 +327,13 @@ function LinksPage({ language }: { language: Language }) {
               <span className="win-cta">{copy.comandle.cta} →</span>
             </Window>
 
-            <Window title={copy.youtube.title} href={youtubeUrl} className="w-youtube">
-              <span className="win-name">{copy.youtube.name}</span>
-              <span className="tag">{copy.youtube.stats(audience.youtube, audience.youtubeVideos)}</span>
-              <span className="win-text">{copy.youtube.body}</span>
-              <span className="win-cta">{copy.youtube.cta} →</span>
-            </Window>
-
-            <Window title={copy.book.title} href={bookHref} external={false} className="w-book">
-              <picture className="book-cover">
-                <source type="image/webp" srcSet={`${coverWebp360} 360w, ${coverWebp540} 540w`} sizes="140px" />
-                <img src={coverFallback} alt={copy.book.coverAlt} width={540} height={720} loading="lazy" decoding="async" />
-              </picture>
-              <span className="book-copy">
-                <span className="win-name">{copy.book.name}</span>
-                <span className="win-text">{copy.book.body}</span>
-                <span className="tag">{copy.book.meta}</span>
-                <span className="win-cta">{copy.book.cta} →</span>
-              </span>
-            </Window>
-
             {talk ? (
               <Window title={copy.talk.title} href={localePath(language, `/charlas/${talk.id}`)} external={false} className="w-talk">
                 <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
                 <span className="win-name">{talk.title[language]}</span>
                 <span className="win-text">
-                  {[talk.event, talk.city].filter(Boolean).join(' · ')}
-                  {talk.status === 'closed' ? ` · ${copy.talk.closed}` : ''}
+                  {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
+                  {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
                 </span>
                 <span className="win-cta">{copy.talk.cta} →</span>
               </Window>

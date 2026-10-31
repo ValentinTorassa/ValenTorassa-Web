@@ -193,6 +193,16 @@ a:focus-visible {
   text-wrap: balance;
 }
 
+.subtitle {
+  max-width: 34ch;
+  margin: 22px 0 0;
+  font-family: var(--mono);
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-wrap: balance;
+}
+
 .mega-ctas {
   display: flex;
   flex-wrap: wrap;
@@ -705,14 +715,6 @@ a:focus-visible {
     grid-column: span 3;
   }
 
-  .desk-grid > .w-comandle {
-    grid-column: span 4;
-  }
-
-  .desk-grid > .w-youtube {
-    grid-column: span 2;
-  }
-
   .desk-grid > .win-clock,
   .desk-grid > .win-glider {
     grid-column: span 2;
@@ -747,11 +749,11 @@ a:focus-visible {
   }
 
   /* Placed by row and column: the source order is the phone order. */
-  .desk-grid > .w-comandle { grid-area: 1 / 1 / auto / span 5; }
-  .desk-grid > .w-youtube { grid-area: 1 / 6 / auto / span 4; margin-top: 40px; }
+  .desk-grid > .w-youtube { grid-area: 1 / 1 / auto / span 4; }
+  .desk-grid > .w-book { grid-area: 1 / 5 / auto / span 5; margin-top: 40px; }
   .desk-grid > .win-clock { grid-area: 1 / 10 / auto / span 3; }
-  .desk-grid > .w-book { grid-area: 2 / 1 / auto / span 5; }
-  .desk-grid > .w-talk { grid-area: 2 / 6 / auto / span 4; margin-top: -10px; }
+  .desk-grid > .w-comandle { grid-area: 2 / 1 / auto / span 5; }
+  .desk-grid > .w-talk { grid-area: 2 / 6 / auto / span 4; margin-top: 10px; }
   .desk-grid > .win-glider { grid-area: 2 / 10 / auto / span 2; margin-top: 30px; }
   .desk-grid > .w-labs { grid-area: 3 / 1 / auto / span 3; }
   .desk-grid > .w-blog { grid-area: 3 / 4 / auto / span 3; margin-top: 24px; }

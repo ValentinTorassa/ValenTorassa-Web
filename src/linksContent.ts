@@ -56,15 +56,16 @@ type LinksCopy = {
   documentTitle: string;
   seo: { description: string };
   topBar: { home: string; homeHref: string; language: string; languageLabel: string };
-  news: { label: string; withCount: (total: string) => string; withoutCount: string; cta: string };
+  news: { label: string; body: string; cta: string };
   leader: { left: string; right: string };
   title: string;
-  ctas: { comandle: string; youtube: string };
+  subtitle: string;
+  ctas: { youtube: string; book: string };
   desktopLabel: string;
-  comandle: { title: string; body: string; today: string; yesterday: string; total: string; cta: string; offline: string };
   youtube: { title: string; name: string; stats: (subs: number, videos: number) => string; body: string; cta: string };
   book: { title: string; name: string; body: string; meta: string; cta: string; coverAlt: string };
-  talk: { title: string; empty: string; cta: string; closed: string };
+  comandle: { title: string; body: string; today: string; yesterday: string; total: string; cta: string; offline: string };
+  talk: { title: string; at: (place: string) => string; empty: string; cta: string; closed: string };
   labs: { title: string; name: string; body: string; cta: string };
   blog: { title: string; name: string; body: string; cta: string };
   discord: { title: string; name: string; body: (members: string) => string; cta: string };
@@ -91,66 +92,72 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     documentTitle: 'Links · Valentín Torassa',
     seo: {
       description:
-        'Todo lo de Valentín Torassa en un solo lugar: comandle, el canal VT Security, el libro, la próxima charla, Open Security Labs, el blog y sus redes.',
+        'Todo lo de Valentín Torassa en un solo lugar: el canal VT Security, su libro, comandle, la próxima charla, Open Security Labs, el blog y sus redes.',
     },
     topBar: { home: 'Valentín Torassa', homeHref: '/', language: 'EN', languageLabel: 'Ver en inglés' },
     news: {
-      label: 'VT News',
-      withCount: (total) => `Armé un Wordle de comandos de Linux. Ya van ${total} partidas.`,
-      withoutCount: 'Armé un Wordle de comandos de Linux. Hay uno nuevo cada día.',
-      cta: 'Jugar el de hoy',
+      label: 'Libro',
+      body: 'Estoy escribiendo un libro: No podés defender lo que no entendés. El capítulo 1 ya es gratis.',
+      cta: 'Leer el capítulo 1',
     },
     leader: { left: 'VT Security', right: 'Linux, sistemas y seguridad' },
-    title: 'Todo lo que hago, acá.',
-    ctas: { comandle: 'Jugar comandle', youtube: 'Ver el canal' },
+    title: 'Nada es magia.',
+    subtitle: 'Ni Linux, ni la red, ni la IA. Te muestro lo que corre debajo.',
+    ctas: { youtube: 'Ver el canal', book: 'Leer el libro' },
     desktopLabel: 'VT.OS 1.1',
-    comandle: {
-      title: 'comandle 1.1',
-      body: 'El Wordle de los comandos de Linux y seguridad. Seis intentos, uno nuevo por día.',
-      today: 'hoy',
-      yesterday: 'ayer',
-      total: 'total',
-      cta: 'Jugar el de hoy',
-      offline: 'Partidas en vivo: no cargaron, el juego anda igual.',
-    },
     youtube: {
       title: 'YouTube.app',
       name: 'VT Security',
       stats: (subs, videos) => `${subs} mil suscriptores · ${number('es').format(videos)} videos`,
-      body: 'Linux, redes, cloud y ciberseguridad en español, con los comandos que uso de verdad.',
+      body: 'Mi canal: explico Linux, redes, cloud y ciberseguridad con los comandos que uso de verdad.',
       cta: 'Ver el canal',
     },
     book: {
       title: 'libro.pdf',
       name: 'No podés defender lo que no entendés',
-      body: 'Mi libro sobre Linux, las abstracciones que fallan y el camino a la ciberseguridad.',
+      body: 'Estoy escribiendo un libro sobre Linux, las abstracciones que fallan y el camino a la ciberseguridad.',
       meta: 'Capítulo 1 gratis · PDF · sin registro',
       cta: 'Leer el capítulo',
       coverAlt: 'Tapa del libro No podés defender lo que no entendés: Tux en un bote alumbra un iceberg hecho de capas del sistema.',
     },
-    talk: { title: 'charla.ics', empty: 'Sin fechas anunciadas. La agenda completa está en /eventos.', cta: 'Ver la charla', closed: 'cerrada' },
+    comandle: {
+      title: 'comandle 1.1',
+      body: 'Armé un Wordle de comandos de Linux y seguridad. Seis intentos, uno nuevo por día.',
+      today: 'hoy',
+      yesterday: 'ayer',
+      total: 'total',
+      cta: 'Jugar el de hoy',
+      offline: 'Las partidas en vivo no cargaron; el juego anda igual.',
+    },
+    talk: {
+      title: 'charla.ics',
+      at: (place) => `Doy esta charla en ${place}.`,
+      empty: 'Todavía no anuncié la próxima. La agenda completa está en /eventos.',
+      cta: 'Ver la charla',
+      closed: 'Es cerrada.',
+    },
     labs: {
       title: 'labs.sh',
       name: 'Open Security Labs',
-      body: 'Labs gratis de Linux, redes, backend y cloud. Corrés los comandos y dejás evidencia. Sin cuenta.',
+      body: 'Armé labs gratis de Linux, redes, backend y cloud. Corrés los comandos y dejás evidencia. Sin cuenta.',
       cta: 'Empezar un lab',
     },
     blog: {
       title: 'blog.txt',
       name: 'Blog',
-      body: 'Notas largas con los diagramas y los comandos exactos.',
+      body: 'Escribo notas largas, con los diagramas y los comandos exactos.',
       cta: 'Leer',
     },
     discord: {
       title: 'discord.exe',
       name: 'DedSec',
-      body: (members) => `La comunidad del canal: ${members} personas hablando de seguridad.`,
+      body: (members) => `Mi comunidad: ${members} personas hablando de seguridad.`,
       cta: 'Entrar',
     },
     secretShare: {
       title: 'secretshare.bin',
       name: 'VT-SecretShare',
-      body: 'Mandá una clave que se lee una vez y se autodestruye.',
+      body: 'Lo hice para no mandar más claves por chat: se leen una vez y se autodestruyen.',
       cta: 'Probarlo',
     },
     clock: { title: 'Clock Tool 1.1', place: 'Rosario, AR' },
@@ -175,66 +182,72 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     documentTitle: 'Links · Valentín Torassa',
     seo: {
       description:
-        'Everything from Valentín Torassa in one place: comandle, the VT Security channel, the book, the next talk, Open Security Labs, the blog and his profiles.',
+        'Everything from Valentín Torassa in one place: the VT Security channel, his book, comandle, the next talk, Open Security Labs, the blog and his profiles.',
     },
     topBar: { home: 'Valentín Torassa', homeHref: '/en/', language: 'ES', languageLabel: 'Ver en español' },
     news: {
-      label: 'VT News',
-      withCount: (total) => `I built a Wordle of Linux commands. ${total} games played so far.`,
-      withoutCount: 'I built a Wordle of Linux commands. A new one every day.',
-      cta: "Play today's",
+      label: 'Book',
+      body: "I'm writing a book: No podés defender lo que no entendés. Chapter 1 is already free (in Spanish).",
+      cta: 'Read chapter 1',
     },
     leader: { left: 'VT Security', right: 'Linux, systems and security' },
-    title: 'Everything I make, right here.',
-    ctas: { comandle: 'Play comandle', youtube: 'Watch the channel' },
+    title: 'Nothing is magic.',
+    subtitle: 'Not Linux, not the network, not AI. I show you what runs underneath.',
+    ctas: { youtube: 'Watch the channel', book: 'Read the book' },
     desktopLabel: 'VT.OS 1.1',
+    youtube: {
+      title: 'YouTube.app',
+      name: 'VT Security',
+      stats: (subs, videos) => `${subs}K subscribers · ${number('en').format(videos)} videos`,
+      body: 'My channel: I explain Linux, networking, cloud and cybersecurity, in Spanish, with the commands I actually use.',
+      cta: 'Watch the channel',
+    },
+    book: {
+      title: 'libro.pdf',
+      name: 'No podés defender lo que no entendés',
+      body: "I'm writing a book on Linux, the abstractions that fail, and the road to cybersecurity. In Spanish.",
+      meta: 'Chapter 1 free · PDF · no sign-up',
+      cta: 'Read the chapter',
+      coverAlt: 'Cover of the book No podés defender lo que no entendés: Tux in a boat lights up an iceberg made of system layers.',
+    },
     comandle: {
       title: 'comandle 1.1',
-      body: 'Wordle for Linux and security commands. Six tries, a new one every day. In Spanish.',
+      body: 'I built a Wordle of Linux and security commands. Six tries, a new one every day. In Spanish.',
       today: 'today',
       yesterday: 'yesterday',
       total: 'total',
       cta: "Play today's",
       offline: 'Live counts did not load; the game works anyway.',
     },
-    youtube: {
-      title: 'YouTube.app',
-      name: 'VT Security',
-      stats: (subs, videos) => `${subs}K subscribers · ${number('en').format(videos)} videos`,
-      body: 'Linux, networking, cloud and cybersecurity in Spanish, with the commands I actually use.',
-      cta: 'Watch the channel',
+    talk: {
+      title: 'charla.ics',
+      at: (place) => `I'm giving this talk at ${place}.`,
+      empty: 'No next talk announced yet. The full schedule is on /eventos.',
+      cta: 'See the talk',
+      closed: 'Closed to the public.',
     },
-    book: {
-      title: 'libro.pdf',
-      name: 'No podés defender lo que no entendés',
-      body: 'My book on Linux, the abstractions that fail, and the road to cybersecurity. In Spanish.',
-      meta: 'Chapter 1 free · PDF · no sign-up',
-      cta: 'Read the chapter',
-      coverAlt: 'Cover of the book No podés defender lo que no entendés: Tux in a boat lights up an iceberg made of system layers.',
-    },
-    talk: { title: 'charla.ics', empty: 'No dates announced. The full schedule is on /eventos.', cta: 'See the talk', closed: 'closed' },
     labs: {
       title: 'labs.sh',
       name: 'Open Security Labs',
-      body: 'Free labs on Linux, networking, backend and cloud. You run the commands and keep the evidence. No account.',
+      body: 'I built free labs on Linux, networking, backend and cloud. You run the commands and keep the evidence. No account.',
       cta: 'Start a lab',
     },
     blog: {
       title: 'blog.txt',
       name: 'Blog',
-      body: 'Long-form notes with the diagrams and the exact commands. In Spanish.',
+      body: 'I write long-form notes with the diagrams and the exact commands. In Spanish.',
       cta: 'Read',
     },
     discord: {
       title: 'discord.exe',
       name: 'DedSec',
-      body: (members) => `The channel's community: ${members} people talking security.`,
+      body: (members) => `My community: ${members} people talking security.`,
       cta: 'Join',
     },
     secretShare: {
       title: 'secretshare.bin',
       name: 'VT-SecretShare',
-      body: 'Send a secret that can be read once and then destroys itself.',
+      body: 'I made it to stop sending passwords over chat: they can be read once, then destroy themselves.',
       cta: 'Try it',
     },
     clock: { title: 'Clock Tool 1.1', place: 'Rosario, AR' },

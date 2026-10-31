@@ -7,7 +7,7 @@ import { expect, test } from '@playwright/test';
 test.describe('links page', () => {
   test('carries the bio tag to comandle and the book', async ({ page }) => {
     await page.goto('/links?ref=ig');
-    await expect(page.locator('h1')).toHaveText('Todo lo que hago, acá.');
+    await expect(page.locator('h1')).toHaveText('Nada es magia.');
     await expect(page.locator('.w-comandle')).toHaveAttribute('href', 'https://comandle.valentorassa.com/?ref=links-ig');
     await expect(page.locator('.w-book')).toHaveAttribute('href', '/libro?ref=links-ig');
   });
@@ -26,7 +26,7 @@ test.describe('links page', () => {
 
   test('the English page links back to Spanish', async ({ page }) => {
     await page.goto('/en/links');
-    await expect(page.locator('h1')).toHaveText('Everything I make, right here.');
+    await expect(page.locator('h1')).toHaveText('Nothing is magic.');
     await expect(page.locator('a[hreflang="es"]')).toHaveAttribute('href', '/links');
   });
 });
