@@ -191,7 +191,7 @@ for (const route of ROUTES) {
   });
 }
 
-test('home leads to six selected projects and the private case study without a GitHub API request', async ({ page }) => {
+test('home leads to eight selected projects and the private case study without a GitHub API request', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
   const apiRequests: string[] = [];
@@ -205,6 +205,8 @@ test('home leads to six selected projects and the private case study without a G
   await expect(page.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', 'https://vtsecurity.com.ar');
   await expect(page.locator('#research h4')).toHaveText([
     'Open-Security-Labs',
+    'VT-Agent-Firewall',
+    'comandle',
     'VT-Security-Fixes',
     'VT-SecretShare',
     'pluma',
@@ -213,7 +215,7 @@ test('home leads to six selected projects and the private case study without a G
     'VT-Radar',
   ]);
   const projectVisuals = page.locator('#research .repo-card-media img');
-  await expect(projectVisuals).toHaveCount(6);
+  await expect(projectVisuals).toHaveCount(8);
   await expect(page.locator('#research .repo-card-media-label')).toHaveCount(0);
   for (const visual of await projectVisuals.all()) {
     await visual.scrollIntoViewIfNeeded();

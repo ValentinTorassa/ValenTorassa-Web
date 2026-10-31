@@ -33,6 +33,7 @@ type CharlasPageContent = {
   apuntesLead: string;
   apuntesLabel: string;
   officialLabel: string;
+  recordingLabel: string;
   hintOpen: string;
   hintMove: string;
   hintYear: string;
@@ -78,6 +79,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     apuntesLead: 'Las slides de cada charla y lo que voy aprendiendo, cada quince días por mail.',
     apuntesLabel: 'Suscribirme a Apuntes',
     officialLabel: 'Página oficial',
+    recordingLabel: 'Grabación',
     hintOpen: 'abrir',
     hintMove: 'elegir',
     hintYear: 'año',
@@ -117,6 +119,7 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     apuntesLead: 'Talk slides and what I am learning, every two weeks by email (in Spanish).',
     apuntesLabel: 'Subscribe to Apuntes',
     officialLabel: 'Official page',
+    recordingLabel: 'Recording',
     hintOpen: 'open',
     hintMove: 'pick',
     hintYear: 'year',

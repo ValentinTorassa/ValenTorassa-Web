@@ -103,8 +103,8 @@ test.describe('structured data', () => {
       const image = new URL(full.image as string);
       expect((await request.get(image.pathname)).ok(), 'Person image exists').toBe(true);
       expect(node('WebSite')).toHaveLength(1);
-      // The six public repositories the page shows; the private work has no code to point at.
-      expect(node('SoftwareSourceCode').map((item) => item.name)).toEqual(['Open-Security-Labs', 'VT-Security-Fixes', 'VT-SecretShare', 'pluma', 'VT-Ragnaros', 'VT-Lens']);
+      // The eight public repositories the page shows; the private work has no code to point at.
+      expect(node('SoftwareSourceCode').map((item) => item.name)).toEqual(['Open-Security-Labs', 'VT-Agent-Firewall', 'comandle', 'VT-Security-Fixes', 'VT-SecretShare', 'pluma', 'VT-Ragnaros', 'VT-Lens']);
     }
   });
 

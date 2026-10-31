@@ -327,6 +327,17 @@ function App({ language }: { language: Language }) {
                   </div>
                   <h3>{item.role}</h3>
                   <p>{item.description}</p>
+                  {item.writing ? (
+                    <div className="timeline-writing">
+                      <span>{item.writing.label}</span>
+                      {item.writing.links.map((link) => (
+                        <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
+                          {link.label}
+                          <ExternalLink aria-hidden="true" />
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
                   <TagList tags={item.tags} />
                 </div>
               </Reveal>
@@ -396,6 +407,14 @@ function App({ language }: { language: Language }) {
                   );
                 })}
               </div>
+              <p className="cert-community">
+                <span>{content.education.community.label}</span>
+                <a href={content.education.community.href} target="_blank" rel="noopener noreferrer">
+                  {content.education.community.name}
+                  <ExternalLink aria-hidden="true" />
+                </a>
+                {content.education.community.text}
+              </p>
             </Reveal>
           </div>
         </section>
@@ -593,13 +612,43 @@ function App({ language }: { language: Language }) {
                     <ProjectCard
                       key={repo.name}
                       repo={repo}
-                      className={index < 3 ? 'is-lead' : 'is-standard'}
+                      className={index < content.research.repos.length - 3 ? 'is-lead' : 'is-standard'}
                       labels={projectCardLabels}
                       onOpen={openProjectDrawer}
                     />
                   );
                 })}
             </Reveal>
+
+            <section className="legios" aria-labelledby="legios-title">
+              <div className="legios-head">
+                <h3 className="eyebrow" id="legios-title">{content.research.legios.label}</h3>
+                <p>{content.research.legios.intro}</p>
+                <div className="legios-links">
+                  {content.research.legios.links.map((link) => (
+                    <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
+                      {link.label} <ExternalLink aria-hidden="true" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+              <ul className="legios-list">
+                {content.research.legios.projects.map((project) => (
+                  <li key={project.name}>
+                    <a className="legios-shot" href={project.href} target="_blank" rel="noopener noreferrer" tabIndex={-1} aria-hidden="true">
+                      <img src={project.image} alt="" width="1280" height="800" loading="lazy" decoding="async" />
+                    </a>
+                    <a className="legios-name" href={project.href} target="_blank" rel="noopener noreferrer">
+                      {project.name} <ExternalLink aria-hidden="true" />
+                    </a>
+                    <p>{project.text}</p>
+                    <a className="legios-repo" href={project.repo} target="_blank" rel="noopener noreferrer">
+                      {content.research.openRepoLabel} <ExternalLink aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
 
             {content.research.privateProjects.length > 0 ? (
               <div className="repo-private">
@@ -634,9 +683,21 @@ function App({ language }: { language: Language }) {
                 <div className="repo-more-links">
                   <a href="https://github.com/ValentinTorassa/VT-Terminal-Project" target="_blank" rel="noopener noreferrer">VT Terminal <ExternalLink aria-hidden="true" /></a>
                   <a href="https://github.com/ValentinTorassa/VT-Terminal-Project/tree/main/ide" target="_blank" rel="noopener noreferrer">VT IDE <ExternalLink aria-hidden="true" /></a>
-                  <a href="https://comandle.valentorassa.com/?ref=portfolio" target="_blank" rel="noopener noreferrer">comandle <ExternalLink aria-hidden="true" /></a>
                 </div>
               </div>
+              {content.research.moreWork.map((item) => (
+                <div className="repo-more-item" key={item.label}>
+                  <span>{item.label}</span>
+                  <p className="repo-more-note">{item.text}</p>
+                  <div className="repo-more-links">
+                    {item.links.map((link) => (
+                      <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
+                        {link.label} <ExternalLink aria-hidden="true" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
         </section>
 

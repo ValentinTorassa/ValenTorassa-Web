@@ -153,7 +153,7 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     },
     author: {
       title: 'Sobre el autor',
-      text: 'Valentín Torassa Colombero trabaja en ciberseguridad en Rosario y hace VT Security, un canal sobre Linux y seguridad. El libro nace de su charla «Abstraction Leaks» en DebConf26.',
+      text: 'Valentín Torassa Colombero es ingeniero en ciberseguridad y arquitecto de software en Rosario. Hace VT Security, un canal sobre Linux y seguridad con más de 40.000 suscriptores, y da charlas en eventos como Ekoparty, DebConf y CACIC. El libro nace de su charla «Abstraction Leaks» en DebConf26.',
       talkLink: 'La charla y sus slides',
       channelLink: 'Canal de YouTube',
     },
@@ -241,7 +241,7 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     },
     author: {
       title: 'About the author',
-      text: 'Valentín Torassa Colombero works in cybersecurity in Rosario and makes VT Security, a channel about Linux and security. The book grew out of his talk “Abstraction Leaks” at DebConf26.',
+      text: 'Valentín Torassa Colombero is a cybersecurity engineer and software architect in Rosario, Argentina. He makes VT Security, a channel about Linux and security with more than 40,000 subscribers, and speaks at events such as Ekoparty, DebConf, and CACIC. The book grew out of his talk “Abstraction Leaks” at DebConf26.',
       talkLink: 'The talk and its slides',
       channelLink: 'YouTube channel',
     },

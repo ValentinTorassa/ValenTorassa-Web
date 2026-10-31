@@ -6,6 +6,7 @@ export type TalkLabels = {
   mode: Record<TalkMode, string>;
   officialLinkLabel: string;
   slidesLabel: string;
+  recordingLabel: string;
   talkCount: { one: string; other: string };
 };
 
@@ -24,6 +25,7 @@ export const talkLabelsByLanguage: Record<Language, TalkLabels> = {
     },
     officialLinkLabel: 'Página oficial',
     slidesLabel: 'Slides',
+    recordingLabel: 'Grabación',
     talkCount: { one: 'charla', other: 'charlas' },
   },
   en: {
@@ -39,6 +41,7 @@ export const talkLabelsByLanguage: Record<Language, TalkLabels> = {
     },
     officialLinkLabel: 'Official page',
     slidesLabel: 'Slides',
+    recordingLabel: 'Recording',
     talkCount: { one: 'talk', other: 'talks' },
   },
 };

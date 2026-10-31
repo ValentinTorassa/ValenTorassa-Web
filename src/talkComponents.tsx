@@ -1,4 +1,4 @@
-import { ArrowUpRight, Award, Clock3, MapPin, Presentation } from 'lucide-react';
+import { ArrowUpRight, Award, Clock3, MapPin, Presentation, Video } from 'lucide-react';
 import type { TalkLabels } from './eventsContent';
 import type { Language } from './siteContent';
 import type { Talk } from './events';
@@ -154,7 +154,7 @@ function TalkCard({ talk, language, labels, today, isPast, inGroup = false }: Ta
 
         <div className="talk-footer">
           <TalkChips talk={talk} labels={labels} showStatus={!isPast} />
-          {talk.url || slidesUrl ? (
+          {talk.url || slidesUrl || talk.recordingUrl ? (
             <div className="talk-links">
               {talk.url ? (
                 <a href={talk.url} target="_blank" rel="noopener noreferrer">
@@ -166,6 +166,12 @@ function TalkCard({ talk, language, labels, today, isPast, inGroup = false }: Ta
                 <a href={slidesUrl} {...(slidesOutside ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
                   <Presentation aria-hidden="true" />
                   {labels.slidesLabel}
+                </a>
+              ) : null}
+              {talk.recordingUrl ? (
+                <a href={talk.recordingUrl} target="_blank" rel="noopener noreferrer">
+                  <Video aria-hidden="true" />
+                  {labels.recordingLabel}
                 </a>
               ) : null}
             </div>

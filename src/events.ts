@@ -50,6 +50,8 @@ export type Talk = {
   status: TalkStatus;
   /** Official event or talk page. */
   url?: string;
+  /** Public recording (a YouTube video or live), when there is one. */
+  recordingUrl?: string;
   /** Public PDF, when available. Hosted decks are configured in talkMedia. */
   slidesUrl?: string;
   /** First day the site's slide links appear, in Argentina time. Defaults to the talk day. */
@@ -69,20 +71,22 @@ export const talks: Talk[] = [
   {
     id: 'rossec-2026',
     date: '2026-11-06',
+    time: '14:50',
+    endTime: '15:15',
     event: 'ROS:SEC 2026',
     track: 'OWASP Rosario',
     title: {
-      es: 'Dónde se rompe OAuth cuando el que llama es un agente',
-      en: 'Where OAuth breaks when the caller is an agent',
+      es: 'Dónde se rompe OAuth cuando llama un agente',
+      en: 'Where OAuth breaks when an agent calls',
     },
     place: { es: 'Sede de Gobierno de Santa Fe', en: 'Santa Fe Government Headquarters' },
     city: 'Rosario',
     mode: 'presencial',
-    status: 'tbd',
+    status: 'confirmed',
     url: 'https://rosariosecurity.com/',
     note: {
-      es: 'Participación confirmada. Horario y duración de la charla a confirmar.',
-      en: 'Participation confirmed. Speaking time and duration to be announced.',
+      es: 'Charla de 25 minutos sobre OAuth, MCP y permisos cuando el cliente es un agente de IA.',
+      en: 'A 25-minute talk on OAuth, MCP, and permissions when the client is an AI agent.',
     },
   },
   {
@@ -341,6 +345,7 @@ export const talks: Talk[] = [
     city: 'Rosario',
     mode: 'presencial',
     status: 'closed',
+    recordingUrl: 'https://www.youtube.com/watch?v=-8NueWzHkh0',
     slidesUrl: 'https://drive.google.com/file/d/1WDZIur1X77AJtnx35nQ93twQf8FNBnwA/view',
     note: {
       es: 'Clase invitada en la cursada de Santiago Roatta.',
