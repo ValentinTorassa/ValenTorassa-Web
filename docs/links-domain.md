@@ -22,20 +22,24 @@ routing rules run at the CDN before the deployment's own routes, so two rules
 on the `pagina-cv-web` project do it, with no code running on requests:
 
 ```sh
-vercel routes add "links host (es)" \
-  --src "/" --src-syntax equals \
-  --has "host:links.vtsecurity.com.ar" \
-  --action rewrite --dest "/links" --yes
-vercel routes add "links host (en)" \
-  --src "^/en/?$" \
-  --has "host:links.vtsecurity.com.ar" \
-  --action rewrite --dest "/en/links" --yes
-vercel routes list --diff
+# REST API; VERCEL_TOKEN in the env. Rules are staged, then published.
+P=prj_AV0oDST5yFUjrwpWfogYnDu2MBtL; T=team_0P7juoC6JNEFGqg1wKnv01de
+rule() {
+  jq -nc --arg name "$1" --arg src "$2" --arg dest "$3" \
+    '{route: {name: $name, srcSyntax: "regex",
+      route: {src: $src, dest: $dest, has: [{type: "host", value: "links.vtsecurity.com.ar"}]}}}' |
+  curl -s -X POST -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" \
+    "https://api.vercel.com/v1/projects/$P/routes?teamId=$T" --data @-
+}
+rule "links host (es)" '^/$' /links
+rule "links host (en)" '^/en/?$' /en/links
+vercel routes list --diff     # from this repo (linked in .vercel/)
 vercel routes publish --yes
 ```
 
 The rules live in the Vercel project, not in this repo: `vercel routes list`
-shows them. The `vercel.json` redirects from `/links` only match the
+shows them (published 30/10/2026). To undo, `vercel routes delete` both and
+publish. The `vercel.json` redirects from `/links` only match the
 `valentorassa.com` host; on the links host they would loop with these rewrites.
 
 ## DNS and domains
