@@ -136,7 +136,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       locale: 'es_AR',
     },
     navItems: siteNav('speaker-kit', 'es'),
-    eyebrow: '// speaker kit',
+    eyebrow: 'speaker kit',
     title: 'Kit para organizadores',
     intro: 'Lo que suele pedir un evento antes de confirmar una charla: bio, foto, temas, charlas anteriores y datos prácticos. Si querés invitarme, el formulario del final arma el mail por vos.',
     inviteCta: 'Invitarme a tu evento',
@@ -148,7 +148,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       caption: 'JPG, 1150 × 1150 px. Para la difusión de tu evento.',
     },
     bio: {
-      eyebrow: '// bio',
+      eyebrow: 'bio',
       title: 'Bio para el programa',
       intro: 'En tercera persona y lista para pegar: una corta y una larga.',
       shortLabel: 'Bio corta',
@@ -172,7 +172,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       },
     },
     topics: {
-      eyebrow: '// temas',
+      eyebrow: 'temas',
       title: 'De qué puedo hablar',
       intro: 'Temas sobre los que ya di o tengo confirmadas charlas. Cada uno enlaza sus charlas en valentorassa.com/charlas.',
       talksLabel: 'Charlas',
@@ -204,7 +204,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       },
     },
     talks: {
-      eyebrow: '// charlas',
+      eyebrow: 'charlas',
       title: 'Charlas anteriores y próximas',
       intro: 'Dónde hablé y dónde voy a hablar, con link a cada charla.',
       upcomingTitle: 'Próximas',
@@ -215,7 +215,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       agendaLink: 'Ver la agenda',
     },
     practical: {
-      eyebrow: '// datos',
+      eyebrow: 'datos',
       title: 'Datos prácticos',
       intro: 'Lo que suelen preguntarme antes de cerrar una fecha.',
       items: [
@@ -230,7 +230,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       ],
     },
     invite: {
-      eyebrow: '// invitación',
+      eyebrow: 'invitación',
       title: 'Invitarme a tu evento',
       intro: 'Completá los datos y se arma un mail con lo que necesito para responderte. No se envía nada desde este sitio: el mail sale desde tu correo.',
       fields: {
@@ -301,7 +301,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       locale: 'en_US',
     },
     navItems: siteNav('speaker-kit', 'en'),
-    eyebrow: '// speaker kit',
+    eyebrow: 'speaker kit',
     title: 'Speaker kit',
     intro: 'What an event usually asks for before confirming a talk: bio, headshot, topics, past talks, and the practical details. To invite me, the form at the end drafts the email for you.',
     inviteCta: 'Invite me to your event',
@@ -313,7 +313,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       caption: 'JPG, 1150 × 1150 px, for promoting your event.',
     },
     bio: {
-      eyebrow: '// bio',
+      eyebrow: 'bio',
       title: 'Bio for the program',
       intro: 'Third person and ready to paste: one short, one long.',
       shortLabel: 'Short bio',
@@ -337,7 +337,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       },
     },
     topics: {
-      eyebrow: '// topics',
+      eyebrow: 'topics',
       title: 'What I talk about',
       intro: 'Topics I have given or have confirmed talks on. Each one links to its talks on valentorassa.com/charlas.',
       talksLabel: 'Talks',
@@ -369,7 +369,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       },
     },
     talks: {
-      eyebrow: '// talks',
+      eyebrow: 'talks',
       title: 'Past and upcoming talks',
       intro: 'Where I have spoken and where I will speak next, with a link to each talk.',
       upcomingTitle: 'Upcoming',
@@ -380,7 +380,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       agendaLink: 'See the events page',
     },
     practical: {
-      eyebrow: '// details',
+      eyebrow: 'details',
       title: 'Practical details',
       intro: 'What organizers usually ask before locking in a date.',
       items: [
@@ -395,7 +395,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
       ],
     },
     invite: {
-      eyebrow: '// invitation',
+      eyebrow: 'invitation',
       title: 'Invite me to your event',
       intro: 'Fill in the details and the page drafts an email with what I need to reply. Nothing is sent from this site: the email goes out from your own mail app.',
       fields: {

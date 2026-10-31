@@ -10,10 +10,11 @@ test('the same navigation works across every page', async ({ page }) => {
     await page.goto(path);
     await expect(page.locator('.nav-links a')).toHaveText(spanish);
     await expect(page.locator('.social-actions a[aria-label="Blog"]')).toHaveAttribute('href', 'https://vtsecurity.com.ar');
-    await expect(page.locator('.social-actions a')).toHaveCount(5);
+    await expect(page.locator('.social-actions a')).toHaveCount(6);
     expect(await page.locator('.social-actions a').evaluateAll((links) => links.map((link) => link.getAttribute('aria-label'))))
-      .toEqual(['GitHub', 'LinkedIn', 'YouTube', 'Blog', 'Libro']);
+      .toEqual(['GitHub', 'LinkedIn', 'YouTube', 'Blog', 'Libro', 'Links']);
     await expect(page.locator('.social-actions a[aria-label="Libro"]')).toHaveAttribute('href', '/libro');
+    await expect(page.locator('.social-actions a[aria-label="Links"]')).toHaveAttribute('href', 'https://links.vtsecurity.com.ar/');
     await expect(page.locator('.social-actions a[aria-label="Libro"]')).not.toHaveAttribute('target', '_blank');
     if (path === '/charlas') await expect(page.locator('.nav-links a[href="/charlas"]')).toHaveAttribute('aria-current', 'page');
     if (path === '/eventos') await expect(page.locator('.nav-links a[href="/eventos"]')).toHaveAttribute('aria-current', 'page');

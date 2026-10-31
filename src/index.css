@@ -4546,3 +4546,528 @@ p {
     grid-column: span 2;
   }
 }
+
+/* ── Quieter surfaces (2026-10-31) ─────────────────────────────────────────────
+   One layer over everything above, approved from a preview. Fewer devices:
+   one accent (the teal), neutral hairlines, 4px corners, no glows, no hover
+   lifts, no fake window chrome, tags as plain text, and boxes only where a
+   thing is a thing (a project, a talk), never a box inside a box. */
+:root {
+  --display: 'IBM Plex Sans', system-ui, sans-serif;
+  --body: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --accent: var(--accent-2);
+  --surface-soft: #111215;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --radius: 4px;
+}
+
+/* Headings: Plex at a sensible weight instead of a heavy grotesk. */
+.section-head h2,
+.contact-section h2,
+.hero h1 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* Section labels: small caps text, no "//". */
+.eyebrow {
+  color: var(--faint);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-eyebrow {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* The scrolling buzzword strip goes. */
+.strip {
+  display: none;
+}
+
+/* Buttons and small controls: flat, square-ish, no glow, no lift. */
+.btn,
+.talks-page-link,
+.repo-details-trigger,
+.repo-card-head a,
+.repo-unfurl-links a,
+.section-head-row .github-profile-link,
+.social-actions a,
+.language-toggle,
+.hero .hero-socials a,
+.repo-private-badge {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+.btn-primary {
+  box-shadow: none;
+}
+
+.btn-secondary,
+.talks-page-link,
+.repo-details-trigger,
+.repo-card-head a,
+.repo-unfurl-links a,
+.repo-unfurl-links a:first-child,
+.section-head-row .github-profile-link,
+.social-actions a,
+.language-toggle,
+.hero .hero-socials a {
+  border-color: var(--line);
+  background: transparent;
+}
+
+.btn:hover,
+.btn:focus-visible,
+.repo-card-head a:hover,
+.repo-card-head a:focus-visible,
+.skill-card:hover,
+.social-actions a:hover,
+.social-actions a:focus-visible {
+  transform: none;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible,
+.talks-page-link:hover,
+.repo-details-trigger:hover,
+.repo-card-head a:hover,
+.repo-card-head a:focus-visible,
+.repo-unfurl-links a:hover,
+.social-actions a:hover,
+.hero .hero-socials a:hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.hero-socials a::before {
+  content: none;
+}
+
+.hero-announce {
+  border-radius: var(--radius);
+}
+
+/* Profile: the statement is just text, and the facts are a list, not tiles. */
+.statement,
+.profile-grid .statement {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.statement::before,
+.statement::after {
+  content: none;
+}
+
+.statement p {
+  font-size: 1.18rem;
+  line-height: 1.6;
+}
+
+.fact-card,
+.profile-layout .fact-card {
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.fact-icon {
+  width: auto;
+  height: auto;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--faint);
+}
+
+.fact-key {
+  color: var(--faint);
+}
+
+/* The terminal card keeps its text and loses the window. */
+.terminal-card {
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  box-shadow: none;
+  animation: none;
+}
+
+.terminal-card::before,
+.terminal-card::after {
+  content: none;
+}
+
+.terminal-bar > i,
+.terminal-bar > span:not(:last-child) {
+  display: none;
+}
+
+.terminal-bar span:last-child {
+  margin-left: 0;
+}
+
+/* Experience: rows separated by rules, a plain line, still dots. */
+.timeline::after {
+  background: var(--line-strong);
+  box-shadow: none;
+}
+
+.timeline-node,
+.timeline-node.is-complete,
+.timeline-node.is-active {
+  border-color: var(--bg);
+  background: var(--faint);
+  box-shadow: none;
+  transform: none;
+  animation: none;
+}
+
+.timeline-node.is-active {
+  background: var(--accent-2);
+}
+
+.timeline-card,
+.timeline-node.is-active + .timeline-card {
+  padding: 4px 0 8px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.timeline-head .time {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--faint);
+}
+
+/* Tags read as a line of text, not a row of pills. */
+.tag-list {
+  gap: 4px 16px;
+}
+
+.tag-list span,
+.tag-list.colorful span,
+.tag-list.tone span,
+.repo-card .tag-list span {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.tag-list .tag-logo,
+.tag-list.tone .tag-logo {
+  color: var(--faint);
+}
+
+/* Education and certifications: one level of boxes. */
+.panel,
+.education-panel {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.panel-title {
+  color: var(--text);
+}
+
+#education .education-row,
+#education .cert-card,
+.cert-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  box-shadow: none;
+}
+
+.cert-card strong {
+  color: var(--faint);
+}
+
+.education-entry-logo {
+  filter: none;
+}
+
+/* Stack: same card for every group, no colour codes, no icon tiles. */
+.skill-card,
+#stack .skill-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+
+.skill-card::before {
+  content: none;
+}
+
+.skill-icon {
+  width: auto;
+  height: auto;
+  border: 0;
+  background: none;
+  color: var(--faint);
+}
+
+/* Talks. */
+.talk-feature,
+.talk-row,
+.talk-row.has-award,
+.talk-thumb,
+.talk-card {
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  box-shadow: none;
+}
+
+.talk-chips > .talk-chip {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--faint);
+}
+
+/* The "next talk" mark is a word in the accent, not a pill. */
+.recognition-meta strong {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--accent-2);
+}
+
+/* Projects: the screenshot, a plain caption bar, and the text. */
+#research .repo-card,
+.repo-card,
+.repo-unfurl-card,
+#research .repo-unfurl-card,
+.repo-more {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  box-shadow: none;
+}
+
+#research .repo-card:hover,
+.repo-card:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-soft);
+  box-shadow: none;
+}
+
+.repo-card::before,
+#research .repo-card::before {
+  content: none;
+}
+
+.project-preview-dots,
+.project-preview-signal {
+  visibility: hidden;
+}
+
+.project-preview-chrome {
+  border-bottom-color: var(--line);
+  background: #15161a;
+}
+
+.project-preview-stage {
+  background: #0e0f12;
+}
+
+.project-preview-stage::after {
+  content: none;
+}
+
+.project-preview-stage img {
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.repo-stage {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+
+.repo-stage::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  background: var(--accent-2);
+  content: '';
+  vertical-align: 1px;
+}
+
+.repo-proof,
+#research .repo-featured-proof {
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.repo-proof > span,
+.repo-featured-proof > span {
+  color: var(--faint);
+}
+
+/* Contact: every network the same quiet button; the icons keep their colours. */
+.contact-network-links a,
+.contact-network-links a[data-network] {
+  --network-border: var(--line);
+  --network-border-hover: var(--line-strong);
+  --network-bg: transparent;
+  --network-glow: transparent;
+  border-radius: var(--radius);
+}
+
+/* Talk chips are words now, so they need room between them. */
+.talk-chips {
+  gap: 4px 14px;
+}
+
+/* The stage label's square sits on the text line. */
+.repo-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repo-stage::before {
+  flex: none;
+  margin-right: 0;
+  vertical-align: baseline;
+}
+
+/* Contact: the same card as everything else; presence notes as text. */
+.contact-card {
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+
+.contact-presence > span {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.availability-indicator i,
+.mobile-nav-meta i {
+  box-shadow: none;
+}
+
+.site-footer::before {
+  background: var(--line);
+}
+
+/* Phone menu: a plain panel. */
+.mobile-nav-panel {
+  border-radius: var(--radius);
+}
+
+.mobile-nav-panel::before {
+  content: none;
+}
+
+.mobile-menu-toggle,
+.mobile-nav-panel nav a,
+.mobile-nav-social a,
+.mobile-nav-book {
+  border-radius: var(--radius);
+}
+
+.mobile-menu-toggle,
+.mobile-nav-social a {
+  background: transparent;
+}
+
+.mobile-menu-toggle:hover {
+  transform: none;
+}
+
+.mobile-menu-toggle:hover,
+.mobile-menu-toggle:focus-visible,
+.mobile-menu-toggle[aria-expanded='true'] {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* /eventos: groups and cards like the home page's. */
+.talk-group {
+  border-color: var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+
+.talk-card:hover,
+.talk-card:target {
+  border-color: var(--line-strong);
+  box-shadow: none;
+}
+
+.events-count,
+.events-empty {
+  border-radius: var(--radius);
+}
+
+/* The archive links are the page's way out; give them a thumb-sized target. */
+.events-hero .events-archive-link {
+  min-height: 44px;
+  margin-top: 0;
+}
+
+/* /speaker-kit and /libro share the corners and lose the inner highlights. */
+.kit-card,
+.book-card {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+.kit-photo img,
+.book-author img,
+.kit-profiles a,
+.kit-field input:not([type='radio']),
+.kit-field select,
+.kit-field textarea,
+.kit-draft-text,
+.book-badge {
+  border-radius: var(--radius);
+}
+
+.kit-profiles a {
+  background: transparent;
+}

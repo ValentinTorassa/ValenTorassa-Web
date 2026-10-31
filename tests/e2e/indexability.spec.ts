@@ -258,7 +258,7 @@ test.describe('site files', () => {
     await expect(page.getByRole('link', { name: 'Charlas' })).toHaveAttribute('href', '/charlas');
     // The site's stylesheet is there: the graphite background and the display face.
     expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(11, 12, 14)');
-    expect(await page.locator('h1').evaluate((h1) => getComputedStyle(h1).fontFamily)).toContain('Space Grotesk');
+    expect(await page.locator('h1').evaluate((h1) => getComputedStyle(h1).fontFamily)).toContain('IBM Plex Sans');
   });
 
   test('share images are the new files, 1200×630 and under 300 KB', async ({ request }) => {

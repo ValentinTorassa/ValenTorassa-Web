@@ -23,13 +23,8 @@ export function outboundRef(search: string): string {
   return ref && (bioRefs as readonly string[]).includes(ref) ? `links-${ref}` : 'links';
 }
 
-/**
- * The page lives on its own host. Vercel serves it at the root of that host
- * with a project routing rule (docs/links-domain.md); the site's own /links
- * paths redirect there (vercel.json).
- */
-export const LINKS_ORIGIN = 'https://links.vtsecurity.com.ar';
-export const linksPageUrl = (language: Language) => (language === 'es' ? `${LINKS_ORIGIN}/` : `${LINKS_ORIGIN}/en`);
+// The page's address lives in siteContent, next to the header links that point at it.
+export { LINKS_ORIGIN, linksPageUrl } from './siteContent';
 
 export const comandleUrl = 'https://comandle.valentorassa.com/';
 export const comandleStatsApi = 'https://vtsecurity.com.ar/api/comandle';
