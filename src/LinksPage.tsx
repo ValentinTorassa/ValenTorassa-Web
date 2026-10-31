@@ -12,13 +12,15 @@ import {
   discordUrl,
   labsUrl,
   linksByLanguage,
+  linksPageUrl,
   marginCode,
   outboundRef,
   profiles,
   secretShareUrl,
   youtubeUrl,
 } from './linksContent';
-import { counterpartPath, localePath, useToday } from './site';
+import LinksTerminal, { type TermFact } from './LinksTerminal';
+import { absoluteUrl, useToday } from './site';
 import type { Language } from './siteContent';
 
 type ComandleStats = {
@@ -64,9 +66,6 @@ function useOutboundRef() {
 }
 
 const withRef = (url: string, ref: string) => `${url}${url.includes('?') ? '&' : '?'}ref=${encodeURIComponent(ref)}`;
-
-const daysBetween = (from: string, to: string) =>
-  Math.round((Date.parse(`${to}T12:00:00Z`) - Date.parse(`${from}T12:00:00Z`)) / 86_400_000) + 1;
 
 const locale = (language: Language) => (language === 'es' ? 'es-AR' : 'en-US');
 
@@ -200,6 +199,10 @@ function Glider({ title, caption }: { title: string; caption: string }) {
   );
 }
 
+/**
+ * The page is served from its own host (linksPageUrl), so links into the site
+ * are absolute.
+ */
 function LinksPage({ language }: { language: Language }) {
   const copy = linksByLanguage[language];
   const today = useToday();
@@ -207,22 +210,46 @@ function LinksPage({ language }: { language: Language }) {
   const ref = useOutboundRef();
   const number = new Intl.NumberFormat(locale(language));
   const talk = nextTalk(today);
-  const languageHref = counterpartPath(localePath(language, '/links'));
+  const other: Language = language === 'es' ? 'en' : 'es';
 
   const comandleHref = withRef(comandleUrl, ref);
-  const bookHref = withRef(localePath(language, '/libro'), ref);
+  const bookHref = withRef(absoluteUrl(language, '/libro'), ref);
+  const talkHref = absoluteUrl(language, talk ? `/charlas/${talk.id}` : '/eventos');
+  const homeHref = absoluteUrl(language, '/');
+  const videos = number.format(audience.youtubeVideos);
+  const members = `+${number.format(audience.discord)}`;
+
+  const facts: TermFact[] = [
+    copy.terminal.role,
+    copy.terminal.base,
+    { key: copy.terminal.channel, value: copy.youtube.stats(audience.youtube, videos), href: youtubeUrl, external: true },
+    { ...copy.terminal.book, href: bookHref },
+    {
+      key: copy.terminal.comandle.key,
+      value: stats ? copy.terminal.comandle.live(number.format(stats.total)) : copy.terminal.comandle.idle,
+      href: comandleHref,
+      external: true,
+    },
+    {
+      key: copy.terminal.talk.key,
+      value: talk ? `${formatTalkDay(talk, language)} · ${talk.event}` : copy.terminal.talk.none,
+      href: talkHref,
+    },
+    { key: copy.terminal.community.key, value: copy.terminal.community.value(members), href: discordUrl, external: true },
+    copy.terminal.shell,
+  ];
 
   return (
     <div className="links-page">
       <header className="topbar">
-        <a className="chip" href={copy.topBar.homeHref}>
+        <a className="chip" href={homeHref}>
           {copy.topBar.home}
         </a>
         <nav className="topbar-right" aria-label={copy.profilesLabel}>
           <a className="chip" href={youtubeUrl} target="_blank" rel="noopener noreferrer">
             YouTube
           </a>
-          <a className="chip chip-dark" href={languageHref} hrefLang={language === 'es' ? 'en' : 'es'} aria-label={copy.topBar.languageLabel}>
+          <a className="chip chip-dark" href={linksPageUrl(other)} hrefLang={other} aria-label={copy.topBar.languageLabel}>
             {copy.topBar.language}
           </a>
         </nav>
@@ -250,8 +277,8 @@ function LinksPage({ language }: { language: Language }) {
             <span>{copy.leader.right}</span>
           </p>
 
-          <h1 className="mega">{copy.title}</h1>
-          <p className="subtitle">{copy.subtitle}</p>
+          <h1 className="sr-only">{copy.heading}</h1>
+          <LinksTerminal title={copy.terminal.title} facts={facts} />
 
           <div className="mega-ctas">
             <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
@@ -278,7 +305,7 @@ function LinksPage({ language }: { language: Language }) {
           <div className="desk-grid">
             <Window title={copy.youtube.title} href={youtubeUrl} className="w-youtube">
               <span className="win-name">{copy.youtube.name}</span>
-              <span className="tag">{copy.youtube.stats(audience.youtube, audience.youtubeVideos)}</span>
+              <span className="tag">{copy.youtube.stats(audience.youtube, videos)}</span>
               <span className="win-text">{copy.youtube.body}</span>
               <span className="win-cta">{copy.youtube.cta} →</span>
             </Window>
@@ -327,21 +354,21 @@ function LinksPage({ language }: { language: Language }) {
               <span className="win-cta">{copy.comandle.cta} →</span>
             </Window>
 
-            {talk ? (
-              <Window title={copy.talk.title} href={localePath(language, `/charlas/${talk.id}`)} external={false} className="w-talk">
-                <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
-                <span className="win-name">{talk.title[language]}</span>
-                <span className="win-text">
-                  {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
-                  {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
-                </span>
-                <span className="win-cta">{copy.talk.cta} →</span>
-              </Window>
-            ) : (
-              <Window title={copy.talk.title} href={localePath(language, '/eventos')} external={false} className="w-talk">
+            <Window title={copy.talk.title} href={talkHref} external={false} className="w-talk">
+              {talk ? (
+                <>
+                  <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
+                  <span className="win-name">{talk.title[language]}</span>
+                  <span className="win-text">
+                    {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
+                    {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
+                  </span>
+                  <span className="win-cta">{copy.talk.cta} →</span>
+                </>
+              ) : (
                 <span className="win-text">{copy.talk.empty}</span>
-              </Window>
-            )}
+              )}
+            </Window>
 
             <Window title={copy.labs.title} href={labsUrl} className="w-labs">
               <span className="win-name">{copy.labs.name}</span>
@@ -359,7 +386,7 @@ function LinksPage({ language }: { language: Language }) {
 
             <Window title={copy.discord.title} href={discordUrl} className="w-discord">
               <span className="win-name">{copy.discord.name}</span>
-              <span className="win-text">{copy.discord.body(`+${number.format(audience.discord)}`)}</span>
+              <span className="win-text">{copy.discord.body(members)}</span>
               <span className="win-cta">{copy.discord.cta} →</span>
             </Window>
 
@@ -371,38 +398,6 @@ function LinksPage({ language }: { language: Language }) {
 
             <Glider title={copy.glider.title} caption={copy.glider.caption} />
           </div>
-        </section>
-
-        <section className="numbers">
-          <div className="framed">
-            <Corners />
-            {stats ? (
-              <>
-                <p className="mega mega-number">{copy.bigNumber.played(number.format(stats.total))}</p>
-                <p className="mega mega-number">{copy.bigNumber.days(daysBetween(stats.since, stats.today.date))}</p>
-                <p className="footnote">
-                  {copy.bigNumber.playedNote}{' '}
-                  <a href={comandleHref} target="_blank" rel="noopener noreferrer">
-                    (comandle)
-                  </a>
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="mega mega-number">{copy.bigNumber.fallback}</p>
-                <p className="footnote">{copy.bigNumber.fallbackNote(formatDay(audience.asOf, language))}</p>
-              </>
-            )}
-          </div>
-
-          <ul className="stat-row">
-            {copy.stats.map((stat) => (
-              <li key={stat.label}>
-                <span className="stat-value">{stat.value(audience)}</span>
-                <span className="stat-label">{stat.label}</span>
-              </li>
-            ))}
-          </ul>
         </section>
 
         <section className="profiles">
@@ -425,6 +420,23 @@ function LinksPage({ language }: { language: Language }) {
           </ul>
         </section>
 
+        <section className="numbers">
+          <div className="framed">
+            <Corners />
+            <p className="mega mega-number">{copy.numbers.subscribers(audience.youtube)}</p>
+            <p className="mega mega-number">{copy.numbers.videos(videos)}</p>
+            <p className="footnote">{copy.numbers.note(formatDay(audience.asOf, language))}</p>
+          </div>
+
+          <ul className="stat-row">
+            {copy.stats.map((stat) => (
+              <li key={stat.label}>
+                <span className="stat-value">{stat.value(audience, number)}</span>
+                <span className="stat-label">{stat.label}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       </main>
 
       <footer className="links-footer">
@@ -433,7 +445,7 @@ function LinksPage({ language }: { language: Language }) {
           <span className="pixel-text">{copy.footer.rights}</span>
           <span className="pixel-text">{copy.footer.made}</span>
         </Window>
-        <a className="footer-site" href={copy.topBar.homeHref}>
+        <a className="footer-site" href={homeHref}>
           {copy.footer.site}
         </a>
       </footer>

@@ -5,7 +5,7 @@ import { talks, type Talk } from './events';
 import { eventsPageByLanguage } from './eventsContent';
 import { contentByLanguage } from './homeContent';
 import { book, libroByLanguage } from './libroContent';
-import { linksByLanguage } from './linksContent';
+import { linksByLanguage, linksPageUrl } from './linksContent';
 import { paperOfTalk, papers, type Paper } from './research';
 import { absoluteUrl, SITE_ORIGIN } from './site';
 import type { Language } from './siteContent';
@@ -351,9 +351,13 @@ export function pageHead(route: Route, today: string): PageHead {
       };
     }
     case 'links': {
+      // Served from its own host, not from this site's /links.
       const page = linksByLanguage[language];
+      const url = linksPageUrl(language);
       return {
         ...base,
+        url,
+        alternates: { es: linksPageUrl('es'), en: linksPageUrl('en') },
         title: page.documentTitle,
         description: page.seo.description,
         image: `${SITE_ORIGIN}${socialImages.home}`,

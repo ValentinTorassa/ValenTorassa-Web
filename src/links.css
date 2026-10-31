@@ -1,15 +1,12 @@
-/* /links: a light, loud page on purpose, apart from the site's dark terminal look.
-   Big tight grotesk, black-titled retro windows, rose dither and a cloudy sky. */
+/* The links page: a light, loud page on purpose, apart from the site's dark
+   terminal look. Big tight grotesk, black-titled retro windows, a yellow dither
+   and a cobalt sky, printed like a riso in yellow, cobalt and pink. */
 
 :root {
   --ink: #1e1e1e;
   --ink-soft: #3d3d3d;
   --paper: #fefefe;
   --gray: #dedede;
-  --rose: #f386a1;
-  --magenta: #d45bb6;
-  --sky: #8ec5e8;
-  --mint: #44c08a;
   --green: #03aa5c;
   --amber: #f2c94c;
   --display: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
@@ -44,11 +41,26 @@ a {
 }
 
 a:focus-visible {
-  outline: 3px solid var(--magenta);
+  outline: 3px solid var(--accent);
   outline-offset: 3px;
 }
 
 .links-page {
+  /* Palette. Every color below derives from these. */
+  --cloud-a: #3d5afe;
+  --cloud-b: #ffd23f;
+  --cloud-c: #8fb0ff;
+  --accent: #2f4bff;
+  --bar-text: #ffd23f;
+  --desk: #ffd23f;
+  --desk-dot: rgba(30, 30, 30, 0.38);
+  --desk-blob: var(--ink);
+  --toy: var(--desk);
+  --numbers-bg: #2f4bff;
+  --numbers-text: var(--paper);
+  --numbers-big: var(--paper);
+  --band: #ff8fab;
+  --band-text: var(--ink);
   position: relative;
   overflow: hidden;
 }
@@ -100,10 +112,10 @@ a:focus-visible {
 }
 
 .chip-dark:hover {
-  background: var(--magenta);
+  background: var(--accent);
 }
 
-/* ── hero: grainy pink and blue clouds fading into paper ─────────────────── */
+/* ── hero: grainy cobalt and yellow clouds fading into paper ────────────── */
 
 .sky {
   position: relative;
@@ -113,15 +125,15 @@ a:focus-visible {
   padding: 88px var(--gutter) 72px;
   text-align: center;
   background:
-    radial-gradient(60% 45% at 8% 8%, rgba(212, 91, 182, 0.95), transparent 70%),
-    radial-gradient(45% 40% at 92% 10%, rgba(243, 134, 161, 0.95), transparent 70%),
-    radial-gradient(55% 35% at 55% 0%, rgba(142, 197, 232, 0.95), transparent 75%),
-    radial-gradient(40% 30% at 30% 30%, rgba(142, 197, 232, 0.7), transparent 70%),
-    radial-gradient(35% 30% at 78% 32%, rgba(212, 91, 182, 0.55), transparent 70%),
+    radial-gradient(60% 45% at 8% 8%, color-mix(in srgb, var(--cloud-a) 95%, transparent), transparent 70%),
+    radial-gradient(45% 40% at 92% 10%, color-mix(in srgb, var(--cloud-b) 95%, transparent), transparent 70%),
+    radial-gradient(55% 35% at 55% 0%, color-mix(in srgb, var(--cloud-c) 95%, transparent), transparent 75%),
+    radial-gradient(40% 30% at 30% 30%, color-mix(in srgb, var(--cloud-c) 70%, transparent), transparent 70%),
+    radial-gradient(35% 30% at 78% 32%, color-mix(in srgb, var(--cloud-a) 55%, transparent), transparent 70%),
     linear-gradient(180deg, transparent 0 38%, var(--paper) 62%);
 }
 
-/* Film grain over the clouds, faded out before the headline. */
+/* Film grain over the clouds, faded out before the terminal. */
 .sky::before {
   content: '';
   position: absolute;
@@ -157,7 +169,7 @@ a:focus-visible {
 }
 
 .news-cta:hover {
-  color: var(--magenta);
+  color: var(--accent);
 }
 
 .leader {
@@ -187,32 +199,16 @@ a:focus-visible {
   line-height: 0.88;
 }
 
-.sky .mega {
-  max-width: 11ch;
-  font-size: clamp(3.6rem, 15vw, 10.5rem);
-  text-wrap: balance;
-}
-
-.subtitle {
-  max-width: 34ch;
-  margin: 22px 0 0;
-  font-family: var(--mono);
-  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
-  line-height: 1.5;
-  color: var(--ink-soft);
-  text-wrap: balance;
-}
-
 .mega-ctas {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 18px clamp(28px, 6vw, 80px);
-  margin-top: clamp(40px, 7vw, 72px);
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 40px;
 }
 
 .mega-ctas a {
-  font-size: clamp(2rem, 7vw, 4rem);
+  font-size: clamp(2.8rem, 11vw, 7rem);
   font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 1;
@@ -222,8 +218,8 @@ a:focus-visible {
 }
 
 .mega-ctas a:hover {
-  color: var(--magenta);
-  border-color: var(--magenta);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* The book's title in base64, running up the left margin. */
@@ -268,7 +264,7 @@ a:focus-visible {
   min-height: 24px;
   padding: 0 6px;
   background: var(--ink);
-  color: var(--rose);
+  color: var(--bar-text);
   font-family: var(--pixel);
   font-size: 1.2rem;
   line-height: 1;
@@ -300,7 +296,7 @@ a:focus-visible {
 }
 
 .win-link:hover .win-bar {
-  background: var(--magenta);
+  background: var(--accent);
   color: var(--paper);
 }
 
@@ -340,15 +336,15 @@ a:focus-visible {
   font-size: 0.75rem;
 }
 
-/* ── desk: the rose, dithered desktop holding the links ─────────────────── */
+/* ── desk: the yellow, dithered desktop holding the links ───────────────── */
 
 .desk {
   position: relative;
   margin: 0 var(--gutter);
   padding: 44px 12px 28px;
   border: 1px solid var(--ink);
-  background-color: var(--rose);
-  background-image: radial-gradient(rgba(30, 30, 30, 0.42) 0.9px, transparent 1.2px);
+  background-color: var(--desk);
+  background-image: radial-gradient(var(--desk-dot) 0.9px, transparent 1.2px);
   background-size: 6px 6px;
 }
 
@@ -358,7 +354,7 @@ a:focus-visible {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(var(--ink) 1.3px, transparent 1.6px);
+  background-image: radial-gradient(var(--desk-blob) 1.3px, transparent 1.6px);
   background-size: 5px 5px;
   -webkit-mask-image:
     radial-gradient(circle at 92% 78%, #000 0 14%, transparent 34%),
@@ -376,7 +372,7 @@ a:focus-visible {
   left: -1px;
   padding: 2px 6px;
   background: var(--ink);
-  color: var(--rose);
+  color: var(--bar-text);
 }
 
 .desk-grid {
@@ -500,7 +496,7 @@ a:focus-visible {
 
 .win-clock,
 .win-glider {
-  background: var(--rose);
+  background: var(--toy);
 }
 
 .clock-time {
@@ -532,7 +528,8 @@ a:focus-visible {
 
 .numbers {
   padding: 64px var(--gutter) 72px;
-  background: var(--rose);
+  background: var(--numbers-bg);
+  color: var(--numbers-text);
   margin-top: -1px;
 }
 
@@ -545,7 +542,7 @@ a:focus-visible {
   position: absolute;
   width: 10px;
   height: 10px;
-  border-color: var(--ink);
+  border-color: currentColor;
   border-style: solid;
   border-width: 0;
 }
@@ -556,7 +553,7 @@ a:focus-visible {
 .corners i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
 
 .mega-number {
-  color: var(--ink-soft);
+  color: var(--numbers-big);
   font-size: clamp(3.4rem, 15vw, 10rem);
 }
 
@@ -585,7 +582,7 @@ a:focus-visible {
   flex-direction: column;
   gap: 4px;
   padding-left: 10px;
-  border-left: 1px solid var(--ink);
+  border-left: 1px solid currentColor;
 }
 
 .stat-value {
@@ -597,14 +594,15 @@ a:focus-visible {
 
 .stat-label {
   font-size: 1rem;
-  color: var(--ink-soft);
+  opacity: 0.8;
 }
 
-/* ── profiles: green band, label + rows ─────────────────────────────────── */
+/* ── profiles: pink band, label + rows ──────────────────────────────────── */
 
 .profiles {
   padding: 56px var(--gutter) 64px;
-  background: var(--mint);
+  background: var(--band);
+  color: var(--band-text);
 }
 
 .profiles-head h2 {
@@ -625,7 +623,7 @@ a:focus-visible {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid currentColor;
 }
 
 .profile-list a {
@@ -634,7 +632,7 @@ a:focus-visible {
   align-items: baseline;
   gap: 12px;
   padding: 14px 4px;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid currentColor;
   text-decoration: none;
 }
 
@@ -652,8 +650,8 @@ a:focus-visible {
 }
 
 .profile-list a:hover {
-  background: var(--ink);
-  color: var(--mint);
+  background: var(--band-text);
+  color: var(--band);
 }
 
 /* ── footer ─────────────────────────────────────────────────────────────── */
@@ -696,7 +694,122 @@ a:focus-visible {
 }
 
 .footer-site:hover {
-  color: var(--rose);
+  color: var(--bar-text);
+}
+
+/* ── hero terminal: neofetch instead of a headline ─────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.hero-terminal {
+  width: min(100%, 760px);
+  margin-top: 36px;
+  text-align: left;
+}
+
+.hero-terminal .win-body {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.term {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+  font-size: clamp(0.85rem, 2.4vw, 1.1rem);
+  line-height: 1.75;
+}
+
+.term b {
+  color: var(--bar-text);
+  font-weight: 500;
+}
+
+.term-line {
+  opacity: 0;
+  animation: term-in 0.12s ease-out forwards;
+  animation-delay: calc(var(--i) * 420ms);
+}
+
+.term-cursor {
+  font-style: normal;
+  color: var(--bar-text);
+  animation: term-blink 1.1s steps(1) infinite;
+}
+
+.neofetch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 8px 0;
+}
+
+.neofetch-art {
+  margin: 0;
+  color: var(--bar-text);
+  font: inherit;
+  line-height: 1.25;
+}
+
+.neofetch-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.neofetch-info a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.neofetch-head {
+  color: var(--bar-text);
+  font-weight: 600;
+}
+
+.neofetch-swatches {
+  display: flex;
+  gap: 0;
+  margin-top: 10px;
+}
+
+.neofetch-swatches i {
+  width: 26px;
+  height: 14px;
+}
+
+.neofetch-swatches i:nth-child(1) { background: var(--ink); outline: 1px solid var(--paper); }
+.neofetch-swatches i:nth-child(2) { background: var(--cloud-a); }
+.neofetch-swatches i:nth-child(3) { background: var(--desk); }
+.neofetch-swatches i:nth-child(4) { background: var(--band); }
+.neofetch-swatches i:nth-child(5) { background: var(--cloud-c); }
+.neofetch-swatches i:nth-child(6) { background: var(--paper); }
+
+@keyframes term-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes term-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term-line {
+    opacity: 1;
+    animation: none;
+  }
+
+  .term-cursor {
+    animation: none;
+  }
 }
 
 /* ── wider screens: the desktop becomes a collage ───────────────────────── */

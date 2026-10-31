@@ -1,9 +1,9 @@
 import type { Language } from './siteContent';
 
 /**
- * /links: the one link every social bio points to. The bio adds its own tag
- * (/links?ref=ig) and every outbound link carries it on as ref=links-ig, so the
- * destination can tell which network the visit came from.
+ * The links page: the one link every social bio points to. The bio adds its
+ * own tag (?ref=ig) and every outbound link carries it on as ref=links-ig, so
+ * the destination can tell which network the visit came from.
  */
 
 /** Tags the bios use. Anything else counts as "links" alone. */
@@ -13,6 +13,14 @@ export function outboundRef(search: string): string {
   const ref = new URLSearchParams(search).get('ref')?.toLowerCase();
   return ref && (bioRefs as readonly string[]).includes(ref) ? `links-${ref}` : 'links';
 }
+
+/**
+ * The page lives on its own host. Vercel serves it at the root of that host
+ * with a project routing rule (docs/links-domain.md); the site's own /links
+ * paths redirect there (vercel.json).
+ */
+export const LINKS_ORIGIN = 'https://links.vtsecurity.com.ar';
+export const linksPageUrl = (language: Language) => (language === 'es' ? `${LINKS_ORIGIN}/` : `${LINKS_ORIGIN}/en`);
 
 export const comandleUrl = 'https://comandle.valentorassa.com/';
 export const comandleStatsApi = 'https://vtsecurity.com.ar/api/comandle';
@@ -52,17 +60,31 @@ export const profiles = [
   { name: 'Threads', handle: '@vt_security_', href: 'https://www.threads.com/@vt_security_' },
 ] as const;
 
-type LinksCopy = {
+type Fact = { key: string; value: string };
+
+export type LinksCopy = {
   documentTitle: string;
+  /** The page's h1, for screen readers: the terminal stands in for a headline. */
+  heading: string;
   seo: { description: string };
-  topBar: { home: string; homeHref: string; language: string; languageLabel: string };
+  topBar: { home: string; language: string; languageLabel: string };
   news: { label: string; body: string; cta: string };
   leader: { left: string; right: string };
-  title: string;
-  subtitle: string;
   ctas: { youtube: string; book: string };
+  /** The neofetch in the hero: one line per fact, some of them links. */
+  terminal: {
+    title: string;
+    role: Fact;
+    base: Fact;
+    channel: string;
+    book: Fact;
+    comandle: { key: string; live: (total: string) => string; idle: string };
+    talk: { key: string; none: string };
+    community: { key: string; value: (members: string) => string };
+    shell: Fact;
+  };
   desktopLabel: string;
-  youtube: { title: string; name: string; stats: (subs: number, videos: number) => string; body: string; cta: string };
+  youtube: { title: string; name: string; stats: (subs: number, videos: string) => string; body: string; cta: string };
   book: { title: string; name: string; body: string; meta: string; cta: string; coverAlt: string };
   comandle: { title: string; body: string; today: string; yesterday: string; total: string; cta: string; offline: string };
   talk: { title: string; at: (place: string) => string; empty: string; cta: string; closed: string };
@@ -72,57 +94,59 @@ type LinksCopy = {
   secretShare: { title: string; name: string; body: string; cta: string };
   clock: { title: string; place: string };
   glider: { title: string; caption: string };
-  bigNumber: {
-    played: (total: string) => string;
-    days: (days: number) => string;
-    playedNote: string;
-    fallback: string;
-    fallbackNote: (date: string) => string;
-  };
-  stats: Array<{ value: (a: typeof audience) => string; label: string }>;
   profilesTitle: string;
   profilesLabel: string;
+  numbers: { subscribers: (subs: number) => string; videos: (videos: string) => string; note: (date: string) => string };
+  stats: Array<{ value: (a: typeof audience, number: Intl.NumberFormat) => string; label: string }>;
   footer: { version: string; rights: string; made: string; site: string };
 };
-
-const number = (language: Language) => new Intl.NumberFormat(language === 'es' ? 'es-AR' : 'en-US');
 
 export const linksByLanguage: Record<Language, LinksCopy> = {
   es: {
     documentTitle: 'Links · Valentín Torassa',
+    heading: 'Links de Valentín Torassa',
     seo: {
       description:
         'Todo lo de Valentín Torassa en un solo lugar: el canal VT Security, su libro, comandle, la próxima charla, Open Security Labs, el blog y sus redes.',
     },
-    topBar: { home: 'Valentín Torassa', homeHref: '/', language: 'EN', languageLabel: 'Ver en inglés' },
+    topBar: { home: 'Valentín Torassa', language: 'EN', languageLabel: 'Ver en inglés' },
     news: {
       label: 'Libro',
-      body: 'Estoy escribiendo un libro: No podés defender lo que no entendés. El capítulo 1 ya es gratis.',
+      body: 'Escribí sobre lo que pasa cuando el tablero está en verde y el sistema igual no funciona. El capítulo 1 es gratis.',
       cta: 'Leer el capítulo 1',
     },
-    leader: { left: 'VT Security', right: 'Linux, sistemas y seguridad' },
-    title: 'Nada es magia.',
-    subtitle: 'Ni Linux, ni la red, ni la IA. Te muestro lo que corre debajo.',
-    ctas: { youtube: 'Ver el canal', book: 'Leer el libro' },
-    desktopLabel: 'VT.OS 1.1',
+    leader: { left: 'VT Security', right: 'del código a producción' },
+    ctas: { youtube: 'Ver el canal', book: 'Leer el capítulo 1' },
+    terminal: {
+      title: 'valen@vt: ~',
+      role: { key: 'Rol', value: 'ciberseguridad + backend' },
+      base: { key: 'Base', value: 'Rosario, AR' },
+      channel: 'Canal',
+      book: { key: 'Libro', value: 'en beta · cap. 1 gratis' },
+      comandle: { key: 'comandle', live: (total) => `${total} partidas (en vivo)`, idle: 'el comando del día' },
+      talk: { key: 'Charla', none: 'sin fecha' },
+      community: { key: 'Comunidad', value: (members) => `${members} en Discord` },
+      shell: { key: 'Shell', value: 'español, con voseo' },
+    },
+    desktopLabel: 'PROD 1.1',
     youtube: {
-      title: 'YouTube.app',
+      title: 'canal.mp4',
       name: 'VT Security',
-      stats: (subs, videos) => `${subs} mil suscriptores · ${number('es').format(videos)} videos`,
-      body: 'Mi canal: explico Linux, redes, cloud y ciberseguridad con los comandos que uso de verdad.',
+      stats: (subs, videos) => `${subs} mil suscriptores · ${videos} videos`,
+      body: 'Videos sobre lo que no ves en localhost: redes, permisos, colas, cloud y seguridad.',
       cta: 'Ver el canal',
     },
     book: {
       title: 'libro.pdf',
       name: 'No podés defender lo que no entendés',
-      body: 'Estoy escribiendo un libro sobre Linux, las abstracciones que fallan y el camino a la ciberseguridad.',
+      body: 'Linux desde las capas que fallan: cada abstracción y lo que esconde.',
       meta: 'Capítulo 1 gratis · PDF · sin registro',
       cta: 'Leer el capítulo',
       coverAlt: 'Tapa del libro No podés defender lo que no entendés: Tux en un bote alumbra un iceberg hecho de capas del sistema.',
     },
     comandle: {
-      title: 'comandle 1.1',
-      body: 'Armé un Wordle de comandos de Linux y seguridad. Seis intentos, uno nuevo por día.',
+      title: 'comandle.sh',
+      body: 'Un comando por día, seis intentos. Al final te lo explico.',
       today: 'hoy',
       yesterday: 'ayer',
       total: 'total',
@@ -137,82 +161,85 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       closed: 'Es cerrada.',
     },
     labs: {
-      title: 'labs.sh',
+      title: 'labs/',
       name: 'Open Security Labs',
-      body: 'Armé labs gratis de Linux, redes, backend y cloud. Corrés los comandos y dejás evidencia. Sin cuenta.',
+      body: 'Practicás en tu máquina como si fuera producción y te quedás con la evidencia.',
       cta: 'Empezar un lab',
     },
-    blog: {
-      title: 'blog.txt',
-      name: 'Blog',
-      body: 'Escribo notas largas, con los diagramas y los comandos exactos.',
-      cta: 'Leer',
-    },
+    blog: { title: 'notas.md', name: 'Blog', body: 'Fallas reales, diagramas y los comandos exactos.', cta: 'Leer' },
     discord: {
-      title: 'discord.exe',
+      title: 'dedsec.chat',
       name: 'DedSec',
-      body: (members) => `Mi comunidad: ${members} personas hablando de seguridad.`,
+      body: (members) => `${members} personas preguntando lo que no sale en los tutoriales.`,
       cta: 'Entrar',
     },
     secretShare: {
-      title: 'secretshare.bin',
+      title: 'secreto.bin',
       name: 'VT-SecretShare',
-      body: 'Lo hice para no mandar más claves por chat: se leen una vez y se autodestruyen.',
+      body: 'Se cifra en tu navegador y se borra apenas alguien la lee.',
       cta: 'Probarlo',
     },
-    clock: { title: 'Clock Tool 1.1', place: 'Rosario, AR' },
-    glider: { title: 'Glider 1.1', caption: 'Game of Life' },
-    bigNumber: {
-      played: (total) => `${total} partidas.`,
-      days: (days) => (days === 1 ? 'En 1 día.' : `En ${days} días.`),
-      playedNote: '*Partidas de comandle desde el lanzamiento, en vivo.',
-      fallback: '42 mil suscriptores.',
-      fallbackNote: (date) => `*VT Security en YouTube, al ${date}.`,
+    clock: { title: 'uptime', place: 'Rosario, AR' },
+    glider: { title: 'cron.life', caption: 'Game of Life' },
+    profilesTitle: 'Seguime en producción.',
+    profilesLabel: 'Redes',
+    numbers: {
+      subscribers: (subs) => `${subs} mil suscriptores.`,
+      videos: (videos) => `${videos} videos.`,
+      note: (date) => `*VT Security en YouTube, al ${date}.`,
     },
     stats: [
-      { value: (a) => `${a.youtube} mil`, label: 'Suscriptores en YouTube.' },
       { value: (a) => `${a.instagram} mil`, label: 'Seguidores en Instagram.' },
-      { value: (a) => number('es').format(a.youtubeVideos), label: 'Videos publicados.' },
+      { value: (a) => `${a.tiktok} mil`, label: 'Seguidores en TikTok.' },
+      { value: (a, number) => `+${number.format(a.discord)}`, label: 'Personas en Discord.' },
     ],
-    profilesTitle: 'Seguime donde estés.',
-    profilesLabel: 'Redes',
     footer: { version: 'Versión 1.1', rights: '©2026 Valentín Torassa Colombero.', made: 'Hecho en Rosario.', site: 'valentorassa.com' },
   },
   en: {
     documentTitle: 'Links · Valentín Torassa',
+    heading: "Valentín Torassa's links",
     seo: {
       description:
         'Everything from Valentín Torassa in one place: the VT Security channel, his book, comandle, the next talk, Open Security Labs, the blog and his profiles.',
     },
-    topBar: { home: 'Valentín Torassa', homeHref: '/en/', language: 'ES', languageLabel: 'Ver en español' },
+    topBar: { home: 'Valentín Torassa', language: 'ES', languageLabel: 'Ver en español' },
     news: {
       label: 'Book',
-      body: "I'm writing a book: No podés defender lo que no entendés. Chapter 1 is already free (in Spanish).",
+      body: "I wrote about what happens when the dashboard is green and the system still doesn't work. Chapter 1 is free, in Spanish.",
       cta: 'Read chapter 1',
     },
-    leader: { left: 'VT Security', right: 'Linux, systems and security' },
-    title: 'Nothing is magic.',
-    subtitle: 'Not Linux, not the network, not AI. I show you what runs underneath.',
-    ctas: { youtube: 'Watch the channel', book: 'Read the book' },
-    desktopLabel: 'VT.OS 1.1',
+    leader: { left: 'VT Security', right: 'from code to production' },
+    ctas: { youtube: 'Watch the channel', book: 'Read chapter 1' },
+    terminal: {
+      title: 'valen@vt: ~',
+      role: { key: 'Role', value: 'cybersecurity + backend' },
+      base: { key: 'Base', value: 'Rosario, AR' },
+      channel: 'Channel',
+      book: { key: 'Book', value: 'in beta · ch. 1 free' },
+      comandle: { key: 'comandle', live: (total) => `${total} games (live)`, idle: 'command of the day' },
+      talk: { key: 'Talk', none: 'none scheduled' },
+      community: { key: 'Community', value: (members) => `${members} on Discord` },
+      shell: { key: 'Shell', value: 'Spanish, Rioplatense' },
+    },
+    desktopLabel: 'PROD 1.1',
     youtube: {
-      title: 'YouTube.app',
+      title: 'channel.mp4',
       name: 'VT Security',
-      stats: (subs, videos) => `${subs}K subscribers · ${number('en').format(videos)} videos`,
-      body: 'My channel: I explain Linux, networking, cloud and cybersecurity, in Spanish, with the commands I actually use.',
+      stats: (subs, videos) => `${subs}K subscribers · ${videos} videos`,
+      body: "Videos on what you don't see on localhost: networking, permissions, queues, cloud and security. In Spanish.",
       cta: 'Watch the channel',
     },
     book: {
-      title: 'libro.pdf',
+      title: 'book.pdf',
       name: 'No podés defender lo que no entendés',
-      body: "I'm writing a book on Linux, the abstractions that fail, and the road to cybersecurity. In Spanish.",
+      body: 'Linux through the layers that fail: every abstraction and what it hides. In Spanish.',
       meta: 'Chapter 1 free · PDF · no sign-up',
       cta: 'Read the chapter',
       coverAlt: 'Cover of the book No podés defender lo que no entendés: Tux in a boat lights up an iceberg made of system layers.',
     },
     comandle: {
-      title: 'comandle 1.1',
-      body: 'I built a Wordle of Linux and security commands. Six tries, a new one every day. In Spanish.',
+      title: 'comandle.sh',
+      body: 'One command a day, six tries. Then I explain it. In Spanish.',
       today: 'today',
       yesterday: 'yesterday',
       total: 'total',
@@ -220,52 +247,45 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       offline: 'Live counts did not load; the game works anyway.',
     },
     talk: {
-      title: 'charla.ics',
+      title: 'talk.ics',
       at: (place) => `I'm giving this talk at ${place}.`,
       empty: 'No next talk announced yet. The full schedule is on /eventos.',
       cta: 'See the talk',
       closed: 'Closed to the public.',
     },
     labs: {
-      title: 'labs.sh',
+      title: 'labs/',
       name: 'Open Security Labs',
-      body: 'I built free labs on Linux, networking, backend and cloud. You run the commands and keep the evidence. No account.',
+      body: 'You practice on your own machine as if it were production, and you keep the evidence.',
       cta: 'Start a lab',
     },
-    blog: {
-      title: 'blog.txt',
-      name: 'Blog',
-      body: 'I write long-form notes with the diagrams and the exact commands. In Spanish.',
-      cta: 'Read',
-    },
+    blog: { title: 'notes.md', name: 'Blog', body: 'Real failures, diagrams and the exact commands. In Spanish.', cta: 'Read' },
     discord: {
-      title: 'discord.exe',
+      title: 'dedsec.chat',
       name: 'DedSec',
-      body: (members) => `My community: ${members} people talking security.`,
+      body: (members) => `${members} people asking what the tutorials leave out.`,
       cta: 'Join',
     },
     secretShare: {
-      title: 'secretshare.bin',
+      title: 'secret.bin',
       name: 'VT-SecretShare',
-      body: 'I made it to stop sending passwords over chat: they can be read once, then destroy themselves.',
+      body: 'Encrypted in your browser and deleted as soon as someone reads it.',
       cta: 'Try it',
     },
-    clock: { title: 'Clock Tool 1.1', place: 'Rosario, AR' },
-    glider: { title: 'Glider 1.1', caption: 'Game of Life' },
-    bigNumber: {
-      played: (total) => `${total} games.`,
-      days: (days) => (days === 1 ? 'In 1 day.' : `In ${days} days.`),
-      playedNote: '*comandle games since launch, live.',
-      fallback: '42K subscribers.',
-      fallbackNote: (date) => `*VT Security on YouTube, as of ${date}.`,
+    clock: { title: 'uptime', place: 'Rosario, AR' },
+    glider: { title: 'cron.life', caption: 'Game of Life' },
+    profilesTitle: 'Follow me in production.',
+    profilesLabel: 'Profiles',
+    numbers: {
+      subscribers: (subs) => `${subs}K subscribers.`,
+      videos: (videos) => `${videos} videos.`,
+      note: (date) => `*VT Security on YouTube, as of ${date}.`,
     },
     stats: [
-      { value: (a) => `${a.youtube}K`, label: 'Subscribers on YouTube.' },
       { value: (a) => `${a.instagram}K`, label: 'Followers on Instagram.' },
-      { value: (a) => number('en').format(a.youtubeVideos), label: 'Videos published.' },
+      { value: (a) => `${a.tiktok}K`, label: 'Followers on TikTok.' },
+      { value: (a, number) => `+${number.format(a.discord)}`, label: 'People on Discord.' },
     ],
-    profilesTitle: 'Find me anywhere.',
-    profilesLabel: 'Profiles',
     footer: { version: 'Version 1.1', rights: '©2026 Valentín Torassa Colombero.', made: 'Made in Rosario.', site: 'valentorassa.com' },
   },
 };

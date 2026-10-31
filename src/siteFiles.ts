@@ -35,13 +35,14 @@ function contentDate(route: Route, today: string): string | undefined {
 }
 
 /**
- * sitemap.xml: every page in both languages with its hreflang alternates. lastmod
+ * sitemap.xml: every page in both languages with its hreflang alternates,
+ * except the links page, which lives on its own host (linksContent.ts). lastmod
  * is the later of the page's content date and the last commit to its sources
  * (when the build has git history); a page with neither has no lastmod.
  * `committedOn` is keyed by page (`home`, `libro`...) and `talk:<id>`.
  */
 export function sitemapXml(today: string, committedOn: Record<string, string | undefined>) {
-  const entries = routes.map((route) => {
+  const entries = routes.filter((route) => route.page !== 'links').map((route) => {
     const alternates = {
       es: absoluteUrl('es', route.path),
       en: absoluteUrl('en', route.path),

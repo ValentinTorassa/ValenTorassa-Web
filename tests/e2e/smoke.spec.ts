@@ -17,6 +17,8 @@ import { expect, test, type Page } from '@playwright/test';
  * - speaker-kit.html (src/speakerKit.tsx) is /speaker-kit, the page for event organizers.
  * - libro.html (src/libro.tsx) is /libro: the upcoming book and its waitlist form.
  * - links.html (src/links.tsx) is /links: the page every social bio points to.
+ *   Production serves it at https://links.vtsecurity.com.ar/ and leaves it out
+ *   of this site's sitemap (docs/links-domain.md).
  * - public/*.html are standalone static pages. vercel.json sets cleanUrls, so
  *   production serves them without the .html suffix; `vite preview` does the same.
  * - 404.html is served for any other path, with status 404.
@@ -103,7 +105,7 @@ test.describe('route coverage', () => {
       .map((file) => `/${file.replace(/\.html$/, '')}`);
     for (const page of noindex) expect(locs, `noindex page ${page} is not in the sitemap`).not.toContain(page);
     for (const loc of locs) {
-      expect(loc, `sitemap entry ${loc}`).toMatch(/^(\/en)?(\/|\/(charlas|eventos|libro|speaker-kit|links)|\/charlas\/[a-z0-9-]+)$/);
+      expect(loc, `sitemap entry ${loc}`).toMatch(/^(\/en)?(\/|\/(charlas|eventos|libro|speaker-kit)|\/charlas\/[a-z0-9-]+)$/);
       const file = loc.endsWith('/') ? `${loc}index.html` : `${loc}.html`;
       expect(existsSync(path.join(repoRoot, 'dist', file.slice(1))), `built page ${loc}`).toBe(true);
     }
