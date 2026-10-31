@@ -30,8 +30,10 @@ import {
   type PrivateProject,
   type StackTag,
 } from './homeContent';
+import { FaLink } from 'react-icons/fa6';
 import { talkLabelsByLanguage } from './eventsContent';
-import { blogUrl, contactEmail, headerSocialLinks, isExternalLink, socialLinks, type Language } from './siteContent';
+import { linksPageUrl } from './linksContent';
+import { blogUrl, contactEmail, headerSocialLinks, isExternalLink, socialLinks, type Language, type SocialLink } from './siteContent';
 import { talks, type Talk } from './events';
 import { formatTalkDate, formatTalkPlace, formatTalkTime, splitTalks } from './eventSchedule';
 import { localePath, useToday } from './site';
@@ -40,6 +42,8 @@ import { TalkChips } from './talkComponents';
 import { talkMedia } from './talkMedia';
 
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
+/** The links page (the one every social bio points to), in the page's language. */
+const linksPageLink = (language: Language): SocialLink => ({ name: 'Links', href: linksPageUrl(language), icon: FaLink });
 
 function App({ language }: { language: Language }) {
   const [activeSection, setActiveSection] = useState('');
@@ -231,7 +235,7 @@ function App({ language }: { language: Language }) {
             </div>
 
             <div className="hero-socials" aria-label={content.heroSocialLabel}>
-              {headerSocialLinks.filter(isExternalLink).map((link) => (
+              {[...headerSocialLinks.filter(isExternalLink), linksPageLink(language)].map((link) => (
                 <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" title={link.name}>
                   <SocialIcon link={link} />
                   <span>{link.name}</span>
@@ -673,7 +677,7 @@ function App({ language }: { language: Language }) {
 
           <div className="contact-networks">
             <nav className="contact-network-links" aria-label={content.contact.socialLabel}>
-              {contactSocialLinks.map((link) => (
+              {[...contactSocialLinks, linksPageLink(language)].map((link) => (
                 <a
                   key={link.name}
                   href={link.href}

@@ -37,10 +37,7 @@ body {
   overflow-x: hidden;
   min-width: 320px;
   margin: 0;
-  background:
-    radial-gradient(circle at 50% -14%, rgba(98, 223, 210, 0.1), transparent 36rem),
-    radial-gradient(circle at 92% 42%, rgba(156, 140, 255, 0.035), transparent 30rem),
-    linear-gradient(180deg, #07090e 0%, #090d14 52%, #07090e 100%);
+  background: #0b0c0e;
   color: var(--text);
   font-family: var(--body);
   font-size: 16px;
@@ -49,27 +46,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The ground: graphite, a touch lighter behind the hero and darker at the edges,
+   fixed to the viewport so long pages keep it centred on screen. */
 body::before {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   content: '';
-  background-image:
-    linear-gradient(rgba(156, 140, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(98, 223, 210, 0.032) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(110% 80% at 50% 0%, #000 35%, transparent 86%);
-}
-
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-  content: '';
-  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 6px);
-  opacity: 0.24;
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #14161a 0%, #0b0c0e 60%, #060607 100%);
 }
 
 button,
@@ -457,25 +442,6 @@ img {
   place-items: center;
 }
 
-.hero::before {
-  position: absolute;
-  inset: -18%;
-  z-index: 0;
-  pointer-events: none;
-  content: '';
-  background: linear-gradient(
-    115deg,
-    transparent 32%,
-    rgba(98, 223, 210, 0.055) 45%,
-    rgba(156, 140, 255, 0.05) 50%,
-    transparent 63%
-  );
-  mix-blend-mode: screen;
-  opacity: 0.56;
-  transform: translateX(-36%);
-  animation: hero-light-sweep 10s ease-in-out infinite;
-}
-
 .hero::after {
   position: absolute;
   inset: 0;
@@ -483,8 +449,8 @@ img {
   pointer-events: none;
   content: '';
   background:
-    radial-gradient(circle at 50% 49%, rgba(7, 9, 14, 0.64) 0 19rem, rgba(7, 9, 14, 0.16) 31rem, transparent 49rem),
-    linear-gradient(90deg, rgba(7, 9, 14, 0.18), transparent 20%, transparent 80%, rgba(7, 9, 14, 0.18));
+    radial-gradient(circle at 50% 49%, rgba(11, 12, 14, 0.64) 0 19rem, rgba(11, 12, 14, 0.16) 31rem, transparent 49rem),
+    linear-gradient(90deg, rgba(11, 12, 14, 0.18), transparent 20%, transparent 80%, rgba(11, 12, 14, 0.18));
 }
 
 .hero-scene {
@@ -2193,18 +2159,6 @@ p {
   }
 }
 
-@keyframes hero-light-sweep {
-  0%,
-  28% {
-    transform: translateX(-38%);
-  }
-
-  58%,
-  100% {
-    transform: translateX(38%);
-  }
-}
-
 @keyframes hero-settle {
   from {
     opacity: 0;
@@ -2853,10 +2807,6 @@ p {
 
   .mobile-nav-panel {
     width: calc(100vw - 24px);
-  }
-
-  .hero::before {
-    opacity: 0.32;
   }
 
   .hero-inner {
