@@ -359,8 +359,8 @@ export function pageHead(route: Route, today: string): PageHead {
         alternates: { es: linksPageUrl('es'), en: linksPageUrl('en') },
         title: page.documentTitle,
         description: page.seo.description,
-        image: `${SITE_ORIGIN}${socialImages.home}`,
-        imageAlt: contentByLanguage[language].documentTitle,
+        image: `${SITE_ORIGIN}${socialImages.links}`,
+        imageAlt: page.seo.imageAlt,
         jsonLd: {
           '@context': 'https://schema.org',
           '@type': 'ProfilePage',
