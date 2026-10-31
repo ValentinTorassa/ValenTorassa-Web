@@ -1,7 +1,8 @@
 /*
  * /charlas: a 3D stage. The deck plays on a tilted screen on the right, the
- * dots behind it draw the talk's icon over a floor grid (src/hubScene.ts), the
- * text sits bottom left, and the selector runs along the bottom.
+ * dots behind it draw the talk's icon (src/hubScene.ts), the text sits bottom
+ * left, and the selector runs along the bottom. Same ground, accent and
+ * corners as the rest of the site: graphite, one teal, 4px, no glows.
  */
 
 .sr-only {
@@ -17,9 +18,8 @@
 }
 
 .hub {
-  --mint: #8fe0c6;
+  --mint: #62dfd2;
   --deck-h: 150px;
-  --ink-hub: #0a0c11;
   --paper: #f3f1ea;
   position: relative;
   display: grid;
@@ -28,7 +28,7 @@
   height: 100vh;
   height: 100dvh;
   min-height: 640px;
-  background: radial-gradient(ellipse at 70% 40%, #10141f 0%, var(--ink-hub) 60%);
+  background: radial-gradient(ellipse 80% 70% at 50% 42%, #14161a 0%, #0b0c0e 60%, #060607 100%);
   color: var(--paper);
   overflow: hidden;
 }
@@ -83,7 +83,6 @@
   height: 10px;
   border-radius: 50%;
   background: var(--mint);
-  box-shadow: 0 0 12px rgba(143, 224, 198, 0.6);
 }
 
 .hub-touch-controls {
@@ -91,18 +90,15 @@
 }
 
 .hub-soon {
-  padding: 2px 8px;
-  border: 1px solid rgba(143, 224, 198, 0.4);
-  border-radius: 999px;
   color: var(--mint);
   font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 /* A paper or poster of its own, in the tone of its page. */
 .hub-soon.is-paper {
-  border-color: rgba(243, 241, 234, 0.35);
   color: var(--paper);
 }
 
@@ -111,16 +107,16 @@
   margin: 0;
   font-family: var(--display);
   font-size: clamp(3.4rem, 7vw, 6.6rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 0.95;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.04em;
 }
 
 .hub-name {
   margin: 22px 0 12px;
   font-family: var(--display);
   font-size: clamp(1.4rem, 2.3vw, 2.15rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
   letter-spacing: -0.025em;
   text-wrap: balance;
@@ -157,14 +153,14 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 28px;
-  border-radius: 999px;
+  padding: 14px 24px;
+  border-radius: 4px;
   background: var(--mint);
-  color: #0b0d10;
-  font-size: 1.12rem;
-  font-weight: 700;
+  color: #04211d;
+  font-size: 1.02rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .hub-open svg {
@@ -174,8 +170,7 @@
 
 a.hub-open:hover,
 a.hub-open:focus-visible {
-  background: #a8ecd6;
-  transform: translateX(2px);
+  background: #86e8de;
 }
 
 .hub-open.is-off {
@@ -242,7 +237,7 @@ a.hub-open:focus-visible {
   font-family: var(--mono);
   font-size: 0.88rem;
   text-decoration: none;
-  border-bottom: 1px solid rgba(143, 224, 198, 0.35);
+  border-bottom: 1px solid rgba(98, 223, 210, 0.35);
 }
 
 .hub-apuntes a svg {
@@ -268,7 +263,7 @@ a.hub-open:focus-visible {
 .hub-hint kbd {
   padding: 3px 9px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 4px;
   color: var(--paper);
   font-family: var(--mono);
   font-size: 0.85rem;
@@ -287,7 +282,6 @@ a.hub-open:focus-visible {
   min-width: 0;
   perspective: 1800px;
   perspective-origin: 30% 50%;
-  animation: hub-bob 7s ease-in-out infinite alternate;
 }
 
 .hub-screen {
@@ -296,7 +290,7 @@ a.hub-open:focus-visible {
   overflow: hidden;
   border-radius: 4px;
   background: #11141c;
-  box-shadow: 0 50px 120px -40px rgba(70, 90, 255, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 40px 90px -50px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
   transform: rotateY(-17deg) rotateX(2deg);
   transform-origin: 60% 50%;
   animation: hub-enter 0.75s cubic-bezier(0.2, 0.7, 0.1, 1) both;
@@ -316,7 +310,7 @@ a.hub-open:focus-visible {
 .hub-screen::after {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(8, 10, 16, 0.42) 100%);
+  background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(8, 9, 10, 0.42) 100%);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   content: '';
   pointer-events: none;
@@ -330,7 +324,7 @@ a.hub-open:focus-visible {
   justify-content: flex-end;
   gap: 14px;
   padding: 7% 8%;
-  background: linear-gradient(140deg, #26336e 0%, #151a33 55%, #0e1120 100%);
+  background: linear-gradient(140deg, #1b1d22 0%, #131417 55%, #0c0d0f 100%);
 }
 
 .hub-titlecard span {
@@ -355,7 +349,7 @@ a.hub-open:focus-visible {
   font-family: var(--display);
   font-size: clamp(2rem, 5vw, 4.4rem);
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   opacity: 0.85;
 }
 
@@ -387,8 +381,8 @@ a.hub-open:focus-visible {
   top: 16px;
   right: 40px;
   padding: 2px 7px;
-  border-radius: 5px;
-  background: rgba(10, 12, 17, 0.55);
+  border-radius: 3px;
+  background: rgba(10, 11, 12, 0.6);
   color: rgba(255, 255, 255, 0.85);
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -397,11 +391,6 @@ a.hub-open:focus-visible {
 @keyframes hub-enter {
   from { opacity: 0; transform: rotateY(-42deg) rotateX(4deg) translateX(90px) translateZ(-120px); }
   to { opacity: 1; transform: rotateY(-17deg) rotateX(2deg); }
-}
-
-@keyframes hub-bob {
-  from { transform: translateY(0); }
-  to { transform: translateY(-10px); }
 }
 
 @keyframes hub-rise {
@@ -416,7 +405,7 @@ a.hub-open:focus-visible {
   z-index: 2;
   min-width: 0;
   padding: 18px 0 24px;
-  background: linear-gradient(180deg, transparent, rgba(8, 10, 14, 0.92) 40%);
+  background: linear-gradient(180deg, transparent, rgba(9, 10, 11, 0.92) 40%);
 }
 
 .hub-deck-row {
@@ -463,13 +452,13 @@ a.hub-open:focus-visible {
   margin-left: 10px;
   padding: 10px 28px 0 18px;
   border: 0;
-  border-left: 1px solid rgba(166, 181, 205, 0.18);
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
   /* The entries slide under it and fade, instead of showing through the numbers. */
-  background: linear-gradient(90deg, #0b0d12 72%, rgba(11, 13, 18, 0));
+  background: linear-gradient(90deg, #0a0b0c 72%, rgba(10, 11, 12, 0));
   color: rgba(243, 241, 234, 0.22);
   font-family: var(--display);
   font-size: 3.4rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.05em;
   line-height: 0.82;
   text-align: left;
@@ -518,7 +507,6 @@ a.hub-open:focus-visible {
 }
 
 .deck-card.is-selected {
-  transform: translateY(-5px);
   color: var(--paper);
 }
 
@@ -532,9 +520,9 @@ a.hub-open:focus-visible {
   place-items: center;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  border-radius: 10px;
-  background: linear-gradient(140deg, #1f2850, #10131f);
-  box-shadow: inset 0 0 0 1px rgba(166, 181, 205, 0.14);
+  border-radius: 4px;
+  background: #15171b;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .deck-thumb img {
@@ -546,15 +534,15 @@ a.hub-open:focus-visible {
 }
 
 .deck-thumb em {
-  color: rgba(214, 222, 255, 0.8);
+  color: rgba(236, 238, 241, 0.7);
   font-family: var(--display);
   font-size: 1.3rem;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .deck-card.is-selected .deck-thumb {
-  box-shadow: 0 0 0 2px var(--mint), 0 14px 30px -14px rgba(143, 224, 198, 0.5);
+  box-shadow: 0 0 0 2px var(--mint);
 }
 
 .deck-card:focus-visible .deck-thumb {
@@ -636,9 +624,9 @@ a.hub-open:focus-visible {
     width: 44px;
     height: 44px;
     padding: 0;
-    border: 1px solid rgba(166, 181, 205, 0.35);
-    border-radius: 10px;
-    background: rgba(17, 23, 34, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(17, 18, 21, 0.9);
     color: var(--paper);
     cursor: pointer;
   }
@@ -686,9 +674,9 @@ a.hub-open:focus-visible {
     font-size: 1.9rem;
     transform: rotate(180deg);
     writing-mode: vertical-rl;
-    background: linear-gradient(270deg, #0b0d12 60%, rgba(11, 13, 18, 0));
+    background: linear-gradient(270deg, #0a0b0c 60%, rgba(10, 11, 12, 0));
     border-left: 0;
-    border-right: 1px solid rgba(166, 181, 205, 0.18);
+    border-right: 1px solid rgba(255, 255, 255, 0.14);
   }
 
   .deck-year.is-current {
