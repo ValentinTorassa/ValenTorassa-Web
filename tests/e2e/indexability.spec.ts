@@ -256,8 +256,8 @@ test.describe('site files', () => {
     expect(html).toContain('href="/en/"');
     await page.goto('/no-existe');
     await expect(page.getByRole('link', { name: 'Charlas' })).toHaveAttribute('href', '/charlas');
-    // The site's stylesheet is there: the dark gradient background and the display face.
-    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundImage)).toContain('gradient');
+    // The site's stylesheet is there: the graphite background and the display face.
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(11, 12, 14)');
     expect(await page.locator('h1').evaluate((h1) => getComputedStyle(h1).fontFamily)).toContain('Space Grotesk');
   });
 
