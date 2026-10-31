@@ -73,18 +73,23 @@ test.describe('/speaker-kit', () => {
     await expect(past.locator('a[href="/charlas/debconf26"]')).toHaveCount(1);
   });
 
-  test('the headshot downloads as a 720 px PNG', async ({ page }) => {
+  test('the headshot downloads as a 1150 px JPG', async ({ page }) => {
     desktopOnly();
     await page.goto('/speaker-kit?lang=es');
 
     const link = page.locator('#foto a[download]');
-    await expect(link).toHaveAttribute('download', 'valentin-torassa-colombero.png');
-    const response = await page.request.get((await link.getAttribute('href'))!);
+    await expect(link).toHaveAttribute('download', 'valentin-torassa-colombero.jpg');
+    const href = (await link.getAttribute('href'))!;
+    const response = await page.request.get(href);
     expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toContain('image/png');
-    const png = await response.body();
-    expect(png.readUInt32BE(16)).toBe(720);
-    expect(png.readUInt32BE(20)).toBe(720);
+    expect(response.headers()['content-type']).toContain('image/jpeg');
+    const size = await page.evaluate(async (src) => {
+      const img = new Image();
+      img.src = src;
+      await img.decode();
+      return [img.naturalWidth, img.naturalHeight];
+    }, href);
+    expect(size).toEqual([1150, 1150]);
   });
 
   test('copies the short bio', async ({ page, context }) => {

@@ -1,4 +1,3 @@
-import portrait from './assets/portrait-dark.png';
 import { charlasPageByLanguage } from './charlasContent';
 import { splitTalks } from './eventSchedule';
 import { talks, type Talk } from './events';
@@ -8,7 +7,7 @@ import { book, libroByLanguage } from './libroContent';
 import { linksByLanguage, linksPageUrl } from './linksContent';
 import { paperOfTalk, papers, type Paper } from './research';
 import { absoluteUrl, SITE_ORIGIN } from './site';
-import type { Language } from './siteContent';
+import { headshotPath, type Language } from './siteContent';
 import { socialImages, SOCIAL_IMAGE_SIZE } from './socialImages';
 import { speakerKitByLanguage } from './speakerKitContent';
 import { talkPageMeta, talkPages } from './talkSeo';
@@ -59,7 +58,7 @@ const person = {
   name: NAME,
   alternateName: ['Valen Torassa', 'Valentin Torassa', 'Valentín Torassa'],
   url: `${SITE_ORIGIN}/`,
-  image: `${SITE_ORIGIN}${portrait}`,
+  image: `${SITE_ORIGIN}${headshotPath}`,
   jobTitle: ['Cybersecurity Engineer', 'Backend Engineer'],
   worksFor: { '@type': 'Organization', name: 'Teramot' },
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universidad Abierta Interamericana' },

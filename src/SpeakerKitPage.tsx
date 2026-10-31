@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowRight, ArrowUpRight, Award, Check, Copy, Download, Languages, Mail, MicVocal } from 'lucide-react';
-import headshotFull from './assets/headshot.jpg';
 import headshotFallback from './assets/headshot-384.jpg';
 import headshotAvif256 from './assets/headshot-256.avif';
 import headshotAvif384 from './assets/headshot-384.avif';
@@ -13,7 +12,7 @@ import { talkLabelsByLanguage } from './eventsContent';
 import { formatTalkDate, formatTalkPlace, splitTalks } from './eventSchedule';
 import { papers } from './research';
 import { counterpartPath, localePath, useToday } from './site';
-import { contactEmail, siteChromeByLanguage, socialLinks, type Language } from './siteContent';
+import { contactEmail, headshotPath, siteChromeByLanguage, socialLinks, type Language } from './siteContent';
 import { SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
 import {
   inviteDurations,
@@ -259,7 +258,7 @@ function SpeakerKitPage({ language }: { language: Language }) {
               <img src={headshotFallback} alt={kit.photo.alt} width={384} height={384} decoding="async" />
             </picture>
             <figcaption>
-              <a href={headshotFull} download={headshotFileName}>
+              <a href={headshotPath} download={headshotFileName}>
                 <Download aria-hidden="true" />
                 {kit.photo.download}
               </a>

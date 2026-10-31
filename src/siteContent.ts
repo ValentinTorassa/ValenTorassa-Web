@@ -58,6 +58,9 @@ export function siteNav(page: SitePage, language: Language): NavItem[] {
 
 export const contactEmail = 'valentin.torassa.colombero@gmail.com';
 
+/** The full-size headshot: the speaker kit download and the Person image. A fixed URL in public/, so it never depends on a page importing it. */
+export const headshotPath = '/valentin-torassa-colombero.jpg';
+
 export const socialLinks: SocialLink[] = [
   {
     name: 'Blog',
