@@ -145,7 +145,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
     photo: {
       alt: 'Retrato de Valentín Torassa Colombero',
       download: 'Descargar foto',
-      caption: 'PNG, 720 × 720 px. Para la difusión de tu evento.',
+      caption: 'JPG, 1150 × 1150 px. Para la difusión de tu evento.',
     },
     bio: {
       eyebrow: '// bio',
@@ -310,7 +310,7 @@ export const speakerKitByLanguage: Record<Language, SpeakerKitContent> = {
     photo: {
       alt: 'Headshot of Valentín Torassa Colombero',
       download: 'Download headshot',
-      caption: 'PNG, 720 × 720 px, for promoting your event.',
+      caption: 'JPG, 1150 × 1150 px, for promoting your event.',
     },
     bio: {
       eyebrow: '// bio',
