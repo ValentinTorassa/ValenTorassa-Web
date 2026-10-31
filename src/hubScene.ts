@@ -1,7 +1,6 @@
 /**
- * The 3D backdrop of /charlas: a floor grid that fades into the dark and a
- * figure drawn with dots, like an LED display, that re-forms into each talk's
- * icon. The icon is rasterized from its SVG and sampled on a regular grid, so
+ * The 3D backdrop of /charlas: a figure drawn with dots, like an LED
+ * display, that re-forms into each talk's icon. The icon is rasterized from its SVG and sampled on a regular grid, so
  * the dots keep the even spacing of a dot-matrix sign.
  *
  * Loaded on demand (three.js is heavy); if WebGL is not there, the page keeps
@@ -72,20 +71,9 @@ export async function createHubScene(canvas: HTMLCanvasElement, reducedMotion: b
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x090b10, 0.075);
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
   camera.position.set(0, 1.1, 8);
   camera.lookAt(0, 0.35, 0);
-
-  // Floor: a wide grid of thin lines that the fog swallows in the distance.
-  const lines: number[] = [];
-  const floorY = -2.1;
-  for (let x = -40; x <= 40; x += 1.6) lines.push(x, floorY, 8, x, floorY, -60);
-  for (let z = 8; z >= -60; z -= 1.6) lines.push(-40, floorY, z, 40, floorY, z);
-  const floorGeometry = new THREE.BufferGeometry();
-  floorGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(lines), 3));
-  const floor = new THREE.LineSegments(floorGeometry, new THREE.LineBasicMaterial({ color: 0x1d2432, transparent: true, opacity: 0.85 }));
-  scene.add(floor);
 
   const sprite = dotTexture(THREE);
   const figure = new THREE.Group();
@@ -132,7 +120,7 @@ export async function createHubScene(canvas: HTMLCanvasElement, reducedMotion: b
   const discGeometry = new THREE.BufferGeometry();
   discGeometry.setAttribute('position', new THREE.BufferAttribute(disc.subarray(0, d * 3), 3));
   const discMaterial = new THREE.PointsMaterial({
-    color: 0x7fe0c3, size: 0.042, map: sprite, transparent: true, alphaTest: 0.35, depthWrite: false, fog: false, opacity: 0.6,
+    color: 0x62dfd2, size: 0.042, map: sprite, transparent: true, alphaTest: 0.35, depthWrite: false, fog: false, opacity: 0.6,
   });
   figure.add(new THREE.Points(discGeometry, discMaterial));
 
@@ -206,7 +194,6 @@ export async function createHubScene(canvas: HTMLCanvasElement, reducedMotion: b
       figure.rotation.y = Math.sin(time * 0.25) * 0.12 + pointer.x * 0.25;
       figure.rotation.x = pointer.y * 0.12;
       figure.position.y = 2.35 + Math.sin(time * 0.6) * 0.06;
-      floor.position.z = (time * 0.35) % 1.6;
     }
 
     renderer.render(scene, camera);
@@ -222,7 +209,6 @@ export async function createHubScene(canvas: HTMLCanvasElement, reducedMotion: b
       cancelAnimationFrame(frame);
       observer.disconnect();
       window.removeEventListener('pointermove', onPointer);
-      floorGeometry.dispose();
       iconGeometry.dispose();
       discGeometry.dispose();
       sprite.dispose();

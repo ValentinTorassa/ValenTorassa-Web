@@ -5277,3 +5277,27 @@ p {
     border-bottom: 0;
   }
 }
+
+/* Every page, same pass: graphite header, 4px brand mark, headings at 600, and
+   the book's "provisional" badge in neutral instead of amber. */
+.topbar {
+  background: rgba(11, 12, 14, 0.9);
+}
+
+.brand img {
+  border-radius: var(--radius);
+}
+
+.events-hero h1,
+.events-section-head h2,
+.book-hero h1,
+.book-section h2,
+.kit-hero h1,
+.kit-section-head h2 {
+  font-weight: 600;
+}
+
+.book-badge {
+  border-color: var(--line-strong);
+  color: var(--muted);
+}
