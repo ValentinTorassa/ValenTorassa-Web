@@ -321,6 +321,42 @@
   line-height: 1.75;
 }
 
+/* Details */
+
+.book-details {
+  display: grid;
+  margin: 0;
+  padding-block: 8px;
+}
+
+.book-details div {
+  display: grid;
+  grid-template-columns: clamp(6rem, 20vw, 8.75rem) minmax(0, 1fr);
+  gap: 12px;
+  padding: 9px 0;
+}
+
+.book-details div + div {
+  border-top: 1px solid rgba(166, 181, 205, 0.08);
+}
+
+.book-details dt {
+  padding-top: 2px;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.book-details dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
 /* Waitlist */
 
 .book-waitlist {

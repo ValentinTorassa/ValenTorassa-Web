@@ -157,6 +157,18 @@ function LibroPage({ language }: { language: Language }) {
           <p>{page.audience.text}</p>
         </section>
 
+        <section className="book-section" id="ficha" aria-labelledby="ficha-title">
+          <h2 id="ficha-title">{page.details.title}</h2>
+          <dl className="book-card book-details">
+            {page.details.items.map((item) => (
+              <div key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         <section className="book-section" id="lista" aria-labelledby="lista-title">
           <div className="book-card book-waitlist">
             <div className="book-waitlist-text">
