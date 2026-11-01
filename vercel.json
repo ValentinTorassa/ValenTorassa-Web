@@ -1,7 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci",
+  "buildCommand": "npm run build && node scripts/strip-media.mjs",
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/charlas/:id/slides",
+      "destination": "https://valentorassa-media.vercel.app/charlas/:id/slides"
+    },
+    {
+      "source": "/charlas/:id/reel.mp4",
+      "destination": "https://valentorassa-media.vercel.app/charlas/:id/reel.mp4"
+    },
+    {
+      "source": "/og-charlas/:file.png",
+      "destination": "https://valentorassa-media.vercel.app/og-charlas/:file.png"
+    }
+  ],
   "redirects": [
     {
       "source": "/:path(.*)",
