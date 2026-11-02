@@ -7,7 +7,7 @@ import { book, libroByLanguage } from './libroContent';
 import { linksByLanguage, linksPageUrl } from './linksContent';
 import { paperOfTalk, papers, type Paper } from './research';
 import { absoluteUrl, SITE_ORIGIN } from './site';
-import { headshotPath, type Language } from './siteContent';
+import { headshotPath, mastodonUrl, type Language } from './siteContent';
 import { socialImages, SOCIAL_IMAGE_SIZE } from './socialImages';
 import { speakerKitByLanguage } from './speakerKitContent';
 import { talkPageMeta, talkPages } from './talkSeo';
@@ -417,6 +417,7 @@ export function headHtml(head: PageHead): string {
     `<link rel="alternate" hreflang="es" href="${head.alternates.es}" />`,
     `<link rel="alternate" hreflang="en" href="${head.alternates.en}" />`,
     `<link rel="alternate" hreflang="x-default" href="${head.alternates.es}" />`,
+    `<link rel="me" href="${mastodonUrl}" />`,
     meta('property', 'og:type', 'website'),
     meta('property', 'og:site_name', NAME),
     meta('property', 'og:title', head.title),

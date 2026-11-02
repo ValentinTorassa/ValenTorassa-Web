@@ -63,6 +63,15 @@ test.describe('HTML without JavaScript', () => {
     });
   }
 
+  test('links back to Mastodon with rel="me", so the profile shows the site as verified', async ({ request }) => {
+    once();
+    // Mastodon reads the HTML without running JavaScript.
+    for (const pathname of ['/', '/en/', '/links']) {
+      const html = await rawHtml(request, pathname);
+      expect(html, pathname).toContain('<link rel="me" href="https://infosec.exchange/@vtsecurity" />');
+    }
+  });
+
   test('every page in the sitemap is real HTML with a self canonical and JSON-LD that parses', async ({ request }) => {
     once();
     const paths = sitemapPaths();

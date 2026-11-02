@@ -1,5 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { talks } from '../../src/events';
 import { linksAnalyticsUrl } from '../../src/linksAnalytics';
+
+/** Noon in Argentina on the day after the last talk in src/events.ts, when none is coming. */
+function afterTheLastTalk() {
+  const last = talks.map((talk) => talk.endDate ?? talk.date).sort().at(-1)!;
+  const day = new Date(`${last}T15:00:00Z`);
+  day.setUTCDate(day.getUTCDate() + 1);
+  return day;
+}
 
 /**
  * The links page is where the social bios point. A bio adds its tag (?ref=ig)
@@ -14,6 +23,47 @@ test.describe('links page', () => {
     await expect(page.locator('.hero-terminal')).toContainText('valen@vt');
     await expect(page.locator('.w-comandle')).toHaveAttribute('href', 'https://comandle.valentorassa.com/?ref=links-ig');
     await expect(page.locator('.w-book')).toHaveAttribute('href', 'https://valentorassa.com/libro?ref=links-ig');
+  });
+
+  test('carries the bio tag to Apuntes, whose sign-ups keep any ref', async ({ page }) => {
+    await page.goto('/links?ref=ig');
+    await expect(page.locator('.w-apuntes')).toHaveAttribute('href', 'https://vtsecurity.com.ar/apuntes?ref=links-ig');
+    await expect(page.locator('.w-apuntes')).toContainText('Un mail cada dos semanas');
+    await page.goto('/links');
+    await expect(page.locator('.w-apuntes')).toHaveAttribute('href', 'https://vtsecurity.com.ar/apuntes?ref=links');
+  });
+
+  test('gives the book the same status as /libro', async ({ page }) => {
+    await page.goto('/links');
+    await expect(page.locator('.hero-terminal')).toContainText('Libro: en preparación · cap. 1 gratis');
+    await page.goto('/en/links');
+    await expect(page.locator('.hero-terminal')).toContainText('Book: in progress · ch. 1 free');
+  });
+
+  test('shows the next talk while one is coming', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-11-02T15:00:00Z'));
+    await page.goto('/links');
+    await expect(page.locator('.w-talk')).toHaveAttribute('href', 'https://valentorassa.com/charlas/rossec-2026');
+    await expect(page.locator('.w-talk')).toContainText('ROS:SEC 2026');
+    await expect(page.locator('.w-invite')).toHaveCount(0);
+  });
+
+  test('invites organizers to the speaker kit once no talk is coming', async ({ page }) => {
+    await page.clock.setFixedTime(afterTheLastTalk());
+    await page.goto('/links');
+    await expect(page.locator('.w-talk')).toHaveAttribute('href', 'https://valentorassa.com/speaker-kit');
+    await expect(page.locator('.w-talk')).toContainText('Invitame a tu evento');
+    await expect(page.locator('.hero-terminal')).toContainText('Charla: sin fecha');
+    await page.goto('/en/links');
+    await expect(page.locator('.w-talk')).toHaveAttribute('href', 'https://valentorassa.com/en/speaker-kit');
+    await expect(page.locator('.w-talk')).toContainText('Invite me to your event');
+  });
+
+  test('lists Facebook and Mastodon with the other profiles', async ({ page }) => {
+    await page.goto('/links');
+    const list = page.locator('.profile-list');
+    await expect(list.locator('a[href="https://www.facebook.com/vtsecurity"]')).toContainText('Facebook');
+    await expect(list.locator('a[href="https://infosec.exchange/@vtsecurity"]')).toContainText('@vtsecurity@infosec.exchange');
   });
 
   test('keeps the network refs that AutoMediaPoster adds to its posts', async ({ page }) => {

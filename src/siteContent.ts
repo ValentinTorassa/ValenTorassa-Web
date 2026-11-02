@@ -130,6 +130,12 @@ export const socialLinks: SocialLink[] = [
 ];
 
 /**
+ * The Mastodon profile. Every page's head links to it with rel="me"
+ * (src/seo.ts): that is how Mastodon shows this site as verified on the profile.
+ */
+export const mastodonUrl = 'https://infosec.exchange/@vtsecurity';
+
+/**
  * The links page lives on its own host. Vercel serves it at the root of that
  * host with a project routing rule (docs/links-domain.md); the site's own
  * /links paths redirect there (vercel.json).

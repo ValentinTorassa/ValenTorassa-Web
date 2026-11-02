@@ -5,6 +5,7 @@ import coverWebp540 from './assets/libro-cover-540.webp';
 import { ARGENTINA_TIME_ZONE, splitTalks } from './eventSchedule';
 import { talks, type Talk } from './events';
 import {
+  apuntesUrl,
   audience,
   blogUrl,
   comandleStatsApi,
@@ -215,6 +216,8 @@ function LinksPage({ language }: { language: Language }) {
   const comandleHref = withRef(comandleUrl, ref);
   const bookHref = withRef(absoluteUrl(language, '/libro'), ref);
   const talkHref = absoluteUrl(language, talk ? `/charlas/${talk.id}` : '/eventos');
+  const speakerKitHref = absoluteUrl(language, '/speaker-kit');
+  const apuntesHref = withRef(apuntesUrl, ref);
   const homeHref = absoluteUrl(language, '/');
   const videos = number.format(audience.youtubeVideos);
   const members = `+${number.format(audience.discord)}`;
@@ -354,21 +357,24 @@ function LinksPage({ language }: { language: Language }) {
               <span className="win-cta">{copy.comandle.cta} →</span>
             </Window>
 
-            <Window title={copy.talk.title} href={talkHref} external={false} className="w-talk">
-              {talk ? (
-                <>
-                  <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
-                  <span className="win-name">{talk.title[language]}</span>
-                  <span className="win-text">
-                    {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
-                    {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
-                  </span>
-                  <span className="win-cta">{copy.talk.cta} →</span>
-                </>
-              ) : (
-                <span className="win-text">{copy.talk.empty}</span>
-              )}
-            </Window>
+            {/* With no talk coming, the slot invites organizers instead of showing an empty date. */}
+            {talk ? (
+              <Window title={copy.talk.title} href={talkHref} external={false} className="w-talk">
+                <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
+                <span className="win-name">{talk.title[language]}</span>
+                <span className="win-text">
+                  {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
+                  {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
+                </span>
+                <span className="win-cta">{copy.talk.cta} →</span>
+              </Window>
+            ) : (
+              <Window title={copy.invite.title} href={speakerKitHref} external={false} className="w-talk w-invite">
+                <span className="win-name">{copy.invite.name}</span>
+                <span className="win-text">{copy.invite.body}</span>
+                <span className="win-cta">{copy.invite.cta} →</span>
+              </Window>
+            )}
 
             <Window title={copy.labs.title} href={labsUrl} className="w-labs">
               <span className="win-name">{copy.labs.name}</span>
@@ -382,6 +388,12 @@ function LinksPage({ language }: { language: Language }) {
               <span className="win-name">{copy.blog.name}</span>
               <span className="win-text">{copy.blog.body}</span>
               <span className="win-cta">{copy.blog.cta} →</span>
+            </Window>
+
+            <Window title={copy.apuntes.title} href={apuntesHref} className="w-apuntes">
+              <span className="win-name">{copy.apuntes.name}</span>
+              <span className="win-text">{copy.apuntes.body}</span>
+              <span className="win-cta">{copy.apuntes.cta} →</span>
             </Window>
 
             <Window title={copy.discord.title} href={discordUrl} className="w-discord">

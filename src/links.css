@@ -842,6 +842,11 @@ a:focus-visible {
     grid-column: span 2;
   }
 
+  /* Six small windows fill two rows of three; Apuntes takes a row of its own between them. */
+  .desk-grid > .w-apuntes {
+    grid-column: 1 / -1;
+  }
+
   .book-cover {
     width: 120px;
   }
@@ -868,10 +873,11 @@ a:focus-visible {
   .desk-grid > .w-comandle { grid-area: 2 / 1 / auto / span 5; }
   .desk-grid > .w-talk { grid-area: 2 / 6 / auto / span 4; margin-top: 10px; }
   .desk-grid > .win-glider { grid-area: 2 / 10 / auto / span 2; margin-top: 30px; }
-  .desk-grid > .w-labs { grid-area: 3 / 1 / auto / span 3; }
-  .desk-grid > .w-blog { grid-area: 3 / 4 / auto / span 3; margin-top: 24px; }
-  .desk-grid > .w-discord { grid-area: 3 / 7 / auto / span 3; }
-  .desk-grid > .w-secret { grid-area: 3 / 10 / auto / span 3; margin-top: 24px; }
+  .desk-grid > .w-labs { grid-area: 3 / 1 / auto / span 4; }
+  .desk-grid > .w-blog { grid-area: 3 / 5 / auto / span 4; margin-top: 24px; }
+  .desk-grid > .w-apuntes { grid-area: 3 / 9 / auto / span 4; }
+  .desk-grid > .w-discord { grid-area: 4 / 2 / auto / span 4; }
+  .desk-grid > .w-secret { grid-area: 4 / 7 / auto / span 4; margin-top: 24px; }
 
   .numbers {
     padding: 96px var(--gutter) 104px;
