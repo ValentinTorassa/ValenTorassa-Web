@@ -79,6 +79,10 @@ test('the back link on a deck returns to its talk', async ({ page }) => {
 
 test('the back link on a deck stays clear of the deck header until hovered', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'layout check; run once');
+  // The ROS:SEC deck keeps a 3D scene moving, and on a shared CI runner that makes
+  // every step take seconds. Reduced motion stops the scene; slow() covers the rest.
+  test.slow();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   // 16:9 fills the screen with the deck, so its header sits right under the corner.
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto('/charlas/rossec-2026/slides');
