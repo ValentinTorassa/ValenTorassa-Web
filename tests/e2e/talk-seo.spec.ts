@@ -76,3 +76,17 @@ test('the back link on a deck returns to its talk', async ({ page }) => {
   await expect(page).toHaveURL(/\/charlas\/hacking-day-2026$/);
   await expect(page.locator('#card-hacking-day-2026')).toHaveAttribute('aria-selected', 'true');
 });
+
+test('the back link on a deck stays clear of the deck header until hovered', async ({ page }) => {
+  test.skip(test.info().project.name !== 'desktop', 'layout check; run once');
+  // 16:9 fills the screen with the deck, so its header sits right under the corner.
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/charlas/rossec-2026/slides');
+  const link = page.getByRole('link', { name: 'Volver a la charla' });
+  const box = await link.boundingBox();
+  const header = await page.locator('#masthead .event').boundingBox();
+  expect(box && header).toBeTruthy();
+  expect(box!.x + box!.width <= header!.x || box!.y + box!.height <= header!.y).toBe(true);
+  await link.hover();
+  expect((await link.boundingBox())!.width).toBeGreaterThan(box!.width * 2);
+});
