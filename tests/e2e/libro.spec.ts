@@ -25,6 +25,9 @@ test.describe('/libro', () => {
     await expect(page.locator('#indice .book-badge')).toHaveText('Índice provisorio');
     await expect(page.locator('#indice .book-toc-part li')).toHaveCount(12);
     await expect(page.locator('#indice .book-toc-part h3')).toHaveText(['Parte I. El mapa', 'Parte II. Las fugas', 'Parte III. La evidencia']);
+    await expect(page.locator('#ficha dt')).toHaveText(['ISBN', 'Páginas', 'Formato', 'Edición', 'Idioma']);
+    await expect(page.locator('#ficha')).toContainText('978-631-01-9288-8');
+    await expect(page.locator('#ficha')).toContainText('224');
     await expect(page.locator('#autor a[href="/charlas/debconf26"]')).toBeVisible();
     await expect(page.locator('#autor a[href="https://www.youtube.com/@vtcibersecurity"]')).toBeVisible();
 
@@ -138,9 +141,8 @@ test.describe('/libro', () => {
       expect(text, `${lang}: em or en dashes`).not.toMatch(/[—–]/);
       expect(text, `${lang}: exclamation marks`).not.toMatch(/[!¡]/);
       expect(text, `${lang}: AI as a method`).not.toMatch(/\b(IA|AI)\b|inteligencia artificial|artificial intelligence/i);
-      // Only the approved sample has a public page count, not the upcoming book.
-      const commercialText = text.replaceAll('PDF · 15 páginas · sin registro', '').replaceAll('PDF · 15 pages · no signup', '');
-      expect(commercialText, `${lang}: commercial details`).not.toMatch(/ISBN|editorial|imprenta|publisher|preventa|presale|páginas|pages/i);
+      // ISBN, page count, format and edition are public since 2026-11-01; price and presale are not.
+      expect(text, `${lang}: commercial details`).not.toMatch(/editorial|imprenta|publisher|preventa|presale/i);
     }
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -167,12 +169,15 @@ test.describe('/libro', () => {
       name: 'No podés defender lo que no entendés',
       alternativeHeadline: 'Linux, las abstracciones que fallan y el camino a la ciberseguridad',
       inLanguage: 'es',
+      isbn: '9786310192888',
+      numberOfPages: 224,
+      bookFormat: 'https://schema.org/Paperback',
       author: { '@type': 'Person', '@id': 'https://valentorassa.com/#person', name: 'Valentín Torassa Colombero' },
       image: 'https://valentorassa.com/og-libro.png',
       url: 'https://valentorassa.com/libro',
       isPartOf: { '@id': 'https://valentorassa.com/#website' },
     });
-    for (const key of ['isbn', 'datePublished', 'offers', 'price', 'publisher', 'numberOfPages']) expect(data, key).not.toHaveProperty(key);
+    for (const key of ['datePublished', 'offers', 'price', 'publisher']) expect(data, key).not.toHaveProperty(key);
   });
 
   test('has its own crawlable metadata, social image and sitemap entry', () => {

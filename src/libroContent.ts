@@ -6,9 +6,10 @@ import { siteNav, type Language, type NavItem } from './siteContent';
  * The book is in Spanish, so its title, subtitle and chapter titles are the
  * Spanish originals; the English page translates the chapters for reference.
  * Public copy rules: plain hyphens at most (no em or en dashes), no hype, no
- * exclamation marks, and nothing about publishers, page count, price, dates,
- * ISBN or presale until the owner announces them. The approved sample PDF
- * is 15 pages; that is not the page count of the upcoming book.
+ * exclamation marks, and nothing about price, release dates or presale until
+ * the owner announces them. The ISBN, page count, format and edition were
+ * announced on 2026-11-01 and appear in the details card. The approved sample
+ * PDF is 15 pages; that is not the page count of the book.
  */
 
 /**
@@ -23,6 +24,8 @@ export const samplePdfUrl = '/libro/muestra-capitulo-1.pdf';
 export const book = {
   title: 'No podés defender lo que no entendés',
   subtitle: 'Linux, las abstracciones que fallan y el camino a la ciberseguridad',
+  isbn: '978-631-01-9288-8',
+  pages: 224,
 };
 
 export const youtubeChannelUrl = 'https://www.youtube.com/@vtcibersecurity';
@@ -61,6 +64,7 @@ type LibroContent = {
     epilogue: Chapter & { label: string };
   };
   audience: { title: string; text: string };
+  details: { title: string; items: { label: string; value: string }[] };
   waitlist: {
     title: string;
     text: string;
@@ -144,6 +148,16 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     audience: {
       title: 'Para quién',
       text: 'Para estudiantes y personas que empiezan en sistemas o ciberseguridad y quieren entender qué pasa debajo de las herramientas que usan. No hace falta experiencia previa con el kernel.',
+    },
+    details: {
+      title: 'Ficha',
+      items: [
+        { label: 'ISBN', value: book.isbn },
+        { label: 'Páginas', value: String(book.pages) },
+        { label: 'Formato', value: 'Impreso, tapa blanda, 17 × 24 cm' },
+        { label: 'Edición', value: 'Primera edición, 2026, edición de autor' },
+        { label: 'Idioma', value: 'Español' },
+      ],
     },
     waitlist: {
       title: 'Anotate en la lista de espera',
@@ -232,6 +246,16 @@ export const libroByLanguage: Record<Language, LibroContent> = {
     audience: {
       title: 'Who it is for',
       text: 'For students and people starting out in systems or cybersecurity who want to understand what happens beneath the tools they use. No prior experience with the kernel is needed.',
+    },
+    details: {
+      title: 'Details',
+      items: [
+        { label: 'ISBN', value: book.isbn },
+        { label: 'Pages', value: String(book.pages) },
+        { label: 'Format', value: 'Paperback, 17 × 24 cm' },
+        { label: 'Edition', value: 'First edition, 2026, self-published' },
+        { label: 'Language', value: 'Spanish' },
+      ],
     },
     waitlist: {
       title: 'Join the waitlist',
