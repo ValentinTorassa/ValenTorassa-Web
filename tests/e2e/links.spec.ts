@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { linksAnalyticsUrl } from '../../src/linksAnalytics';
 
 /**
  * The links page is where the social bios point. A bio adds its tag (?ref=ig)
@@ -52,5 +53,14 @@ test.describe('links page', () => {
     await page.goto('/en/links');
     await expect(page.locator('h1')).toHaveText("Valentín Torassa's links");
     await expect(page.locator('a[hreflang="es"]')).toHaveAttribute('href', 'https://links.vtsecurity.com.ar/');
+  });
+
+  test('reports its visits to analytics as /links, with the bio tag as the source', () => {
+    const host = 'https://links.vtsecurity.com.ar';
+    expect(linksAnalyticsUrl(`${host}/?ref=IG`)).toBe(`${host}/links?utm_source=ig`);
+    expect(linksAnalyticsUrl(`${host}/en?ref=yt-short`)).toBe(`${host}/en/links?utm_source=yt-short`);
+    expect(linksAnalyticsUrl(`${host}/en/`)).toBe(`${host}/en/links`);
+    expect(linksAnalyticsUrl(`${host}/?ref=<script>&email=a@b.c`)).toBe(`${host}/links`);
+    expect(linksAnalyticsUrl(`${host}/?utm_source=newsletter&ref=ig`)).toBe(`${host}/links?utm_source=newsletter`);
   });
 });
