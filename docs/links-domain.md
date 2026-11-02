@@ -51,6 +51,15 @@ homelab hub, which moved to `hub.*` (SelfHost-Server-Config, `links/README.md`).
 On the Vercel project: `links.vtsecurity.com.ar` serves the deployment, and
 `links.valentorassa.com` redirects to it.
 
+## Analytics
+
+`src/analytics.ts` loads Vercel Web Analytics on this host too. Web Analytics
+has no host dimension, so `src/linksAnalytics.ts` reports the page as `/links`
+and `/en/links` instead of `/` (which would count as the home page), with the
+bio tag as `utm_source`. In the dashboard: filter by the `/links` path, then break
+down by UTM source. Until 02/11/2026 the script only loaded on
+`*.valentorassa.com`, so visits before that were not recorded.
+
 ## Canonical and sitemap
 
 `src/seo.ts` gives the page its own canonical and hreflang URLs on the links
