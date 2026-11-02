@@ -45,6 +45,7 @@ const ROUTES = [
   { path: '/linkedin-privacy', name: 'linkedin-privacy' },
   { path: '/creatorstack', name: 'creatorstack' },
   { path: '/creatorstack-privacy', name: 'creatorstack-privacy' },
+  { path: '/creatorstack-terms', name: 'creatorstack-terms' },
 ] as const;
 
 /** Hosts that point back at this site (static pages link to the canonical domain). */

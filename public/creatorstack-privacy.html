@@ -13,7 +13,7 @@
       :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #07090e; color: #f5f7fa; }
       * { box-sizing: border-box; }
       body { margin: 0; min-width: 320px; background: radial-gradient(circle at 50% 0, #172c2b, #07090e 55%); }
-      main { max-width: 740px; margin: auto; padding: 64px 24px; line-height: 1.7; }
+      main { max-width: 740px; margin: auto; padding: 64px 24px; line-height: 1.7; overflow-wrap: break-word; }
       h1 { font-size: clamp(2rem, 6vw, 3rem); line-height: 1.1; margin: 0 0 12px; }
       h2 { margin-top: 38px; font-size: 1.2rem; }
       p, li { color: #b8c6d1; }
@@ -27,33 +27,38 @@
     <main>
       <p class="eyebrow">Privacy Policy</p>
       <h1>VT CreatorStack</h1>
-      <p>Last updated: September 29, 2026</p>
+      <p>Last updated: 2 November 2026</p>
       <h2>Operator and purpose</h2>
-      <p>VT CreatorStack is an internal YouTube publishing and analytics workspace operated by Valentin Torassa Colombero in Argentina. It is used for channels the operator owns or administers. It is not offered as a public service.</p>
+      <p>VT CreatorStack is a private YouTube publishing and analytics workspace operated by Valentin Torassa Colombero in Rosario, Argentina. It is used only by the operator, and only for his own YouTube channels, VT Security (@vtcibersecurity) and VT Art (@vtartisan). It has no other users, offers no accounts and is not a public service. VT CreatorStack uses YouTube API Services.</p>
       <h2>Google and YouTube data accessed</h2>
-      <p>When the operator connects a YouTube channel, the application asks Google for these permissions:</p>
+      <p>When the operator connects one of his channels, the application asks Google for these permissions:</p>
       <ul>
         <li><code>youtube.readonly</code>: read channel, playlist and video information.</li>
         <li><code>youtube.upload</code>: upload videos to the connected channel.</li>
         <li><code>youtube.force-ssl</code>: manage the channel's videos, playlists, captions and comments.</li>
-        <li><code>yt-analytics.readonly</code>: read YouTube Analytics reports for the channel.</li>
+        <li><code>yt-analytics.readonly</code>: read YouTube Analytics and YouTube Reporting API reports for the channel.</li>
       </ul>
-      <p>With them it can retrieve video metadata, channel statistics, comments and the analytics the YouTube APIs return for that channel. It does not request the operator's Google contacts, email, or data from other Google services.</p>
+      <p>With them it retrieves the channel's videos and their metadata (titles, descriptions, publish times and privacy status), public statistics such as view, like and comment counts, the comments posted on the operator's videos together with the public display names of their authors, and the analytics and reports the YouTube APIs return for the channel. It does not request the operator's Google contacts, email, or data from other Google services.</p>
       <h2>How the data is used</h2>
-      <p>The data is used only to show channel status and analytics in the operator's workspace and to carry out actions the operator starts there, such as uploading or scheduling a video. It is not sold, not shared for advertising, not transferred to third parties, and YouTube data is not used to train AI models.</p>
+      <p>The data is used only for the operator's own work on his channels: uploading and scheduling videos; editing titles, descriptions and publish times; deleting his own private uploads when he replaces them; drafting and publishing replies to comments on the operator's channels; posting the first comment on a new upload; keeping a publishing calendar so that no day is booked twice; and recording how each video performs over time for his dashboards.</p>
+      <p>When the operator edits a description, links to his own websites can carry a short source tag (such as <code>?ref=yt-desc</code>) so he can see which videos send visitors to them. This is an operator setting and can be turned off.</p>
       <p>VT CreatorStack's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
-      <h2>Storage and information on your device</h2>
-      <p>OAuth credentials and application data are kept on the operator's private server and in the operator's backups of that server.</p>
-      <p>The workspace's web interface stores its settings, such as the OAuth client ID, and cached interface data in the browser's local storage on the operator's own device. VT CreatorStack does not set advertising or tracking cookies and does not let third parties store or read information on the device.</p>
-      <h2>Retention, deletion, and revocation</h2>
-      <p>Channel data and OAuth credentials are kept while the integration is in use. Access can be revoked at any time on the <a href="https://security.google.com/settings/security/permissions">Google security settings page</a>. Within 7 calendar days of a revocation or a deletion request, the operator deletes the stored OAuth credentials and the YouTube data obtained through them from the private server. Backup copies are never restored for use after that and expire as the backups rotate, within 90 days.</p>
+      <h2>Service providers</h2>
+      <p>VT CreatorStack relies on outside AI services for some features. For drafting and publishing replies to comments on the operator's channels, the comment text, the commenter's display name and the video title are sent to Anthropic's API, and the tool's planning assistant sends Anthropic the titles and statistics of the operator's own videos. The operator's coding assistants, Anthropic's Claude Code and OpenAI's Codex, can also read the tool's own endpoints on his behalf, for example his channels' analytics and publishing calendar. This data is shared with these providers only to provide these features to the operator; it is not sold and is not shared for advertising. Under Anthropic's commercial API terms, data sent through its API is not used to train its models. Apart from these providers, Google itself and the backup storage described below, YouTube data is not transferred to anyone.</p>
+      <h2>Where the data is stored</h2>
+      <p>OAuth credentials and YouTube data are stored on the operator's own server, where the tool runs; on the operator's laptop, which keeps a mirror of channel metrics for analysis; and in backup copies of the server, kept on a backup disk in the same server and off site in cloud object storage and a cloud drive account controlled by the operator, both encrypted at rest by their providers. OAuth credentials are kept only on the server and in its backups.</p>
+      <p>The workspace's web interface keeps the access token it uses in memory only, and stores its settings, such as the OAuth client ID, and cached interface data in the browser's local storage on the operator's own device. VT CreatorStack does not set advertising or tracking cookies and does not let third parties store or read information on the device.</p>
+      <h2>Retention</h2>
+      <p>Authorized analytics and reporting data, meaning the YouTube Analytics and YouTube Reporting reports for the operator's channels, is kept while the operator's authorization is in place, and the tool re-checks that authorization at least every 30 days. Public statistics of the operator's videos (view, like and comment counts) are kept for up to 36 months as derived performance metrics. Titles, descriptions, comment text and other metadata are refreshed or deleted within 30 days. OAuth credentials are kept only while the channel stays connected. Backup copies are never restored to bring back deleted data, and they are removed as the backups rotate, within «FILL: backup retention period».</p>
+      <h2>Revocation and deletion</h2>
+      <p>Access can be revoked at any time on Google's <a href="https://myaccount.google.com/connections">third-party connections page</a> (https://myaccount.google.com/connections). The operator can also disconnect a channel from VT CreatorStack itself, which revokes the token and deletes the stored token and the data derived from it within 7 days. If access is revoked from the Google account settings instead, the stored data is deleted within 30 days. Data is also deleted within 7 days of a deletion request sent to the address below. Deleting data from VT CreatorStack does not delete it from YouTube.</p>
       <h2>Contact</h2>
       <p>To request deletion or ask about these privacy practices, write to <a href="mailto:valentintorassa21@gmail.com">valentintorassa21@gmail.com</a>.</p>
       <h2>Platform terms</h2>
-      <p>This integration uses YouTube API Services. Use of YouTube is subject to the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>, and Google's handling of data is described in the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</p>
+      <p>This integration uses YouTube API Services. Use of YouTube is subject to the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>, and Google's handling of data is described in the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>. Use of VT CreatorStack is governed by the <a href="/creatorstack-terms">VT CreatorStack Terms of Service</a>.</p>
       <h2>Changes</h2>
       <p>Changes to this policy will be posted at this address with an updated date.</p>
-      <footer><a href="/creatorstack">VT CreatorStack</a> · <a href="/">Valentin Torassa</a></footer>
+      <footer><a href="/creatorstack">VT CreatorStack</a> · <a href="/creatorstack-terms">Terms of Service</a> · <a href="/">Valentin Torassa</a></footer>
     </main>
   </body>
 </html>
