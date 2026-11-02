@@ -1,4 +1,5 @@
-import type { Language } from './siteContent';
+import { bookStatus } from './libroContent';
+import { mastodonUrl, type Language } from './siteContent';
 
 /**
  * The links page: the one link every social bio points to. The bio adds its
@@ -33,6 +34,8 @@ export const labsUrl = 'https://securitylabs.valentorassa.com/';
 export const blogUrl = 'https://vtsecurity.com.ar';
 export const discordUrl = 'https://discord.com/invite/z6cr5JF6bJ';
 export const secretShareUrl = 'https://secretshare.valentorassa.com/';
+/** Apuntes, the newsletter (pluma). Sign-ups keep any ?ref= of up to 48 letters, digits and hyphens, so links-<tag> counts as is. */
+export const apuntesUrl = 'https://vtsecurity.com.ar/apuntes';
 
 /** Base64 of the book's title, printed sideways in the hero margin. */
 export const marginCode = 'Tm8gcG9kw6lzIGRlZmVuZGVyIGxvIHF1ZSBubyBlbnRlbmTDqXMu';
@@ -62,6 +65,8 @@ export const profiles = [
   { name: 'Discord', handle: 'DedSec', href: discordUrl },
   { name: 'Bluesky', handle: '@vtsecurity.bsky.social', href: 'https://bsky.app/profile/vtsecurity.bsky.social' },
   { name: 'Threads', handle: '@vt_security_', href: 'https://www.threads.com/@vt_security_' },
+  { name: 'Facebook', handle: '@vtsecurity', href: 'https://www.facebook.com/vtsecurity' },
+  { name: 'Mastodon', handle: '@vtsecurity@infosec.exchange', href: mastodonUrl },
 ] as const;
 
 type Fact = { key: string; value: string };
@@ -91,9 +96,12 @@ export type LinksCopy = {
   youtube: { title: string; name: string; stats: (subs: number, videos: string) => string; body: string; cta: string };
   book: { title: string; name: string; body: string; meta: string; cta: string; coverAlt: string };
   comandle: { title: string; body: string; today: string; yesterday: string; total: string; cta: string; offline: string };
-  talk: { title: string; at: (place: string) => string; empty: string; cta: string; closed: string };
+  talk: { title: string; at: (place: string) => string; cta: string; closed: string };
+  /** In the talk's place when no talk is coming: the speaker kit, for organizers. */
+  invite: { title: string; name: string; body: string; cta: string };
   labs: { title: string; name: string; body: string; cta: string };
   blog: { title: string; name: string; body: string; cta: string };
+  apuntes: { title: string; name: string; body: string; cta: string };
   discord: { title: string; name: string; body: (members: string) => string; cta: string };
   secretShare: { title: string; name: string; body: string; cta: string };
   clock: { title: string; place: string };
@@ -127,7 +135,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       role: { key: 'Rol', value: 'ciberseguridad + backend' },
       base: { key: 'Base', value: 'Rosario, AR' },
       channel: 'Canal',
-      book: { key: 'Libro', value: 'en beta · cap. 1 gratis' },
+      book: { key: 'Libro', value: `${bookStatus.es} · cap. 1 gratis` },
       comandle: { key: 'comandle', live: (total) => `${total} partidas (en vivo)`, idle: 'el comando del día' },
       talk: { key: 'Charla', none: 'sin fecha' },
       community: { key: 'Comunidad', value: (members) => `${members} en Discord` },
@@ -161,9 +169,14 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     talk: {
       title: 'charla.ics',
       at: (place) => `Doy esta charla en ${place}.`,
-      empty: 'Todavía no anuncié la próxima. La agenda completa está en /eventos.',
       cta: 'Ver la charla',
       closed: 'Es cerrada.',
+    },
+    invite: {
+      title: 'speaker-kit/',
+      name: 'Invitame a tu evento',
+      body: 'Todavía no anuncié la próxima charla. Si organizás un evento, acá están la bio, la foto y los temas.',
+      cta: 'Ver el kit',
     },
     labs: {
       title: 'labs/',
@@ -172,6 +185,12 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       cta: 'Empezar un lab',
     },
     blog: { title: 'notas.md', name: 'Blog', body: 'Fallas reales, diagramas y los comandos exactos.', cta: 'Leer' },
+    apuntes: {
+      title: 'apuntes.eml',
+      name: 'Apuntes',
+      body: 'Un mail cada dos semanas sobre sistemas, código y seguridad.',
+      cta: 'Anotarme',
+    },
     discord: {
       title: 'dedsec.chat',
       name: 'DedSec',
@@ -221,7 +240,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       role: { key: 'Role', value: 'cybersecurity + backend' },
       base: { key: 'Base', value: 'Rosario, AR' },
       channel: 'Channel',
-      book: { key: 'Book', value: 'in beta · ch. 1 free' },
+      book: { key: 'Book', value: `${bookStatus.en} · ch. 1 free` },
       comandle: { key: 'comandle', live: (total) => `${total} games (live)`, idle: 'command of the day' },
       talk: { key: 'Talk', none: 'none scheduled' },
       community: { key: 'Community', value: (members) => `${members} on Discord` },
@@ -255,9 +274,14 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     talk: {
       title: 'talk.ics',
       at: (place) => `I'm giving this talk at ${place}.`,
-      empty: 'No next talk announced yet. The full schedule is on /eventos.',
       cta: 'See the talk',
       closed: 'Closed to the public.',
+    },
+    invite: {
+      title: 'speaker-kit/',
+      name: 'Invite me to your event',
+      body: "I haven't announced my next talk yet. If you run an event, the bio, headshot and topics are here.",
+      cta: 'See the kit',
     },
     labs: {
       title: 'labs/',
@@ -266,6 +290,12 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       cta: 'Start a lab',
     },
     blog: { title: 'notes.md', name: 'Blog', body: 'Real failures, diagrams and the exact commands. In Spanish.', cta: 'Read' },
+    apuntes: {
+      title: 'apuntes.eml',
+      name: 'Apuntes',
+      body: 'An email every two weeks on systems, code and security. In Spanish.',
+      cta: 'Subscribe',
+    },
     discord: {
       title: 'dedsec.chat',
       name: 'DedSec',

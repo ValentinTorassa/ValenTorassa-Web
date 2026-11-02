@@ -28,6 +28,13 @@ export const book = {
   pages: 224,
 };
 
+/**
+ * Where the book stands, in the words every page uses: the eyebrow here and
+ * the book line in the links page's terminal. Change it here, and only when
+ * the owner announces the next step (see the copy rules above).
+ */
+export const bookStatus: Record<Language, string> = { es: 'en preparación', en: 'in progress' };
+
 export const youtubeChannelUrl = 'https://www.youtube.com/@vtcibersecurity';
 export const sourceTalkHref = '/charlas/debconf26';
 
@@ -84,7 +91,7 @@ export const libroByLanguage: Record<Language, LibroContent> = {
       locale: 'es_AR',
     },
     navItems: siteNav('libro', 'es'),
-    eyebrow: 'Libro · en preparación',
+    eyebrow: `Libro · ${bookStatus.es}`,
     lead: [
       'El tablero está en verde. El servicio responde. El host figura como sano. Y aun así, el sistema no funciona. Pasa cuando una abstracción filtra. Algo que no se ve desde la capa en la que trabajás está fallando más abajo.',
       'Este libro recorre esas capas desde Linux, con comandos probados en Debian, diagramas y ejercicios cuyo resultado podés mostrar. No hace falta memorizar el kernel. Hace falta un mapa de lo que esconde cada abstracción.',
@@ -180,7 +187,7 @@ export const libroByLanguage: Record<Language, LibroContent> = {
       locale: 'en_US',
     },
     navItems: siteNav('libro', 'en'),
-    eyebrow: 'Book · in progress',
+    eyebrow: `Book · ${bookStatus.en}`,
     languageNote: 'The book is in Spanish. In English, the title means “You can’t defend what you don’t understand.”',
     lead: [
       'The dashboard is green. The service responds. The host shows as healthy. And still, the system does not work. That happens when an abstraction leaks. Something you cannot see from the layer you work in is failing further down.',
