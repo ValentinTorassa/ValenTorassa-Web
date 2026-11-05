@@ -13,6 +13,8 @@ const BEFORE_EKOPARTY = new Date('2026-09-25T15:00:00Z');
 const BEFORE_FNGA_RELEASE = new Date('2026-09-26T15:00:00Z');
 const FNGA_RELEASE_DAY = new Date('2026-09-27T15:00:00Z');
 const OWASP_DAY = new Date('2026-10-07T15:00:00Z');
+const SAN_PABLO_EVE = new Date('2026-11-03T15:00:00Z');
+const SAN_PABLO_DAY = new Date('2026-11-04T15:00:00Z');
 
 test.describe('/charlas', () => {
   test('FNGA deck opens one day before the talk', async ({ page }) => {
@@ -224,6 +226,63 @@ test.describe('/charlas', () => {
     await expect(page.locator('.hub-screen img')).toHaveAttribute('src', '/charlas/wicc-2025-scada/still.webp');
   });
 
+  test('Instituto San Pablo photos show from the talk day and open full size', async ({ page }) => {
+    await page.clock.setFixedTime(SAN_PABLO_EVE);
+    await page.goto('/charlas/instituto-san-pablo-2026');
+    await expect(page.locator('#card-instituto-san-pablo-2026')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('.hub-photos')).toHaveCount(0);
+
+    await page.clock.setFixedTime(SAN_PABLO_DAY);
+    await page.reload();
+    const strip = page.getByRole('list', { name: 'Fotos de la charla' });
+    const thumbs = strip.getByRole('img');
+    await expect(thumbs).toHaveCount(3);
+    await expect(thumbs.first()).toHaveAttribute('alt', 'Valentín dando la charla frente a la slide de la clave en el código');
+    await strip.scrollIntoViewIfNeeded();
+    for (const thumb of await thumbs.all()) {
+      await expect(thumb).toHaveAttribute('loading', 'lazy');
+      await expect(thumb).toHaveAttribute('width', /^\d+$/);
+      await expect(thumb).toHaveAttribute('height', /^\d+$/);
+      await expect(thumb).not.toHaveAttribute('alt', '');
+      await expect.poll(() => thumb.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth)).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+
+    // A click opens the photo over the page, at the size its width and height say.
+    const dialog = page.locator('dialog.hub-photo-dialog');
+    const photo = dialog.locator('figure img');
+    const loadedAtItsSize = () => photo.evaluate((image: HTMLImageElement) =>
+      image.complete && `${image.naturalWidth}x${image.naturalHeight}` === `${image.getAttribute('width')}x${image.getAttribute('height')}`);
+    await strip.getByRole('link').first().click();
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Cerrar foto' })).toBeFocused();
+    await expect(photo).toHaveAttribute('src', '/charlas/instituto-san-pablo-2026/photo-charla.webp');
+    await expect(dialog).toContainText('01 / 03');
+    await expect.poll(loadedAtItsSize).toBe(true);
+
+    // ← → move between the photos, not between the talks behind them.
+    await page.keyboard.press('ArrowRight');
+    await expect(photo).toHaveAttribute('src', '/charlas/instituto-san-pablo-2026/photo-mate-tux.webp');
+    await expect(photo).toHaveAttribute('alt', 'Mate de madera con Tux grabado, regalo del instituto');
+    await expect.poll(loadedAtItsSize).toBe(true);
+    await dialog.getByRole('button', { name: 'Foto siguiente' }).click();
+    await expect(photo).toHaveAttribute('src', '/charlas/instituto-san-pablo-2026/photo-mate-grabado.webp');
+    await expect(dialog).toContainText('03 / 03');
+    await expect.poll(loadedAtItsSize).toBe(true);
+    await expect(page.locator('#card-instituto-san-pablo-2026')).toHaveAttribute('aria-selected', 'true');
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(strip.getByRole('link').first()).toBeFocused();
+
+    await page.goto('/en/charlas/instituto-san-pablo-2026');
+    await expect(page.getByRole('list', { name: 'Photos from the talk' }).getByRole('img').nth(1))
+      .toHaveAttribute('alt', 'Wooden mate with Tux engraved on it, a gift from the institute');
+    await page.goto('/charlas/uai-auditoria-controles-2026');
+    await expect(page.locator('#card-uai-auditoria-controles-2026')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('.hub-photos')).toHaveCount(0);
+  });
+
   test('the landing page and /eventos link here', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
@@ -235,6 +294,25 @@ test.describe('/charlas', () => {
     await expect(page).toHaveURL(/\/charlas/);
     await expect(page.getByRole('heading', { level: 1, name: 'Charlas' })).toBeVisible();
   });
+});
+
+test('talk photos carry no EXIF or XMP data', () => {
+  test.skip(test.info().project.name !== 'desktop', 'file check; run once');
+
+  const root = path.join(process.cwd(), 'public/charlas');
+  const photos = readdirSync(root).flatMap((id) =>
+    readdirSync(path.join(root, id)).filter((file) => /^photo-.*\.webp$/.test(file)).map((file) => path.join(root, id, file)));
+  expect(photos.length).toBeGreaterThanOrEqual(3);
+  for (const file of photos) {
+    const image = readFileSync(file);
+    expect(image.toString('latin1', 0, 4) + image.toString('latin1', 8, 12), file).toBe('RIFFWEBP');
+    const chunks: string[] = [];
+    for (let offset = 12; offset + 8 <= image.length; offset += 8 + image.readUInt32LE(offset + 4) + (image.readUInt32LE(offset + 4) % 2)) {
+      chunks.push(image.toString('latin1', offset, offset + 4));
+    }
+    expect(chunks, file).not.toContain('EXIF');
+    expect(chunks, file).not.toContain('XMP ');
+  }
 });
 
 test('the public decks carry no speaker notes', () => {

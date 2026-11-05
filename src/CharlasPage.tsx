@@ -26,6 +26,7 @@ import {
   Video,
   Webhook,
   Workflow,
+  X,
   type LucideProps,
 } from 'lucide-react';
 import { charlasPageByLanguage } from './charlasContent';
@@ -36,7 +37,7 @@ import { paperMedia, paperOfTalk, papers, type Paper } from './research';
 import { absoluteUrl, counterpartPath, localePath, setMetaContent, SITE_ORIGIN, useToday } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
 import { SiteHeader } from './siteChrome';
-import { talkMedia, type TalkIcon, type TalkMedia } from './talkMedia';
+import { talkMedia, type TalkIcon, type TalkMedia, type TalkPhoto } from './talkMedia';
 import { socialImages } from './socialImages';
 import { talkPageMeta } from './talkSeo';
 
@@ -148,6 +149,105 @@ function useMotionAllowed() {
   return allowed;
 }
 
+type TalkPhotosProps = {
+  photos: TalkPhoto[];
+  language: Language;
+  copy: (typeof charlasPageByLanguage)[Language];
+};
+
+/**
+ * The talk's photos: a strip of thumbs, each a link to its photo (so they work
+ * before the page is live), that opens it full size over the page. ← → move
+ * between them, Esc or a click outside closes.
+ */
+function TalkPhotos({ photos, language, copy }: TalkPhotosProps) {
+  const [open, setOpen] = useState<number | null>(null);
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+  const openerRef = useRef<HTMLAnchorElement | null>(null);
+  const photo = open === null ? undefined : photos[open];
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (open === null || !dialog || dialog.open) return;
+    dialog.showModal();
+    closeRef.current?.focus();
+  }, [open]);
+
+  const step = (delta: number) =>
+    setOpen((current) => (current === null ? current : (current + delta + photos.length) % photos.length));
+
+  return (
+    <>
+      <ul className="hub-photos" aria-label={copy.photosLabel}>
+        {photos.map((item, index) => (
+          <li key={item.src}>
+            <a
+              href={item.src}
+              aria-haspopup="dialog"
+              onClick={(event) => {
+                // Cmd/Ctrl/Shift-click still opens the file in a new tab or window.
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                event.preventDefault();
+                openerRef.current = event.currentTarget;
+                setOpen(index);
+              }}
+            >
+              <img src={item.thumb} width={item.width} height={item.height} alt={item.alt[language]} loading="lazy" decoding="async" />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <dialog
+        ref={dialogRef}
+        className="hub-photo-dialog"
+        aria-label={copy.photosLabel}
+        tabIndex={-1}
+        onClose={() => {
+          setOpen(null);
+          openerRef.current?.focus();
+        }}
+        onClick={(event) => {
+          // The backdrop belongs to the dialog itself; the photo and its buttons are inside it.
+          if (event.target === event.currentTarget) event.currentTarget.close();
+        }}
+        onKeyDown={(event) => {
+          if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+          event.preventDefault();
+          step(event.key === 'ArrowRight' ? 1 : -1);
+        }}
+      >
+        {photo && open !== null ? (
+          <>
+            <figure>
+              <img src={photo.src} width={photo.width} height={photo.height} alt={photo.alt[language]} />
+              <figcaption>
+                <span className="hub-photo-count">{pad(open + 1)} / {pad(photos.length)}</span>
+                {photo.caption ? <span>{photo.caption[language]}</span> : null}
+              </figcaption>
+            </figure>
+            <div className="hub-photo-controls">
+              {photos.length > 1 ? (
+                <>
+                  <button type="button" aria-label={copy.previousPhotoLabel} onClick={() => step(-1)}>
+                    <ArrowLeft aria-hidden="true" />
+                  </button>
+                  <button type="button" aria-label={copy.nextPhotoLabel} onClick={() => step(1)}>
+                    <ArrowRight aria-hidden="true" />
+                  </button>
+                </>
+              ) : null}
+              <button ref={closeRef} type="button" aria-label={copy.closePhotoLabel} onClick={() => dialogRef.current?.close()}>
+                <X aria-hidden="true" />
+              </button>
+            </div>
+          </>
+        ) : null}
+      </dialog>
+    </>
+  );
+}
+
 type CharlasPageProps = {
   language: Language;
   /** The talk or paper of a /charlas/<id> page; the hub (/charlas) has none. */
@@ -183,6 +283,8 @@ function CharlasPage({ language, talkId }: CharlasPageProps) {
   const hasSlides = Boolean(media.deck || talk.slidesUrl);
   const coauthors = talk.kind !== 'talk' && talk.paper ? talk.paper.authors.slice(1) : [];
   const showReel = Boolean(media.reel) && deckHasReleased && motionAllowed;
+  // Photos are of the talk itself, so they appear from its day on.
+  const photos = dayHasCome ? media.photos ?? [] : [];
   const date = formatTalkDate(talk, language, currentYear);
   const meta = [
     formatTalkPlace(talk, language) || talk.city,
@@ -289,6 +391,8 @@ function CharlasPage({ language, talkId }: CharlasPageProps) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
+      // A photo open over the page keeps the keys for itself.
+      if (document.querySelector('dialog[open]')) return;
       const target = event.target as HTMLElement | null;
       if (target?.closest('input, textarea')) return;
       const onCard = target?.classList.contains('deck-card') ?? false;
@@ -468,6 +572,7 @@ function CharlasPage({ language, talkId }: CharlasPageProps) {
               <ArrowUpRight aria-hidden="true" />
             </a>
           </div>
+          {photos.length ? <TalkPhotos key={talk.id} photos={photos} language={language} copy={copy} /> : null}
           <p className="hub-apuntes">
             <Mail aria-hidden="true" />
             {copy.apuntesLead}{' '}
