@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 /** Width and height from a JPEG's start-of-frame segment. */
@@ -94,3 +94,31 @@ test('the back link on a deck stays clear of the deck header until hovered', asy
   await link.hover();
   expect((await link.boundingBox())!.width).toBeGreaterThan(box!.width * 2);
 });
+
+// Most decks draw on a 1920×1080 canvas scaled to the window. On a phone that canvas has
+// to shrink inside the screen. Laid out wider than the page, it makes mobile browsers widen
+// the layout viewport (the UAI VLANs deck); scaled about its centre from the wrong spot, it
+// lands off screen (Instituto San Pablo). Both showed phones a black page.
+const publicDecks = readdirSync(path.join(process.cwd(), 'public/charlas'))
+  .filter((id) => existsSync(path.join(process.cwd(), 'public/charlas', id, 'slides.html')));
+
+for (const id of publicDecks) {
+  test(`the ${id} deck fits a phone screen`, async ({ page }) => {
+    test.skip(test.info().project.name !== 'mobile', 'phone layout check');
+    test.slow();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(`/charlas/${id}/slides`);
+    const layout = () => page.evaluate(() => {
+      const wide = [...document.querySelectorAll<HTMLElement>('body *')].filter((el) => el.offsetWidth >= 1000);
+      const canvases = wide.filter((el) => !wide.some((other) => other !== el && other.contains(el)));
+      return {
+        width: innerWidth,
+        offScreen: canvases
+          .map((el) => ({ el, box: el.getBoundingClientRect() }))
+          .filter(({ box }) => box.left < -1 || box.top < -1 || box.right > innerWidth + 1 || box.bottom > innerHeight + 1)
+          .map(({ el, box }) => `${el.id || el.tagName} at ${[box.left, box.top, box.right, box.bottom].map(Math.round).join(',')}`),
+      };
+    });
+    await expect.poll(layout, { timeout: 15_000 }).toEqual({ width: 390, offScreen: [] });
+  });
+}
