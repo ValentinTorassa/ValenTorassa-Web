@@ -163,7 +163,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:#0a0b08;overflow:hidden;color-scheme:dark}
 #viewport{position:fixed;inset:0;display:grid;place-items:center}
-#stage{position:relative;width:1920px;height:1080px;overflow:hidden;transform-origin:center;font-family:var(--sans);color:var(--ink);
+#stage{position:absolute;left:50%;top:50%;margin:-540px 0 0 -960px;width:1920px;height:1080px;overflow:hidden;transform-origin:center;font-family:var(--sans);color:var(--ink);
   background:radial-gradient(ellipse 46% 60% at 70% 42%,#3a412b 0%,#272c1e 45%,#14170f 100%)}
 #stage::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:80;opacity:.22;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .3 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -294,6 +294,7 @@ body.ui #controls{opacity:1}
 #hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:100;font:500 15px/1 var(--sans);letter-spacing:.06em;color:#bdb39a;background:#14170fe6;padding:10px 16px;border-radius:8px;opacity:0;transition:opacity .3s}
 body.ui #hint{opacity:1}
 #hint span{color:var(--acc);margin:0 6px}
+@media (max-width:1100px){#hint{bottom:72px;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;text-align:center;line-height:1.35}}
 dialog{max-width:900px;width:90vw;max-height:84vh;overflow:auto;border:0;border-radius:12px;background:#1d2117;color:var(--ink);font:400 19px/1.5 var(--sans);padding:26px 34px;box-shadow:0 30px 80px #000c}
 dialog::backdrop{background:#000a}
 dialog h2{font:400 30px/1.1 var(--slab);text-transform:uppercase;margin:0;color:var(--acc)}
