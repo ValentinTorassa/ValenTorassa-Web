@@ -43,6 +43,11 @@ type CharlasPageContent = {
   /** The talk's reel loops on the stage; this button stops and restarts it. */
   pauseReelLabel: string;
   playReelLabel: string;
+  /** The talk's photos (talkMedia photos): the strip's name and the viewer's buttons. */
+  photosLabel: string;
+  previousPhotoLabel: string;
+  nextPhotoLabel: string;
+  closePhotoLabel: string;
   yearLabel: (year: string) => string;
 };
 
@@ -88,6 +93,10 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     nextLabel: 'Charla siguiente',
     pauseReelLabel: 'Pausar video',
     playReelLabel: 'Reproducir video',
+    photosLabel: 'Fotos de la charla',
+    previousPhotoLabel: 'Foto anterior',
+    nextPhotoLabel: 'Foto siguiente',
+    closePhotoLabel: 'Cerrar foto',
     yearLabel: (year) => `Ir a ${year}`,
   },
   en: {
@@ -128,6 +137,10 @@ export const charlasPageByLanguage: Record<Language, CharlasPageContent> = {
     nextLabel: 'Next talk',
     pauseReelLabel: 'Pause video',
     playReelLabel: 'Play video',
+    photosLabel: 'Photos from the talk',
+    previousPhotoLabel: 'Previous photo',
+    nextPhotoLabel: 'Next photo',
+    closePhotoLabel: 'Close photo',
     yearLabel: (year) => `Go to ${year}`,
   },
 };

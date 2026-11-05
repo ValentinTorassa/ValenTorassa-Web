@@ -1,4 +1,4 @@
-import type { Talk } from './events';
+import type { Localized, Talk } from './events';
 import { slidesReleased } from './eventSchedule';
 import { localePath } from './site';
 import type { Language } from './siteContent';
@@ -23,6 +23,13 @@ import type { Language } from './siteContent';
  * - deck: public/charlas/<id>/slides.html, the deck as presented, animations and
  *   all, with the speaker notes taken out. Enter on /charlas opens it, from the
  *   talk's day on; the PDF in Drive stays as the download.
+ * - photos: pictures from the talk itself (the room, a gift), in a strip under
+ *   the talk's links from the talk's day on. src is the photo a click opens,
+ *   at most 1600px on its long side; thumb a small copy with the same
+ *   proportions for the strip; width and height are src's, so the strip keeps
+ *   its place while they load. alt describes the picture and the optional
+ *   caption goes under it once open, both in the two languages. WebP without
+ *   EXIF or GPS data.
  *
  * Files live in public/charlas/<id>/. A talk missing here still appears, with
  * an icon made from its event name.
@@ -30,6 +37,15 @@ import type { Language } from './siteContent';
 export type TalkIcon =
   | 'terminal' | 'lock' | 'shield' | 'pull-request' | 'key' | 'castle' | 'webhook' | 'flame'
   | 'branch' | 'chat' | 'workflow' | 'layers' | 'link' | 'users' | 'cap' | 'book';
+
+export type TalkPhoto = {
+  src: string;
+  thumb: string;
+  width: number;
+  height: number;
+  alt: Localized;
+  caption?: Localized;
+};
 
 export type TalkMedia = {
   /** The shape the dots draw behind the screen. */
@@ -45,6 +61,8 @@ export type TalkMedia = {
   checklist?: string;
   /** The deck itself, hosted here with its animations and without speaker notes. */
   deck?: string;
+  /** Pictures from the talk, in the order the strip shows them. */
+  photos?: TalkPhoto[];
 };
 
 const base = (id: string) => `/charlas/${id}`;
@@ -67,6 +85,41 @@ export const talkMedia: Record<string, TalkMedia> = {
     reel: `${base('instituto-san-pablo-2026')}/reel.mp4`,
     poster: `${base('instituto-san-pablo-2026')}/poster.webp`,
     slides: 15,
+    photos: [
+      {
+        src: `${base('instituto-san-pablo-2026')}/photo-charla.webp`,
+        thumb: `${base('instituto-san-pablo-2026')}/photo-charla-thumb.webp`,
+        width: 1280,
+        height: 720,
+        alt: {
+          es: 'Valentín dando la charla frente a la slide de la clave en el código',
+          en: 'Valentín giving the talk in front of the slide about the key left in the code',
+        },
+        caption: { es: 'Riesgo 1, claves y contraseñas.', en: 'Risk 1, keys and passwords.' },
+      },
+      {
+        src: `${base('instituto-san-pablo-2026')}/photo-mate-tux.webp`,
+        thumb: `${base('instituto-san-pablo-2026')}/photo-mate-tux-thumb.webp`,
+        width: 900,
+        height: 1200,
+        alt: {
+          es: 'Mate de madera con Tux grabado, regalo del instituto',
+          en: 'Wooden mate with Tux engraved on it, a gift from the institute',
+        },
+        caption: { es: 'El mate que me regaló el instituto.', en: 'The mate the institute gave me.' },
+      },
+      {
+        src: `${base('instituto-san-pablo-2026')}/photo-mate-grabado.webp`,
+        thumb: `${base('instituto-san-pablo-2026')}/photo-mate-grabado-thumb.webp`,
+        width: 900,
+        height: 1200,
+        alt: {
+          es: 'La virola del mate con el grabado Instituto Superior San Pablo N°9112',
+          en: 'The rim of the mate, engraved Instituto Superior San Pablo N°9112',
+        },
+        caption: { es: 'Con el nombre del instituto en la virola.', en: 'With the name of the institute on the rim.' },
+      },
+    ],
   },
   'uai-auditoria-controles-2026': {
     deck: `${base('uai-auditoria-controles-2026')}/slides`,

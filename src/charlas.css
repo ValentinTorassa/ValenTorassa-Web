@@ -211,6 +211,130 @@ a.hub-open:focus-visible {
   color: var(--paper);
 }
 
+/* The talk's photos: small, under its links. Each opens full size over the page. */
+.hub-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hub-photos a {
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
+  opacity: 0.8;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hub-photos a:hover,
+.hub-photos a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper);
+  opacity: 1;
+}
+
+/* width and height come from the photo, so the strip holds its place while the thumbs load. */
+.hub-photos img {
+  display: block;
+  width: auto;
+  height: 72px;
+}
+
+.hub-photo-dialog {
+  width: fit-content;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  background: #0b0c0e;
+  color: var(--paper);
+}
+
+.hub-photo-dialog::backdrop {
+  background: rgba(6, 6, 7, 0.88);
+}
+
+.hub-photo-dialog:focus-visible {
+  outline: none;
+}
+
+.hub-photo-dialog figure {
+  margin: 0;
+}
+
+.hub-photo-dialog img {
+  display: block;
+  width: auto;
+  max-width: min(calc(100vw - 34px), 1280px);
+  height: auto;
+  max-height: calc(100dvh - 96px);
+}
+
+.hub-photo-dialog figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 14px 16px 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.hub-photo-count {
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Over the photo's top right corner, like the screen's corner marks. */
+.hub-photo-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.hub-photo-controls button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 4px;
+  background: rgba(10, 11, 12, 0.72);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.hub-photo-controls button:hover {
+  background: rgba(10, 11, 12, 0.92);
+}
+
+.hub-photo-controls button:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+
+.hub-photo-controls svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* The page behind an open photo stays put. */
+:root:has(.hub-photo-dialog[open]) {
+  overflow: hidden;
+}
+
 .hub-apuntes {
   max-width: 560px;
   margin: 20px 0 0;
@@ -658,6 +782,10 @@ a.hub-open:focus-visible {
     margin-top: 22px;
   }
 
+  .hub-photos {
+    margin-top: 22px;
+  }
+
   .hub-hint {
     display: none;
   }
@@ -723,6 +851,14 @@ a.hub-open:focus-visible {
   .hub-open {
     padding: 12px 22px;
     font-size: 1rem;
+  }
+
+  .hub-photos {
+    margin-top: 14px;
+  }
+
+  .hub-photos img {
+    height: 56px;
   }
 
   .hub-hint {
