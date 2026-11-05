@@ -295,6 +295,9 @@ body.ui #controls{opacity:1}
 body.ui #hint{opacity:1}
 #hint span{color:var(--acc);margin:0 6px}
 @media (max-width:1100px){#hint{bottom:72px;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;text-align:center;line-height:1.35}}
+/* phone held sideways: the slide fills the height, so the keyboard hint goes and the buttons
+   stack in the side gutter instead of covering the bottom of the slide and the counter */
+@media (orientation:landscape) and (max-height:500px){#hint{display:none}#controls{top:50%;bottom:auto;right:max(4px,calc((100vw - 177.78vh)/4 - 21px));transform:translateY(-50%);flex-direction:column}}
 dialog{max-width:900px;width:90vw;max-height:84vh;overflow:auto;border:0;border-radius:12px;background:#1d2117;color:var(--ink);font:400 19px/1.5 var(--sans);padding:26px 34px;box-shadow:0 30px 80px #000c}
 dialog::backdrop{background:#000a}
 dialog h2{font:400 30px/1.1 var(--slab);text-transform:uppercase;margin:0;color:var(--acc)}
