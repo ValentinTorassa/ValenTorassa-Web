@@ -101,6 +101,32 @@ test.describe('/libro', () => {
     expect(events).toEqual([{ event: 'pdf', ref: 'links-ig' }]);
   });
 
+  test('comandle and press refs are counted under their own name; an unlisted one as otro', async ({ page }) => {
+    desktopOnly();
+    const events: unknown[] = [];
+    await page.route('https://vtsecurity.com.ar/api/book-click', async (route) => {
+      events.push(route.request().postDataJSON());
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true,"counted":true}' });
+    });
+    const refs = ['comandle', 'prensa-lacapital-pardo', 'prensa-not-in-the-list'];
+    for (const [i, ref] of refs.entries()) {
+      await page.goto(`/libro?ref=${ref}`);
+      // The waitlist form gets the ref either way; only the click counter uses the fixed list.
+      await expect(page.locator('#lista a')).toHaveAttribute('href', `https://vtsecurity.com.ar/libro?ref=${ref}`);
+      await page.evaluate(() => {
+        const link = document.querySelector<HTMLAnchorElement>('#lista a')!;
+        link.addEventListener('click', (event) => event.preventDefault());
+        link.click();
+      });
+      await expect.poll(() => events.length).toBe(i + 1);
+    }
+    expect(events).toEqual([
+      { event: 'lista', ref: 'comandle' },
+      { event: 'lista', ref: 'prensa-lacapital-pardo' },
+      { event: 'lista', ref: 'otro' },
+    ]);
+  });
+
   test('the waitlist links to the form on vtsecurity.com.ar with its own ref', async ({ page }) => {
     desktopOnly();
     await page.goto('/libro?lang=es');

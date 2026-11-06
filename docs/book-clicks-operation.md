@@ -13,7 +13,7 @@ Estado al 29/10/2026: **medición activada y comprobada en producción**. La mig
 
 ## Qué significa la métrica
 
-`book_clicks` guarda sólo `day`, `event`, `ref`, `count`. El día es de Argentina y los eventos son `pdf` y `lista`. Los 20 refs permitidos están en `src/bookMetrics.ts` y en `Pluma/src/lib/book-event.ts`; incluyen `muestra-instagram-stories`. Desconocidos van a `otro`: máximo 40 filas/día.
+`book_clicks` guarda sólo `day`, `event`, `ref`, `count`. El día es de Argentina y los eventos son `pdf` y `lista`. Los 58 refs permitidos están en `src/bookMetrics.ts` y en `Pluma/src/lib/book-event.ts`, que tienen que ser la misma lista: los de la muestra (incluido `muestra-instagram-stories`), los `links-*` de links.vtsecurity.com.ar, `comandle` y los 15 `prensa-*` del lanzamiento del 10/11/2026. Desconocidos van a `otro`: máximo 116 filas/día. Sumar un ref no lleva migración ni filas previas: la fila se crea con el primer clic.
 
 Se cuentan clics explícitos, incluso repetidos, en los enlaces al PDF o a la lista. No son personas únicas, descargas terminadas, lecturas ni altas. No se guarda IP, hash, user agent, cookies ni identificadores. El cliente omite credenciales. El servidor excluye sesiones admin cuando las recibe; una petición desde el otro dominio no puede reconocer esa sesión. Un `Origin` falsificado puede inflar el contador.
 

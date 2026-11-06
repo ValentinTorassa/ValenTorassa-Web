@@ -9,6 +9,12 @@ const refs = new Set([
   'links', 'links-ig', 'links-tt', 'links-x', 'links-th', 'links-yt', 'links-li', 'links-bs', 'links-fb',
   'links-md', 'links-dc', 'links-gh', 'links-wa', 'links-tiktok', 'links-threads', 'links-bluesky',
   'links-mastodon', 'links-linkedin', 'links-yt-short', 'links-yt-desc', 'links-whatsapp', 'links-discord',
+  // comandle.valentorassa.com links the book from a command's card with ?ref=comandle.
+  'comandle',
+  // Press emails and WhatsApps for the 10/11/2026 launch: prensa-<outlet>, -wa when sent by WhatsApp.
+  'prensa-elciudadano', 'prensa-eltres-wa', 'prensa-lacapital', 'prensa-lacapital-pardo', 'prensa-lra5',
+  'prensa-lt8-ameriso', 'prensa-lt8-wa', 'prensa-r3-de12a14', 'prensa-r3-editor', 'prensa-r3-redaccion',
+  'prensa-radio2-wa', 'prensa-radiounr', 'prensa-rosario12', 'prensa-uai', 'prensa-unr',
 ]);
 
 /** An aggregate click, not a completed download, reader or subscription. */
