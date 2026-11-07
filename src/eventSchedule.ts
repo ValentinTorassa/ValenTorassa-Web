@@ -4,7 +4,19 @@ import type { Talk } from './events';
 /** Talks are scheduled, and move to "past", in Argentina time. */
 export const ARGENTINA_TIME_ZONE = 'America/Argentina/Buenos_Aires';
 
-const locales: Record<Language, string> = { es: 'es-AR', en: 'en-US' };
+// Short day and month names are spelled out here instead of asked from Intl: ICU versions
+// disagree (Node 26 says "sep" for es-AR, Chrome 157 "sept"), and a page rendered with one
+// and hydrated with the other throws React error #418.
+const shortNames: Record<Language, { weekdays: string[]; months: string[] }> = {
+  es: {
+    weekdays: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+    months: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'],
+  },
+  en: {
+    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  },
+};
 
 /** Today's date in Argentina as ISO `YYYY-MM-DD`. */
 export function todayInArgentina(now = new Date()): string {
@@ -90,16 +102,19 @@ export function groupConsecutiveByEvent(list: Talk[]): TalkRun[] {
   return runs;
 }
 
-function datePart(date: Date, language: Language, options: Intl.DateTimeFormatOptions, type: Intl.DateTimeFormatPartTypes) {
-  const value = new Intl.DateTimeFormat(locales[language], { ...options, timeZone: 'UTC' })
-    .formatToParts(date)
-    .find((part) => part.type === type)?.value ?? '';
+const weekday = (date: Date, language: Language) => shortNames[language].weekdays[date.getUTCDay()];
+const monthName = (date: Date, language: Language) => shortNames[language].months[date.getUTCMonth()];
 
-  return value.replace(/\.$/, '');
+/** A day for the /links lines: "vie, 6 nov 2026" or "Fri, Nov 6, 2026"; the year only when asked. */
+export function formatShortDay(isoDate: string, language: Language, withYear = false): string {
+  const date = parseDay(isoDate);
+  const day = date.getUTCDate();
+  const year = withYear ? `${language === 'es' ? ' ' : ', '}${date.getUTCFullYear()}` : '';
+
+  return language === 'es'
+    ? `${weekday(date, language)}, ${day} ${monthName(date, language)}${year}`
+    : `${weekday(date, language)}, ${monthName(date, language)} ${day}${year}`;
 }
-
-const weekday = (date: Date, language: Language) => datePart(date, language, { weekday: 'short' }, 'weekday');
-const monthName = (date: Date, language: Language) => datePart(date, language, { month: 'short' }, 'month');
 
 /** Pieces for the calendar-style date badge on /eventos. */
 export type TalkDateParts = {
