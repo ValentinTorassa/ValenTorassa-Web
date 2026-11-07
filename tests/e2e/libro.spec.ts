@@ -225,7 +225,7 @@ test.describe('/libro', () => {
   test('the home page links here but the main menu does not', async ({ page }) => {
     desktopOnly();
     await page.goto('/?lang=es');
-    await expect(page.locator('#talks a[href="/libro"]')).toHaveText('El libro: leé el capítulo 1');
+    await expect(page.locator('.hero-announce[href="/libro"]')).toContainText('Leé gratis el capítulo 1 de mi libro');
     await expect(page.locator('.nav-links a[href="/libro"]')).toHaveCount(0);
     await page.goto('/libro?lang=es');
     await expect(page.locator('.nav-links a[href="/libro"]')).toHaveCount(0);

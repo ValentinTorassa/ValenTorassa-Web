@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import {
   ArrowRight,
   Award,
   BookOpenText,
   Calendar,
   Check,
-  ChevronRight,
   ClipboardCheck,
   Clock3,
   Cloud,
@@ -20,7 +19,6 @@ import {
   ShieldCheck,
   Wrench,
   Terminal,
-  X,
   Presentation,
   MicVocal,
 } from 'lucide-react';
@@ -46,22 +44,10 @@ function App({ language }: { language: Language }) {
   const [activeExperienceIndex, setActiveExperienceIndex] = useState(-1);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [emailCopied, setEmailCopied] = useState(false);
-  const [selectedRepoName, setSelectedRepoName] = useState<string | null>(null);
   const copyResetTimer = useRef<ReturnType<typeof globalThis.setTimeout> | undefined>(undefined);
-  const projectTriggerRef = useRef<HTMLButtonElement | null>(null);
   const content = contentByLanguage[language];
-  const selectedRepo =
-    [...content.research.repos, ...content.research.privateProjects].find((repo) => repo.name === selectedRepoName) ??
-    null;
-  const closeProjectDrawer = useCallback(() => setSelectedRepoName(null), []);
-  const openProjectDrawer = useCallback((name: string, trigger: HTMLButtonElement) => {
-    projectTriggerRef.current = trigger;
-    setSelectedRepoName(name);
-  }, []);
   const projectCardLabels: ProjectCardLabels = {
     openRepository: content.research.openRepoLabel,
-    proof: content.research.proofLabel,
-    details: content.research.projectDetailsLabel,
     privateCode: content.research.privateCodeLabel,
   };
 
@@ -241,38 +227,17 @@ function App({ language }: { language: Language }) {
           </div>
         </section>
 
-        <div className="strip" aria-hidden="true">
-          <div className="strip-track">
-            {['GO BACKEND', 'SOC 2', 'ISO 27001', 'MCP/OAUTH', 'AWS SECURITY', 'LINUX', 'VT SECURITY'].map((item) => (
-              <span key={item}>{item}</span>
-            ))}
-            {['GO BACKEND', 'SOC 2', 'ISO 27001', 'MCP/OAUTH', 'AWS SECURITY', 'LINUX', 'VT SECURITY'].map((item) => (
-              <span key={`${item}-copy`}>{item}</span>
-            ))}
-          </div>
-        </div>
-
         <section className="section" id="profile">
           <div className="profile-layout">
           <div className="section-head profile-head">
             <span className="eyebrow">{content.profile.eyebrow}</span>
             <h2>{content.profile.title}</h2>
             <p>{content.profile.intro}</p>
-            <TerminalCard title="vt@security:~/career" lines={content.terminalLines} />
           </div>
 
           <div className="profile-grid">
             <Reveal className="statement">
               <p>{content.profile.statement}</p>
-              <div className="statement-watermark" aria-hidden="true">
-                <span className="watermark-orbit" />
-                <span className="watermark-trace trace-a" />
-                <span className="watermark-trace trace-b" />
-                <span className="watermark-trace trace-c" />
-                <i className="watermark-node node-a" />
-                <i className="watermark-node node-b" />
-                <i className="watermark-node node-c" />
-              </div>
             </Reveal>
 
             <div className="fact-list">
@@ -280,7 +245,6 @@ function App({ language }: { language: Language }) {
                 <Reveal as="article" key={fact.key} className={`fact-card fact-${fact.key}`}>
                   <FactIcon factKey={fact.key} />
                   <div>
-                    <span className="fact-key">{fact.key}</span>
                     <h3>{fact.title}</h3>
                     <p>{fact.text}</p>
                   </div>
@@ -338,7 +302,7 @@ function App({ language }: { language: Language }) {
                       ))}
                     </div>
                   ) : null}
-                  <TagList tags={item.tags} />
+                  {item.tags.length > 0 ? <TagList tags={item.tags} /> : null}
                 </div>
               </Reveal>
             ))}
@@ -401,7 +365,6 @@ function App({ language }: { language: Language }) {
                       <div>
                         <h4>{cert.name}</h4>
                         <strong>{cert.detail}</strong>
-                        <p>{cert.focus}</p>
                       </div>
                     </article>
                   );
@@ -423,7 +386,6 @@ function App({ language }: { language: Language }) {
           <div className="section-head">
             <span className="eyebrow">{content.stack.eyebrow}</span>
             <h2>{content.stack.title}</h2>
-            <p>{content.stack.intro}</p>
           </div>
 
           <div className="skill-grid">
@@ -433,7 +395,6 @@ function App({ language }: { language: Language }) {
                   <SkillIcon tone={group.tone} />
                   <h3>{group.title}</h3>
                 </div>
-                <p>{group.text}</p>
                 <TagList tags={group.tags} variant="tone" />
               </Reveal>
             ))}
@@ -542,11 +503,6 @@ function App({ language }: { language: Language }) {
               {content.research.speakerKitLabel}
               <ArrowRight aria-hidden="true" />
             </a>
-            <a className="talks-page-link" href={href('/libro')}>
-              <BookOpenText aria-hidden="true" />
-              {content.research.bookLabel}
-              <ArrowRight aria-hidden="true" />
-            </a>
           </div>
         </section>
 
@@ -584,7 +540,6 @@ function App({ language }: { language: Language }) {
                         </a>
                         <div className="repo-unfurl-copy">
                           <div className="repo-unfurl-eyebrow">
-                            <strong>{content.research.featuredLabel}</strong>
                             <span className="repo-kicker">
                               <i style={{ backgroundColor: repo.languageColor }} />
                               {repo.language}
@@ -592,7 +547,6 @@ function App({ language }: { language: Language }) {
                           </div>
                           <h4>{repo.name}</h4>
                           <p>{repo.description}</p>
-                          <p className="repo-featured-proof"><span>{content.research.proofLabel}</span>{repo.proof}</p>
                           <div className="repo-unfurl-links">
                             <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
                               <span>securitylabs.valentorassa.com</span>
@@ -614,7 +568,6 @@ function App({ language }: { language: Language }) {
                       repo={repo}
                       className={index < content.research.repos.length - 3 ? 'is-lead' : 'is-standard'}
                       labels={projectCardLabels}
-                      onOpen={openProjectDrawer}
                     />
                   );
                 })}
@@ -660,7 +613,6 @@ function App({ language }: { language: Language }) {
                       repo={project}
                       className={project.previewImage ? 'is-private has-preview' : 'is-private'}
                       labels={projectCardLabels}
-                      onOpen={openProjectDrawer}
                     />
                   ))}
                 </Reveal>
@@ -677,13 +629,6 @@ function App({ language }: { language: Language }) {
                   {content.research.contributionProof}
                   <ExternalLink aria-hidden="true" />
                 </a>
-              </div>
-              <div className="repo-more-item">
-                <span>{content.research.developerSetupLabel}</span>
-                <div className="repo-more-links">
-                  <a href="https://github.com/ValentinTorassa/VT-Terminal-Project" target="_blank" rel="noopener noreferrer">VT Terminal <ExternalLink aria-hidden="true" /></a>
-                  <a href="https://github.com/ValentinTorassa/VT-Terminal-Project/tree/main/ide" target="_blank" rel="noopener noreferrer">VT IDE <ExternalLink aria-hidden="true" /></a>
-                </div>
               </div>
               {content.research.moreWork.map((item) => (
                 <div className="repo-more-item" key={item.label}>
@@ -708,10 +653,6 @@ function App({ language }: { language: Language }) {
             <h2>{content.contact.title}</h2>
             <p>{content.contact.text}</p>
             <div className="contact-presence" aria-label={content.contact.timezone}>
-              <span className="availability-indicator">
-                <i aria-hidden="true" />
-                {content.contact.availability}
-              </span>
               <span>
                 <Clock3 aria-hidden="true" />
                 {content.contact.timezone}
@@ -754,31 +695,12 @@ function App({ language }: { language: Language }) {
       </main>
 
       <SiteFooter backToTopLabel={content.footer.backToTopLabel} />
-
-      {selectedRepo ? (
-        <ProjectDrawer
-          repo={selectedRepo}
-          labels={{
-            close: content.research.closeProjectLabel,
-            problem: content.research.problemLabel,
-            architecture: content.research.architectureLabel,
-            security: content.research.securityLabel,
-            visit: content.research.visitProjectLabel,
-            repository: content.research.openRepoLabel,
-            privateCode: content.research.privateCodeLabel,
-          }}
-          onClose={closeProjectDrawer}
-          returnFocusTarget={projectTriggerRef.current}
-        />
-      ) : null}
     </div>
   );
 }
 
 type ProjectCardLabels = {
   openRepository: string;
-  proof: string;
-  details: string;
   privateCode: string;
 };
 
@@ -786,11 +708,10 @@ type ProjectCardProps = {
   repo: FeaturedRepo | PrivateProject;
   className: string;
   labels: ProjectCardLabels;
-  onOpen: (name: string, trigger: HTMLButtonElement) => void;
 };
 
-/** A selected-work card. Private work says so where public work links its repository. */
-function ProjectCard({ repo, className, labels, onOpen }: ProjectCardProps) {
+/** A selected-work card. Private work says so where public work links its site and repository. */
+function ProjectCard({ repo, className, labels }: ProjectCardProps) {
   const isPublic = 'href' in repo;
 
   return (
@@ -809,40 +730,29 @@ function ProjectCard({ repo, className, labels, onOpen }: ProjectCardProps) {
             </span>
             <h4>{repo.name}</h4>
           </div>
-          {isPublic ? (
-            <a
-              href={repo.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${labels.openRepository}: ${repo.name}`}
-              title={labels.openRepository}
-            >
-              <ExternalLink aria-hidden="true" />
-            </a>
-          ) : (
+          {isPublic ? null : (
             <span className="repo-private-badge">
               <Lock aria-hidden="true" />
               {labels.privateCode}
             </span>
           )}
         </div>
-        <span className="repo-stage">{repo.stage}</span>
         <p>{repo.description}</p>
         <TagList tags={repo.tags} />
-        <div className="repo-card-foot">
-          <div className="repo-proof">
-            <span>{labels.proof}</span>
-            <p>{repo.proof}</p>
+        {isPublic ? (
+          <div className="repo-card-foot repo-unfurl-links">
+            {repo.siteHref ? (
+              <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
+                <span>{new URL(repo.siteHref).host}</span>
+                <ExternalLink aria-hidden="true" />
+              </a>
+            ) : null}
+            <a href={repo.href} target="_blank" rel="noopener noreferrer" aria-label={`${labels.openRepository}: ${repo.name}`}>
+              <Github aria-hidden="true" />
+              <span>{labels.openRepository}</span>
+            </a>
           </div>
-          <button
-            className="repo-details-trigger"
-            type="button"
-            onClick={(event) => onOpen(repo.name, event.currentTarget)}
-          >
-            <span>{labels.details}</span>
-            <ChevronRight aria-hidden="true" />
-          </button>
-        </div>
+        ) : null}
       </div>
     </article>
   );
@@ -872,146 +782,6 @@ function ProjectPreview({ repo }: { repo: FeaturedRepo | PrivateProject }) {
     </div>
   );
 }
-
-type ProjectDrawerProps = {
-  repo: FeaturedRepo | PrivateProject;
-  labels: {
-    close: string;
-    problem: string;
-    architecture: string;
-    security: string;
-    visit: string;
-    repository: string;
-    privateCode: string;
-  };
-  onClose: () => void;
-  returnFocusTarget: HTMLButtonElement | null;
-};
-
-function ProjectDrawer({ repo, labels, onClose, returnFocusTarget }: ProjectDrawerProps) {
-  const panelRef = useRef<HTMLElement | null>(null);
-  const closeRef = useRef<HTMLButtonElement | null>(null);
-
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const focusFrame = window.requestAnimationFrame(() => closeRef.current?.focus());
-    document.body.style.overflow = 'hidden';
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-
-      if (event.key !== 'Tab' || !panelRef.current) return;
-
-      const focusable = [...panelRef.current.querySelectorAll<HTMLElement>(
-        'button, a[href], [tabindex]:not([tabindex="-1"])',
-      )].filter((element) => !element.hasAttribute('disabled'));
-      const first = focusable[0];
-      const last = focusable.at(-1);
-
-      if (!first || !last) return;
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.cancelAnimationFrame(focusFrame);
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
-      returnFocusTarget?.focus();
-    };
-  }, [onClose, returnFocusTarget]);
-
-  return (
-    <div className="project-drawer-layer">
-      <button
-        className="project-drawer-backdrop"
-        type="button"
-        onClick={onClose}
-        aria-label={labels.close}
-        tabIndex={-1}
-      />
-      <aside
-        className={`project-drawer repo-${repo.tone}`}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="project-drawer-title"
-        ref={panelRef}
-      >
-        <div className="project-drawer-head">
-          <span className="repo-kicker">
-            <i style={{ backgroundColor: repo.languageColor }} />
-            {repo.language}
-          </span>
-          <button ref={closeRef} type="button" onClick={onClose} aria-label={labels.close}>
-            <X aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="project-drawer-intro">
-          <p>./project</p>
-          <h2 id="project-drawer-title">{repo.name}</h2>
-          <p>{repo.description}</p>
-          <TagList tags={repo.tags} />
-        </div>
-
-        <div className="project-drawer-details">
-          <article>
-            <span>01 / {labels.problem}</span>
-            <p>{repo.caseStudy.problem}</p>
-          </article>
-          <article>
-            <span>02 / {labels.architecture}</span>
-            <p>{repo.caseStudy.architecture}</p>
-          </article>
-          <article>
-            <span>03 / {labels.security}</span>
-            <p>{repo.caseStudy.security}</p>
-          </article>
-        </div>
-
-        <div className="project-drawer-actions">
-          {'href' in repo ? (
-            <>
-              {repo.siteHref ? (
-                <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
-                  {labels.visit}
-                  <ExternalLink aria-hidden="true" />
-                </a>
-              ) : null}
-              <a href={repo.href} target="_blank" rel="noopener noreferrer">
-                <Github aria-hidden="true" />
-                {labels.repository}
-              </a>
-            </>
-          ) : (
-            <span className="repo-private-badge">
-              <Lock aria-hidden="true" />
-              {labels.privateCode}
-            </span>
-          )}
-        </div>
-      </aside>
-    </div>
-  );
-}
-
-type TerminalLine = {
-  prompt: string;
-  command: string;
-  output: string;
-};
 
 type RevealProps = HTMLAttributes<HTMLElement> & {
   as?: 'div' | 'article';
@@ -1183,29 +953,6 @@ function HeroScene() {
         ))}
       </div>
     </>
-  );
-}
-
-function TerminalCard({ title, lines }: { title: string; lines: TerminalLine[] }) {
-  return (
-    <div className="terminal-card">
-      <div className="terminal-bar">
-        <span className="dot-red" />
-        <span className="dot-yellow" />
-        <span className="dot-green" />
-        <span>{title}</span>
-      </div>
-      <div className="terminal-body">
-        {lines.map((line) => (
-          <div className="terminal-row" key={line.command}>
-            <div>
-              <span className="prompt">{line.prompt}</span> <span className="command">{line.command}</span>
-            </div>
-            <p>{line.output}</p>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
 

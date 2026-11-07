@@ -67,7 +67,6 @@ const ekoparty = 'Ekoparty 2026';
 const cec = 'CEC Buenos Aires';
 
 export const talks: Talk[] = [
-  // Upcoming
   {
     id: 'rossec-2026',
     date: '2026-11-06',
@@ -88,6 +87,7 @@ export const talks: Talk[] = [
       es: 'Charla de 25 minutos sobre OAuth, MCP y permisos cuando el cliente es un agente de IA.',
       en: 'A 25-minute talk on OAuth, MCP, and permissions when the client is an AI agent.',
     },
+    highlight: true,
   },
   {
     id: 'instituto-san-pablo-2026',
@@ -129,7 +129,6 @@ export const talks: Talk[] = [
       en: 'The Airbus A320 and Boeing 737 MAX cases, and five controls from an academic smart traffic light case, each with its test and its evidence.',
     },
   },
-  // Past
   {
     id: 'cacic-2026-podman',
     date: '2026-10-06',
@@ -165,6 +164,7 @@ export const talks: Talk[] = [
       es: 'Paper presentado en modalidad virtual.',
       en: 'Paper presented virtually.',
     },
+    highlight: true,
   },
   {
     id: 'ekoparty-2026-owasp-village',
@@ -201,6 +201,7 @@ export const talks: Talk[] = [
     status: 'confirmed',
 
     slidesUrl: 'https://drive.google.com/file/d/1FJstqPbD8Af0KCtKqlGQD65ko8MVYv0e/view',
+    highlight: true,
   },
   {
     id: 'ekoparty-2026-bluespace',
@@ -367,7 +368,6 @@ export const talks: Talk[] = [
       es: 'Webinar técnico sobre sistemas distribuidos, workers y decisiones de arquitectura.',
       en: 'Technical webinar on distributed systems, workers, and architectural decisions.',
     },
-    highlight: true,
   },
   {
     id: 'debconf26',
@@ -401,7 +401,6 @@ export const talks: Talk[] = [
       es: 'Monitoreo inteligente, respuesta temprana y automatización aplicada a defensa.',
       en: 'Intelligent monitoring, early response, and automation applied to defensive security.',
     },
-    highlight: true,
   },
   {
     id: 'cybersectuc-meetup-3',
@@ -417,7 +416,6 @@ export const talks: Talk[] = [
       es: 'Charla sobre carrera, criterio técnico y trabajo práctico en seguridad.',
       en: 'A practical talk about career development, technical judgment, and security work.',
     },
-    highlight: true,
   },
   {
     id: 'cacic-2024',

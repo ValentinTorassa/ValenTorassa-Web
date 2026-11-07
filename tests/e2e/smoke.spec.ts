@@ -192,7 +192,7 @@ for (const route of ROUTES) {
   });
 }
 
-test('home leads to eight selected projects and the private case study without a GitHub API request', async ({ page }) => {
+test('home leads to eight selected projects and the private dashboard without a GitHub API request', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
   const apiRequests: string[] = [];
@@ -239,17 +239,21 @@ test('private work shows its synthetic preview without a public link', async ({ 
     await expect(card.locator('img')).toHaveCount(1);
     await expect(card.locator('img')).toHaveAttribute('alt', /synthetic|sintéticas/);
     await expect(card).toContainText(lang === 'es' ? 'Tablero de solo lectura' : 'Read-only dashboard');
+    await expect(card.getByRole('button')).toHaveCount(0);
 
-    await card.getByRole('button').click();
-    const drawer = page.getByRole('dialog');
-    await expect(drawer.locator('.project-drawer-details article')).toHaveCount(3);
-    await expect(drawer.locator('.repo-private-badge')).toHaveText(label);
-    await expect(drawer.locator('a')).toHaveCount(0);
-
-    const text = `${await card.innerText()}\n${await drawer.innerText()}`;
+    const text = await card.innerText();
     expect(text, `${lang}: em or en dashes`).not.toMatch(/[—–]/);
     expect(text, `${lang}: never presented as open source`).not.toMatch(/open source|código abierto/i);
-    await page.keyboard.press('Escape');
-    await expect(drawer).toHaveCount(0);
   }
+});
+
+test('project cards link the live site and the repository, with no case-study panel', async ({ page }) => {
+  test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+
+  await page.goto('/');
+  const card = page.locator('#research .repo-card').filter({ hasText: 'VT-SecretShare' });
+  await expect(card.locator('a[href="https://secretshare.valentorassa.com"]')).toHaveText('secretshare.valentorassa.com');
+  await expect(card.locator('a[href="https://github.com/ValentinTorassa/VT-SecretShare"]')).toHaveText('Repositorio');
+  await expect(page.locator('#research button')).toHaveCount(0);
+  await expect(page.locator('#research')).not.toContainText(/Evidencia|Explorar proyecto/);
 });
