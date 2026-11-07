@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import coverFallback from './assets/libro-cover-540.jpg';
 import coverWebp360 from './assets/libro-cover-360.webp';
 import coverWebp540 from './assets/libro-cover-540.webp';
-import { ARGENTINA_TIME_ZONE, splitTalks } from './eventSchedule';
+import { ARGENTINA_TIME_ZONE, formatShortDay, splitTalks } from './eventSchedule';
 import { talks, type Talk } from './events';
 import {
   apuntesUrl,
@@ -70,20 +70,10 @@ const withRef = (url: string, ref: string) => `${url}${url.includes('?') ? '&' :
 
 const locale = (language: Language) => (language === 'es' ? 'es-AR' : 'en-US');
 
-function formatDay(day: string, language: Language) {
-  return new Intl.DateTimeFormat(locale(language), {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(`${day}T12:00:00Z`));
-}
+const formatDay = (day: string, language: Language) => formatShortDay(day, language, true);
 
 function formatTalkDay(talk: Talk, language: Language) {
-  const day = new Intl.DateTimeFormat(locale(language), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(
-    new Date(`${talk.date}T12:00:00Z`),
-  );
+  const day = formatShortDay(talk.date, language);
   return talk.time ? `${day} · ${talk.time}` : day;
 }
 
