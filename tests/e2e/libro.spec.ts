@@ -222,13 +222,12 @@ test.describe('/libro', () => {
     expect(readFileSync(path.join(root, 'dist/sitemap.xml'), 'utf8')).toContain(`<loc>${url}</loc>`);
   });
 
-  test('the home page links here but the main menu does not', async ({ page }) => {
+  test('the home hero and the main menu link here', async ({ page }) => {
     desktopOnly();
     await page.goto('/?lang=es');
     await expect(page.locator('.hero-announce[href="/libro"]')).toContainText('Leé gratis el capítulo 1 de mi libro');
-    await expect(page.locator('.nav-links a[href="/libro"]')).toHaveCount(0);
+    await expect(page.locator('.nav-links a[href="/libro"]')).toHaveText('Libro');
     await page.goto('/libro?lang=es');
-    await expect(page.locator('.nav-links a[href="/libro"]')).toHaveCount(0);
-    await expect(page.locator('.nav-links a[aria-current="page"]')).toHaveCount(0);
+    await expect(page.locator('.nav-links a[aria-current="page"]')).toHaveAttribute('href', '/libro');
   });
 });
