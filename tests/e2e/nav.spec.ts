@@ -1,23 +1,21 @@
 import { expect, test } from '@playwright/test';
 
 const pages = ['/', '/eventos', '/charlas', '/speaker-kit', '/libro'];
-const spanish = ['Perfil', 'Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Contacto'];
-const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Contact'];
+const spanish = ['Perfil', 'Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Libro', 'Contacto'];
+const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Book', 'Contact'];
 
 test('the same navigation works across every page', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'shared navigation; run once');
   for (const path of pages) {
     await page.goto(path);
     await expect(page.locator('.nav-links a')).toHaveText(spanish);
-    await expect(page.locator('.social-actions a[aria-label="Blog"]')).toHaveAttribute('href', 'https://vtsecurity.com.ar');
-    await expect(page.locator('.social-actions a')).toHaveCount(6);
+    // Only the three primary profiles sit in the desktop header.
+    await expect(page.locator('.social-actions a')).toHaveCount(3);
     expect(await page.locator('.social-actions a').evaluateAll((links) => links.map((link) => link.getAttribute('aria-label'))))
-      .toEqual(['GitHub', 'LinkedIn', 'YouTube', 'Blog', 'Libro', 'Links']);
-    await expect(page.locator('.social-actions a[aria-label="Libro"]')).toHaveAttribute('href', '/libro');
-    await expect(page.locator('.social-actions a[aria-label="Links"]')).toHaveAttribute('href', 'https://links.vtsecurity.com.ar/');
-    await expect(page.locator('.social-actions a[aria-label="Libro"]')).not.toHaveAttribute('target', '_blank');
+      .toEqual(['GitHub', 'LinkedIn', 'YouTube']);
     if (path === '/charlas') await expect(page.locator('.nav-links a[href="/charlas"]')).toHaveAttribute('aria-current', 'page');
     if (path === '/eventos') await expect(page.locator('.nav-links a[href="/eventos"]')).toHaveAttribute('aria-current', 'page');
+    if (path === '/libro') await expect(page.locator('.nav-links a[href="/libro"]')).toHaveAttribute('aria-current', 'page');
   }
 
   // The toggle is a link to the same page in the other language.
@@ -26,8 +24,8 @@ test('the same navigation works across every page', async ({ page }) => {
   await expect(page).toHaveURL(/\/en\/libro$/);
   await expect(page.locator('.nav-links a')).toHaveText(english);
   expect(await page.locator('.nav-links a').evaluateAll((links) => links.map((link) => link.getAttribute('href'))))
-    .toEqual(['/en/#profile', '/en/#experience', '/en/#research', '/en/charlas', '/en/eventos', '/en/#contact']);
-  await expect(page.locator('.social-actions a[aria-label="Libro"]')).toHaveAttribute('href', '/en/libro');
+    .toEqual(['/en/#profile', '/en/#experience', '/en/#research', '/en/charlas', '/en/eventos', '/en/libro', '/en/#contact']);
+  await expect(page.locator('.social-actions a')).toHaveCount(3);
   expect(await page.evaluate(() => localStorage.getItem('vt-language'))).toBe('en');
 
   // The choice is remembered but never redirects: a Spanish URL stays Spanish.
@@ -58,7 +56,7 @@ test('the phone menu is usable at 390 px on every page', async ({ page }) => {
     await expect(page.locator('.mobile-nav-panel nav a')).toHaveText(spanish.map((label, index) => `${String(index + 1).padStart(2, '0')}${label}`));
     const socialTops = await page.locator('.mobile-nav-social a').evaluateAll((links) => links.map((link) => link.getBoundingClientRect().top));
     expect(Math.max(...socialTops) - Math.min(...socialTops), `${path}: social icons on one row`).toBeLessThan(1);
-    await expect(page.locator('.mobile-nav-book')).toHaveAttribute('href', '/libro');
+    await expect(page.locator('.mobile-nav-panel nav a[href="/libro"]')).toBeVisible();
     for (const control of [menu, page.locator('.language-toggle'), ...await page.locator('.mobile-nav-panel nav a').all()]) {
       const box = await control.boundingBox();
       expect(box?.width, `${path}: touch width`).toBeGreaterThanOrEqual(44);

@@ -1,9 +1,10 @@
 /**
  * The 3D backdrop behind the home hero, on the two sides of the centered
- * text: Tux drawn with dots on the left (from public/icon.png, a colour per
- * part), and on the right a figure of dots that re-forms into a shield, a
- * lock, a terminal and a cloud, like the talk icons on /charlas. The middle
- * of the screen stays dark so the text reads.
+ * text: Tux drawn with dots on the left (from public/icon.png, a grey per
+ * part, the beak and feet the one warm note), and on the right a figure of
+ * pale dots that re-forms into a shield, a lock, a terminal and a cloud, like
+ * the talk icons on /charlas. The middle of the screen stays dark so the text
+ * reads.
  *
  * Loaded on demand with three.js; it pauses while the hero is off screen or
  * the tab is hidden, and draws a single still frame under reduced motion.
@@ -31,10 +32,10 @@ type BuildContext = {
 const ICON_DOTS = 1500;
 const MORPH_SECONDS = 1.3;
 const HOLD_SECONDS = 4.5;
-const TUX_GRID = 70;
+const TUX_GRID = 92;
 
-/** Tux's parts, told apart by the colour of public/icon.png, each drawn in one colour of the site. */
-const TUX_COLORS = [0x62dfd2, 0xe6edf6, 0xf0b45b, 0x8b95a8]; // body, belly, cheek and chest, beak and feet
+/** Tux's parts, told apart by the colour of public/icon.png: greys, with the beak and feet in amber. */
+const TUX_COLORS = [0x5f6879, 0xeef1f5, 0xf0b45b, 0xa3abba]; // body, belly, cheek and chest, beak and feet
 
 /** Sample a picture on a TUX_GRID lattice: a dot per opaque cell, tagged with the part it falls on. */
 async function sampleTux(url: string): Promise<Array<[number, number, number]>> {
@@ -87,7 +88,7 @@ async function buildFigures({ THREE, scene, camera, iconMarkup }: BuildContext):
   tuxGeometry.setAttribute('position', new THREE.BufferAttribute(tuxPositions, 3));
   tuxGeometry.setAttribute('color', new THREE.BufferAttribute(tuxColors, 3));
   const tuxMaterial = new THREE.PointsMaterial({
-    size: 0.062, map: sprite, vertexColors: true, transparent: true, alphaTest: 0.3, depthWrite: false, opacity: 0.8,
+    size: 0.05, map: sprite, vertexColors: true, transparent: true, alphaTest: 0.3, depthWrite: false, opacity: 0.8,
   });
   const tux = new THREE.Group();
   tux.add(new THREE.Points(tuxGeometry, tuxMaterial));
@@ -110,7 +111,7 @@ async function buildFigures({ THREE, scene, camera, iconMarkup }: BuildContext):
   const iconGeometry = new THREE.BufferGeometry();
   iconGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const iconMaterial = new THREE.PointsMaterial({
-    color: 0x9c8cff, size: 0.066, map: sprite, transparent: true, alphaTest: 0.3, depthWrite: false, opacity: 0.8,
+    color: 0xd3d8e0, size: 0.056, map: sprite, transparent: true, alphaTest: 0.3, depthWrite: false, opacity: 0.6,
   });
   const icon = new THREE.Group();
   icon.add(new THREE.Points(iconGeometry, iconMaterial));

@@ -2797,33 +2797,6 @@ p {
   background: rgba(7, 9, 14, 0.55);
 }
 
-.mobile-nav-book {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  margin-top: 10px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface-soft);
-  color: #c0cadd;
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.mobile-nav-book svg:first-child {
-  color: var(--accent-2);
-}
-
-.mobile-nav-book svg:last-child {
-  width: 16px;
-  height: 16px;
-  margin-left: auto;
-}
-
 /* Eight 40 px icons and their gaps (334 px) fit on one row in the 366 px panel, from a 390 px phone up. */
 .mobile-nav-social {
   display: flex;
@@ -4226,8 +4199,7 @@ p {
 
 .mobile-menu-toggle,
 .mobile-nav-panel nav a,
-.mobile-nav-social a,
-.mobile-nav-book {
+.mobile-nav-social a {
   border-radius: var(--radius);
 }
 
@@ -4521,4 +4493,117 @@ p {
 .book-badge {
   border-color: var(--line-strong);
   color: var(--muted);
+}
+
+/* ── Header, 2026-11-07 ───────────────────────────────────────────────────────
+   Translucent over the page, the name in the body face, the menu as quiet text
+   with an underline only on the current section, and the profile icons without
+   boxes, split from the language switch by a hairline. */
+
+.topbar {
+  min-height: 64px;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  background: rgba(11, 12, 14, 0.74);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+.brand {
+  gap: 11px;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand img {
+  width: 30px;
+  height: 30px;
+  border-color: rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+}
+
+.nav-links {
+  gap: 2px;
+  font-family: var(--body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.nav-links a {
+  padding: 7px 12px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-links a::after {
+  right: 12px;
+  bottom: 0;
+  left: 12px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-links a:hover::after,
+.nav-links a:focus-visible::after {
+  transform: scaleX(0);
+}
+
+.nav-links a.is-active {
+  color: var(--text);
+  text-shadow: none;
+}
+
+.nav-links a.is-active::after {
+  transform: scaleX(1);
+}
+
+.header-actions {
+  gap: 6px;
+}
+
+.social-actions {
+  gap: 0;
+  margin-right: 2px;
+  padding-right: 8px;
+  border-right: 1px solid var(--line);
+}
+
+.social-actions a {
+  width: 34px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--faint);
+  background: transparent;
+}
+
+.social-actions a:hover,
+.social-actions a:focus-visible {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.social-actions svg,
+.social-actions img {
+  width: 17px;
+  height: 17px;
+}
+
+.language-toggle {
+  padding: 0 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 0.72rem;
+}
+
+.language-toggle:hover,
+.language-toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.05);
 }

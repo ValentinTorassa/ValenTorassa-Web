@@ -488,24 +488,24 @@ export const contentByLanguage: Record<Language, PageContent> = {
       eyebrow: 'perfil',
       title: 'Qué hago',
       intro:
-        'Trabajo en seguridad cloud y en backend. Me ocupo de permisos, identidad, datos sensibles y de la evidencia que piden las auditorías, y escribo buena parte del código que implementa esos controles. Mi base son Linux y las redes, de cuando hacía seguridad de redes y operación de SOC en Consulting IT.',
+        'Trabajo en seguridad cloud y backend: permisos, identidad, datos sensibles y el código que implementa esos controles.',
       statement:
-        'En Teramot lidero ciberseguridad y compliance. Coordiné la auditoría SOC 2, del Tipo 1 al informe final del Tipo 2, y diseño Aleph, el backend en Go que les da a agentes de IA acceso controlado a datos de empresa.',
+        'Hoy lidero ciberseguridad y compliance en Teramot.',
       facts: [
         {
           key: 'sec',
           title: 'Seguridad en agentes de IA',
-          text: 'OAuth y permisos cuando el que llama es un agente, servidores MCP y controles que viven fuera del modelo. Es el tema de mis charlas de 2026 en Ekoparty, JCC y ROS:SEC.',
+          text: 'OAuth, MCP y controles fuera del modelo. El tema de mis charlas de 2026.',
         },
         {
           key: 'arch',
           title: 'Arquitectura backend',
-          text: 'Servicios en Go con APIs, eventos en NATS, PostgreSQL y OAuth 2.1, instrumentados con OpenTelemetry. Es el stack de Aleph en Teramot.',
+          text: 'Go, NATS, PostgreSQL y OAuth 2.1, con OpenTelemetry.',
         },
         {
           key: 'ops',
           title: 'Seguridad en AWS',
-          text: 'Hardening de cuentas y despliegues: IAM, SSO, CloudTrail, GuardDuty, ECS/Fargate, OIDC en GitHub Actions y manejo de secretos.',
+          text: 'IAM, SSO, CloudTrail, GuardDuty y manejo de secretos.',
         },
       ],
     },
@@ -725,24 +725,24 @@ export const contentByLanguage: Record<Language, PageContent> = {
       eyebrow: 'profile',
       title: 'What I do',
       intro:
-        'I work on cloud security and backend systems. I handle permissions, identity, sensitive data, and the evidence audits ask for, and I write much of the code that implements those controls. My background is Linux and networking, from my time doing network security and SOC operations at Consulting IT.',
+        'I work on cloud security and backend systems: permissions, identity, sensitive data, and the code that enforces those controls.',
       statement:
-        'At Teramot I lead cybersecurity and compliance. I coordinated the SOC 2 audit, from Type 1 to the final Type 2 report, and I design Aleph, the Go backend that gives AI agents controlled access to company data.',
+        'Today I lead cybersecurity and compliance at Teramot.',
       facts: [
         {
           key: 'sec',
           title: 'Security for AI agents',
-          text: 'OAuth and permissions when the caller is an agent, MCP servers, and controls that live outside the model. It is the subject of my 2026 talks at Ekoparty, JCC, and ROS:SEC.',
+          text: 'OAuth, MCP, and controls outside the model. The subject of my 2026 talks.',
         },
         {
           key: 'arch',
           title: 'Backend architecture',
-          text: 'Go services with APIs, NATS events, PostgreSQL, and OAuth 2.1, instrumented with OpenTelemetry. It is the stack behind Aleph at Teramot.',
+          text: 'Go, NATS, PostgreSQL, and OAuth 2.1, with OpenTelemetry.',
         },
         {
           key: 'ops',
           title: 'Security on AWS',
-          text: 'Hardening accounts and deployments: IAM, SSO, CloudTrail, GuardDuty, ECS/Fargate, GitHub Actions OIDC, and secrets handling.',
+          text: 'IAM, SSO, CloudTrail, GuardDuty, and secrets handling.',
         },
       ],
     },

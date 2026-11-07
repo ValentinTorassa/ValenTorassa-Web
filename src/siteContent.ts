@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons';
-import { FaBookOpen, FaEnvelope, FaLink, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
+import { FaEnvelope, FaLink, FaLinkedinIn, FaPenNib } from 'react-icons/fa6';
 import { SiBluesky, SiDevdotto, SiFacebook, SiGithub, SiInstagram, SiOrcid, SiThreads, SiTiktok, SiX, SiYoutube } from 'react-icons/si';
 import { localePath } from './site';
 
@@ -19,8 +19,6 @@ export type HeaderLabels = {
   englishLabel: string;
   menuLabel: string;
   closeMenuLabel: string;
-  /** Link to /libro in the phone menu, under the profile icons. */
-  bookLabel: string;
 };
 
 /**
@@ -31,9 +29,9 @@ export type NavItem = { label: string; href: string; current?: boolean; section?
 
 export type SitePage = 'home' | 'eventos' | 'charlas' | 'speaker-kit' | 'libro';
 
-const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'contact', string>> = {
-  es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', contact: 'Contacto' },
-  en: { profile: 'Profile', experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', contact: 'Contact' },
+const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'book' | 'contact', string>> = {
+  es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', book: 'Libro', contact: 'Contacto' },
+  en: { profile: 'Profile', experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', book: 'Book', contact: 'Contact' },
 };
 
 export const blogUrl = 'https://vtsecurity.com.ar';
@@ -52,6 +50,7 @@ export function siteNav(page: SitePage, language: Language): NavItem[] {
     { label: label.projects, href: `${home}#research` },
     { label: label.talks, href: localePath(language, '/charlas'), current: page === 'charlas', section: page === 'home' ? 'talks' : undefined },
     { label: label.agenda, href: localePath(language, '/eventos'), current: page === 'eventos' },
+    { label: label.book, href: localePath(language, '/libro'), current: page === 'libro' },
     { label: label.contact, href: `${home}#contact` },
   ];
 }
@@ -146,15 +145,9 @@ export const linksPageUrl = (language: Language) => (language === 'es' ? `${LINK
 /** The links page (the one every social bio points to), in the page's language. */
 export const linksPageLink = (language: Language): SocialLink => ({ name: 'Links', href: linksPageUrl(language), icon: FaLink });
 
-/** The book page on this site; it sits next to the blog icon in every header. */
-export const bookLink: SocialLink = { name: 'Libro', href: '/libro', icon: FaBookOpen };
-
-/** The blog, the book and the primary profiles appear together on the right of every desktop header. */
-const headerSocialNames = ['GitHub', 'LinkedIn', 'YouTube', 'Blog'];
-export const headerSocialLinks = [
-  ...headerSocialNames.flatMap((name) => socialLinks.filter((link) => link.name === name)),
-  bookLink,
-];
+/** The three primary profiles, the only icons on the right of every desktop header. */
+const headerSocialNames = ['GitHub', 'LinkedIn', 'YouTube'];
+export const headerSocialLinks = headerSocialNames.flatMap((name) => socialLinks.filter((link) => link.name === name));
 
 /** Site pages (like /libro) open in the same tab; profiles and the blog open in a new one. */
 export const isExternalLink = (link: SocialLink) => !link.href.startsWith('/');
@@ -171,7 +164,6 @@ export const siteChromeByLanguage = {
       englishLabel: 'Inglés de Estados Unidos',
       menuLabel: 'Abrir navegación',
       closeMenuLabel: 'Cerrar navegación',
-      bookLabel: 'El libro, en preparación',
     },
     footer: {
       tagline: 'Seguridad · sistemas · open source',
@@ -188,7 +180,6 @@ export const siteChromeByLanguage = {
       englishLabel: 'United States English',
       menuLabel: 'Open navigation',
       closeMenuLabel: 'Close navigation',
-      bookLabel: 'The upcoming book',
     },
     footer: {
       tagline: 'Security · systems · open source',
