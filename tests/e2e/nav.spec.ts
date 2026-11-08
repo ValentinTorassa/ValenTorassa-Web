@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
 const pages = ['/', '/eventos', '/charlas', '/speaker-kit', '/libro'];
-const spanish = ['Perfil', 'Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Libro', 'Contacto'];
-const english = ['Profile', 'Experience', 'Projects', 'Talks', 'Events', 'Book', 'Contact'];
+const spanish = ['Experiencia', 'Proyectos', 'Charlas', 'Agenda', 'Libro', 'Contacto'];
+const english = ['Experience', 'Projects', 'Talks', 'Events', 'Book', 'Contact'];
 
 test('the same navigation works across every page', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'shared navigation; run once');
@@ -24,7 +24,7 @@ test('the same navigation works across every page', async ({ page }) => {
   await expect(page).toHaveURL(/\/en\/libro$/);
   await expect(page.locator('.nav-links a')).toHaveText(english);
   expect(await page.locator('.nav-links a').evaluateAll((links) => links.map((link) => link.getAttribute('href'))))
-    .toEqual(['/en/#profile', '/en/#experience', '/en/#research', '/en/charlas', '/en/eventos', '/en/libro', '/en/#contact']);
+    .toEqual(['/en/#experience', '/en/#research', '/en/charlas', '/en/eventos', '/en/libro', '/en/#contact']);
   await expect(page.locator('.social-actions a')).toHaveCount(3);
   expect(await page.evaluate(() => localStorage.getItem('vt-language'))).toBe('en');
 

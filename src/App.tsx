@@ -17,7 +17,6 @@ import {
   Network,
   Server,
   ShieldCheck,
-  Wrench,
   Terminal,
   Presentation,
   MicVocal,
@@ -36,6 +35,8 @@ import { localePath, useToday } from './site';
 import { SiteFooter, SiteHeader, SocialIcon } from './siteChrome';
 import { TalkChips } from './talkComponents';
 import { talkMedia } from './talkMedia';
+import headshotAvif256 from './assets/headshot-256.avif';
+import headshotWebp256 from './assets/headshot-256.webp';
 
 const contactSocialLinks = socialLinks.filter((link) => link.name !== 'Email');
 
@@ -224,34 +225,6 @@ function App({ language }: { language: Language }) {
                 </a>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="section" id="profile">
-          <div className="profile-layout">
-          <div className="section-head profile-head">
-            <span className="eyebrow">{content.profile.eyebrow}</span>
-            <h2>{content.profile.title}</h2>
-            <p>{content.profile.intro}</p>
-          </div>
-
-          <div className="profile-grid">
-            <Reveal className="statement">
-              <p>{content.profile.statement}</p>
-            </Reveal>
-
-            <div className="fact-list">
-              {content.profile.facts.map((fact) => (
-                <Reveal as="article" key={fact.key} className={`fact-card fact-${fact.key}`}>
-                  <FactIcon factKey={fact.key} />
-                  <div>
-                    <h3>{fact.title}</h3>
-                    <p>{fact.text}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
           </div>
         </section>
 
@@ -646,6 +619,19 @@ function App({ language }: { language: Language }) {
             </div>
         </section>
 
+        <section className="section about-me" id="about">
+          <picture>
+            <source type="image/avif" srcSet={headshotAvif256} />
+            <img className="about-photo" src={headshotWebp256} alt={content.about.photoAlt} width="256" height="256" loading="lazy" decoding="async" />
+          </picture>
+          <div className="about-copy">
+            <span className="eyebrow">{content.about.eyebrow}</span>
+            {content.about.text.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
+        </section>
+
         <section className="section contact-block" id="contact">
           <Reveal className="contact-card">
           <div className="contact-copy">
@@ -953,17 +939,6 @@ function HeroScene() {
         ))}
       </div>
     </>
-  );
-}
-
-const FACT_ICONS: Record<string, typeof Cloud> = { sec: ShieldCheck, arch: Server, ops: Wrench };
-
-function FactIcon({ factKey }: { factKey: string }) {
-  const Icon = FACT_ICONS[factKey] ?? Terminal;
-  return (
-    <span className="fact-icon" aria-hidden="true">
-      <Icon />
-    </span>
   );
 }
 

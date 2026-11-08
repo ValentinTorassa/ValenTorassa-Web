@@ -8,7 +8,7 @@ import { expect, test, type Page } from '@playwright/test';
  *   the same slugs. The path alone decides the language (src/site.ts); old
  *   `?lang=` links still load (Vercel sends ?lang=en to /en/..., see vercel.json).
  * - The build renders each page to HTML (src/entry-server.tsx, vite.config.ts)
- *   and the client hydrates it. In-page navigation is hash anchors (#profile...).
+ *   and the client hydrates it. In-page navigation is hash anchors (#experience...).
  * - index.html (src/main.tsx -> src/App.tsx) is the home page: dist/index.html
  *   and dist/en/index.html.
  * - eventos.html (src/eventos.tsx) is /eventos and /en/eventos.

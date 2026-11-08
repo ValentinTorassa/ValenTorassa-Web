@@ -700,84 +700,6 @@ p {
   line-height: 1.72;
 }
 
-.profile-grid {
-  display: grid;
-  gap: 20px;
-}
-
-.statement {
-  position: relative;
-  display: block;
-  min-height: 100%;
-  overflow: hidden;
-  isolation: isolate;
-  padding: 30px;
-  border: 1px solid rgba(84, 230, 214, 0.2);
-  border-radius: 10px;
-  background:
-    linear-gradient(180deg, rgba(84, 230, 214, 0.06), transparent 42%),
-    var(--surface-soft);
-}
-
-.statement::before {
-  position: relative;
-  z-index: 2;
-  display: block;
-  margin-bottom: 18px;
-  color: var(--accent-2);
-  content: '$ cat profile.md';
-  font-family: var(--mono);
-  font-size: 0.82rem;
-}
-
-.statement p {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  color: var(--text);
-  font-family: var(--body);
-  font-size: 1.08rem;
-  line-height: 1.62;
-}
-
-.fact-list {
-  display: grid;
-  gap: 12px;
-}
-
-.fact-card {
-  display: flex;
-  gap: 14px;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface-soft);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
-  transition:
-    border-color 0.22s ease,
-    background 0.22s ease,
-    transform 0.22s ease;
-}
-
-.fact-card:hover {
-  border-color: rgba(98, 223, 210, 0.32);
-  background: rgba(15, 22, 31, 0.92);
-  transform: translateY(-2px);
-}
-
-.fact-card h3 {
-  margin-bottom: 4px;
-  font-family: var(--mono);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.fact-card p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
 .timeline {
   --timeline-progress: 0;
   position: relative;
@@ -1691,7 +1613,6 @@ p {
   transform: translateX(40%);
 }
 
-.statement,
 .panel,
 .cert-card {
   transition:
@@ -1701,7 +1622,6 @@ p {
     transform 0.22s ease;
 }
 
-.statement:hover,
 .cert-card:hover {
   border-color: rgba(98, 223, 210, 0.34);
   box-shadow: 0 24px 52px -44px rgba(0, 0, 0, 0.96);
@@ -2117,15 +2037,6 @@ p {
     font-size: 2.85rem;
   }
 
-  .profile-grid {
-    grid-template-columns: 1.05fr 0.95fr;
-    align-items: stretch;
-  }
-
-  .statement p {
-    font-size: 1.14rem;
-  }
-
   .timeline-item {
     grid-template-columns: 196px 1fr;
     gap: 52px;
@@ -2317,10 +2228,8 @@ p {
     font-size: 0.68rem;
   }
 
-  .statement,
   .panel,
-  .skill-card,
-  .fact-card {
+  .skill-card {
     padding: 18px;
   }
 
@@ -3168,14 +3077,6 @@ p {
 }
 
 /* Profile: the statement across the top, the three points under it */
-.profile-grid .statement {
-  min-height: 0;
-  padding: 28px 32px;
-}
-
-.profile-grid .statement p {
-  max-width: 62ch;
-}
 
 /* Experience: every company logo at the same height */
 .logo-institution .experience-logo {
@@ -3206,18 +3107,6 @@ p {
 }
 
 @media (min-width: 900px) {
-  .profile-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .fact-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .fact-list .fact-card {
-    flex-direction: column;
-    gap: 8px;
-  }
 
   #education .stack-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3373,75 +3262,6 @@ p {
 }
 
 /* ── profile: the heading on the left, the statement and the three points on the right ── */
-
-.fact-sec {
-  --fact: var(--accent-2);
-}
-
-.fact-arch {
-  --fact: var(--accent);
-}
-
-.fact-ops {
-  --fact: var(--accent-3);
-}
-
-.profile-layout .fact-list {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.profile-layout .fact-card {
-  display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-  padding: 18px 20px;
-}
-
-.fact-icon {
-  display: inline-grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--fact) 36%, transparent);
-  border-radius: 10px;
-  color: var(--fact);
-  background: color-mix(in srgb, var(--fact) 10%, transparent);
-}
-
-.fact-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.profile-layout .fact-card h3 {
-  font-family: var(--display);
-  font-size: 1.08rem;
-  font-weight: 700;
-}
-
-@media (min-width: 1040px) {
-  .profile-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    align-items: start;
-    gap: 56px;
-  }
-
-  .profile-head {
-    position: sticky;
-    top: 96px;
-    margin-bottom: 0;
-  }
-
-  .profile-head h2 {
-    font-size: 2.45rem;
-  }
-
-  .profile-layout .fact-list .fact-card {
-    flex-direction: row;
-  }
-}
 
 /* ── hero, redesigned on 26/09 ───────────────────────────────────────────────
    One centered column with room to breathe; Tux on one side and the icons on
@@ -3924,43 +3744,6 @@ p {
 }
 
 /* Profile: the statement is just text, and the facts are a list, not tiles. */
-.statement,
-.profile-grid .statement {
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-}
-
-.statement::before,
-.statement::after {
-  content: none;
-}
-
-.statement p {
-  font-size: 1.18rem;
-  line-height: 1.6;
-}
-
-.fact-card,
-.profile-layout .fact-card {
-  padding: 16px 0;
-  border: 0;
-  border-top: 1px solid var(--line);
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-}
-
-.fact-icon {
-  width: auto;
-  height: auto;
-  border: 0;
-  background: none;
-  box-shadow: none;
-  color: var(--faint);
-}
 
 /* Experience: rows separated by rules, a plain line, still dots. */
 .timeline::after {
@@ -4606,4 +4389,54 @@ p {
 .language-toggle:hover,
 .language-toggle:focus-visible {
   background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── About, 2026-11-07 ────────────────────────────────────────────────────────
+   A short note in the first person with a small photo, low on the page, just
+   before the contact. It replaces the profile section under the hero. */
+
+.about-me {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 560px);
+  gap: 28px;
+  align-items: center;
+  padding: 56px 0;
+  border-top: 1px solid var(--line);
+}
+
+.about-photo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.about-copy .eyebrow {
+  margin-bottom: 8px;
+}
+
+.about-copy p {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.about-copy p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .about-me {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 18px;
+    padding: 44px 0;
+  }
+
+  .about-photo {
+    width: 72px;
+    height: 72px;
+  }
 }

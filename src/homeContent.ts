@@ -90,12 +90,11 @@ type PageContent = {
   heroProjectsLabel: string;
   heroBlogLabel: string;
   heroContactLabel: string;
-  profile: {
+  /** A short note in the first person, with the photo, low on the page before the contact. */
+  about: {
     eyebrow: string;
-    title: string;
-    intro: string;
-    statement: string;
-    facts: Array<{ key: string; title: string; text: string }>;
+    photoAlt: string;
+    text: string[];
   };
   experience: {
     eyebrow: string;
@@ -484,29 +483,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
     heroProjectsLabel: 'Ver proyectos',
     heroBlogLabel: 'Leer el blog',
     heroContactLabel: 'Contacto',
-    profile: {
-      eyebrow: 'perfil',
-      title: 'Qué hago',
-      intro:
-        'Trabajo en seguridad cloud y backend: permisos, identidad, datos sensibles y el código que implementa esos controles.',
-      statement:
-        'Hoy lidero ciberseguridad y compliance en Teramot.',
-      facts: [
-        {
-          key: 'sec',
-          title: 'Seguridad en agentes de IA',
-          text: 'OAuth, MCP y controles fuera del modelo. El tema de mis charlas de 2026.',
-        },
-        {
-          key: 'arch',
-          title: 'Arquitectura backend',
-          text: 'Go, NATS, PostgreSQL y OAuth 2.1, con OpenTelemetry.',
-        },
-        {
-          key: 'ops',
-          title: 'Seguridad en AWS',
-          text: 'IAM, SSO, CloudTrail, GuardDuty y manejo de secretos.',
-        },
+    about: {
+      eyebrow: 'sobre mí',
+      photoAlt: 'Valentín Torassa Colombero',
+      text: [
+        'Soy Valentín. Trabajo en seguridad cloud y backend, y hoy lidero ciberseguridad y compliance en Teramot.',
+        'Doy charlas sobre seguridad en agentes de IA y comparto lo que aprendo en el blog.',
       ],
     },
     experience: {
@@ -721,29 +703,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
     heroProjectsLabel: 'Explore projects',
     heroBlogLabel: 'Read the blog',
     heroContactLabel: 'Contact',
-    profile: {
-      eyebrow: 'profile',
-      title: 'What I do',
-      intro:
-        'I work on cloud security and backend systems: permissions, identity, sensitive data, and the code that enforces those controls.',
-      statement:
-        'Today I lead cybersecurity and compliance at Teramot.',
-      facts: [
-        {
-          key: 'sec',
-          title: 'Security for AI agents',
-          text: 'OAuth, MCP, and controls outside the model. The subject of my 2026 talks.',
-        },
-        {
-          key: 'arch',
-          title: 'Backend architecture',
-          text: 'Go, NATS, PostgreSQL, and OAuth 2.1, with OpenTelemetry.',
-        },
-        {
-          key: 'ops',
-          title: 'Security on AWS',
-          text: 'IAM, SSO, CloudTrail, GuardDuty, and secrets handling.',
-        },
+    about: {
+      eyebrow: 'about me',
+      photoAlt: 'Valentín Torassa Colombero',
+      text: [
+        "I'm Valentín. I work on cloud security and backend systems, and I lead cybersecurity and compliance at Teramot.",
+        'I give talks on security for AI agents and share what I learn on the blog.',
       ],
     },
     experience: {

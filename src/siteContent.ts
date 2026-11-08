@@ -29,9 +29,9 @@ export type NavItem = { label: string; href: string; current?: boolean; section?
 
 export type SitePage = 'home' | 'eventos' | 'charlas' | 'speaker-kit' | 'libro';
 
-const navLabels: Record<Language, Record<'profile' | 'experience' | 'projects' | 'talks' | 'agenda' | 'book' | 'contact', string>> = {
-  es: { profile: 'Perfil', experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', book: 'Libro', contact: 'Contacto' },
-  en: { profile: 'Profile', experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', book: 'Book', contact: 'Contact' },
+const navLabels: Record<Language, Record<'experience' | 'projects' | 'talks' | 'agenda' | 'book' | 'contact', string>> = {
+  es: { experience: 'Experiencia', projects: 'Proyectos', talks: 'Charlas', agenda: 'Agenda', book: 'Libro', contact: 'Contacto' },
+  en: { experience: 'Experience', projects: 'Projects', talks: 'Talks', agenda: 'Events', book: 'Book', contact: 'Contact' },
 };
 
 export const blogUrl = 'https://vtsecurity.com.ar';
@@ -45,7 +45,6 @@ export function siteNav(page: SitePage, language: Language): NavItem[] {
   const home = page === 'home' ? '' : localePath(language, '/');
   const label = navLabels[language];
   return [
-    { label: label.profile, href: `${home}#profile` },
     { label: label.experience, href: `${home}#experience` },
     { label: label.projects, href: `${home}#research` },
     { label: label.talks, href: localePath(language, '/charlas'), current: page === 'charlas', section: page === 'home' ? 'talks' : undefined },
