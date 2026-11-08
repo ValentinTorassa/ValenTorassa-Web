@@ -6,7 +6,7 @@ import vtMarkWebp96 from './assets/vt-mark-96.webp';
 import vtMarkWebp160 from './assets/vt-mark-160.webp';
 import vtMarkFallback from './assets/vt-mark-160.png';
 import { localePath, useToday } from './site';
-import { bookLink, headerSocialLinks, isExternalLink, linksPageLink, linkTargetProps, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
+import { headerSocialLinks, isExternalLink, linkTargetProps, socialLinks, type HeaderLabels, type Language, type NavItem, type SocialLink } from './siteContent';
 
 /**
  * Profiles left out of the phone menu: its icons fit one row at 390 px, and
@@ -142,7 +142,7 @@ export function SiteHeader({
 
       <div className="header-actions">
         <div className="social-actions">
-          {[...headerSocialLinks, linksPageLink(language)].map((link) => (
+          {headerSocialLinks.map((link) => (
             <a
               key={link.name}
               href={localeLink(link, language).href}
@@ -216,11 +216,6 @@ export function SiteHeader({
               </a>
             ))}
           </div>
-          <a className="mobile-nav-book" href={localePath(language, bookLink.href)} onClick={() => setMobileMenuOpen(false)}>
-            <SocialIcon link={bookLink} />
-            <span>{labels.bookLabel}</span>
-            <ChevronRight aria-hidden="true" />
-          </a>
           <div className="mobile-nav-meta">
             <span><i aria-hidden="true" />{meta.location}</span>
             <span>{meta.tagline}</span>

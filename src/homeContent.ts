@@ -51,8 +51,6 @@ export type FeaturedRepo = {
   description: string;
   language: string;
   languageColor: string;
-  stage: string;
-  proof: string;
   tags: StackTag[];
   tone: string;
   featured?: boolean;
@@ -64,11 +62,6 @@ export type FeaturedRepo = {
   previewCrop?: 'top' | 'bottom';
   previewSize?: { width: number; height: number };
   siteHref?: string;
-  caseStudy: {
-    problem: string;
-    architecture: string;
-    security: string;
-  };
 };
 
 /**
@@ -97,13 +90,11 @@ type PageContent = {
   heroProjectsLabel: string;
   heroBlogLabel: string;
   heroContactLabel: string;
-  terminalLines: Array<{ prompt: string; command: string; output: string }>;
-  profile: {
+  /** A short note in the first person, with the photo, low on the page before the contact. */
+  about: {
     eyebrow: string;
-    title: string;
-    intro: string;
-    statement: string;
-    facts: Array<{ key: string; title: string; text: string }>;
+    photoAlt: string;
+    text: string[];
   };
   experience: {
     eyebrow: string;
@@ -131,7 +122,6 @@ type PageContent = {
     certifications: Array<{
       name: string;
       detail: string;
-      focus: string;
       icon: IconType;
       tone: string;
     }>;
@@ -141,10 +131,8 @@ type PageContent = {
   stack: {
     eyebrow: string;
     title: string;
-    intro: string;
     groups: Array<{
       title: string;
-      text: string;
       tags: StackTag[];
       tone: string;
     }>;
@@ -155,9 +143,6 @@ type PageContent = {
     talksEyebrow: string;
     talksTitle: string;
     talksIntro: string;
-    speakingTitle: string;
-    repositoriesTitle: string;
-    featuredLabel: string;
     upcomingTalksLabel: string;
     previousTalksLabel: string;
     nextTalkLabel: string;
@@ -165,23 +150,13 @@ type PageContent = {
     hubLabel: string;
     /** Link to /speaker-kit, the page for event organizers. */
     speakerKitLabel: string;
-    /** Link to /libro, the upcoming book and its waitlist. */
-    bookLabel: string;
     openTalkLabel: string;
     openProjectLabel: string;
     openRepoLabel: string;
-    proofLabel: string;
     additionalLabel: string;
     contributionLabel: string;
     contributionProof: string;
-    developerSetupLabel: string;
     githubProfileLabel: string;
-    projectDetailsLabel: string;
-    closeProjectLabel: string;
-    problemLabel: string;
-    architectureLabel: string;
-    securityLabel: string;
-    visitProjectLabel: string;
     repos: FeaturedRepo[];
     /** Heading over the private-work cards, below the open-source grid. */
     privateWorkLabel: string;
@@ -195,7 +170,7 @@ type PageContent = {
       links: Array<{ label: string; href: string }>;
       projects: Array<{ name: string; href: string; repo: string; image: string; alt: string; text: string }>;
     };
-    /** Extra rows in "More work", after the Podman contribution and the developer setup. */
+    /** Extra rows in "More work", after the Podman contribution. */
     moreWork: Array<{ label: string; text: string; links: Array<{ label: string; href: string }> }>;
   };
   contact: {
@@ -208,7 +183,6 @@ type PageContent = {
     socialLabel: string;
     youtubeLabel: string;
     timezone: string;
-    availability: string;
   };
   footer: {
     tagline: string;
@@ -358,98 +332,42 @@ const esRepos: FeaturedRepo[] = [
   {
     ...repoFacts.openSecurityLabs,
     previewAlt: 'Vista de la plataforma Open Security Labs',
-    stage: 'Plataforma pública',
-    proof: 'Laboratorios MDX versionados · seis rutas de aprendizaje',
-    description: 'Laboratorios abiertos en español para aprender Linux, redes, backend y seguridad entendiendo cómo funcionan los sistemas.',
-    caseStudy: {
-      problem: 'La formación técnica en español suele quedarse en teoría o depender de plataformas cerradas.',
-      architecture: 'Sitio estático en Astro con rutas temáticas, laboratorios versionados en GitHub y progreso guardado localmente en el navegador.',
-      security: 'Sin cuentas ni seguimiento remoto del progreso; los ejercicios se ejecutan en la máquina del estudiante y el contenido es auditable como código.',
-    },
+    description: 'Laboratorios abiertos en español para aprender Linux, redes, backend y seguridad viendo cómo funcionan los sistemas por dentro. Son seis rutas; los ejercicios se hacen en tu máquina y no hace falta crear una cuenta.',
   },
   {
     ...repoFacts.agentFirewall,
     previewAlt: 'Demo de VT-Agent-Firewall en la terminal: cada pedido del agente, permitido o bloqueado, con su regla',
-    stage: 'Laboratorio de seguridad',
-    proof: 'Demo de prompt injection: cero exfiltraciones y cada decisión auditada',
-    description: 'Gateway local entre un agente de IA y sus herramientas: archivos, shell, red y MCP. Bloquea lo que la política no permite, pide aprobación humana y deja un registro de auditoría.',
-    caseStudy: {
-      problem: 'Un agente con herramientas puede leer un archivo con instrucciones maliciosas y usarlas para sacar secretos de la máquina.',
-      architecture: 'Cada pedido del agente pasa por un motor de políticas default-deny antes de tocar archivos, shell, red, APIs o un servidor MCP. Python con la biblioteca estándar, probado contra 58 casos sintéticos de inyección.',
-      security: 'Es un laboratorio y no está listo para producción. Si no puede escribir el registro de auditoría, bloquea todo. La demo usa un .env falso y un receptor local.',
-    },
+    description: 'Gateway local entre un agente de IA y sus herramientas: archivos, shell, red y MCP. Bloquea lo que la política no permite, pide aprobación humana y registra cada decisión. Es un laboratorio, probado contra 58 casos de prompt injection; no está pensado para producción.',
   },
   {
     ...repoFacts.comandle,
     previewAlt: 'Pantalla de comandle con el tablero vacío del comando del día y el teclado',
-    stage: 'Juego en vivo · Legios',
-    proof: 'Más de 1.500 partidas · versión de terminal y web',
-    description: 'Adiviná el comando de Linux o de seguridad del día en seis intentos, desde la terminal o el navegador. Al final te explica qué hace.',
-    caseStudy: {
-      problem: 'Los comandos de Linux y de seguridad se suelen aprender de memoria, con listas. Un juego diario da una razón para volver y aprender uno por día.',
-      architecture: 'Un cliente de terminal y una versión web comparten la lista de comandos. El contador de partidas y las salas para jugar en una clase usan la API de pluma.',
-      security: 'No hace falta crear cuenta ni elegir nombre. En una sala, la pantalla muestra cuántos terminaron y en cuántos intentos, sin nombres.',
-    },
+    description: 'Adiviná el comando de Linux o de seguridad del día en seis intentos, desde la terminal o el navegador. Al final te explica qué hace. Lleva más de 1.500 partidas.',
   },
   {
     ...repoFacts.securityFixes,
     previewAlt: 'El registro fixes.yaml de VT-Security-Fixes en GitHub',
-    stage: 'Candidatos de parche',
-    proof: 'Tres parches DEP-3 con trazabilidad de CVE y upstream',
-    description: 'Parches para CVEs de paquetes Ubuntu universe, con procedencia y estado documentados por paquete.',
-    caseStudy: {
-      problem: 'Una corrección upstream no siempre llega al paquete estándar que utiliza una persona.',
-      architecture: 'Cada candidato reúne el parche DEP-3, la referencia upstream, el CVE, las versiones afectadas y un registro de seguimiento.',
-      security: 'El repositorio contiene candidatos de parche. Su presencia no demuestra que Ubuntu los haya aceptado o publicado; ese estado se verifica por CVE.',
-    },
+    description: 'Parches DEP-3 para CVEs en paquetes de Ubuntu universe, cada uno con su CVE, su referencia upstream y su estado. Son candidatos: que un parche esté acá no quiere decir que Ubuntu lo haya publicado.',
   },
   {
     ...repoFacts.secretShare,
     previewAlt: 'Captura de la interfaz pública de VT-SecretShare',
-    stage: 'Servicio en vivo',
-    proof: 'Cifrado WebCrypto · lectura única con Redis GETDEL',
-    description: 'Enlaces de una sola lectura: el navegador cifra el secreto y un backend en Go coordina su vencimiento.',
-    caseStudy: {
-      problem: 'Compartir credenciales por chat o email deja copias persistentes y difíciles de revocar.',
-      architecture: 'El navegador cifra con WebCrypto; el servicio Go guarda solo el texto cifrado en Redis y consume cada enlace con GETDEL atómico.',
-      security: 'La clave viaja en el fragmento del enlace y no se almacena en el servidor. CSP, TTL y límites de uso reducen riesgos adicionales, sin eliminar los del navegador o el receptor.',
-    },
+    description: 'Enlaces para pasar un secreto que se leen una sola vez. El navegador lo cifra y la clave queda en el fragmento del enlace; el servidor en Go solo guarda el texto cifrado en Redis y lo borra al leerlo.',
   },
   {
     ...repoFacts.pluma,
     previewAlt: 'El blog de VT Security, publicado con pluma',
-    stage: 'Aplicación en uso',
-    proof: 'Un código · dos sitios públicos · API con permisos',
-    description: 'Plataforma de publicación con editor, imágenes y comentarios, desplegada para sitios independientes desde un mismo código.',
-    caseStudy: {
-      problem: 'Publicar en sitios distintos suele duplicar el producto o mezclar contenido, configuración y permisos.',
-      architecture: 'Next.js, Turso y un contrato de tenants separan los despliegues; el editor y la API comparten el modelo de publicaciones.',
-      security: 'El panel usa sesión de administrador y la API emplea tokens con scopes; el contenido y los comentarios requieren validación y moderación.',
-    },
+    description: 'La plataforma con la que publico el blog: editor, imágenes, comentarios y una API con permisos por token. El mismo código sirve dos sitios separados.',
   },
   {
     ...repoFacts.ragnaros,
     previewAlt: 'Foto del control deck real funcionando con el daemon de Ragnaros',
-    stage: 'Daemon Linux',
-    proof: 'Protocolo USB reconstruido · controles y pantallas vía libusb',
-    description: 'Daemon Linux y perfiles configurables para un control deck USB, con transporte libusb y controles en espacio de usuario.',
-    caseStudy: {
-      problem: 'El dispositivo no ofrecía una integración Linux nativa para sus teclas, perillas y pantalla táctil.',
-      architecture: 'Un servicio de usuario decodifica eventos USB, dibuja pantallas y enlaza acciones a perfiles YAML; el transporte usa libusb.',
-      security: 'Es un daemon de espacio de usuario, no un controlador del kernel. Las acciones de shell configuradas en perfiles requieren revisión del operador.',
-    },
+    description: 'Daemon para usar en Linux un control deck USB que no tenía soporte. Reconstruí su protocolo: teclas, perillas y pantallas funcionan con libusb y las acciones se configuran en perfiles YAML.',
   },
   {
     ...repoFacts.lens,
     previewAlt: 'VT Lens con datos sintéticos: procesos a la izquierda y sus conexiones a la derecha',
-    stage: 'Aplicación de escritorio',
-    proof: 'GUI Rust · procesos, conexiones y exportación de evidencia',
-    description: 'Interfaz nativa para inspeccionar procesos y conexiones de Linux y convertir una selección en evidencia legible.',
-    caseStudy: {
-      problem: 'Relacionar procesos con conexiones y explicar una observación concreta exige reunir datos dispersos del sistema.',
-      architecture: 'Una GUI en Rust lee metadatos de /proc, permite enfocar un proceso y exporta la selección en Markdown.',
-      security: 'Es una herramienta educativa, no un EDR. Su función opcional de consulta a un modelo puede transmitir la evidencia seleccionada y necesita una explicación de privacidad clara.',
-    },
+    description: 'App de escritorio en Rust que muestra qué conexiones tiene cada proceso de Linux y exporta lo que seleccionás a Markdown.',
   },
 ];
 
@@ -457,98 +375,42 @@ const enRepos: FeaturedRepo[] = [
   {
     ...repoFacts.openSecurityLabs,
     previewAlt: 'Preview of the Open Security Labs platform',
-    stage: 'Public learning platform',
-    proof: 'Versioned MDX labs · six learning paths',
-    description: 'Open Spanish-language labs for learning Linux, networking, backend systems, and security from the underlying mechanisms.',
-    caseStudy: {
-      problem: 'Spanish-language technical education often stops at theory or depends on closed learning platforms.',
-      architecture: 'Static Astro site with themed paths, GitHub-versioned labs, and progress stored locally in the browser.',
-      security: 'No accounts or remote progress tracking; exercises run on the learner’s machine and the content remains auditable as code.',
-    },
+    description: 'Open Spanish-language labs for learning Linux, networking, backend systems, and security by seeing how they work underneath. Six learning paths; the exercises run on your own machine, with no account needed.',
   },
   {
     ...repoFacts.agentFirewall,
     previewAlt: 'VT-Agent-Firewall demo in the terminal: each agent request, allowed or blocked, with its rule',
-    stage: 'Security lab',
-    proof: 'Prompt injection demo: zero exfiltration and every decision audited',
-    description: 'A local gateway between an AI agent and its tools: files, shell, network, and MCP. It blocks whatever the policy does not allow, asks a human for approval, and keeps an audit log.',
-    caseStudy: {
-      problem: 'An agent with tools can read a file that carries malicious instructions and use them to pull secrets off the machine.',
-      architecture: 'Every agent request goes through a default-deny policy engine before it reaches files, the shell, the network, APIs, or an MCP server. Python standard library only, tested against 58 synthetic injection cases.',
-      security: 'It is a lab and not production-ready. If it cannot write the audit log, it blocks everything. The demo uses a fake .env and a local receiver.',
-    },
+    description: 'A local gateway between an AI agent and its tools: files, shell, network, and MCP. It blocks whatever the policy does not allow, asks a human for approval, and logs every decision. It is a lab, tested against 58 prompt injection cases, and not meant for production.',
   },
   {
     ...repoFacts.comandle,
     previewAlt: 'comandle with the empty board for the command of the day and the keyboard',
-    stage: 'Live game · Legios',
-    proof: 'More than 1,500 games played · terminal and web',
-    description: 'Guess the Linux or security command of the day in six tries, from the terminal or the browser. At the end it explains what the command does.',
-    caseStudy: {
-      problem: 'Linux and security commands are usually learned by memorizing lists. A daily game gives a reason to come back and learn one a day.',
-      architecture: 'A terminal client and a web version share the command list. The game counter and the rooms for playing in a class use the pluma API.',
-      security: 'No account or player name needed. In a room, the screen shows how many finished and in how many tries, with no names.',
-    },
+    description: 'Guess the Linux or security command of the day in six tries, from the terminal or the browser. At the end it explains what the command does. More than 1,500 games played so far.',
   },
   {
     ...repoFacts.securityFixes,
-    previewAlt: 'Dark-adapted view of the VT Security Fixes fixes.yaml registry on GitHub',
-    stage: 'Patch candidates',
-    proof: 'Three DEP-3 patches with CVE and upstream provenance',
-    description: 'Candidate patches for Ubuntu universe CVEs, with source and package status recorded for each fix.',
-    caseStudy: {
-      problem: 'An upstream fix does not always reach the standard package people use.',
-      architecture: 'Each candidate includes a DEP-3 patch, upstream reference, CVE, affected releases, and a status record.',
-      security: 'The repository contains patch candidates. Their presence does not prove Ubuntu accepted or released them; verify that status per CVE.',
-    },
+    previewAlt: 'The VT-Security-Fixes fixes.yaml registry on GitHub',
+    description: 'DEP-3 patches for CVEs in Ubuntu universe packages, each with its CVE, upstream reference, and status. They are candidates: a patch being here does not mean Ubuntu has released it.',
   },
   {
     ...repoFacts.secretShare,
     previewAlt: 'Screenshot of the public VT-SecretShare interface',
-    stage: 'Live service',
-    proof: 'WebCrypto encryption · one read through Redis GETDEL',
-    description: 'Single-read links: the browser encrypts the secret and a Go backend coordinates its expiration.',
-    caseStudy: {
-      problem: 'Sharing credentials through chat or email leaves persistent copies that are difficult to revoke.',
-      architecture: 'The browser encrypts with WebCrypto; the Go service stores only ciphertext in Redis and consumes each link with atomic GETDEL.',
-      security: 'The key stays in the URL fragment and is not stored by the server. CSP, TTL, and rate limits reduce other risks without eliminating browser or recipient risks.',
-    },
+    description: 'Links for passing on a secret that can be read only once. The browser encrypts it and the key stays in the link fragment; the Go server stores only the ciphertext in Redis and deletes it on read.',
   },
   {
     ...repoFacts.pluma,
-    previewAlt: 'Dark-adapted view of the VT Security blog published with Pluma',
-    stage: 'Live application',
-    proof: 'One codebase · two public sites · scoped API',
-    description: 'Publishing platform with an editor, images, and comments, deployed for independent sites from one codebase.',
-    caseStudy: {
-      problem: 'Publishing across separate sites often duplicates the product or mixes content, configuration, and permissions.',
-      architecture: 'Next.js, Turso, and a tenant contract separate deployments; the editor and API share a publishing model.',
-      security: 'The admin panel uses a session and the API uses scoped tokens; content and comments require validation and moderation.',
-    },
+    previewAlt: 'The VT Security blog, published with pluma',
+    description: 'The platform I publish the blog with: an editor, images, comments, and an API with scoped tokens. The same codebase serves two separate sites.',
   },
   {
     ...repoFacts.ragnaros,
     previewAlt: 'Photo of the real USB control deck running the Ragnaros daemon',
-    stage: 'Linux daemon',
-    proof: 'Reverse-engineered USB protocol · libusb controls and displays',
-    description: 'Linux daemon and configurable profiles for a USB control deck, with libusb transport and user-space controls.',
-    caseStudy: {
-      problem: 'The device lacked a native Linux integration for its keys, knobs, and touch display.',
-      architecture: 'A user service decodes USB events, renders displays, and maps actions through YAML profiles; transport uses libusb.',
-      security: 'This is a userspace daemon, not a kernel driver. Shell actions configured in profiles require operator review.',
-    },
+    description: 'A daemon that makes a USB control deck work on Linux, which it did not support. I reverse-engineered its protocol: keys, knobs, and displays run over libusb, and actions are set in YAML profiles.',
   },
   {
     ...repoFacts.lens,
-    previewAlt: 'Dark-adapted VT Lens view using synthetic demo data',
-    stage: 'Desktop app',
-    proof: 'Rust GUI · processes, connections, evidence export',
-    description: 'Native app for inspecting Linux processes and connections and turning a selection into readable evidence.',
-    caseStudy: {
-      problem: 'Connecting processes to network activity and explaining an observation requires gathering scattered system data.',
-      architecture: 'A Rust GUI reads /proc metadata, lets users focus on a process, and exports the selected evidence as Markdown.',
-      security: 'An educational instrument, not an EDR. Its optional model request can send selected evidence and needs a clear privacy explanation.',
-    },
+    previewAlt: 'VT Lens with synthetic data: processes on the left and their connections on the right',
+    description: 'A Rust desktop app that shows which connections each Linux process has and exports your selection as Markdown.',
   },
 ];
 
@@ -568,14 +430,7 @@ const esPrivateProjects: PrivateProject[] = [
     ...radarFacts,
     previewAddress: 'VT-Radar · datos sintéticos',
     previewAlt: 'Captura de la vista Audiencia de VT-Radar editada con métricas sintéticas',
-    stage: 'Tablero privado en uso',
-    proof: 'Atlas de proyectos · agenda de 14 días · señales de salud',
-    description: 'Tablero de solo lectura que reúne proyectos, infraestructura, publicaciones y estado operativo de VT Security y VT Art.',
-    caseStudy: {
-      problem: 'El estado de los proyectos, los servicios y el calendario de contenido estaba repartido entre varias fuentes.',
-      architecture: 'Una aplicación Next.js combina señales de GitHub, Gatus, Tailscale y herramientas de publicación. Presenta un atlas de repositorios e infraestructura, una agenda de 14 días y vistas de salud y rendimiento con la procedencia de cada dato.',
-      security: 'El acceso requiere login y red privada Tailscale. El tablero solo lee: no publica ni agenda contenido; las vistas y API protegidas exigen autenticación.',
-    },
+    description: 'Tablero de solo lectura con el estado de mis proyectos, servicios y publicaciones. Está detrás de un login y de Tailscale; la captura usa datos de ejemplo.',
   },
 ];
 
@@ -584,14 +439,7 @@ const enPrivateProjects: PrivateProject[] = [
     ...radarFacts,
     previewAddress: 'VT-Radar · synthetic data',
     previewAlt: 'Screenshot of the VT-Radar Audience view edited with synthetic metrics',
-    stage: 'Private dashboard in use',
-    proof: 'Project atlas · 14-day schedule · health signals',
-    description: 'Read-only dashboard bringing together projects, infrastructure, publishing, and operational health for VT Security and VT Art.',
-    caseStudy: {
-      problem: 'Project status, service health, and the publishing calendar were scattered across several sources.',
-      architecture: 'A Next.js app combines signals from GitHub, Gatus, Tailscale, and publishing tools. It presents a repository and infrastructure atlas, a 14-day schedule, and health and performance views with source provenance.',
-      security: 'Access requires a login on the private Tailscale network. The dashboard only reads: it does not publish or schedule content, and protected views and APIs require authentication.',
-    },
+    description: 'Read-only dashboard with the status of my projects, services, and publishing. It sits behind a login and Tailscale; the screenshot uses sample data.',
   },
 ];
 
@@ -610,6 +458,10 @@ const legiosApps = {
 const legiosLinks = [
   { label: 'legios.com.ar', href: 'https://legios.com.ar/' },
   { label: 'github.com/legiosai', href: 'https://github.com/legiosai' },
+];
+const devSetupLinks = [
+  { label: 'VT Terminal', href: 'https://github.com/ValentinTorassa/VT-Terminal-Project' },
+  { label: 'VT IDE', href: 'https://github.com/ValentinTorassa/VT-Terminal-Project/tree/main/ide' },
 ];
 const awsStandbyArticle =
   'https://builder.aws.com/content/3KsTKSPIcI2vPjk1pr5gAQPPdTE/un-standby-frio-en-aws-para-mi-servidor-casero-que-medi-y-que-falta-probar';
@@ -631,42 +483,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
     heroProjectsLabel: 'Ver proyectos',
     heroBlogLabel: 'Leer el blog',
     heroContactLabel: 'Contacto',
-    terminalLines: [
-      { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer & Software Architect' },
-      {
-        prompt: '$',
-        command: 'grep -i focus ./stack.log',
-        output: 'AI agent authorization, MCP, OAuth/OIDC, AWS IAM, Go, Linux',
-      },
-      {
-        prompt: '$',
-        command: 'certs --active',
-        output: 'CompTIA Security+, AWS CCP, LFCA, HCIA Datacom',
-      },
-    ],
-    profile: {
-      eyebrow: 'perfil',
-      title: 'Entender los sistemas a fondo para construirlos, protegerlos y explicarlos.',
-      intro:
-        'Trabajo en seguridad cloud y en backend. Me ocupo de permisos, identidad, datos sensibles y de la evidencia que piden las auditorías, y escribo buena parte del código que implementa esos controles. Mi base son Linux y las redes, de cuando hacía seguridad de redes y operación de SOC en Consulting IT.',
-      statement:
-        'En Teramot lidero ciberseguridad y compliance. Coordiné la auditoría SOC 2, del Tipo 1 al informe final del Tipo 2, y diseño Aleph, el backend en Go que les da a agentes de IA acceso controlado a datos de empresa.',
-      facts: [
-        {
-          key: 'sec',
-          title: 'Seguridad en agentes de IA',
-          text: 'OAuth y permisos cuando el que llama es un agente, servidores MCP y controles que viven fuera del modelo. Es el tema de mis charlas de 2026 en Ekoparty, JCC y ROS:SEC.',
-        },
-        {
-          key: 'arch',
-          title: 'Arquitectura backend',
-          text: 'Servicios en Go con APIs, eventos en NATS, PostgreSQL y OAuth 2.1, instrumentados con OpenTelemetry. Es el stack de Aleph en Teramot.',
-        },
-        {
-          key: 'ops',
-          title: 'Operaciones de seguridad y hardening cloud',
-          text: 'AWS ECS/Fargate, IAM, SSO, CloudTrail, GuardDuty, OIDC en GitHub Actions, secretos, remediación e instrumentación con OpenTelemetry.',
-        },
+    about: {
+      eyebrow: 'sobre mí',
+      photoAlt: 'Valentín Torassa Colombero',
+      text: [
+        'Soy Valentín. Trabajo en seguridad cloud y backend, y hoy lidero ciberseguridad y compliance en Teramot.',
+        'Doy charlas sobre seguridad en agentes de IA y comparto lo que aprendo en el blog.',
       ],
     },
     experience: {
@@ -678,8 +500,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'nov. 2025 - actualidad',
           description:
-            'Lidero ciberseguridad y compliance en una startup de IA. Coordiné la auditoría SOC 2 de Teramot, del Tipo 1 (dic. 2025) al informe final del Tipo 2 (sep. 2026). Soy arquitecto principal de Aleph, un backend en Go para que agentes de IA accedan a datos empresariales de forma segura y escalable.',
-          tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
+            'Lidero ciberseguridad y compliance en una startup de IA. Coordiné la auditoría SOC 2 de Teramot, del Tipo 1 (dic. 2025) al informe final del Tipo 2 (sep. 2026). Soy el arquitecto principal de Aleph, el backend en Go con el que agentes de IA acceden a datos de empresa.',
+          tags: ['Go', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
           logo: teramotLogo,
           logoMode: 'symbol',
           writing: { label: 'En el blog de ingeniería de Teramot', links: teramotPosts },
@@ -689,8 +511,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'jun. 2025 - nov. 2025',
           description:
-            'Estructuración del área de seguridad, automatización de controles, evidencia de auditoría y hardening de infraestructura AWS para datos sensibles usados por agentes de IA.',
-          tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
+            'Armé el área de seguridad, automaticé controles y evidencia de auditoría e hice el hardening de la infraestructura AWS donde viven los datos sensibles que usan los agentes de IA.',
+          tags: ['SOC 2', 'ISO/IEC 27001', 'AWS'],
           logo: teramotLogo,
           logoMode: 'symbol',
         },
@@ -699,8 +521,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Consulting IT',
           period: 'ago. 2024 - jul. 2025',
           description:
-            'Estrategia de seguridad para clientes de outsourcing, arquitectura de red segura, hardening, automatización y operación SOC con Sophos Central, Avast Business y Nagios.',
-          tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
+            'Seguridad para clientes de outsourcing: diseño y hardening de redes, automatización y operación del SOC con Sophos Central, Avast Business y Nagios.',
+          tags: ['SOC', 'Firewalls', 'Networking'],
           logo: consultingItLogo,
           logoMode: 'wordmark',
           hideCompanyLabel: true,
@@ -710,8 +532,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Universidad Abierta Interamericana',
           period: 'sept. 2024 - jun. 2025',
           description:
-            'Acompañamiento académico en arquitectura de procesadores, jerarquía de memoria, I/O y conceptos de sistemas de bajo nivel.',
-          tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
+            'Ayudé en las clases de arquitectura de procesadores, jerarquía de memoria y entrada/salida.',
+          tags: [],
           logo: uaiLogo,
           logoMode: 'institution',
           hideCompanyLabel: true,
@@ -754,28 +576,24 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           name: 'CompTIA Security+',
           detail: 'SY0-701 · vigente hasta feb. 2029',
-          focus: 'Operaciones, riesgo, arquitectura de seguridad y fundamentos de respuesta a incidentes.',
           icon: SiComptia,
           tone: 'security',
         },
         {
           name: 'AWS Certified Cloud Practitioner',
           detail: 'CLF-C02 · vigente hasta jul. 2028',
-          focus: 'Conceptos cloud, seguridad, servicios, facturación y responsabilidad compartida en AWS.',
           icon: FaAws,
           tone: 'aws',
         },
         {
           name: 'Linux Foundation Certified IT Associate',
           detail: 'LFCA · vigente hasta abr. 2028',
-          focus: 'Linux, cloud, DevOps, fundamentos de seguridad y sistemas de TI modernos.',
           icon: SiLinuxfoundation,
           tone: 'linux',
         },
         {
           name: 'Huawei HCIA Datacom',
           detail: 'Huawei Certified ICT Associate · Datacom',
-          focus: 'Routing, switching, redes IP y fundamentos de conectividad empresarial.',
           icon: SiHuawei,
           tone: 'huawei',
         },
@@ -783,30 +601,25 @@ export const contentByLanguage: Record<Language, PageContent> = {
     },
     stack: {
       eyebrow: 'stack',
-      title: 'Stack operativo',
-      intro: 'Tecnologías y prácticas presentes en producto, seguridad cloud, auditorías y operación en producción.',
+      title: 'Con qué trabajo',
       groups: [
         {
           title: 'Seguridad cloud',
-          text: 'Seguridad e infraestructura AWS para workloads de producto, datos sensibles y despliegues auditables.',
           tags: cloudTags,
           tone: 'cloud',
         },
         {
-          title: 'Compliance engineering',
-          text: 'Controles implementados en sistemas, evidencia, poblaciones de auditoría y remediación técnica.',
+          title: 'Compliance',
           tags: complianceTags,
           tone: 'compliance',
         },
         {
-          title: 'Arquitectura backend',
-          text: 'Servicios en Go para APIs, eventos, autenticación, observabilidad y contratos compartidos con frontend.',
+          title: 'Backend',
           tags: backendTags,
           tone: 'backend',
         },
         {
           title: 'Sistemas y redes',
-          text: 'Administración Linux, redes, VPNs, firewalls, monitoreo y troubleshooting operativo.',
           tags: systemsTags,
           tone: 'systems',
         },
@@ -817,39 +630,27 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Proyectos seleccionados',
       talksEyebrow: 'charlas',
       talksTitle: 'Charlas y reconocimiento',
-      talksIntro: 'En 2026 hablé en Ekoparty, DebConf26, CACIC, JCC y Hacking Day, y di clases invitadas en la UAI. Cada charla tiene su página con las slides.',
-      speakingTitle: 'Speaking y reconocimiento',
-      repositoriesTitle: 'Repositorios destacados',
-      featuredLabel: 'Proyecto destacado',
+      talksIntro: 'En 2026 di charlas en Ekoparty (cinco), DebConf26, CACIC, JCC, Hacking Day y ROS:SEC, y clases invitadas en la UAI. Cada charla tiene su página con las slides.',
       upcomingTalksLabel: 'Próximas charlas',
       previousTalksLabel: 'Charlas y reconocimientos anteriores',
       nextTalkLabel: 'Próxima charla',
       allTalksLabel: 'Ver todas las charlas',
       hubLabel: 'Explorar las charlas y sus slides',
       speakerKitLabel: 'Invitarme a tu evento',
-      bookLabel: 'El libro: leé el capítulo 1',
       openTalkLabel: 'Ver agenda oficial',
       openProjectLabel: 'Abrir Open Security Labs',
-      openRepoLabel: 'Abrir repositorio',
-      proofLabel: 'Evidencia',
+      openRepoLabel: 'Repositorio',
       additionalLabel: 'Más trabajo',
       contributionLabel: 'Contribución a Podman',
       contributionProof: 'Soporte de reintentos para manifest push, integrado upstream.',
-      developerSetupLabel: 'Entornos de desarrollo',
       githubProfileLabel: 'Ver todos los repositorios',
-      projectDetailsLabel: 'Explorar proyecto',
-      closeProjectLabel: 'Cerrar proyecto',
-      problemLabel: 'Problema',
-      architectureLabel: 'Arquitectura',
-      securityLabel: 'Decisiones de seguridad',
-      visitProjectLabel: 'Abrir proyecto',
       repos: esRepos,
       privateWorkLabel: 'trabajo privado',
       privateCodeLabel: 'Acceso privado',
       privateProjects: esPrivateProjects,
       legios: {
         label: 'Legios',
-        intro: 'Con Sol Soletti armamos Legios. Publicamos como open source las herramientas que primero necesitábamos nosotros. comandle, entre los destacados, también es de Legios.',
+        intro: 'Legios es el estudio open source que armamos con Sol Soletti. Publicamos las herramientas que primero necesitamos nosotros; comandle también es de Legios.',
         links: legiosLinks,
         projects: [
           { ...legiosApps.quartermaster, alt: 'Página de quartermaster con el panel de cuota de cada cuenta', text: 'Cuánta cuota te queda en todas tus cuentas de agentes: cada perfil de Claude Code, Codex y opencode, sin red y sin credenciales.' },
@@ -858,6 +659,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
         ],
       },
       moreWork: [
+        {
+          label: 'Dotfiles',
+          text: 'Mi configuración de terminal y editor para macOS y Linux.',
+          links: devSetupLinks,
+        },
         {
           label: 'Homelab',
           text: 'Mi servidor casero como plano reproducible: monitoreo, restore probado cada semana y un standby frío en AWS.',
@@ -878,7 +684,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       socialLabel: 'Perfiles sociales',
       youtubeLabel: 'Ver en YouTube',
       timezone: 'UTC-3 · Rosario',
-      availability: 'Disponible para conversaciones técnicas',
     },
     footer: siteChromeByLanguage.es.footer,
   },
@@ -898,42 +703,12 @@ export const contentByLanguage: Record<Language, PageContent> = {
     heroProjectsLabel: 'Explore projects',
     heroBlogLabel: 'Read the blog',
     heroContactLabel: 'Contact',
-    terminalLines: [
-      { prompt: '$', command: 'whoami', output: 'Cybersecurity Engineer & Software Architect' },
-      {
-        prompt: '$',
-        command: 'grep -i focus ./stack.log',
-        output: 'AI agent authorization, MCP, OAuth/OIDC, AWS IAM, Go, Linux',
-      },
-      {
-        prompt: '$',
-        command: 'certs --active',
-        output: 'CompTIA Security+, AWS CCP, LFCA, HCIA Datacom',
-      },
-    ],
-    profile: {
-      eyebrow: 'profile',
-      title: 'Understanding systems well enough to build them, secure them, and explain them.',
-      intro:
-        'I work on cloud security and backend systems. I handle permissions, identity, sensitive data, and the evidence audits ask for, and I write much of the code that implements those controls. My background is Linux and networking, from my time doing network security and SOC operations at Consulting IT.',
-      statement:
-        'At Teramot I lead cybersecurity and compliance. I coordinated the SOC 2 audit, from Type 1 to the final Type 2 report, and I design Aleph, the Go backend that gives AI agents controlled access to company data.',
-      facts: [
-        {
-          key: 'sec',
-          title: 'Security for AI agents',
-          text: 'OAuth and permissions when the caller is an agent, MCP servers, and controls that live outside the model. It is the subject of my 2026 talks at Ekoparty, JCC, and ROS:SEC.',
-        },
-        {
-          key: 'arch',
-          title: 'Backend architecture',
-          text: 'Go services with APIs, NATS events, PostgreSQL, and OAuth 2.1, instrumented with OpenTelemetry. It is the stack behind Aleph at Teramot.',
-        },
-        {
-          key: 'ops',
-          title: 'Security operations and cloud hardening',
-          text: 'AWS ECS/Fargate, IAM, SSO, CloudTrail, GuardDuty, GitHub Actions OIDC, secrets, remediation, and OpenTelemetry instrumentation.',
-        },
+    about: {
+      eyebrow: 'about me',
+      photoAlt: 'Valentín Torassa Colombero',
+      text: [
+        "I'm Valentín. I work on cloud security and backend systems, and I lead cybersecurity and compliance at Teramot.",
+        'I give talks on security for AI agents and share what I learn on the blog.',
       ],
     },
     experience: {
@@ -945,8 +720,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'Nov. 2025 - present',
           description:
-            'I lead cybersecurity and compliance at an AI startup. I coordinated Teramot’s SOC 2 audit, from the Type 1 (Dec. 2025) to the final Type 2 report (Sep. 2026). I am the principal architect of Aleph, a Go backend that gives AI agents secure, scalable access to enterprise data.',
-          tags: ['Go 1.25', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
+            'I lead cybersecurity and compliance at an AI startup. I coordinated Teramot’s SOC 2 audit, from the Type 1 (Dec. 2025) to the final Type 2 report (Sep. 2026). I am the principal architect of Aleph, the Go backend through which AI agents access company data.',
+          tags: ['Go', 'AWS SDK v2', 'MCP', 'OAuth 2.1', 'OIDC', 'NATS', 'PostgreSQL', 'OpenTelemetry'],
           logo: teramotLogo,
           logoMode: 'symbol',
           writing: { label: 'On the Teramot engineering blog', links: teramotPosts },
@@ -956,8 +731,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Teramot',
           period: 'Jun. 2025 - Nov. 2025',
           description:
-            'Built the security function, automated controls and audit evidence, and hardened AWS infrastructure for sensitive data used by AI agents.',
-          tags: ['SOC 2', 'ISO/IEC 27001', 'AWS Security', 'Audit Evidence', 'Data Protection'],
+            'Built the security function, automated controls and audit evidence, and hardened the AWS infrastructure that holds the sensitive data AI agents use.',
+          tags: ['SOC 2', 'ISO/IEC 27001', 'AWS'],
           logo: teramotLogo,
           logoMode: 'symbol',
         },
@@ -966,8 +741,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Consulting IT',
           period: 'Aug. 2024 - Jul. 2025',
           description:
-            'Security strategy for outsourcing clients, secure network architecture, hardening, automation, and SOC operations with Sophos Central, Avast Business, and Nagios.',
-          tags: ['SOC', 'Sophos', 'Avast', 'Nagios', 'Firewalls', 'Networking'],
+            'Security for outsourcing clients: network design and hardening, automation, and SOC operations with Sophos Central, Avast Business, and Nagios.',
+          tags: ['SOC', 'Firewalls', 'Networking'],
           logo: consultingItLogo,
           logoMode: 'wordmark',
           hideCompanyLabel: true,
@@ -977,8 +752,8 @@ export const contentByLanguage: Record<Language, PageContent> = {
           company: 'Universidad Abierta Interamericana',
           period: 'Sep. 2024 - Jun. 2025',
           description:
-            'Academic support across processor architecture, memory hierarchies, I/O, and low-level systems concepts.',
-          tags: ['Low-level systems', 'CPU Architecture', 'Memory', 'I/O', 'Teaching'],
+            'Helped teach processor architecture, memory hierarchy, and I/O.',
+          tags: [],
           logo: uaiLogo,
           logoMode: 'institution',
           hideCompanyLabel: true,
@@ -1021,28 +796,24 @@ export const contentByLanguage: Record<Language, PageContent> = {
         {
           name: 'CompTIA Security+',
           detail: 'SY0-701 · valid through Feb. 2029',
-          focus: 'Security operations, risk, architecture, and incident response fundamentals.',
           icon: SiComptia,
           tone: 'security',
         },
         {
           name: 'AWS Certified Cloud Practitioner',
           detail: 'CLF-C02 · valid through Jul. 2028',
-          focus: 'AWS cloud concepts, security, services, billing, and shared responsibility.',
           icon: FaAws,
           tone: 'aws',
         },
         {
           name: 'Linux Foundation Certified IT Associate',
           detail: 'LFCA · valid through Apr. 2028',
-          focus: 'Linux, cloud, DevOps, security fundamentals, and modern IT systems.',
           icon: SiLinuxfoundation,
           tone: 'linux',
         },
         {
           name: 'Huawei HCIA Datacom',
           detail: 'Huawei Certified ICT Associate · Datacom',
-          focus: 'Routing, switching, IP networking, and enterprise connectivity fundamentals.',
           icon: SiHuawei,
           tone: 'huawei',
         },
@@ -1050,30 +821,25 @@ export const contentByLanguage: Record<Language, PageContent> = {
     },
     stack: {
       eyebrow: 'stack',
-      title: 'Operational stack',
-      intro: 'Technologies and practices used across product engineering, cloud security, audits, and production operations.',
+      title: 'What I work with',
       groups: [
         {
           title: 'Cloud security',
-          text: 'AWS security and infrastructure for product workloads, sensitive data, and auditable deployments.',
           tags: cloudTags,
           tone: 'cloud',
         },
         {
-          title: 'Compliance engineering',
-          text: 'System-level controls, evidence, audit populations, and technical remediation.',
+          title: 'Compliance',
           tags: complianceTags,
           tone: 'compliance',
         },
         {
-          title: 'Backend architecture',
-          text: 'Go services for APIs, events, authentication, observability, and shared frontend contracts.',
+          title: 'Backend',
           tags: backendTags,
           tone: 'backend',
         },
         {
           title: 'Systems and networks',
-          text: 'Linux administration, networking, VPNs, firewalls, monitoring, and operational troubleshooting.',
           tags: systemsTags,
           tone: 'systems',
         },
@@ -1084,39 +850,27 @@ export const contentByLanguage: Record<Language, PageContent> = {
       title: 'Selected work',
       talksEyebrow: 'talks',
       talksTitle: 'Talks and recognition',
-      talksIntro: 'In 2026 I spoke at Ekoparty, DebConf26, CACIC, JCC, and Hacking Day, and gave guest classes at UAI. Each talk has its own page with the slides.',
-      speakingTitle: 'Speaking and recognition',
-      repositoriesTitle: 'Featured repositories',
-      featuredLabel: 'Featured project',
+      talksIntro: 'In 2026 I spoke at Ekoparty (five talks), DebConf26, CACIC, JCC, Hacking Day, and ROS:SEC, and gave guest classes at UAI. Each talk has its own page with the slides.',
       upcomingTalksLabel: 'Upcoming talks',
       previousTalksLabel: 'Previous talks and recognition',
       nextTalkLabel: 'Upcoming talk',
       allTalksLabel: 'See all talks',
       hubLabel: 'Browse the talks and their slides',
       speakerKitLabel: 'Invite me to your event',
-      bookLabel: 'The book: read chapter 1',
       openTalkLabel: 'View official schedule',
       openProjectLabel: 'Open Open Security Labs',
-      openRepoLabel: 'Open repository',
-      proofLabel: 'Evidence',
+      openRepoLabel: 'Repository',
       additionalLabel: 'More work',
       contributionLabel: 'Podman contribution',
       contributionProof: 'Retry support for manifest push, merged upstream.',
-      developerSetupLabel: 'Developer setup',
       githubProfileLabel: 'View all repositories',
-      projectDetailsLabel: 'Explore project',
-      closeProjectLabel: 'Close project',
-      problemLabel: 'Problem',
-      architectureLabel: 'Architecture',
-      securityLabel: 'Security decisions',
-      visitProjectLabel: 'Open project',
       repos: enRepos,
       privateWorkLabel: 'private work',
       privateCodeLabel: 'Private access',
       privateProjects: enPrivateProjects,
       legios: {
         label: 'Legios',
-        intro: 'Sol Soletti and I started Legios. We publish as open source the tools we first needed ourselves. comandle, among the featured projects, is also a Legios project.',
+        intro: 'Legios is the open source studio Sol Soletti and I started. We publish the tools we needed first ourselves; comandle is a Legios project too.',
         links: legiosLinks,
         projects: [
           { ...legiosApps.quartermaster, alt: 'The quartermaster page with the quota panel for each account', text: 'How much quota you have left across all your agent accounts: every Claude Code profile, Codex, and opencode, offline and without credentials.' },
@@ -1125,6 +879,11 @@ export const contentByLanguage: Record<Language, PageContent> = {
         ],
       },
       moreWork: [
+        {
+          label: 'Dotfiles',
+          text: 'My terminal and editor setup for macOS and Linux.',
+          links: devSetupLinks,
+        },
         {
           label: 'Homelab',
           text: 'My home server as a reproducible blueprint: monitoring, a restore tested every week, and a cold standby in AWS.',
@@ -1145,7 +904,6 @@ export const contentByLanguage: Record<Language, PageContent> = {
       socialLabel: 'Social profiles',
       youtubeLabel: 'Watch on YouTube',
       timezone: 'UTC-3 · Rosario',
-      availability: 'Open to technical conversations',
     },
     footer: siteChromeByLanguage.en.footer,
   },

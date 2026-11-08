@@ -15,7 +15,7 @@ export function languageFromPath(pathname: string): Language {
 
 /**
  * A site path in the given language: `/charlas` -> `/en/charlas`, `/` -> `/en/`,
- * `/#profile` -> `/en/#profile`. Anchors, files under /charlas/<id>/ (the
+ * `/#contact` -> `/en/#contact`. Anchors, files under /charlas/<id>/ (the
  * Spanish decks), external URLs and mailto: links stay as they are.
  */
 export function localePath(language: Language, path: string): string {
