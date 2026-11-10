@@ -12,10 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
     "@vercel/analytics": "^2.0.1",
-    "country-flag-icons": "^1.6.20",
-    "framer-motion": "^12.19.2",
     "lucide-react": "^0.525.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

@@ -10,7 +10,6 @@ The app is a Vite + React + TypeScript project located at the repository root.
 - TypeScript
 - Vite
 - TailwindCSS
-- Framer Motion
 - Lucide React
 
 ## Development
