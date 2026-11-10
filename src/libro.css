@@ -395,6 +395,48 @@
   line-height: 1.6;
 }
 
+/* On sale (src/bookSale.ts): the price, Buy, and the free chapter. */
+
+.book-price {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  color: var(--text);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.book-price span {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.book-buy-sample {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+  min-height: 40px;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.book-buy-sample:hover,
+.book-buy-sample:focus-visible {
+  text-decoration: underline;
+}
+
+.book-buy-sample svg {
+  width: 14px;
+  height: 14px;
+}
+
 /* Author */
 
 .book-author {

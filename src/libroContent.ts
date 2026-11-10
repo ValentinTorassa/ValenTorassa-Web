@@ -1,7 +1,9 @@
+import { bookStatus } from './bookSale';
 import { siteNav, type Language, type NavItem } from './siteContent';
 
 /**
- * Copy for /libro, the page for the upcoming book and its waitlist.
+ * Copy for /libro, the page for the book: its waitlist until it is on sale,
+ * then its price and where to buy it (see `bookSale` in bookSale.ts).
  *
  * The book is in Spanish, so its title, subtitle and chapter titles are the
  * Spanish originals; the English page translates the chapters for reference.
@@ -27,13 +29,6 @@ export const book = {
   isbn: '978-631-01-9288-8',
   pages: 224,
 };
-
-/**
- * Where the book stands, in the words every page uses: the eyebrow here and
- * the book line in the links page's terminal. Change it here, and only when
- * the owner announces the next step (see the copy rules above).
- */
-export const bookStatus: Record<Language, string> = { es: 'en preparación', en: 'in progress' };
 
 export const youtubeChannelUrl = 'https://www.youtube.com/@vtcibersecurity';
 export const sourceTalkHref = '/charlas/debconf26';
@@ -78,6 +73,15 @@ type LibroContent = {
     /** Label of the button that opens the form on vtsecurity.com.ar. */
     cta: string;
     privacy: string;
+  };
+  /** Takes the waitlist's place, in the hero and in its section, once the book is on sale. */
+  sale: {
+    /** Label of the button that opens `bookSale.buyUrl`. */
+    cta: string;
+    title: string;
+    text: string;
+    priceLabel: string;
+    sampleLink: string;
   };
   author: { title: string; text: string; talkLink: string; channelLink: string };
 };
@@ -171,6 +175,13 @@ export const libroByLanguage: Record<Language, LibroContent> = {
       text: 'Te aviso una sola vez cuando haya fecha, precio y dónde conseguirlo. Para anotarte, dejá tu mail en VT Security, mi blog. Vas a recibir un mail para confirmar.',
       cta: 'Anotarme en VT Security',
       privacy: 'La lista es mía, en un servidor propio. Te podés dar de baja con un clic desde cualquier mail.',
+    },
+    sale: {
+      cta: 'Comprar',
+      title: 'Comprar el libro',
+      text: 'La primera edición impresa, en tapa blanda. Si preferís leer un poco antes, el capítulo 1 sigue gratis.',
+      priceLabel: 'Precio',
+      sampleLink: 'Leer el capítulo 1 gratis',
     },
     author: {
       title: 'Sobre el autor',
@@ -269,6 +280,13 @@ export const libroByLanguage: Record<Language, LibroContent> = {
       text: 'I will write once, when there is a date, a price and a place to get it. To join, leave your email on VT Security, my blog (in Spanish). You will receive an email to confirm first.',
       cta: 'Join on VT Security',
       privacy: 'The list is mine, on my own server. You can unsubscribe with one click from any email.',
+    },
+    sale: {
+      cta: 'Buy',
+      title: 'Buy the book',
+      text: 'The first printed edition, in paperback and in Spanish. If you would rather read some of it first, chapter 1 is still free.',
+      priceLabel: 'Price',
+      sampleLink: 'Read chapter 1 for free',
     },
     author: {
       title: 'About the author',

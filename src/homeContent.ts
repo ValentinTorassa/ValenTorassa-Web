@@ -38,6 +38,7 @@ import quartermasterScreenshot from './assets/projects/quartermaster.webp';
 import archivistScreenshot from './assets/projects/archivist.webp';
 import tidbitScreenshot from './assets/projects/tidbit.webp';
 
+import { bookMention } from './bookSale';
 import { siteChromeByLanguage, siteNav, type HeaderLabels, type Language, type NavItem } from './siteContent';
 
 export type StackTag = string | {
@@ -470,7 +471,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
   es: {
     documentTitle: 'Valentín Torassa Colombero · Ciberseguridad y Backend',
     seo: {
-      description: 'Valentín Torassa Colombero, ingeniero en ciberseguridad y arquitecto de software en Rosario. Seguridad cloud, agentes de IA, Go y Linux, con charlas, proyectos open source y un libro en preparación.',
+      description: `Valentín Torassa Colombero, ingeniero en ciberseguridad y arquitecto de software en Rosario. Seguridad cloud, agentes de IA, Go y Linux, con charlas, proyectos open source ${bookMention.homeDescription.es}.`,
       locale: 'es_AR',
     },
     header: siteChromeByLanguage.es.header,
@@ -690,7 +691,7 @@ export const contentByLanguage: Record<Language, PageContent> = {
   en: {
     documentTitle: 'Valentin Torassa Colombero · Cybersecurity & Backend',
     seo: {
-      description: 'Valentín Torassa Colombero, cybersecurity engineer and software architect in Rosario, Argentina. Cloud security, AI agents, Go, and Linux, with talks, open source projects, and an upcoming book.',
+      description: `Valentín Torassa Colombero, cybersecurity engineer and software architect in Rosario, Argentina. Cloud security, AI agents, Go, and Linux, with talks, open source projects, ${bookMention.homeDescription.en}.`,
       locale: 'en_US',
     },
     header: siteChromeByLanguage.en.header,

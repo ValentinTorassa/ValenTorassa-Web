@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, ArrowUpRight, BookOpenText, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BookOpenText, Mail, ShoppingCart } from 'lucide-react';
 import coverFallback from './assets/libro-cover-540.jpg';
 import coverAvif360 from './assets/libro-cover-360.avif';
 import coverAvif540 from './assets/libro-cover-540.avif';
@@ -13,6 +13,7 @@ import portraitAvif176 from './assets/author-176.avif';
 import portraitAvif264 from './assets/author-264.avif';
 import portraitWebp176 from './assets/author-176.webp';
 import portraitWebp264 from './assets/author-264.webp';
+import { bookOffer, formatBookPrice } from './bookSale';
 import { book, libroByLanguage, samplePdfUrl, sourceTalkHref, waitlistUrl, youtubeChannelUrl } from './libroContent';
 import { counterpartPath, localePath } from './site';
 import { siteChromeByLanguage, type Language } from './siteContent';
@@ -23,10 +24,14 @@ const coverAvif = `${coverAvif360} 360w, ${coverAvif540} 540w, ${coverAvif720} 7
 const coverWebp = `${coverWebp360} 360w, ${coverWebp540} 540w, ${coverWebp720} 720w`;
 const coverSizes = '(min-width: 900px) 340px, 200px';
 
+/** Null until the book is on sale (`bookSale` in bookSale.ts). */
+const offer = bookOffer();
+
 function LibroPage({ language }: { language: Language }) {
   const page = libroByLanguage[language];
   const siteContent = siteChromeByLanguage[language];
-  const { contents, sample, waitlist, author } = page;
+  const { contents, sample, waitlist, sale, author } = page;
+  const price = offer?.price === undefined ? null : formatBookPrice(offer.price, language);
   // Keep the server render stable, then carry the campaign tag to the external form.
   const [referral, setReferral] = useState<string | null>(null);
   useEffect(() => {
@@ -62,14 +67,22 @@ function LibroPage({ language }: { language: Language }) {
               {page.lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
             <div className="book-hero-actions">
-              <a className="btn btn-primary" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('pdf')}>
+              {offer ? (
+                <a className="btn btn-primary" href={offer.buyUrl} target="_blank" rel="noopener noreferrer">
+                  <ShoppingCart aria-hidden="true" />
+                  {price ? `${sale.cta} · ${price}` : sale.cta}
+                </a>
+              ) : null}
+              <a className={`btn ${offer ? 'btn-secondary' : 'btn-primary'}`} href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('pdf')}>
                 <BookOpenText aria-hidden="true" />
                 {sample.cta}
               </a>
-              <a className="btn btn-secondary" href="#lista">
-                <Mail aria-hidden="true" />
-                {page.waitlistCta}
-              </a>
+              {offer ? null : (
+                <a className="btn btn-secondary" href="#lista">
+                  <Mail aria-hidden="true" />
+                  {page.waitlistCta}
+                </a>
+              )}
               <a className="btn btn-secondary" href="#indice">
                 <BookOpenText aria-hidden="true" />
                 {page.contentsCta}
@@ -102,7 +115,7 @@ function LibroPage({ language }: { language: Language }) {
                 <ArrowUpRight aria-hidden="true" />
               </a>
               <p className="book-sample-meta">{sample.meta}</p>
-              <p className="book-sample-optional">{sample.optional}</p>
+              {offer ? null : <p className="book-sample-optional">{sample.optional}</p>}
             </div>
           </div>
         </section>
@@ -169,23 +182,51 @@ function LibroPage({ language }: { language: Language }) {
           </dl>
         </section>
 
-        <section className="book-section" id="lista" aria-labelledby="lista-title">
-          <div className="book-card book-waitlist">
-            <div className="book-waitlist-text">
-              <h2 id="lista-title">{waitlist.title}</h2>
-              <p>{waitlist.text}</p>
+        {offer ? (
+          <section className="book-section" id="comprar" aria-labelledby="comprar-title">
+            <div className="book-card book-waitlist book-buy">
+              <div className="book-waitlist-text">
+                <h2 id="comprar-title">{sale.title}</h2>
+                <p>{sale.text}</p>
+              </div>
+              <div className="book-waitlist-action">
+                {price ? (
+                  <p className="book-price">
+                    <span>{sale.priceLabel}</span>
+                    {price}
+                  </p>
+                ) : null}
+                <a className="btn btn-primary" href={offer.buyUrl} target="_blank" rel="noopener noreferrer">
+                  <ShoppingCart aria-hidden="true" />
+                  {sale.cta}
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+                <a className="book-buy-sample" href={samplePdfUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('pdf')}>
+                  <BookOpenText aria-hidden="true" />
+                  {sale.sampleLink}
+                </a>
+              </div>
             </div>
-            <div className="book-waitlist-action">
-              {/* The form itself is on vtsecurity.com.ar, with its anti-bot check and per-ref counts. */}
-              <a className="btn btn-primary" href={formUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('lista')}>
-                <Mail aria-hidden="true" />
-                {waitlist.cta}
-                <ArrowUpRight aria-hidden="true" />
-              </a>
-              <p className="book-waitlist-note">{waitlist.privacy}</p>
+          </section>
+        ) : (
+          <section className="book-section" id="lista" aria-labelledby="lista-title">
+            <div className="book-card book-waitlist">
+              <div className="book-waitlist-text">
+                <h2 id="lista-title">{waitlist.title}</h2>
+                <p>{waitlist.text}</p>
+              </div>
+              <div className="book-waitlist-action">
+                {/* The form itself is on vtsecurity.com.ar, with its anti-bot check and per-ref counts. */}
+                <a className="btn btn-primary" href={formUrl} target="_blank" rel="noopener noreferrer" onClick={() => recordClick('lista')}>
+                  <Mail aria-hidden="true" />
+                  {waitlist.cta}
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+                <p className="book-waitlist-note">{waitlist.privacy}</p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <section className="book-section" id="autor" aria-labelledby="autor-title">
           <div className="book-card book-author">

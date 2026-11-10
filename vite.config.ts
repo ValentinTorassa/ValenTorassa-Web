@@ -12,12 +12,12 @@ const ssrOut = path.join(root, 'dist-ssr')
 
 /** Files whose last commit dates a page's lastmod in the sitemap, next to its content date. */
 const pageSources: Record<string, string[]> = {
-  home: ['src/homeContent.ts', 'src/App.tsx', 'src/siteContent.ts'],
+  home: ['src/homeContent.ts', 'src/App.tsx', 'src/siteContent.ts', 'src/bookSale.ts'],
   charlas: ['src/charlasContent.ts', 'src/CharlasPage.tsx', 'src/events.ts', 'src/research.ts', 'src/talkMedia.ts'],
   eventos: ['src/eventsContent.ts', 'src/EventosPage.tsx', 'src/events.ts'],
-  libro: ['src/libroContent.ts', 'src/LibroPage.tsx', 'public/og-libro.png'],
-  'speaker-kit': ['src/speakerKitContent.ts', 'src/SpeakerKitPage.tsx'],
-  links: ['src/linksContent.ts', 'src/LinksPage.tsx', 'src/links.css'],
+  libro: ['src/libroContent.ts', 'src/LibroPage.tsx', 'src/bookSale.ts', 'public/og-libro.png'],
+  'speaker-kit': ['src/speakerKitContent.ts', 'src/SpeakerKitPage.tsx', 'src/bookSale.ts'],
+  links: ['src/linksContent.ts', 'src/LinksPage.tsx', 'src/links.css', 'src/bookSale.ts'],
 }
 
 const git = (args: string[]) => execFileSync('git', args, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()

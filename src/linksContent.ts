@@ -1,4 +1,4 @@
-import { bookStatus } from './libroContent';
+import { bookStatus } from './bookSale';
 import { mastodonUrl, type Language } from './siteContent';
 
 /**

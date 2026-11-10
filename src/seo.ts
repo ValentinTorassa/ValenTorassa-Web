@@ -3,6 +3,7 @@ import { splitTalks } from './eventSchedule';
 import { talks, type Talk } from './events';
 import { eventsPageByLanguage } from './eventsContent';
 import { contentByLanguage } from './homeContent';
+import { bookOffer } from './bookSale';
 import { book, libroByLanguage } from './libroContent';
 import { linksByLanguage, linksPageUrl } from './linksContent';
 import { paperOfTalk, papers, type Paper } from './research';
@@ -329,6 +330,7 @@ export function pageHead(route: Route, today: string): PageHead {
     }
     case 'libro': {
       const page = libroByLanguage[language];
+      const offer = bookOffer();
       return {
         ...base,
         title: page.documentTitle,
@@ -349,6 +351,17 @@ export function pageHead(route: Route, today: string): PageHead {
           image: `${SITE_ORIGIN}${socialImages.libro}`,
           url: `${SITE_ORIGIN}/libro`,
           isPartOf: websiteRef,
+          // Only once it is on sale (bookSale in bookSale.ts).
+          ...(offer
+            ? {
+                offers: {
+                  '@type': 'Offer',
+                  url: offer.buyUrl,
+                  ...(offer.price === undefined ? {} : { price: String(offer.price), priceCurrency: 'ARS' }),
+                  availability: 'https://schema.org/InStock',
+                },
+              }
+            : {}),
         },
       };
     }
