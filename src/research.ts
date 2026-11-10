@@ -100,6 +100,27 @@ export const papers: Paper[] = [
     authors: ['Valentín Torassa Colombero', 'Santiago Roatta', 'María Eugenia Casco'],
     url: 'https://revistas.unlp.edu.ar/JAIIO/article/view/20074',
   },
+  {
+    id: 'cacic-2025-agentes-ia',
+    kind: 'paper',
+    date: '2025-10-06',
+    venue: 'CACIC 2025',
+    track: 'WTIAE',
+    city: 'Viedma',
+    title: same('Uso ético de los agentes de inteligencia artificial en el ámbito de la investigación académica'),
+    authors: ['Valentín Torassa Colombero', 'María Eugenia Casco', 'Santiago Roatta'],
+    url: 'https://sedici.unlp.edu.ar/handle/10915/191296',
+  },
+  {
+    id: 'wicc-2026-go',
+    kind: 'poster',
+    date: '2026-04-09',
+    venue: 'WICC 2026',
+    city: 'Buenos Aires',
+    title: same('Go como lenguaje de diseño: reducción de complejidad accidental en sistemas concurrentes'),
+    authors: ['Valentín Torassa Colombero', 'Santiago Roatta', 'María Eugenia Casco'],
+    url: 'https://sedici.unlp.edu.ar/handle/10915/195946',
+  },
 ];
 
 export const paperOfTalk = (talkId: string) => papers.find((paper) => paper.talk === talkId);
