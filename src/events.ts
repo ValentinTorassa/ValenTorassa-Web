@@ -82,8 +82,8 @@ export const talks: Talk[] = [
     status: 'tbd',
     url: 'https://congresoconvergente.ugr.edu.ar/',
     note: {
-      es: 'Un comparador de precios de supermercados, medido: la misma pregunta de sí o no a un modelo de sí o no y a dos LLM, con el criterio fijado antes de medir. Calibración, costo y latencia.',
-      en: 'A supermarket price comparator, measured: the same yes-or-no question put to a yes-or-no model and to two LLMs, with the pass criterion set before measuring. Calibration, cost, and latency.',
+      es: 'Un comparador de precios de supermercados, medido: la misma pregunta cerrada a un modelo de sí o no y a dos LLM, con el criterio fijado antes de medir. Calibración, costo y latencia.',
+      en: 'A supermarket price comparator, measured: the same closed question put to a yes-or-no model and to two LLMs, with the pass criterion set before measuring. Calibration, cost, and latency.',
     },
   },
   {
