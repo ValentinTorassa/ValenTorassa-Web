@@ -68,6 +68,25 @@ const cec = 'CEC Buenos Aires';
 
 export const talks: Talk[] = [
   {
+    id: 'convergente-2026',
+    date: '2026-11-26',
+    event: 'Convergente 2026',
+    track: 'Congreso de Ciencia de Datos e IA',
+    title: {
+      es: 'La pregunta elige el modelo: cuándo un LLM y cuándo un modelo de sí o no',
+      en: 'The question picks the model: when to use an LLM and when a yes-or-no model',
+    },
+    place: { es: 'HUB de Innovación UGR', en: 'UGR Innovation Hub' },
+    city: 'Funes',
+    mode: 'presencial',
+    status: 'tbd',
+    url: 'https://congresoconvergente.ugr.edu.ar/',
+    note: {
+      es: 'Un comparador de precios de supermercados, medido: la misma pregunta de sí o no a un modelo de sí o no y a dos LLM, con el criterio fijado antes de medir. Calibración, costo y latencia.',
+      en: 'A supermarket price comparator, measured: the same yes-or-no question put to a yes-or-no model and to two LLMs, with the pass criterion set before measuring. Calibration, cost, and latency.',
+    },
+  },
+  {
     id: 'rossec-2026',
     date: '2026-11-06',
     time: '14:50',

@@ -69,6 +69,11 @@ const base = (id: string) => `/charlas/${id}`;
 const firewall = 'https://github.com/ValentinTorassa/VT-Agent-Firewall';
 
 export const talkMedia: Record<string, TalkMedia> = {
+  'convergente-2026': {
+    icon: 'branch',
+    still: `${base('convergente-2026')}/still.webp`,
+    thumb: `${base('convergente-2026')}/thumb.webp`,
+  },
   'rossec-2026': {
     deck: `${base('rossec-2026')}/slides`,
     icon: 'key',
