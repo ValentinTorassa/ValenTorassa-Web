@@ -15,6 +15,16 @@
     {
       "source": "/og-charlas/:file.png",
       "destination": "https://valentorassa-media.vercel.app/og-charlas/:file.png"
+    },
+    {
+      "source": "/p/:path*",
+      "destination": "https://valentorassa-preview.vercel.app/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/p/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }]
     }
   ],
   "redirects": [
