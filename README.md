@@ -47,6 +47,8 @@ The links page (`links.html`, `src/LinksPage.tsx`, copy in `src/linksContent.ts`
 
 The decks (`public/charlas/<id>/slides.html`), the reels (`public/charlas/<id>/reel.mp4`) and the deck cards (`public/og-charlas/*.png`) are about 40 MB, and Vercel stores every deploy in full. So on Vercel the site build drops them (`scripts/strip-media.mjs`, run by the `buildCommand` in `vercel.json`) and `vercel.json` rewrites their URLs to the separate `valentorassa-media` project, which serves them from `media-site/` and only rebuilds when those files change. Their public URLs stay on valentorassa.com. Locally nothing changes: they are still in `public/`, so `npm run dev`, `vite preview` and the e2e tests serve them as before. The list of files lives in `scripts/media-files.mjs`.
 
+Pages shared by link before they are public live under `/p/`: `vercel.json` proxies `/p/:path*` to the separate `valentorassa-preview` project and marks every response `noindex`. Their source is in `preview-site/` (see its README); slugs and media stay out of the repo.
+
 Public decks in `public/charlas/<id>/slides.html` carry a canonical URL and a link back to the talk. `VT-Knowledge-Engine-Brain/events/charlas-2026-decks/hub/public_decks.py` adds those when creating the public copies. Its `--decorate-existing <public/charlas>` mode updates already published copies.
 
 Activation, migration and production verification: [book click operations](docs/book-clicks-operation.md). The counter is active; the record includes the initial zero baseline, two independently confirmed technical clicks, and their cleanup.
