@@ -1,0 +1,3 @@
+# Slugs and built pages stay out of git: the slug is what keeps a page unlisted.
+slug.txt
+deploy/
