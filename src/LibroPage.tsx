@@ -33,7 +33,7 @@ function LibroPage({ language }: { language: Language }) {
     const ref = new URLSearchParams(window.location.search).get('ref');
     if (ref && /^[a-zA-Z0-9_-]{1,80}$/.test(ref)) setReferral(ref);
   }, []);
-  const formUrl = referral ? `https://vtsecurity.com.ar/libro?ref=${encodeURIComponent(referral)}` : waitlistUrl;
+  const formUrl = `${referral ? `https://vtsecurity.com.ar/libro?ref=${encodeURIComponent(referral)}` : waitlistUrl}#book-wait-h`;
   const languagePath = counterpartPath(localePath(language, '/libro'));
   const languageHref = referral ? `${languagePath}?ref=${encodeURIComponent(referral)}` : languagePath;
   const recordClick = (event: 'pdf' | 'lista') => {
