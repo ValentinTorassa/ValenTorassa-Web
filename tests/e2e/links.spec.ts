@@ -86,8 +86,8 @@ test.describe('links page', () => {
   test('closes with the numbers, after the profiles', async ({ page }) => {
     await page.goto('/links');
     await expect(page.locator('main > section').last()).toHaveClass('numbers');
-    await expect(page.locator('.numbers')).toContainText('42 mil suscriptores.');
-    await expect(page.locator('.numbers')).toContainText('579 videos.');
+    await expect(page.locator('.numbers')).toContainText('43 mil suscriptores.');
+    await expect(page.locator('.numbers')).toContainText('600 videos.');
   });
 
   test('points search engines at its own host', async ({ page }) => {

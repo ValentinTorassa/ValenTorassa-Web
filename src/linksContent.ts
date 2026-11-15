@@ -46,12 +46,12 @@ export const marginCode = 'Tm8gcG9kw6lzIGRlZmVuZGVyIGxvIHF1ZSBubyBlbnRlbmTDqXMu'
  * hand with `asOf`. YouTube's API already rounds subscribers to 3 digits.
  */
 export const audience = {
-  asOf: '2026-10-30',
-  youtube: 42,
-  youtubeVideos: 579,
-  instagram: 14,
+  asOf: '2026-11-14',
+  youtube: 43,
+  youtubeVideos: 600,
+  instagram: 15,
   tiktok: 11,
-  discord: 2200,
+  discord: 2300,
 } as const;
 
 /** Profiles in the closing list, in the order people look for them. */

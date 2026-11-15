@@ -192,7 +192,7 @@ for (const route of ROUTES) {
   });
 }
 
-test('home leads to eight selected projects and the private dashboard without a GitHub API request', async ({ page }) => {
+test('home leads to nine selected projects and the private dashboard without a GitHub API request', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
   const apiRequests: string[] = [];
@@ -205,6 +205,7 @@ test('home leads to eight selected projects and the private dashboard without a 
   await expect(page.getByRole('link', { name: 'Explore projects' })).toHaveAttribute('href', '#research');
   await expect(page.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', 'https://vtsecurity.com.ar');
   await expect(page.locator('#research h4')).toHaveText([
+    'blackice',
     'Open-Security-Labs',
     'VT-Agent-Firewall',
     'comandle',

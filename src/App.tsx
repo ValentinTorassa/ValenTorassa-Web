@@ -522,7 +522,7 @@ function App({ language }: { language: Language }) {
                           <p>{repo.description}</p>
                           <div className="repo-unfurl-links">
                             <a href={repo.siteHref} target="_blank" rel="noopener noreferrer">
-                              <span>securitylabs.valentorassa.com</span>
+                              <span>{new URL(repo.siteHref).host}</span>
                               <ExternalLink aria-hidden="true" />
                             </a>
                             <a href={repo.href} target="_blank" rel="noopener noreferrer">
