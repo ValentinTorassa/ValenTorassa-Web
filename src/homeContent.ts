@@ -346,7 +346,7 @@ const repoFacts = {
 const esRepos: FeaturedRepo[] = [
   {
     ...repoFacts.blackice,
-    previewAlt: 'Página de blackice: una app abre una conexión, blackice revisa las reglas y, si ninguna aplica, la frena hasta que vos o un agente la aprueben',
+    previewAlt: 'Página de blackice en modo oscuro: una app abre una conexión, blackice revisa las reglas y, si ninguna aplica, la frena hasta que vos o un agente la aprueben',
     description: 'Firewall de aplicaciones para macOS que se maneja desde la terminal, hecho con Esteban Suárez. Una conexión que ninguna regla cubre queda en espera hasta que vos o un agente de IA (fx, Claude Code, Codex u opencode) la aprueban o la rechazan, y cada cambio pide Touch ID. Firmado y notarizado, con instalador que verifica el SHA-256 y cask de Homebrew.',
   },
   {
@@ -394,7 +394,7 @@ const esRepos: FeaturedRepo[] = [
 const enRepos: FeaturedRepo[] = [
   {
     ...repoFacts.blackice,
-    previewAlt: 'The blackice page: an app opens a connection, blackice checks the rules and, when none matches, holds it until you or an agent approve it',
+    previewAlt: 'The blackice page in dark mode: an app opens a connection, blackice checks the rules and, when none matches, holds it until you or an agent approve it',
     description: 'A macOS application firewall operated through a CLI, built with Esteban Suárez. A connection no rule covers waits until you or an AI agent (fx, Claude Code, Codex, or opencode) approves or denies it, and every change needs Touch ID. Signed and notarized, with an install script that checks the SHA-256 and a Homebrew cask.',
   },
   {
