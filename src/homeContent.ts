@@ -15,6 +15,7 @@ import {
   SiOpenid,
   SiPostgresql,
   SiRedis,
+  SiSwift,
   SiTerraform,
   SiWireguard,
 } from 'react-icons/si';
@@ -33,6 +34,7 @@ import secretShareScreenshot from './assets/projects/secretshare.webp';
 import securityFixesScreenshot from './assets/projects/security-fixes.webp';
 import radarAudienceScreenshot from './assets/projects/vt-radar-audience-demo.webp';
 import agentFirewallDemo from './assets/projects/agent-firewall.webp';
+import blackiceScreenshot from './assets/projects/blackice.webp';
 import comandleScreenshot from './assets/projects/comandle.webp';
 import quartermasterScreenshot from './assets/projects/quartermaster.webp';
 import archivistScreenshot from './assets/projects/archivist.webp';
@@ -303,6 +305,19 @@ const repoFacts = {
     previewKind: 'screenshot' as const,
     previewAddress: 'VT-Lens / demo',
   },
+  blackice: {
+    name: 'blackice',
+    href: 'https://github.com/ValentinTorassa/blackice',
+    language: 'Swift',
+    languageColor: '#f05138',
+    tags: [{ label: 'Swift', icon: SiSwift }, 'macOS', 'Network Extension', 'AI agents'],
+    tone: 'security',
+    featured: true,
+    siteHref: 'https://blackice-macos.vercel.app',
+    previewImage: blackiceScreenshot,
+    previewKind: 'screenshot' as const,
+    previewAddress: 'blackice-macos.vercel.app',
+  },
   agentFirewall: {
     name: 'VT-Agent-Firewall',
     href: 'https://github.com/ValentinTorassa/VT-Agent-Firewall',
@@ -329,6 +344,11 @@ const repoFacts = {
 };
 
 const esRepos: FeaturedRepo[] = [
+  {
+    ...repoFacts.blackice,
+    previewAlt: 'Página de blackice: una app abre una conexión, blackice revisa las reglas y, si ninguna aplica, la frena hasta que vos o un agente la aprueben',
+    description: 'Firewall de aplicaciones para macOS que se maneja desde la terminal, hecho con Esteban Suárez. Una conexión que ninguna regla cubre queda en espera hasta que vos o un agente de IA (fx, Claude Code, Codex u opencode) la aprueban o la rechazan, y cada cambio pide Touch ID. Firmado y notarizado, con instalador que verifica el SHA-256 y cask de Homebrew.',
+  },
   {
     ...repoFacts.openSecurityLabs,
     previewAlt: 'Vista de la plataforma Open Security Labs',
@@ -372,6 +392,11 @@ const esRepos: FeaturedRepo[] = [
 ];
 
 const enRepos: FeaturedRepo[] = [
+  {
+    ...repoFacts.blackice,
+    previewAlt: 'The blackice page: an app opens a connection, blackice checks the rules and, when none matches, holds it until you or an agent approve it',
+    description: 'A macOS application firewall operated through a CLI, built with Esteban Suárez. A connection no rule covers waits until you or an AI agent (fx, Claude Code, Codex, or opencode) approves or denies it, and every change needs Touch ID. Signed and notarized, with an install script that checks the SHA-256 and a Homebrew cask.',
+  },
   {
     ...repoFacts.openSecurityLabs,
     previewAlt: 'Preview of the Open Security Labs platform',
