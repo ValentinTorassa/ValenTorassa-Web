@@ -7,7 +7,7 @@ import { expect, test } from '@playwright/test';
  * section links to the form on vtsecurity.com.ar/libro, which has the anti-bot
  * check and counts sign-ups per ?ref=; nothing here posts to listmonk.
  */
-const WAITLIST = 'https://vtsecurity.com.ar/libro?ref=web-libro';
+const WAITLIST = 'https://vtsecurity.com.ar/libro?ref=web-libro#book-wait-h';
 const desktopOnly = () => test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
 
 test.describe('/libro', () => {
@@ -42,10 +42,10 @@ test.describe('/libro', () => {
   test('preserves a campaign ref through the language switch and the waitlist link', async ({ page }) => {
     desktopOnly();
     await page.goto('/libro?ref=muestra-linkedin');
-    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-linkedin');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-linkedin#book-wait-h');
     await page.locator('.language-toggle').click();
     await expect(page).toHaveURL(/\/en\/libro\?ref=muestra-linkedin$/);
-    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-linkedin');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-linkedin#book-wait-h');
 
     await page.goto('/libro?ref=reader%40example.com');
     await expect(page.locator('#lista a')).toHaveAttribute('href', WAITLIST);
@@ -59,7 +59,7 @@ test.describe('/libro', () => {
     expect((await pdf.body()).subarray(0, 5).toString()).toBe('%PDF-');
 
     await page.goto('/libro?ref=muestra-instagram-stories');
-    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-instagram-stories');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=muestra-instagram-stories#book-wait-h');
     const preview = page.locator('.book-sample-preview img');
     await expect.poll(() => preview.evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBe(1440);
     const events: unknown[] = [];
@@ -91,7 +91,7 @@ test.describe('/libro', () => {
       events.push(route.request().postDataJSON());
       await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true,"counted":true}' });
     });
-    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=links-ig');
+    await expect(page.locator('#lista a')).toHaveAttribute('href', 'https://vtsecurity.com.ar/libro?ref=links-ig#book-wait-h');
     await page.evaluate(() => {
       const link = document.querySelector<HTMLAnchorElement>('.book-hero-actions a[href$=".pdf"]')!;
       link.addEventListener('click', (event) => event.preventDefault());
@@ -112,7 +112,7 @@ test.describe('/libro', () => {
     for (const [i, ref] of refs.entries()) {
       await page.goto(`/libro?ref=${ref}`);
       // The waitlist form gets the ref either way; only the click counter uses the fixed list.
-      await expect(page.locator('#lista a')).toHaveAttribute('href', `https://vtsecurity.com.ar/libro?ref=${ref}`);
+      await expect(page.locator('#lista a')).toHaveAttribute('href', `https://vtsecurity.com.ar/libro?ref=${ref}#book-wait-h`);
       await page.evaluate(() => {
         const link = document.querySelector<HTMLAnchorElement>('#lista a')!;
         link.addEventListener('click', (event) => event.preventDefault());
