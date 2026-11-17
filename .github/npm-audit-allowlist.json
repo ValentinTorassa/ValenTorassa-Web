@@ -1,4 +1,11 @@
 {
   "_doc": "Advisories the shared Security workflow (scripts/npm-audit.mjs in ValentinTorassa/.github) reports as warnings instead of failing. Each entry needs id, package, added (YYYY-MM-DD) and reason. Remove an entry once a release without the advisory is in the lockfile; the script flags entries that no longer match anything.",
-  "allow": []
+  "allow": [
+    {
+      "id": "GHSA-fc5q-39xc-vjpf",
+      "package": "picomatch",
+      "added": "2026-11-17",
+      "reason": "ReDoS with single-branch repeated extglobs. Published 2026-11-17 with no fixed picomatch release yet (every version is affected). Here picomatch is only a dev/build dependency (vite, vitest, tinyglobby, fdir, micromatch) matching globs from our own config, never user input. Remove once a fixed release is in the lockfile."
+    }
+  ]
 }
