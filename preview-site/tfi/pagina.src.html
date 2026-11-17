@@ -99,6 +99,8 @@ figcaption span{display:block;font:400 13px/1.4 var(--mono);color:var(--faint)}
 
 .papers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .paper{display:flex;flex-direction:column;gap:10px}
+.paper .shot{display:block;margin-bottom:4px;border-radius:8px;overflow:hidden;border:1px solid var(--line2);background:var(--raise)}
+.paper .shot img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:top}
 .paper .tag{align-self:flex-start;margin-bottom:0}
 .paper .tag.soft{color:var(--muted);background:none;border:1px solid var(--line2)}
 .paper h3{font:500 16px/1.4 var(--sans);margin:0}
@@ -276,18 +278,21 @@ footer .links a{color:var(--muted)}
       <p class="say">El proyecto es el mismo: investigación aplicada en Ingeniería de Software sobre Go, contribuciones a software libre y Podman. blackice es la primera herramienta propia.</p>
       <div class="papers">
         <article class="card paper">
+          <a class="shot" href="https://valentorassa.com/charlas/cacic-2026-ubuntu" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="https://valentorassa.com/charlas/cacic-2026-ubuntu/still.webp" width="1280" height="720" alt="" loading="lazy" decoding="async"></a>
           <span class="tag">CACIC 2026 · aceptado</span>
           <h3>Marco Metodológico para Parches de Seguridad Comunitarios en Ubuntu Universe: Trazabilidad de CVEs, Backports y Aportes SRU</h3>
           <span class="meta">Workshop de Seguridad Informática</span>
           <a class="go" href="https://valentorassa.com/charlas/cacic-2026-ubuntu" target="_blank" rel="noopener">ver la charla →</a>
         </article>
         <article class="card paper">
+          <a class="shot" href="https://valentorassa.com/charlas/cacic-2026-podman" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="https://valentorassa.com/charlas/cacic-2026-podman/still.webp" width="1280" height="720" alt="" loading="lazy" decoding="async"></a>
           <span class="tag">CACIC 2026 · aceptado</span>
           <h3>Contribuciones a Proyectos de Software Libre como Estrategia de Formación en Ingeniería de Software: un Marco Metodológico Aplicado al Ecosistema Podman</h3>
           <span class="meta">Workshop de Ingeniería de Software</span>
           <a class="go" href="https://valentorassa.com/charlas/cacic-2026-podman" target="_blank" rel="noopener">ver la charla →</a>
         </article>
         <article class="card paper">
+          <a class="shot" href="https://sedici.unlp.edu.ar/handle/10915/195946" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="https://valentorassa.com/charlas/wicc-2026-go/still.webp" width="1280" height="720" alt="" loading="lazy" decoding="async"></a>
           <span class="tag soft">WICC 2026 · póster</span>
           <h3>Go como lenguaje de diseño: reducción de complejidad accidental en sistemas concurrentes</h3>
           <span class="meta">abril de 2026</span>
