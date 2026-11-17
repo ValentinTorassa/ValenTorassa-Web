@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
@@ -60,6 +61,80 @@ const SITE_HOSTS = new Set(['valentorassa.com', 'www.valentorassa.com']);
 const CONSOLE_ERROR_ALLOWLIST: Array<{ pattern: RegExp; reason: string }> = [];
 
 const repoRoot = process.cwd();
+
+/**
+ * Security headers, set in vercel.json. `vite preview` applies that file's
+ * headers like Vercel does (vite.config.ts), so these checks see what
+ * production sends:
+ * - site pages (every page the build renders, the 404 page and public/*.html)
+ *   get the strict CSP: scripts only from this origin, plus one hashed inline
+ *   event handler (the Google Fonts swap in the HTML templates);
+ * - talk decks (/charlas/<id>/slides) and /experiencia are self-contained pages
+ *   that run their own inline scripts: their CSP only blocks plugins, <base>,
+ *   foreign form targets and framing;
+ * - PDFs get frame-ancestors only, so no built-in PDF viewer is affected;
+ * - /p/* is proxied to another project whose page frames its own deck, so it
+ *   may be framed by this origin only.
+ */
+type ResponseHeaders = Record<string, string>;
+
+function cspDirectives(policy: string) {
+  const directives = new Map<string, string[]>();
+  for (const part of policy.split(';')) {
+    const [name, ...sources] = part.trim().split(/\s+/);
+    if (name) directives.set(name.toLowerCase(), sources);
+  }
+  return directives;
+}
+
+function expectBaseSecurityHeaders(headers: ResponseHeaders, where: string) {
+  expect.soft(headers['x-content-type-options'], `${where}: X-Content-Type-Options`).toBe('nosniff');
+  const maxAge = Number(/max-age=(\d+)/.exec(headers['strict-transport-security'] ?? '')?.[1] ?? 0);
+  expect.soft(maxAge, `${where}: Strict-Transport-Security max-age`).toBeGreaterThanOrEqual(31536000);
+  const permissions = headers['permissions-policy'] ?? '';
+  for (const feature of ['camera', 'microphone', 'geolocation', 'payment', 'usb']) {
+    expect.soft(permissions, `${where}: Permissions-Policy denies ${feature}`).toContain(`${feature}=()`);
+  }
+}
+
+function expectSitePolicy(headers: ResponseHeaders, where: string) {
+  expectBaseSecurityHeaders(headers, where);
+  expect.soft(headers['x-frame-options'], `${where}: X-Frame-Options`).toBe('DENY');
+  expect.soft(headers['referrer-policy'], `${where}: Referrer-Policy`).toBe('strict-origin-when-cross-origin');
+  expect.soft(headers['content-security-policy-report-only'], `${where}: no report-only CSP`).toBeUndefined();
+
+  const csp = cspDirectives(headers['content-security-policy'] ?? '');
+  expect.soft(csp.get('default-src'), `${where}: CSP default-src`).toEqual(["'self'"]);
+  expect.soft(csp.get('object-src'), `${where}: CSP object-src`).toEqual(["'none'"]);
+  expect.soft(csp.get('frame-ancestors'), `${where}: CSP frame-ancestors`).toEqual(["'none'"]);
+  expect.soft(csp.get('base-uri'), `${where}: CSP base-uri`).toEqual(["'self'"]);
+  expect.soft(csp.get('form-action'), `${where}: CSP form-action`).toEqual(["'self'"]);
+  const scripts = csp.get('script-src') ?? [];
+  expect.soft(scripts, `${where}: CSP script-src`).toContain("'self'");
+  for (const source of scripts) {
+    expect.soft(source, `${where}: script-src allows only this origin and hashes`).toMatch(/^('self'|'unsafe-hashes'|'sha256-[A-Za-z0-9+/]+=*')$/);
+  }
+}
+
+/** Records every CSP violation in the page, reported or blocked, for cspViolations(). */
+async function watchCspViolations(page: Page) {
+  await page.addInitScript(() => {
+    const seen: string[] = [];
+    (window as unknown as { __cspViolations: string[] }).__cspViolations = seen;
+    document.addEventListener('securitypolicyviolation', (event) => {
+      seen.push(`${event.disposition} ${event.effectiveDirective}: ${event.blockedURI || '-'} (${event.sourceFile || '-'}:${event.lineNumber})`);
+    });
+  });
+}
+
+function cspViolations(page: Page) {
+  return page.evaluate(() => (window as unknown as { __cspViolations?: string[] }).__cspViolations ?? []);
+}
+
+/** The Google Fonts stylesheet loads as a preload that its hashed onload handler turns into a stylesheet. */
+function pendingFontPreloads(page: Page) {
+  return page.locator('link[rel="preload"][as="style"][href*="fonts.googleapis.com"]').count();
+}
 
 async function scrollThrough(page: Page) {
   // Scroll the whole page so whileInView animations and lazy images settle
@@ -126,9 +201,12 @@ for (const route of ROUTES) {
         consoleErrors.push(text);
       });
 
+      await watchCspViolations(page);
+
       const response = await page.goto(route.path, { waitUntil: 'load' });
       expect(response, 'navigation response').not.toBeNull();
       expect(response!.ok(), `HTTP ${response!.status()}`).toBe(true);
+      expectSitePolicy(response!.headers(), route.path);
       await page.waitForLoadState('networkidle');
 
       // Main landmark and heading.
@@ -186,11 +264,122 @@ for (const route of ROUTES) {
       }
       expect.soft(brokenLinks, 'broken internal links').toEqual([]);
 
+      expect.soft(await cspViolations(page), 'CSP violations').toEqual([]);
+      expect.soft(await pendingFontPreloads(page), 'Google Fonts preload never became a stylesheet').toBe(0);
       expect.soft(pageErrors, 'uncaught page errors').toEqual([]);
       expect.soft(consoleErrors, 'console errors').toEqual([]);
     });
   });
 }
+
+test.describe('security headers', () => {
+  test('the 404 page gets the site policy and loads without CSP violations', async ({ page }) => {
+    const consoleErrors: string[] = [];
+    page.on('console', (message) => {
+      // The 404 status of the page itself is logged as a failed resource.
+      if (message.type() === 'error' && !/status of 404/.test(message.text())) consoleErrors.push(message.text());
+    });
+    await watchCspViolations(page);
+
+    const response = await page.goto('/no-such-page', { waitUntil: 'load' });
+    expect(response!.status()).toBe(404);
+    expectSitePolicy(response!.headers(), '/no-such-page');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('h1').first()).toBeVisible();
+
+    expect.soft(await cspViolations(page), 'CSP violations').toEqual([]);
+    expect.soft(await pendingFontPreloads(page), 'Google Fonts preload never became a stylesheet').toBe(0);
+    expect.soft(consoleErrors, 'console errors').toEqual([]);
+  });
+
+  test('every built page under the site policy runs no inline script the policy does not list', async ({ page, request }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+    const dist = path.join(repoRoot, 'dist');
+    const pages = readdirSync(dist, { recursive: true, encoding: 'utf8' }).filter((file) => file.endsWith('.html'));
+    expect(pages.length).toBeGreaterThan(0);
+
+    const hash = (value: string) => `'sha256-${createHash('sha256').update(value).digest('base64')}'`;
+    const problems: string[] = [];
+    let strict = 0;
+
+    for (const file of pages) {
+      const urlPath = `/${file.split(path.sep).join('/')}`.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+      const pathToGet = urlPath === '/404' ? '/no-such-page' : urlPath;
+      const headers = (await request.get(pathToGet)).headers();
+      const policy = headers['content-security-policy'];
+      expect.soft(policy, `${pathToGet}: Content-Security-Policy`).toBeTruthy();
+      const scripts = cspDirectives(policy ?? '').get('script-src');
+      if (!scripts) continue; // a deck or /experiencia: no script policy
+      strict += 1;
+      expectSitePolicy(headers, pathToGet);
+
+      // Parsed by the browser (DOMParser runs nothing), so entities and quoting
+      // come out exactly as the browser hashes them.
+      const inline = await page.evaluate((html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const scripts = [...doc.querySelectorAll('script:not([src])')]
+          .filter((script) => ['', 'module', 'text/javascript'].includes((script.getAttribute('type') ?? '').toLowerCase())) // JSON-LD never runs
+          .map((script) => script.textContent ?? '')
+          .filter((text) => text.trim());
+        const handlers: Array<[string, string]> = [];
+        const javascriptUrls: string[] = [];
+        for (const element of doc.querySelectorAll('*')) {
+          for (const { name, value } of element.attributes) {
+            if (/^on/i.test(name)) handlers.push([name, value]);
+            if (/^(href|src|action|formaction)$/i.test(name) && /^\s*javascript:/i.test(value)) javascriptUrls.push(`<${element.localName} ${name}>`);
+          }
+        }
+        return { scripts, handlers, javascriptUrls };
+      }, readFileSync(path.join(dist, file), 'utf8'));
+
+      for (const script of inline.scripts) {
+        if (!scripts.includes(hash(script))) problems.push(`${file}: inline <script> (add ${hash(script)} to script-src in vercel.json)`);
+      }
+      for (const [name, handler] of inline.handlers) {
+        if (!scripts.includes("'unsafe-hashes'") || !scripts.includes(hash(handler))) {
+          problems.push(`${file}: ${name} handler "${handler}" (add 'unsafe-hashes' and ${hash(handler)} to script-src in vercel.json)`);
+        }
+      }
+      for (const url of inline.javascriptUrls) problems.push(`${file}: javascript: URL in ${url}`);
+    }
+    expect(strict, 'pages checked under the site policy').toBeGreaterThan(50);
+    expect(problems).toEqual([]);
+  });
+
+  test('decks, /experiencia, PDFs and /p get their own policies', async ({ request }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+    const groups = [
+      { paths: ['/charlas/hacking-day-2026/slides', '/experiencia', '/experiencia/'], frame: 'DENY', csp: "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" },
+      { paths: ['/libro/muestra-capitulo-1.pdf'], frame: 'DENY', csp: "frame-ancestors 'none'" },
+      // Proxied to valentorassa-preview on Vercel; the local preview answers 404 but sends the same headers.
+      { paths: ['/p/any-page', '/p'], frame: 'SAMEORIGIN', csp: "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'" },
+    ];
+    for (const group of groups) {
+      for (const urlPath of group.paths) {
+        const headers = (await request.get(urlPath)).headers();
+        expectBaseSecurityHeaders(headers, urlPath);
+        expect.soft(headers['x-frame-options'], `${urlPath}: X-Frame-Options`).toBe(group.frame);
+        expect.soft(headers['content-security-policy'], `${urlPath}: Content-Security-Policy`).toBe(group.csp);
+      }
+    }
+  });
+
+  test('every talk deck and /experiencia load without CSP violations', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
+    test.setTimeout(120_000);
+    const decks = readdirSync(path.join(repoRoot, 'public', 'charlas'))
+      .filter((id) => existsSync(path.join(repoRoot, 'public', 'charlas', id, 'slides.html')))
+      .map((id) => `/charlas/${id}/slides`);
+    expect(decks.length).toBeGreaterThan(0);
+    await watchCspViolations(page);
+    for (const urlPath of [...decks, '/experiencia']) {
+      const response = await page.goto(urlPath, { waitUntil: 'load' });
+      expect(response!.ok(), `${urlPath}: HTTP ${response!.status()}`).toBe(true);
+      await page.waitForTimeout(300);
+      expect.soft(await cspViolations(page), `${urlPath}: CSP violations`).toEqual([]);
+    }
+  });
+});
 
 test('home leads to nine selected projects and the private dashboard without a GitHub API request', async ({ page }) => {
   test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
