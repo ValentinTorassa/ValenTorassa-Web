@@ -111,8 +111,10 @@ function expectSitePolicy(headers: ResponseHeaders, where: string) {
   expect.soft(csp.get('form-action'), `${where}: CSP form-action`).toEqual(["'self'"]);
   const scripts = csp.get('script-src') ?? [];
   expect.soft(scripts, `${where}: CSP script-src`).toContain("'self'");
+  // The one external script: Cloudflare injects its Web Analytics beacon at the
+  // edge (valentorassa.com is proxied), so it never shows up in the build.
   for (const source of scripts) {
-    expect.soft(source, `${where}: script-src allows only this origin and hashes`).toMatch(/^('self'|'unsafe-hashes'|'sha256-[A-Za-z0-9+/]+=*')$/);
+    expect.soft(source, `${where}: script-src allows only this origin, hashes and the Cloudflare beacon`).toMatch(/^('self'|'unsafe-hashes'|'sha256-[A-Za-z0-9+/]+=*'|https:\/\/static\.cloudflareinsights\.com)$/);
   }
 }
 
