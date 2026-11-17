@@ -68,6 +68,10 @@ p{margin:0 0 12px}
 .rows li:last-child{border-bottom:1px solid var(--line)}
 .rows .k{font:400 14px/1.5 var(--mono);color:var(--fg)}
 .rows .v{color:var(--muted)}
+.group{margin-top:36px}
+.group:first-of-type{margin-top:0}
+.group h3{font:400 13px/1 var(--mono);color:var(--faint);margin:0}
+.group .rows{margin-top:12px}
 
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 30px}
 .stat{border-top:1px solid var(--line2);padding-top:14px;min-width:0}
@@ -124,7 +128,7 @@ footer .links a{color:var(--muted)}
   <div class="wrap">
     <a class="brand" href="#inicio"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L28 9V23L16 30L4 23V18H16V14H4V9Z"/></svg>blackice</a>
     <nav aria-label="Secciones">
-      <a href="#problema">problema</a><a href="#funciona">cómo funciona</a><a href="#numeros">números</a><a href="#videos">videos</a><a href="#presentacion">presentación</a><a href="#tfi">trabajo final</a><a href="#sigue">lo que sigue</a>
+      <a href="#problema">problema</a><a href="#funciona">cómo funciona</a><a href="#numeros">números</a><a href="#alcance">alcance</a><a href="#videos">videos</a><a href="#presentacion">presentación</a><a href="#aportes">aportes</a><a href="#tfi">trabajo final</a><a href="#sigue">lo que sigue</a>
     </nav>
   </div>
 </header>
@@ -134,9 +138,9 @@ footer .links a{color:var(--muted)}
     <p class="eyebrow">trabajo final de ingeniería · uai · 2026</p>
     <h1>blackice</h1>
     <p class="lede">Un cortafuegos de aplicaciones para macOS que controla a qué se conectan los agentes de programación.</p>
-    <p class="by">Valentín Torassa Colombero, con Esteban Suárez. Hecho entre el 2 y el 10 de noviembre de 2026.</p>
+    <p class="by">Valentín Torassa Colombero, con Esteban Suárez. En desarrollo desde el 2 de noviembre de 2026.</p>
     <div class="chips">
-      <span class="chip">versión 1.0.6</span>
+      <span class="chip">versión 1.1.1</span>
       <span class="chip">código abierto · Apache-2.0</span>
       <a class="chip" href="https://github.com/ValentinTorassa/blackice" target="_blank" rel="noopener">repositorio</a>
       <a class="chip" href="https://blackice-macos.vercel.app" target="_blank" rel="noopener">sitio</a>
@@ -177,14 +181,37 @@ footer .links a{color:var(--muted)}
     <div class="wrap">
       <h2>En números</h2>
       <div class="stats">
-        <div class="stat"><span class="v">21</span><span class="l">versiones en 7 días, todas notarizadas por Apple</span></div>
-        <div class="stat"><span class="v">554</span><span class="l">pruebas automáticas</span></div>
-        <div class="stat"><span class="v">25</span><span class="l">corridas registradas en una Mac real</span></div>
-        <div class="stat"><span class="v">337</span><span class="l">commits en 9 días</span></div>
-        <div class="stat"><span class="v">77</span><span class="l">pull requests integrados</span></div>
+        <div class="stat"><span class="v">25</span><span class="l">versiones en 14 días, de la 0.1.0 a la 1.1.1, firmadas y notarizadas por Apple</span></div>
+        <div class="stat"><span class="v">662</span><span class="l">pruebas automáticas en 77 suites</span></div>
+        <div class="stat"><span class="v">29</span><span class="l">corridas registradas en una Mac real</span></div>
+        <div class="stat"><span class="v">447</span><span class="l">commits en 16 días</span></div>
+        <div class="stat"><span class="v">88</span><span class="l">pull requests integrados</span></div>
         <div class="stat"><span class="v">4</span><span class="l">agentes conectados: fx, Claude Code, Codex y opencode</span></div>
       </div>
-      <p class="note">Al 11/11/2026.</p>
+      <p class="note">Al 17/11/2026.</p>
+    </div>
+  </section>
+
+  <section id="alcance">
+    <div class="wrap">
+      <h2>Alcance</h2>
+      <p class="say">Cuántas personas lo vieron, lo visitaron o lo bajaron en sus primeras dos semanas.</p>
+      <div class="stats">
+        <div class="stat"><span class="v">74.065</span><span class="l">impresiones y reproducciones en redes</span></div>
+        <div class="stat"><span class="v">73</span><span class="l">descargas del instalador</span></div>
+        <div class="stat"><span class="v">152</span><span class="l">visitas al repositorio en 14 días, de 67 personas</span></div>
+        <div class="stat"><span class="v">52</span><span class="l">visitantes del sitio desde el 14/11</span></div>
+        <div class="stat"><span class="v">8</span><span class="l">estrellas en GitHub y 1 fork</span></div>
+        <div class="stat"><span class="v">1</span><span class="l">pull request de un colaborador externo, en revisión</span></div>
+      </div>
+      <ul class="rows">
+        <li><span class="k">facebook</span><span class="v">37.330 impresiones</span></li>
+        <li><span class="k">instagram</span><span class="v">17.150 impresiones</span></li>
+        <li><span class="k">tiktok</span><span class="v">9.836 reproducciones</span></li>
+        <li><span class="k">youtube</span><span class="v">8.612 vistas, entre tres videos</span></li>
+        <li><span class="k">x</span><span class="v">1.127 impresiones</span></li>
+      </ul>
+      <p class="note">Redes: cuatro publicaciones del 12 al 16/11, medidas a las 24 o 48 h de cada una. Descargas: los .zip de las 25 versiones en GitHub, que bajan tanto el script de instalación como Homebrew. Al 17/11/2026.</p>
     </div>
   </section>
 
@@ -213,15 +240,33 @@ footer .links a{color:var(--muted)}
     </div>
   </section>
 
-  <section id="vercel">
+  <section id="aportes">
     <div class="wrap">
-      <h2>Con Vercel</h2>
-      <p class="say">Aportes a proyectos abiertos de Vercel Labs. No hay convenio ni patrocinio.</p>
-      <ul class="rows">
-        <li><span class="k">fx</span><span class="v">Su agente fue el primero en responder en blackice. Mi arreglo para fx lo retomó el mantenedor en el <a href="https://github.com/vercel-labs/fx/pull/1747" target="_blank" rel="noopener">PR #1747</a>, que me acredita. Sigue abierto.</span></li>
-        <li><span class="k">deepsec</span><span class="v">Su escáner revisó blackice y salieron 10 correcciones. Mi aporte a deepsec (<a href="https://github.com/vercel-labs/deepsec/pull/137" target="_blank" rel="noopener">PR #137</a>) espera revisión.</span></li>
-        <li><span class="k">v0</span><span class="v">Sorteamos cinco cupones de USD 100 en la comunidad.</span></li>
-      </ul>
+      <h2>Aportes a software libre</h2>
+      <p class="say">Antes de blackice, la línea aportaba a proyectos de otros. Este es el estado de cada aporte.</p>
+      <div class="group">
+        <h3>podman</h3>
+        <ul class="rows">
+          <li><span class="k">manifest push</span><span class="v">Agregué <code>--retry</code> a <code>podman manifest push</code> (issue <a href="https://github.com/podman-container-tools/podman/issues/28590" target="_blank" rel="noopener">#28590</a>). Integrado el 23/06/2026: <a href="https://github.com/podman-container-tools/podman/pull/28637" target="_blank" rel="noopener">PR #28637</a>.</span></li>
+        </ul>
+      </div>
+      <div class="group">
+        <h3>debian · equipo debian med</h3>
+        <ul class="rows">
+          <li><span class="k">invesalius</span><span class="v">Parche para CVE-2024-44825: un proyecto <code>.inv3</code> armado podía escribir fuera de su carpeta. <a href="https://salsa.debian.org/med-team/invesalius/-/merge_requests/3" target="_blank" rel="noopener">MR !3</a> integrado; el bug <a href="https://bugs.debian.org/1136204" target="_blank" rel="noopener">#1136204</a> quedó cerrado con la 3.1.99998-9 en unstable.</span></li>
+          <li><span class="k">pydicom</span><span class="v">Arreglo de CVE-2026-32711 para Debian 13. <a href="https://salsa.debian.org/med-team/pydicom/-/merge_requests/1" target="_blank" rel="noopener">MR !1</a> integrado en la rama de trixie; la actualización espera al equipo de release (<a href="https://bugs.debian.org/1148120" target="_blank" rel="noopener">#1148120</a>).</span></li>
+          <li><span class="k">gdcm</span><span class="v">Cinco CVE corregidos para Debian 13 y 12: <a href="https://salsa.debian.org/med-team/gdcm/-/merge_requests/6" target="_blank" rel="noopener">MR !6</a> y <a href="https://salsa.debian.org/med-team/gdcm/-/merge_requests/7" target="_blank" rel="noopener">MR !7</a>, integrados el 17/11. El pedido de actualización es el <a href="https://bugs.debian.org/1153126" target="_blank" rel="noopener">#1153126</a>, y la regresión que encontré con su parche, el <a href="https://bugs.debian.org/1152837" target="_blank" rel="noopener">#1152837</a>.</span></li>
+        </ul>
+      </div>
+      <div class="group">
+        <h3>vercel labs · no hay convenio ni patrocinio</h3>
+        <ul class="rows">
+          <li><span class="k">fx</span><span class="v">Su agente fue el primero en responder en blackice. Mi arreglo (<a href="https://github.com/vercel-labs/fx/pull/1659" target="_blank" rel="noopener">PR #1659</a>) lo retomó el mantenedor en el <a href="https://github.com/vercel-labs/fx/pull/1747" target="_blank" rel="noopener">PR #1747</a>, que me acredita. Sigue abierto.</span></li>
+          <li><span class="k">deepsec</span><span class="v">Su escáner revisó blackice y salieron 10 correcciones. Mi aporte a deepsec (<a href="https://github.com/vercel-labs/deepsec/pull/137" target="_blank" rel="noopener">PR #137</a>) espera revisión.</span></li>
+          <li><span class="k">v0</span><span class="v">Sorteamos cinco cupones de USD 100 en la comunidad.</span></li>
+        </ul>
+      </div>
+      <p class="note">Integrado quiere decir aceptado en el repositorio del proyecto. En Debian 13 y 12, el paquete corregido llega después del visto bueno del equipo de release. Al 17/11/2026.</p>
     </div>
   </section>
 
