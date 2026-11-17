@@ -44,6 +44,44 @@ function committedOn(files: string[]) {
   }
 }
 
+/**
+ * A vercel.json `source` as Vercel matches it (path-to-regexp, case-sensitive,
+ * whole path, no optional trailing slash). Only literal text and unnamed
+ * `(regex)` groups are supported; anything else throws, so the preview never
+ * quietly applies a rule differently from Vercel.
+ */
+function sourceToRegExp(source: string) {
+  let pattern = ''
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i]
+    if (char === '(') {
+      let depth = 0
+      let j = i
+      for (; j < source.length; j++) {
+        if (source[j] === '\\') j++
+        else if (source[j] === '(') depth++
+        else if (source[j] === ')' && --depth === 0) break
+      }
+      if (depth !== 0) throw new Error(`vercel.json: unbalanced group in "${source}"`)
+      pattern += source.slice(i, j + 1)
+      i = j
+    } else if (/[:*+?{}\\]/.test(char)) {
+      throw new Error(`vercel.json: the preview server cannot match "${source}"`)
+    } else {
+      pattern += char.replace(/[.^$|[\]]/g, '\\$&')
+    }
+  }
+  return new RegExp(`^${pattern}$`)
+}
+
+/** vercel.json `headers`, compiled for the preview server. */
+function vercelHeaderRules() {
+  const config = JSON.parse(readFileSync(path.join(root, 'vercel.json'), 'utf8')) as {
+    headers?: Array<{ source: string; headers: Array<{ key: string; value: string }> }>
+  }
+  return (config.headers ?? []).map((rule) => ({ test: sourceToRegExp(rule.source), headers: rule.headers }))
+}
+
 /** What src/entry-server.tsx exports, as the build uses it. */
 type Route = { page: string; language: string; path: string; talkId?: string }
 type EntryServer = {
@@ -74,6 +112,28 @@ function staticPagesPlugin(): Plugin {
     configurePreviewServer(server) {
       const out = path.resolve(server.config.root, server.config.build.outDir)
       const isFile = (file: string) => existsSync(file) && statSync(file).isFile()
+      // The response headers from vercel.json (security headers included), on
+      // every path like on Vercel, so the e2e tests check what production sends.
+      // The rules are written so no two set the same header on one path; if two
+      // do, the preview answers 500 instead of picking one.
+      const headerRules = vercelHeaderRules()
+      server.middlewares.use((req, res, next) => {
+        const { pathname } = new URL(req.url ?? '/', 'http://preview')
+        const set = new Set<string>()
+        for (const rule of headerRules) {
+          if (!rule.test.test(pathname)) continue
+          for (const { key, value } of rule.headers) {
+            if (set.has(key.toLowerCase())) {
+              res.statusCode = 500
+              res.end(`vercel.json: more than one rule sets ${key} on ${pathname}`)
+              return
+            }
+            set.add(key.toLowerCase())
+            res.setHeader(key, value)
+          }
+        }
+        next()
+      })
       server.middlewares.use((req, res, next) => {
         if (req.method !== 'GET' && req.method !== 'HEAD') return next()
         const url = new URL(req.url ?? '/', 'http://preview')
