@@ -292,15 +292,13 @@ test.describe('security headers', () => {
     expect.soft(consoleErrors, 'console errors').toEqual([]);
   });
 
-  test('every built page under the site policy runs no inline script the policy does not list', async ({ request }) => {
+  test('every built page under the site policy runs no inline script the policy does not list', async ({ page, request }) => {
     test.skip(test.info().project.name !== 'desktop', 'viewport independent; run once');
     const dist = path.join(repoRoot, 'dist');
     const pages = readdirSync(dist, { recursive: true, encoding: 'utf8' }).filter((file) => file.endsWith('.html'));
     expect(pages.length).toBeGreaterThan(0);
 
-    const decode = (value: string) =>
-      value.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-    const hash = (value: string) => `'sha256-${createHash('sha256').update(decode(value)).digest('base64')}'`;
+    const hash = (value: string) => `'sha256-${createHash('sha256').update(value).digest('base64')}'`;
     const problems: string[] = [];
     let strict = 0;
 
@@ -315,23 +313,34 @@ test.describe('security headers', () => {
       strict += 1;
       expectSitePolicy(headers, pathToGet);
 
-      const html = readFileSync(path.join(dist, file), 'utf8');
-      for (const [, attributes, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
-        if (/\ssrc=/i.test(attributes) || !body.trim()) continue;
-        const type = /\stype="([^"]*)"/i.exec(attributes)?.[1].toLowerCase() ?? '';
-        if (type && type !== 'module' && type !== 'text/javascript') continue; // JSON-LD and other data blocks never run
-        if (!scripts.includes(hash(body))) problems.push(`${file}: inline <script> (${hash(body)})`);
-      }
-      const markup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
-      for (const [tag] of markup.matchAll(/<[a-z][^>]*>/gi)) {
-        for (const [, name, quoted] of tag.matchAll(/\s(on[a-z]+)\s*=\s*("[^"]*"|'[^']*')/gi)) {
-          const handler = quoted.slice(1, -1);
-          if (!scripts.includes("'unsafe-hashes'") || !scripts.includes(hash(handler))) {
-            problems.push(`${file}: ${name} handler "${handler}" (add 'unsafe-hashes' and ${hash(handler)} to script-src in vercel.json)`);
+      // Parsed by the browser (DOMParser runs nothing), so entities and quoting
+      // come out exactly as the browser hashes them.
+      const inline = await page.evaluate((html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const scripts = [...doc.querySelectorAll('script:not([src])')]
+          .filter((script) => ['', 'module', 'text/javascript'].includes((script.getAttribute('type') ?? '').toLowerCase())) // JSON-LD never runs
+          .map((script) => script.textContent ?? '')
+          .filter((text) => text.trim());
+        const handlers: Array<[string, string]> = [];
+        const javascriptUrls: string[] = [];
+        for (const element of doc.querySelectorAll('*')) {
+          for (const { name, value } of element.attributes) {
+            if (/^on/i.test(name)) handlers.push([name, value]);
+            if (/^(href|src|action|formaction)$/i.test(name) && /^\s*javascript:/i.test(value)) javascriptUrls.push(`<${element.localName} ${name}>`);
           }
         }
-        if (/\s(href|src|action|formaction)\s*=\s*["']?\s*javascript:/i.test(tag)) problems.push(`${file}: javascript: URL in ${tag}`);
+        return { scripts, handlers, javascriptUrls };
+      }, readFileSync(path.join(dist, file), 'utf8'));
+
+      for (const script of inline.scripts) {
+        if (!scripts.includes(hash(script))) problems.push(`${file}: inline <script> (add ${hash(script)} to script-src in vercel.json)`);
       }
+      for (const [name, handler] of inline.handlers) {
+        if (!scripts.includes("'unsafe-hashes'") || !scripts.includes(hash(handler))) {
+          problems.push(`${file}: ${name} handler "${handler}" (add 'unsafe-hashes' and ${hash(handler)} to script-src in vercel.json)`);
+        }
+      }
+      for (const url of inline.javascriptUrls) problems.push(`${file}: javascript: URL in ${url}`);
     }
     expect(strict, 'pages checked under the site policy').toBeGreaterThan(50);
     expect(problems).toEqual([]);

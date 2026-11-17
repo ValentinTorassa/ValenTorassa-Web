@@ -68,7 +68,7 @@ function sourceToRegExp(source: string) {
     } else if (/[:*+?{}\\]/.test(char)) {
       throw new Error(`vercel.json: the preview server cannot match "${source}"`)
     } else {
-      pattern += char.replace(/[.^$|[\]]/g, '\\$&')
+      pattern += char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     }
   }
   return new RegExp(`^${pattern}$`)
