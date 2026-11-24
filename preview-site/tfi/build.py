@@ -21,7 +21,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROBOTS = '<meta name="robots" content="noindex,nofollow,noarchive">'
-FILES = ['presentacion.html', 'video.mp4', 'portada.jpg', 'publicidad.mp4', 'publicidad.jpg', 'aviso.mp4', 'aviso.jpg']
+FILES = ['presentacion.html', 'pitch.mp4', 'pitch.jpg', 'video.mp4', 'portada.jpg', 'publicidad.mp4', 'publicidad.jpg', 'aviso.mp4', 'aviso.jpg']
 
 
 def vtt(srt: Path) -> str:
