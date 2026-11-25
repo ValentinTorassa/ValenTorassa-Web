@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from 'react';
 import coverFallback from './assets/libro-cover-540.jpg';
 import coverWebp360 from './assets/libro-cover-360.webp';
 import coverWebp540 from './assets/libro-cover-540.webp';
+import podcastCover from './assets/whoami-cover-360.jpg';
+import podcastCoverWebp from './assets/whoami-cover-360.webp';
 import { ARGENTINA_TIME_ZONE, formatShortDay, splitTalks } from './eventSchedule';
 import { talks, type Talk } from './events';
 import {
@@ -14,13 +16,12 @@ import {
   labsUrl,
   linksByLanguage,
   linksPageUrl,
-  marginCode,
   outboundRef,
+  podcastUrl,
   profiles,
   secretShareUrl,
   youtubeUrl,
 } from './linksContent';
-import LinksTerminal, { type TermFact } from './LinksTerminal';
 import { absoluteUrl, useToday } from './site';
 import type { Language } from './siteContent';
 
@@ -212,26 +213,6 @@ function LinksPage({ language }: { language: Language }) {
   const videos = number.format(audience.youtubeVideos);
   const members = `+${number.format(audience.discord)}`;
 
-  const facts: TermFact[] = [
-    copy.terminal.role,
-    copy.terminal.base,
-    { key: copy.terminal.channel, value: copy.youtube.stats(audience.youtube, videos), href: youtubeUrl, external: true },
-    { ...copy.terminal.book, href: bookHref },
-    {
-      key: copy.terminal.comandle.key,
-      value: stats ? copy.terminal.comandle.live(number.format(stats.total)) : copy.terminal.comandle.idle,
-      href: comandleHref,
-      external: true,
-    },
-    {
-      key: copy.terminal.talk.key,
-      value: talk ? `${formatTalkDay(talk, language)} · ${talk.event}` : copy.terminal.talk.none,
-      href: talkHref,
-    },
-    { key: copy.terminal.community.key, value: copy.terminal.community.value(members), href: discordUrl, external: true },
-    copy.terminal.shell,
-  ];
-
   return (
     <div className="links-page">
       <header className="topbar">
@@ -249,46 +230,7 @@ function LinksPage({ language }: { language: Language }) {
       </header>
 
       <main>
-        <section className="sky">
-          <div className="news win">
-            <span className="win-bar">
-              <span>
-                {formatDay(today, language)} ▪ {copy.news.label}
-              </span>
-            </span>
-            <span className="win-body news-body">
-              <span className="pixel-text">{copy.news.body}</span>
-              <a className="pixel-text news-cta" href={bookHref}>
-                {copy.news.cta}
-              </a>
-            </span>
-          </div>
-
-          <p className="leader">
-            <span>{copy.leader.left}</span>
-            <span className="leader-dots" aria-hidden="true" />
-            <span>{copy.leader.right}</span>
-          </p>
-
-          <h1 className="sr-only">{copy.heading}</h1>
-          <LinksTerminal title={copy.terminal.title} facts={facts} />
-
-          <div className="mega-ctas">
-            <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
-              {copy.ctas.youtube}
-            </a>
-            <a href={bookHref}>{copy.ctas.book}</a>
-          </div>
-
-          <span className="margin-code" aria-hidden="true">
-            {marginCode}
-          </span>
-        </section>
-
-        <div className="glyph-row" aria-hidden="true">
-          <span>∵ ⩆</span>
-          <span>⩆ ∵</span>
-        </div>
+        <h1 className="sr-only">{copy.heading}</h1>
 
         <section className="desk" aria-label={copy.desktopLabel}>
           <span className="desk-label pixel-text" aria-hidden="true">
@@ -296,24 +238,40 @@ function LinksPage({ language }: { language: Language }) {
           </span>
 
           <div className="desk-grid">
-            <Window title={copy.youtube.title} href={youtubeUrl} className="w-youtube">
-              <span className="win-name">{copy.youtube.name}</span>
-              <span className="tag">{copy.youtube.stats(audience.youtube, videos)}</span>
-              <span className="win-text">{copy.youtube.body}</span>
-              <span className="win-cta">{copy.youtube.cta} →</span>
-            </Window>
-
-            <Window title={copy.book.title} href={bookHref} external={false} className="w-book">
+            {/* The featured window: the one thing to open this week. */}
+            <Window title={copy.book.title} href={bookHref} external={false} className="w-book w-featured">
               <picture className="book-cover">
-                <source type="image/webp" srcSet={`${coverWebp360} 360w, ${coverWebp540} 540w`} sizes="140px" />
-                <img src={coverFallback} alt={copy.book.coverAlt} width={540} height={720} loading="lazy" decoding="async" />
+                <source type="image/webp" srcSet={`${coverWebp360} 360w, ${coverWebp540} 540w`} sizes="(min-width: 1100px) 150px, 84px" />
+                <img src={coverFallback} alt={copy.book.coverAlt} width={540} height={720} decoding="async" />
               </picture>
               <span className="book-copy">
                 <span className="win-name">{copy.book.name}</span>
-                <span className="win-text">{copy.book.body}</span>
+                <span className="win-text t-long">{copy.book.body}</span>
                 <span className="tag">{copy.book.meta}</span>
                 <span className="win-cta">{copy.book.cta} →</span>
               </span>
+            </Window>
+
+            <Window title={copy.podcast.title} href={podcastUrl} className="w-podcast">
+              <picture className="pod-cover">
+                <source type="image/webp" srcSet={podcastCoverWebp} />
+                <img src={podcastCover} alt={copy.podcast.coverAlt} width={360} height={360} decoding="async" />
+              </picture>
+              <span className="book-copy">
+                <span className="win-name">{copy.podcast.name}</span>
+                <span className="win-text t-short">{copy.podcast.short}</span>
+                <span className="win-text t-long">{copy.podcast.body}</span>
+                <span className="win-cta t-long">{copy.podcast.cta} →</span>
+              </span>
+            </Window>
+
+            {/* Small windows: on a phone or tablet a name and one line (t-short), on a computer the full text (t-long). */}
+            <Window title={copy.youtube.title} href={youtubeUrl} className="w-youtube">
+              <span className="win-name">{copy.youtube.name}</span>
+              <span className="win-text t-short">{copy.youtube.short(audience.youtube, videos)}</span>
+              <span className="tag t-long">{copy.youtube.stats(audience.youtube, videos)}</span>
+              <span className="win-text t-long">{copy.youtube.body}</span>
+              <span className="win-cta t-long">{copy.youtube.cta} →</span>
             </Window>
 
             <Window title={copy.comandle.title} href={comandleHref} className="w-comandle">
@@ -324,9 +282,13 @@ function LinksPage({ language }: { language: Language }) {
                 <span className="tile tile-hit">o</span>
                 <span className="tile tile-hit">d</span>
               </span>
-              <span className="win-text">{copy.comandle.body}</span>
+              {/* A count that did not load shows the invitation to play, never zero games. */}
+              <span className="win-text t-short">
+                {stats ? copy.comandle.played(number.format(stats.total)) : copy.comandle.cta}
+              </span>
+              <span className="win-text t-long">{copy.comandle.body}</span>
               {stats ? (
-                <span className="counts">
+                <span className="counts t-long">
                   <span>
                     <b>{number.format(stats.today.played)}</b> {copy.comandle.today}
                   </span>
@@ -338,70 +300,74 @@ function LinksPage({ language }: { language: Language }) {
                   </span>
                 </span>
               ) : stats === null ? (
-                <span className="counts counts-off">{copy.comandle.offline}</span>
+                <span className="counts counts-off t-long">{copy.comandle.offline}</span>
               ) : (
-                <span className="counts counts-wait" aria-hidden="true">
+                <span className="counts counts-wait t-long" aria-hidden="true">
                   ░░░ ░░░ ░░░
                 </span>
               )}
-              <span className="win-cta">{copy.comandle.cta} →</span>
+              <span className="win-cta t-long">{copy.comandle.cta} →</span>
             </Window>
 
             {/* With no talk coming, the slot invites organizers instead of showing an empty date. */}
             {talk ? (
               <Window title={copy.talk.title} href={talkHref} external={false} className="w-talk">
                 <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
-                <span className="win-name">{talk.title[language]}</span>
-                <span className="win-text">
+                <span className="win-text t-short">{talk.event}</span>
+                <span className="win-name t-long">{talk.title[language]}</span>
+                <span className="win-text t-long">
                   {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
                   {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
                 </span>
-                <span className="win-cta">{copy.talk.cta} →</span>
+                <span className="win-cta t-long">{copy.talk.cta} →</span>
               </Window>
             ) : (
               <Window title={copy.invite.title} href={speakerKitHref} external={false} className="w-talk w-invite">
                 <span className="win-name">{copy.invite.name}</span>
-                <span className="win-text">{copy.invite.body}</span>
-                <span className="win-cta">{copy.invite.cta} →</span>
+                <span className="win-text t-short">{copy.invite.cta}</span>
+                <span className="win-text t-long">{copy.invite.body}</span>
+                <span className="win-cta t-long">{copy.invite.cta} →</span>
               </Window>
             )}
 
             <Window title={copy.labs.title} href={labsUrl} className="w-labs">
               <span className="win-name">{copy.labs.name}</span>
-              <span className="win-text">{copy.labs.body}</span>
-              <span className="win-cta">{copy.labs.cta} →</span>
+              <span className="win-text t-short">{copy.labs.short}</span>
+              <span className="win-text t-long">{copy.labs.body}</span>
+              <span className="win-cta t-long">{copy.labs.cta} →</span>
             </Window>
-
-            <Clock language={language} title={copy.clock.title} place={copy.clock.place} />
 
             <Window title={copy.blog.title} href={blogUrl} className="w-blog">
               <span className="win-name">{copy.blog.name}</span>
-              <span className="win-text">{copy.blog.body}</span>
-              <span className="win-cta">{copy.blog.cta} →</span>
+              <span className="win-text t-short">{copy.blog.short}</span>
+              <span className="win-text t-long">{copy.blog.body}</span>
+              <span className="win-cta t-long">{copy.blog.cta} →</span>
             </Window>
 
             <Window title={copy.apuntes.title} href={apuntesHref} className="w-apuntes">
               <span className="win-name">{copy.apuntes.name}</span>
-              <span className="win-text">{copy.apuntes.body}</span>
-              <span className="win-cta">{copy.apuntes.cta} →</span>
+              <span className="win-text t-short">{copy.apuntes.short}</span>
+              <span className="win-text t-long">{copy.apuntes.body}</span>
+              <span className="win-cta t-long">{copy.apuntes.cta} →</span>
             </Window>
 
             <Window title={copy.discord.title} href={discordUrl} className="w-discord">
               <span className="win-name">{copy.discord.name}</span>
-              <span className="win-text">{copy.discord.body(members)}</span>
-              <span className="win-cta">{copy.discord.cta} →</span>
+              <span className="win-text t-short">{copy.discord.short(members)}</span>
+              <span className="win-text t-long">{copy.discord.body(members)}</span>
+              <span className="win-cta t-long">{copy.discord.cta} →</span>
             </Window>
 
             <Window title={copy.secretShare.title} href={secretShareUrl} className="w-secret">
               <span className="win-name">{copy.secretShare.name}</span>
-              <span className="win-text">{copy.secretShare.body}</span>
-              <span className="win-cta">{copy.secretShare.cta} →</span>
+              <span className="win-text t-short">{copy.secretShare.short}</span>
+              <span className="win-text t-long">{copy.secretShare.body}</span>
+              <span className="win-cta t-long">{copy.secretShare.cta} →</span>
             </Window>
-
-            <Glider title={copy.glider.title} caption={copy.glider.caption} />
           </div>
         </section>
 
+        {/* Profiles right under the links, as chips: the handle shows where there is room. */}
         <section className="profiles">
           <div className="profiles-head">
             <span className="label">{copy.profilesLabel}</span>
@@ -411,11 +377,8 @@ function LinksPage({ language }: { language: Language }) {
             {profiles.map((profile) => (
               <li key={profile.name}>
                 <a href={profile.href} target="_blank" rel="noopener noreferrer">
-                  <span className="label">{profile.name}</span>
+                  <span className="profile-name">{profile.name}</span>
                   <span className="profile-handle">{profile.handle}</span>
-                  <span className="profile-arrow" aria-hidden="true">
-                    ↗
-                  </span>
                 </a>
               </li>
             ))}
@@ -442,11 +405,15 @@ function LinksPage({ language }: { language: Language }) {
       </main>
 
       <footer className="links-footer">
-        <Window title="VT Security">
-          <span className="pixel-text">{copy.footer.version}</span>
-          <span className="pixel-text">{copy.footer.rights}</span>
-          <span className="pixel-text">{copy.footer.made}</span>
-        </Window>
+        <div className="footer-wins">
+          <Window title="VT Security">
+            <span className="pixel-text">{copy.footer.version}</span>
+            <span className="pixel-text">{copy.footer.rights}</span>
+            <span className="pixel-text">{copy.footer.made}</span>
+          </Window>
+          <Clock language={language} title={copy.clock.title} place={copy.clock.place} />
+          <Glider title={copy.glider.title} caption={copy.glider.caption} />
+        </div>
         <a className="footer-site" href={homeHref}>
           {copy.footer.site}
         </a>

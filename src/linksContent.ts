@@ -1,4 +1,3 @@
-import { bookStatus } from './libroContent';
 import { mastodonUrl, type Language } from './siteContent';
 
 /**
@@ -30,6 +29,8 @@ export { LINKS_ORIGIN, linksPageUrl } from './siteContent';
 export const comandleUrl = 'https://comandle.valentorassa.com/';
 export const comandleStatsApi = 'https://vtsecurity.com.ar/api/comandle';
 export const youtubeUrl = 'https://www.youtube.com/@vtcibersecurity';
+/** whoami, the podcast: its show page on Spotify. */
+export const podcastUrl = 'https://open.spotify.com/show/5DNWy8GNFjWiw9amRJMwrl';
 export const labsUrl = 'https://securitylabs.valentorassa.com/';
 export const blogUrl = 'https://vtsecurity.com.ar';
 export const discordUrl = 'https://discord.com/invite/z6cr5JF6bJ';
@@ -37,20 +38,19 @@ export const secretShareUrl = 'https://secretshare.valentorassa.com/';
 /** Apuntes, the newsletter (pluma). Sign-ups keep any ?ref= of up to 48 letters, digits and hyphens, so links-<tag> counts as is. */
 export const apuntesUrl = 'https://vtsecurity.com.ar/apuntes';
 
-/** Base64 of the book's title, printed sideways in the hero margin. */
-export const marginCode = 'Tm8gcG9kw6lzIGRlZmVuZGVyIGxvIHF1ZSBubyBlbnRlbmTDqXMu';
-
 /**
  * Audience counts shown as round numbers. They come from the daily audience
  * capture (VT-Content-Data-Lab, audience_daily_<date>.json); update them by
  * hand with `asOf`. YouTube's API already rounds subscribers to 3 digits.
  */
 export const audience = {
-  asOf: '2026-11-14',
-  youtube: 43,
-  youtubeVideos: 600,
-  instagram: 15,
-  tiktok: 11,
+  asOf: '2026-11-25',
+  youtube: 44,
+  youtubeVideos: 620,
+  instagram: 16,
+  tiktok: 12,
+  /** In thousands, one decimal, rounded down. */
+  x: 6.9,
   discord: 2300,
 } as const;
 
@@ -69,41 +69,26 @@ export const profiles = [
   { name: 'Mastodon', handle: '@vtsecurity@infosec.exchange', href: mastodonUrl },
 ] as const;
 
-type Fact = { key: string; value: string };
-
 export type LinksCopy = {
   documentTitle: string;
-  /** The page's h1, for screen readers: the terminal stands in for a headline. */
+  /** The page's h1, for screen readers: the desk of links stands in for a headline. */
   heading: string;
   seo: { description: string; imageAlt: string };
   topBar: { home: string; language: string; languageLabel: string };
-  news: { label: string; body: string; cta: string };
-  leader: { left: string; right: string };
-  ctas: { youtube: string; book: string };
-  /** The neofetch in the hero: one line per fact, some of them links. */
-  terminal: {
-    title: string;
-    role: Fact;
-    base: Fact;
-    channel: string;
-    book: Fact;
-    comandle: { key: string; live: (total: string) => string; idle: string };
-    talk: { key: string; none: string };
-    community: { key: string; value: (members: string) => string };
-    shell: Fact;
-  };
   desktopLabel: string;
-  youtube: { title: string; name: string; stats: (subs: number, videos: string) => string; body: string; cta: string };
+  /** `short` is the one line a small window shows on a phone, where the body does not fit. */
+  youtube: { title: string; name: string; stats: (subs: number, videos: string) => string; short: (subs: number, videos: string) => string; body: string; cta: string };
   book: { title: string; name: string; body: string; meta: string; cta: string; coverAlt: string };
-  comandle: { title: string; body: string; today: string; yesterday: string; total: string; cta: string; offline: string };
+  podcast: { title: string; name: string; short: string; body: string; cta: string; coverAlt: string };
+  comandle: { title: string; body: string; played: (total: string) => string; today: string; yesterday: string; total: string; cta: string; offline: string };
   talk: { title: string; at: (place: string) => string; cta: string; closed: string };
   /** In the talk's place when no talk is coming: the speaker kit, for organizers. */
   invite: { title: string; name: string; body: string; cta: string };
-  labs: { title: string; name: string; body: string; cta: string };
-  blog: { title: string; name: string; body: string; cta: string };
-  apuntes: { title: string; name: string; body: string; cta: string };
-  discord: { title: string; name: string; body: (members: string) => string; cta: string };
-  secretShare: { title: string; name: string; body: string; cta: string };
+  labs: { title: string; name: string; short: string; body: string; cta: string };
+  blog: { title: string; name: string; short: string; body: string; cta: string };
+  apuntes: { title: string; name: string; short: string; body: string; cta: string };
+  discord: { title: string; name: string; short: (members: string) => string; body: (members: string) => string; cta: string };
+  secretShare: { title: string; name: string; short: string; body: string; cta: string };
   clock: { title: string; place: string };
   glider: { title: string; caption: string };
   profilesTitle: string;
@@ -123,29 +108,12 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       imageAlt: 'Una terminal corre neofetch junto a Tux, al lado de ventanas del canal, el libro y comandle sobre un fondo amarillo: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'EN', languageLabel: 'Ver en inglés' },
-    news: {
-      label: 'Libro',
-      body: 'Escribí sobre lo que pasa cuando el tablero está en verde y el sistema igual no funciona. El capítulo 1 es gratis.',
-      cta: 'Leer el capítulo 1',
-    },
-    leader: { left: 'VT Security', right: 'del código a producción' },
-    ctas: { youtube: 'Ver el canal', book: 'Leer el capítulo 1' },
-    terminal: {
-      title: 'valen@vt: ~',
-      role: { key: 'Rol', value: 'ciberseguridad + backend' },
-      base: { key: 'Base', value: 'Rosario, AR' },
-      channel: 'Canal',
-      book: { key: 'Libro', value: `${bookStatus.es} · cap. 1 gratis` },
-      comandle: { key: 'comandle', live: (total) => `${total} partidas (en vivo)`, idle: 'el comando del día' },
-      talk: { key: 'Charla', none: 'sin fecha' },
-      community: { key: 'Comunidad', value: (members) => `${members} en Discord` },
-      shell: { key: 'Shell', value: 'español, con voseo' },
-    },
     desktopLabel: 'PROD 1.1',
     youtube: {
       title: 'canal.mp4',
       name: 'VT Security',
       stats: (subs, videos) => `${subs} mil suscriptores · ${videos} videos`,
+      short: (subs, videos) => `${subs} mil · ${videos} videos`,
       body: 'Videos sobre lo que no ves en localhost: redes, permisos, colas, cloud y seguridad.',
       cta: 'Ver el canal',
     },
@@ -157,9 +125,18 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       cta: 'Leer el capítulo',
       coverAlt: 'Tapa del libro No podés defender lo que no entendés: Tux en un bote alumbra un iceberg hecho de capas del sistema.',
     },
+    podcast: {
+      title: 'whoami.mp3',
+      name: 'whoami',
+      short: 'El podcast: la gente detrás de la seguridad.',
+      body: 'El podcast de VT Security. Charlo con la gente detrás de la seguridad: cómo llegó y qué hace todos los días.',
+      cta: 'Escuchar en Spotify',
+      coverAlt: 'El pingüino de whoami, con capucha negra, delante de un disco rojo sobre papel blanco.',
+    },
     comandle: {
       title: 'comandle.sh',
       body: 'Un comando por día, seis intentos. Al final te lo explico.',
+      played: (total) => `${total} partidas`,
       today: 'hoy',
       yesterday: 'ayer',
       total: 'total',
@@ -181,25 +158,29 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     labs: {
       title: 'labs/',
       name: 'Open Security Labs',
+      short: 'Practicá como en producción',
       body: 'Practicás en tu máquina como si fuera producción y te quedás con la evidencia.',
       cta: 'Empezar un lab',
     },
-    blog: { title: 'notas.md', name: 'Blog', body: 'Fallas reales, diagramas y los comandos exactos.', cta: 'Leer' },
+    blog: { title: 'notas.md', name: 'Blog', short: 'Fallas reales y sus comandos', body: 'Fallas reales, diagramas y los comandos exactos.', cta: 'Leer' },
     apuntes: {
       title: 'apuntes.eml',
       name: 'Apuntes',
+      short: 'Un mail cada dos semanas',
       body: 'Un mail cada dos semanas sobre sistemas, código y seguridad.',
       cta: 'Anotarme',
     },
     discord: {
       title: 'dedsec.chat',
       name: 'DedSec',
+      short: (members) => `${members} en Discord`,
       body: (members) => `${members} personas preguntando lo que no sale en los tutoriales.`,
       cta: 'Entrar',
     },
     secretShare: {
       title: 'secreto.bin',
       name: 'VT-SecretShare',
+      short: 'Se borra al leerla',
       body: 'Se cifra en tu navegador y se borra apenas alguien la lee.',
       cta: 'Probarlo',
     },
@@ -215,6 +196,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     stats: [
       { value: (a) => `${a.instagram} mil`, label: 'Seguidores en Instagram.' },
       { value: (a) => `${a.tiktok} mil`, label: 'Seguidores en TikTok.' },
+      { value: (a, number) => `${number.format(a.x)} mil`, label: 'Seguidores en X.' },
       { value: (a, number) => `+${number.format(a.discord)}`, label: 'Personas en Discord.' },
     ],
     footer: { version: 'Versión 1.1', rights: '©2026 Valentín Torassa Colombero.', made: 'Hecho en Rosario.', site: 'valentorassa.com' },
@@ -228,29 +210,12 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       imageAlt: 'A terminal runs neofetch next to Tux, beside windows for the channel, the book and comandle on a yellow background: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'ES', languageLabel: 'Ver en español' },
-    news: {
-      label: 'Book',
-      body: "I wrote about what happens when the dashboard is green and the system still doesn't work. Chapter 1 is free, in Spanish.",
-      cta: 'Read chapter 1',
-    },
-    leader: { left: 'VT Security', right: 'from code to production' },
-    ctas: { youtube: 'Watch the channel', book: 'Read chapter 1' },
-    terminal: {
-      title: 'valen@vt: ~',
-      role: { key: 'Role', value: 'cybersecurity + backend' },
-      base: { key: 'Base', value: 'Rosario, AR' },
-      channel: 'Channel',
-      book: { key: 'Book', value: `${bookStatus.en} · ch. 1 free` },
-      comandle: { key: 'comandle', live: (total) => `${total} games (live)`, idle: 'command of the day' },
-      talk: { key: 'Talk', none: 'none scheduled' },
-      community: { key: 'Community', value: (members) => `${members} on Discord` },
-      shell: { key: 'Shell', value: 'Spanish, Rioplatense' },
-    },
     desktopLabel: 'PROD 1.1',
     youtube: {
       title: 'channel.mp4',
       name: 'VT Security',
       stats: (subs, videos) => `${subs}K subscribers · ${videos} videos`,
+      short: (subs, videos) => `${subs}K · ${videos} videos`,
       body: "Videos on what you don't see on localhost: networking, permissions, queues, cloud and security. In Spanish.",
       cta: 'Watch the channel',
     },
@@ -262,9 +227,18 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       cta: 'Read the chapter',
       coverAlt: 'Cover of the book No podés defender lo que no entendés: Tux in a boat lights up an iceberg made of system layers.',
     },
+    podcast: {
+      title: 'whoami.mp3',
+      name: 'whoami',
+      short: 'The podcast: the people behind security.',
+      body: 'The VT Security podcast. I talk with the people behind security: how they got there and what they do every day. In Spanish.',
+      cta: 'Listen on Spotify',
+      coverAlt: 'The whoami penguin in a black hoodie, in front of a red disc on white paper.',
+    },
     comandle: {
       title: 'comandle.sh',
       body: 'One command a day, six tries. Then I explain it. In Spanish.',
+      played: (total) => `${total} games`,
       today: 'today',
       yesterday: 'yesterday',
       total: 'total',
@@ -286,25 +260,29 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     labs: {
       title: 'labs/',
       name: 'Open Security Labs',
+      short: 'Practice like production',
       body: 'You practice on your own machine as if it were production, and you keep the evidence.',
       cta: 'Start a lab',
     },
-    blog: { title: 'notes.md', name: 'Blog', body: 'Real failures, diagrams and the exact commands. In Spanish.', cta: 'Read' },
+    blog: { title: 'notes.md', name: 'Blog', short: 'Real failures, exact commands', body: 'Real failures, diagrams and the exact commands. In Spanish.', cta: 'Read' },
     apuntes: {
       title: 'apuntes.eml',
       name: 'Apuntes',
+      short: 'An email every two weeks',
       body: 'An email every two weeks on systems, code and security. In Spanish.',
       cta: 'Subscribe',
     },
     discord: {
       title: 'dedsec.chat',
       name: 'DedSec',
+      short: (members) => `${members} on Discord`,
       body: (members) => `${members} people asking what the tutorials leave out.`,
       cta: 'Join',
     },
     secretShare: {
       title: 'secret.bin',
       name: 'VT-SecretShare',
+      short: 'Deleted once it is read',
       body: 'Encrypted in your browser and deleted as soon as someone reads it.',
       cta: 'Try it',
     },
@@ -320,6 +298,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     stats: [
       { value: (a) => `${a.instagram}K`, label: 'Followers on Instagram.' },
       { value: (a) => `${a.tiktok}K`, label: 'Followers on TikTok.' },
+      { value: (a, number) => `${number.format(a.x)}K`, label: 'Followers on X.' },
       { value: (a, number) => `+${number.format(a.discord)}`, label: 'People on Discord.' },
     ],
     footer: { version: 'Version 1.1', rights: '©2026 Valentín Torassa Colombero.', made: 'Made in Rosario.', site: 'valentorassa.com' },
