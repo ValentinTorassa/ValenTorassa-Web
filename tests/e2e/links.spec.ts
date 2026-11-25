@@ -17,12 +17,27 @@ function afterTheLastTalk() {
  * so links into the site are absolute; the preview serves it at /links.
  */
 test.describe('links page', () => {
-  test('opens with the neofetch and carries the bio tag to comandle and the book', async ({ page }) => {
+  test('opens on the links: every link window is in the first screen', async ({ page }) => {
+    await page.goto('/links');
+    const screen = page.viewportSize()!.height;
+    const windows = page.locator('.desk-grid > .win-link');
+    await expect(windows).toHaveCount(10);
+    for (const box of await windows.evaluateAll((all) => all.map((el) => el.getBoundingClientRect().bottom))) {
+      expect(box).toBeLessThanOrEqual(screen);
+    }
+  });
+
+  test('carries the bio tag to comandle and the book', async ({ page }) => {
     await page.goto('/links?ref=ig');
     await expect(page.locator('h1')).toHaveText('Links de Valentín Torassa');
-    await expect(page.locator('.hero-terminal')).toContainText('valen@vt');
     await expect(page.locator('.w-comandle')).toHaveAttribute('href', 'https://comandle.valentorassa.com/?ref=links-ig');
     await expect(page.locator('.w-book')).toHaveAttribute('href', 'https://valentorassa.com/libro?ref=links-ig');
+  });
+
+  test('links the podcast to its show on Spotify', async ({ page }) => {
+    await page.goto('/links');
+    await expect(page.locator('.w-podcast')).toHaveAttribute('href', 'https://open.spotify.com/show/5DNWy8GNFjWiw9amRJMwrl');
+    await expect(page.locator('.w-podcast')).toContainText('whoami');
   });
 
   test('carries the bio tag to Apuntes, whose sign-ups keep any ref', async ({ page }) => {
@@ -31,13 +46,6 @@ test.describe('links page', () => {
     await expect(page.locator('.w-apuntes')).toContainText('Un mail cada dos semanas');
     await page.goto('/links');
     await expect(page.locator('.w-apuntes')).toHaveAttribute('href', 'https://vtsecurity.com.ar/apuntes?ref=links');
-  });
-
-  test('gives the book the same status as /libro', async ({ page }) => {
-    await page.goto('/links');
-    await expect(page.locator('.hero-terminal')).toContainText('Libro: en preparación · cap. 1 gratis');
-    await page.goto('/en/links');
-    await expect(page.locator('.hero-terminal')).toContainText('Book: in progress · ch. 1 free');
   });
 
   test('shows the next talk while one is coming', async ({ page }) => {
@@ -53,7 +61,6 @@ test.describe('links page', () => {
     await page.goto('/links');
     await expect(page.locator('.w-talk')).toHaveAttribute('href', 'https://valentorassa.com/speaker-kit');
     await expect(page.locator('.w-talk')).toContainText('Invitame a tu evento');
-    await expect(page.locator('.hero-terminal')).toContainText('Charla: sin fecha');
     await page.goto('/en/links');
     await expect(page.locator('.w-talk')).toHaveAttribute('href', 'https://valentorassa.com/en/speaker-kit');
     await expect(page.locator('.w-talk')).toContainText('Invite me to your event');
@@ -79,15 +86,18 @@ test.describe('links page', () => {
   test('shows "did not load" instead of zero games when the counter fails', async ({ page }) => {
     await page.route('https://vtsecurity.com.ar/api/comandle', (route) => route.fulfill({ status: 503, body: '' }));
     await page.goto('/links');
-    await expect(page.locator('.counts-off')).toBeVisible();
-    await expect(page.locator('.hero-terminal')).toContainText('el comando del día');
+    // The notice shows where the full window fits; a phone shows the invitation to play in place of the count.
+    await expect(page.locator('.counts-off')).toHaveCount(1);
+    await expect(page.locator('.w-comandle')).toContainText('Jugar el de hoy');
+    await expect(page.locator('.w-comandle')).not.toContainText('0 partidas');
   });
 
   test('closes with the numbers, after the profiles', async ({ page }) => {
     await page.goto('/links');
     await expect(page.locator('main > section').last()).toHaveClass('numbers');
-    await expect(page.locator('.numbers')).toContainText('43 mil suscriptores.');
-    await expect(page.locator('.numbers')).toContainText('600 videos.');
+    await expect(page.locator('.numbers')).toContainText('44 mil suscriptores.');
+    await expect(page.locator('.numbers')).toContainText('620 videos.');
+    await expect(page.locator('.numbers')).toContainText('Seguidores en X.');
   });
 
   test('points search engines at its own host', async ({ page }) => {

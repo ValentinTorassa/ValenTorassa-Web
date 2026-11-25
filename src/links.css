@@ -1,6 +1,8 @@
 /* The links page: a light, loud page on purpose, apart from the site's dark
    terminal look. Big tight grotesk, black-titled retro windows, a yellow dither
-   and a cobalt sky, printed like a riso in yellow, cobalt and pink. */
+   and a cobalt sky, printed like a riso in yellow, cobalt and pink.
+   The links come first: on a phone every link window fits in the first screen
+   (tests/e2e/links.spec.ts checks it), and what explains the page sits below. */
 
 :root {
   --ink: #1e1e1e;
@@ -72,16 +74,18 @@ a:focus-visible {
   letter-spacing: 0.01em;
 }
 
-/* ── top bar: separate chips, like labels stuck on the sky ─────────────── */
+/* ── top bar: chips on a strip of sky, right above the links ────────────── */
 
 .topbar {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 5;
+  position: relative;
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  padding: 0;
+  padding: 0 0 12px;
+  background:
+    radial-gradient(70% 160% at 6% 0%, color-mix(in srgb, var(--cloud-a) 90%, transparent), transparent 70%),
+    radial-gradient(50% 150% at 94% 0%, color-mix(in srgb, var(--cloud-b) 95%, transparent), transparent 70%),
+    radial-gradient(45% 120% at 52% 0%, color-mix(in srgb, var(--cloud-c) 80%, transparent), transparent 75%);
 }
 
 .topbar-right {
@@ -113,135 +117,6 @@ a:focus-visible {
 
 .chip-dark:hover {
   background: var(--accent);
-}
-
-/* ── hero: grainy cobalt and yellow clouds fading into paper ────────────── */
-
-.sky {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 88px var(--gutter) 72px;
-  text-align: center;
-  background:
-    radial-gradient(60% 45% at 8% 8%, color-mix(in srgb, var(--cloud-a) 95%, transparent), transparent 70%),
-    radial-gradient(45% 40% at 92% 10%, color-mix(in srgb, var(--cloud-b) 95%, transparent), transparent 70%),
-    radial-gradient(55% 35% at 55% 0%, color-mix(in srgb, var(--cloud-c) 95%, transparent), transparent 75%),
-    radial-gradient(40% 30% at 30% 30%, color-mix(in srgb, var(--cloud-c) 70%, transparent), transparent 70%),
-    radial-gradient(35% 30% at 78% 32%, color-mix(in srgb, var(--cloud-a) 55%, transparent), transparent 70%),
-    linear-gradient(180deg, transparent 0 38%, var(--paper) 62%);
-}
-
-/* Film grain over the clouds, faded out before the terminal. */
-.sky::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.12 0 0 0 0 0.12 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
-  opacity: 0.35;
-  -webkit-mask-image: linear-gradient(180deg, #000 0 35%, transparent 60%);
-  mask-image: linear-gradient(180deg, #000 0 35%, transparent 60%);
-}
-
-.sky > * {
-  position: relative;
-}
-
-.news {
-  width: min(100%, 380px);
-  text-align: center;
-}
-
-.news-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  background: var(--gray);
-}
-
-.news-cta {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.news-cta:hover {
-  color: var(--accent);
-}
-
-.leader {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  width: min(100%, 420px);
-  margin: 44px 0 18px;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-
-.leader-dots {
-  flex: 1;
-  min-width: 24px;
-  border-bottom: 2px dotted var(--ink);
-  transform: translateY(-4px);
-}
-
-.mega {
-  margin: 0;
-  font-family: var(--display);
-  font-weight: 600;
-  letter-spacing: -0.055em;
-  line-height: 0.88;
-}
-
-.mega-ctas {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  margin-top: 40px;
-}
-
-.mega-ctas a {
-  font-size: clamp(2.8rem, 11vw, 7rem);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 1;
-  text-decoration: none;
-  border-bottom: clamp(3px, 0.5vw, 6px) solid var(--ink);
-  padding-bottom: 2px;
-}
-
-.mega-ctas a:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-/* The book's title in base64, running up the left margin. */
-.margin-code {
-  position: absolute;
-  left: clamp(4px, 6vw, 120px);
-  bottom: 40px;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  color: var(--ink-soft);
-  opacity: 0.8;
-}
-
-.glyph-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 8px 6px;
-  font-family: var(--mono);
-  font-size: 0.75rem;
 }
 
 /* ── windows ─────────────────────────────────────────────────────────────── */
@@ -280,6 +155,7 @@ a:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
   margin: 3px;
   padding: 14px;
   border: 1px solid var(--ink);
@@ -341,7 +217,7 @@ a:focus-visible {
 .desk {
   position: relative;
   margin: 0 var(--gutter);
-  padding: 44px 12px 28px;
+  padding: 34px 10px 16px;
   border: 1px solid var(--ink);
   background-color: var(--desk);
   background-image: radial-gradient(var(--desk-dot) 0.9px, transparent 1.2px);
@@ -375,27 +251,17 @@ a:focus-visible {
   color: var(--bar-text);
 }
 
+/* One featured window across the top, then the rest as small windows two by two. */
 .desk-grid {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 14px;
+  gap: 12px;
 }
 
-.desk-grid {
-  align-items: start;
-}
-
-.desk-grid > .win {
+.desk-grid > .w-featured,
+.desk-grid > .w-podcast {
   grid-column: 1 / -1;
-}
-
-/* On phones the two small toys share the last row. */
-.desk-grid > .win-clock,
-.desk-grid > .win-glider {
-  grid-column: auto;
-  order: 1;
-  align-self: stretch;
 }
 
 .win-clock .win-bar-dots,
@@ -458,10 +324,28 @@ a:focus-visible {
 
 .book-cover {
   flex: 0 0 auto;
-  width: 96px;
+  width: 84px;
 }
 
 .book-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--ink);
+}
+
+.w-podcast .win-body {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.pod-cover {
+  flex: 0 0 auto;
+  width: 56px;
+}
+
+.pod-cover img {
   display: block;
   width: 100%;
   height: auto;
@@ -473,10 +357,6 @@ a:focus-visible {
   flex-direction: column;
   gap: 8px;
   min-width: 0;
-}
-
-.w-book .win-name {
-  font-size: 1.3rem;
 }
 
 .talk-when {
@@ -552,6 +432,14 @@ a:focus-visible {
 .corners i:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
 .corners i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
 
+.mega {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+}
+
 .mega-number {
   color: var(--numbers-big);
   font-size: clamp(3.4rem, 15vw, 10rem);
@@ -597,17 +485,17 @@ a:focus-visible {
   opacity: 0.8;
 }
 
-/* ── profiles: pink band, label + rows ──────────────────────────────────── */
+/* ── profiles: pink band of chips, right under the links ────────────────── */
 
 .profiles {
-  padding: 56px var(--gutter) 64px;
+  padding: 14px var(--gutter) 20px;
   background: var(--band);
   color: var(--band-text);
 }
 
 .profiles-head h2 {
-  margin: 8px 0 32px;
-  font-size: clamp(2.8rem, 11vw, 6rem);
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 600;
   letter-spacing: -0.05em;
   line-height: 0.9;
@@ -620,38 +508,40 @@ a:focus-visible {
 }
 
 .profile-list {
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid currentColor;
 }
 
 .profile-list a {
-  display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  display: inline-flex;
   align-items: baseline;
-  gap: 12px;
-  padding: 14px 4px;
-  border-bottom: 1px solid currentColor;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
   text-decoration: none;
 }
 
 .profile-handle {
-  overflow: hidden;
-  font-size: 1.2rem;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profile-arrow {
-  font-family: var(--mono);
+  color: var(--ink-soft);
+  font-weight: 400;
 }
 
 .profile-list a:hover {
-  background: var(--band-text);
-  color: var(--band);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.profile-list a:hover .profile-handle {
+  color: var(--paper);
 }
 
 /* ── footer ─────────────────────────────────────────────────────────────── */
@@ -685,6 +575,28 @@ a:focus-visible {
   color: var(--ink);
 }
 
+/* The version note with the two toys beside it: Rosario's clock and a glider. */
+.footer-wins {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.links-footer .clock-place {
+  color: inherit;
+  opacity: 0.7;
+}
+
+.links-footer .life span {
+  border-color: var(--paper);
+}
+
+.links-footer .life .alive {
+  border-color: var(--bar-text);
+  background: var(--bar-text);
+}
+
 .footer-site {
   font-size: clamp(1.8rem, 6vw, 3rem);
   font-weight: 600;
@@ -697,8 +609,6 @@ a:focus-visible {
   color: var(--bar-text);
 }
 
-/* ── hero terminal: neofetch instead of a headline ─────────────────────── */
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -708,188 +618,196 @@ a:focus-visible {
   white-space: nowrap;
 }
 
-.hero-terminal {
-  width: min(100%, 760px);
-  margin-top: 36px;
-  text-align: left;
-}
+/* ── phones and tablets: a small window holds a name and one line ───────── */
 
-.hero-terminal .win-body {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.term {
-  display: flex;
-  flex-direction: column;
-  font-family: var(--mono);
-  font-size: clamp(0.85rem, 2.4vw, 1.1rem);
-  line-height: 1.75;
-}
-
-.term b {
-  color: var(--bar-text);
-  font-weight: 500;
-}
-
-.term-line {
-  opacity: 0;
-  animation: term-in 0.12s ease-out forwards;
-  animation-delay: calc(var(--i) * 420ms);
-}
-
-.term-cursor {
-  font-style: normal;
-  color: var(--bar-text);
-  animation: term-blink 1.1s steps(1) infinite;
-}
-
-.neofetch {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 28px;
-  margin: 8px 0;
-}
-
-.neofetch-art {
-  margin: 0;
-  color: var(--bar-text);
-  font: inherit;
-  line-height: 1.25;
-}
-
-.neofetch-info {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.neofetch-info a {
-  color: inherit;
-  text-underline-offset: 3px;
-}
-
-.neofetch-head {
-  color: var(--bar-text);
-  font-weight: 600;
-}
-
-.neofetch-swatches {
-  display: flex;
-  gap: 0;
-  margin-top: 10px;
-}
-
-.neofetch-swatches i {
-  width: 26px;
-  height: 14px;
-}
-
-.neofetch-swatches i:nth-child(1) { background: var(--ink); outline: 1px solid var(--paper); }
-.neofetch-swatches i:nth-child(2) { background: var(--cloud-a); }
-.neofetch-swatches i:nth-child(3) { background: var(--desk); }
-.neofetch-swatches i:nth-child(4) { background: var(--band); }
-.neofetch-swatches i:nth-child(5) { background: var(--cloud-c); }
-.neofetch-swatches i:nth-child(6) { background: var(--paper); }
-
-@keyframes term-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes term-blink {
-  50% { opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .term-line {
-    opacity: 1;
-    animation: none;
+@media (max-width: 1099px) {
+  .t-long {
+    display: none;
   }
 
-  .term-cursor {
-    animation: none;
+  .desk-grid .win-body {
+    gap: 4px;
+    padding: 9px;
+  }
+
+  .desk-grid .win-name {
+    font-size: 1.1rem;
+  }
+
+  .desk-grid .win-text {
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+
+  .desk-grid .w-featured .win-body,
+  .desk-grid .w-podcast .win-body {
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .desk-grid .w-featured .win-name,
+  .desk-grid .w-podcast .win-name {
+    font-size: 1.3rem;
+  }
+
+  .desk-grid .w-featured .win-cta {
+    font-size: 0.8rem;
+  }
+
+  .desk-grid .tiles {
+    gap: 3px;
+  }
+
+  .desk-grid .tile {
+    width: 22px;
+    height: 22px;
+    font-size: 0.8rem;
+  }
+
+  .desk-grid .talk-when {
+    font-size: 1.3rem;
+    line-height: 0.95;
   }
 }
 
-/* ── wider screens: the desktop becomes a collage ───────────────────────── */
+@media (max-width: 719px) {
+  /* The band keeps its label; the big line needs the room the chips use. */
+  .profiles-head h2 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .profile-handle {
+    display: none;
+  }
+}
+
+/* ── wider screens: the book and the podcast share the first row, four small windows per row ── */
 
 @media (min-width: 720px) {
+  .topbar {
+    padding-bottom: 20px;
+  }
+
   .desk {
-    padding: 56px 28px 40px;
+    padding: 44px 24px 24px;
   }
 
   .desk-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 26px 22px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
   }
 
-  .desk-grid > .win {
-    grid-column: span 3;
-  }
-
-  .desk-grid > .win-clock,
-  .desk-grid > .win-glider {
-    grid-column: span 2;
-    order: 0;
-    align-self: start;
-  }
-
-  .desk-grid > .w-labs,
-  .desk-grid > .w-blog,
-  .desk-grid > .w-discord,
-  .desk-grid > .w-secret {
+  .desk-grid > .w-featured,
+  .desk-grid > .w-podcast {
     grid-column: span 2;
   }
 
-  /* Six small windows fill two rows of three; Apuntes takes a row of its own between them. */
-  .desk-grid > .w-apuntes {
-    grid-column: 1 / -1;
+  .pod-cover {
+    width: 84px;
   }
 
-  .book-cover {
-    width: 120px;
+  .profiles {
+    padding: 40px var(--gutter) 48px;
+  }
+
+  .profile-list {
+    gap: 10px;
+    margin-top: 20px;
   }
 
   .stat-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
+/* ── computers: the two big windows carry their full text; the small ones stay short,
+      so the desk reads as a few labels on yellow and not as a wall of paragraphs ── */
+
 @media (min-width: 1100px) {
+  .w-featured .t-short,
+  .w-podcast .t-short,
+  .w-comandle .t-short {
+    display: none;
+  }
+
+  /* In a small window the one line stands in for the paragraph and the tag. */
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-text.t-long,
+  .desk-grid > .win:not(.w-featured, .w-podcast) .tag.t-long {
+    display: none;
+  }
+
   .desk {
-    padding: 64px 48px 56px;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: 60px 48px 52px;
   }
 
   .desk-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 30px 26px;
+    gap: 32px 28px;
   }
 
-  /* Placed by row and column: the source order is the phone order. */
-  .desk-grid > .w-youtube { grid-area: 1 / 1 / auto / span 4; }
-  .desk-grid > .w-book { grid-area: 1 / 5 / auto / span 5; margin-top: 40px; }
-  .desk-grid > .win-clock { grid-area: 1 / 10 / auto / span 3; }
-  .desk-grid > .w-comandle { grid-area: 2 / 1 / auto / span 5; }
-  .desk-grid > .w-talk { grid-area: 2 / 6 / auto / span 4; margin-top: 10px; }
-  .desk-grid > .win-glider { grid-area: 2 / 10 / auto / span 2; margin-top: 30px; }
-  .desk-grid > .w-labs { grid-area: 3 / 1 / auto / span 4; }
-  .desk-grid > .w-blog { grid-area: 3 / 5 / auto / span 4; margin-top: 24px; }
-  .desk-grid > .w-apuntes { grid-area: 3 / 9 / auto / span 4; }
-  .desk-grid > .w-discord { grid-area: 4 / 2 / auto / span 4; }
-  .desk-grid > .w-secret { grid-area: 4 / 7 / auto / span 4; margin-top: 24px; }
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-body {
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-name {
+    font-size: 1.35rem;
+  }
+
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-bar-dots {
+    display: none;
+  }
+
+  /* The talk's title is a sentence: set as text, under the date. */
+  .desk-grid > .w-talk:not(.w-invite) .win-name.t-long {
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .w-featured .win-body,
+  .w-podcast .win-body {
+    align-items: stretch;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .book-cover,
+  .pod-cover {
+    width: 150px;
+  }
+
+  .w-featured .win-name,
+  .w-podcast .win-name {
+    font-size: 1.9rem;
+  }
 
   .numbers {
     padding: 96px var(--gutter) 104px;
   }
 
+  .stat-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .profiles {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    align-items: end;
     gap: 48px;
-    padding-top: 80px;
-    padding-bottom: 88px;
   }
+
+  .profile-list {
+    margin-top: 0;
+  }
+
 }
 
 @media (max-width: 420px) {
@@ -897,14 +815,6 @@ a:focus-visible {
     height: 32px;
     padding: 0 8px;
     font-size: 0.95rem;
-  }
-
-  .margin-code {
-    display: none;
-  }
-
-  .profile-list a {
-    grid-template-columns: 5.6rem minmax(0, 1fr) auto;
   }
 }
 
