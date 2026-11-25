@@ -70,9 +70,11 @@ const firewall = 'https://github.com/ValentinTorassa/VT-Agent-Firewall';
 
 export const talkMedia: Record<string, TalkMedia> = {
   'convergente-2026': {
+    deck: `${base('convergente-2026')}/slides`,
     icon: 'branch',
     still: `${base('convergente-2026')}/still.webp`,
     thumb: `${base('convergente-2026')}/thumb.webp`,
+    slides: 16,
   },
   'rossec-2026': {
     deck: `${base('rossec-2026')}/slides`,
