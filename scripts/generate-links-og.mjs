@@ -8,7 +8,7 @@ import path from 'node:path';
 import { chromium } from '@playwright/test';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const out = path.join(root, 'public', 'og-links-2026-10.jpg');
+const out = path.join(root, 'public', 'og-links-2026-11.jpg');
 
 const browser = await chromium.launch(
   process.env.PLAYWRIGHT_CHROME_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROME_PATH } : {},

@@ -105,10 +105,10 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     seo: {
       description:
         'Todo lo de Valentín Torassa en un solo lugar: el canal VT Security, su libro, comandle, la próxima charla, Open Security Labs, el blog y sus redes.',
-      imageAlt: 'Una terminal corre neofetch junto a Tux, al lado de ventanas del canal, el libro y comandle sobre un fondo amarillo: links.vtsecurity.com.ar.',
+      imageAlt: 'Ventanas del libro, el podcast whoami, el canal, comandle, los labs y el blog sobre un tablero amarillo: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'EN', languageLabel: 'Ver en inglés' },
-    desktopLabel: 'PROD 1.1',
+    desktopLabel: 'PROD 1.2',
     youtube: {
       title: 'canal.mp4',
       name: 'VT Security',
@@ -199,7 +199,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       { value: (a, number) => `${number.format(a.x)} mil`, label: 'Seguidores en X.' },
       { value: (a, number) => `+${number.format(a.discord)}`, label: 'Personas en Discord.' },
     ],
-    footer: { version: 'Versión 1.1', rights: '©2026 Valentín Torassa Colombero.', made: 'Hecho en Rosario.', site: 'valentorassa.com' },
+    footer: { version: 'Versión 1.2', rights: '©2026 Valentín Torassa Colombero.', made: 'Hecho en Rosario.', site: 'valentorassa.com' },
   },
   en: {
     documentTitle: 'Links · Valentín Torassa',
@@ -207,10 +207,10 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     seo: {
       description:
         'Everything from Valentín Torassa in one place: the VT Security channel, his book, comandle, the next talk, Open Security Labs, the blog and his profiles.',
-      imageAlt: 'A terminal runs neofetch next to Tux, beside windows for the channel, the book and comandle on a yellow background: links.vtsecurity.com.ar.',
+      imageAlt: 'Windows for the book, the whoami podcast, the channel, comandle, the labs and the blog on a yellow board: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'ES', languageLabel: 'Ver en español' },
-    desktopLabel: 'PROD 1.1',
+    desktopLabel: 'PROD 1.2',
     youtube: {
       title: 'channel.mp4',
       name: 'VT Security',
@@ -301,6 +301,6 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       { value: (a, number) => `${number.format(a.x)}K`, label: 'Followers on X.' },
       { value: (a, number) => `+${number.format(a.discord)}`, label: 'People on Discord.' },
     ],
-    footer: { version: 'Version 1.1', rights: '©2026 Valentín Torassa Colombero.', made: 'Made in Rosario.', site: 'valentorassa.com' },
+    footer: { version: 'Version 1.2', rights: '©2026 Valentín Torassa Colombero.', made: 'Made in Rosario.', site: 'valentorassa.com' },
   },
 };
