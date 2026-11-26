@@ -68,6 +68,26 @@ const cec = 'CEC Buenos Aires';
 
 export const talks: Talk[] = [
   {
+    id: 'libro-tecnoteca-2026',
+    date: '2026-12-16',
+    time: '16:00',
+    endTime: '17:30',
+    event: 'Tecnoteca Rosario',
+    title: {
+      es: 'Presentación del libro «No podés defender lo que no entendés»',
+      en: 'Book presentation: «No podés defender lo que no entendés»',
+    },
+    place: { es: 'LAB 2', en: 'LAB 2' },
+    city: 'Rosario',
+    mode: 'presencial',
+    status: 'confirmed',
+    url: 'https://luma.com/qvbvetbz',
+    note: {
+      es: 'Cómo una charla en la conferencia de Debian terminó en un libro, con un ejemplo técnico explicado para cualquiera y preguntas al final. Entrada gratuita, 60 lugares con inscripción.',
+      en: 'How a talk at the Debian conference became a book, with one technical example explained for anyone and questions at the end. Free entry, 60 places, registration required.',
+    },
+  },
+  {
     id: 'convergente-2026',
     date: '2026-11-26',
     event: 'Convergente 2026',
