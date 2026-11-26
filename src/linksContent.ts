@@ -39,16 +39,17 @@ export const secretShareUrl = 'https://secretshare.valentorassa.com/';
 export const apuntesUrl = 'https://vtsecurity.com.ar/apuntes';
 
 /**
- * Audience counts shown as round numbers. They come from the daily audience
+ * Audience counts come from the daily audience
  * capture (VT-Content-Data-Lab, audience_daily_<date>.json); update them by
  * hand with `asOf`. YouTube's API already rounds subscribers to 3 digits.
  */
 export const audience = {
-  asOf: '2026-11-25',
+  asOf: '2026-11-26',
   youtube: 44,
-  youtubeVideos: 620,
+  youtubeVideos: 623,
   instagram: 16,
-  tiktok: 12,
+  tiktok: 12_317,
+  facebook: 9_116,
   /** In thousands, one decimal, rounded down. */
   x: 6.9,
   discord: 2300,
@@ -195,7 +196,8 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     },
     stats: [
       { value: (a) => `${a.instagram} mil`, label: 'Seguidores en Instagram.' },
-      { value: (a) => `${a.tiktok} mil`, label: 'Seguidores en TikTok.' },
+      { value: (a, number) => number.format(a.tiktok), label: 'Seguidores en TikTok.' },
+      { value: (a, number) => number.format(a.facebook), label: 'Seguidores en Facebook.' },
       { value: (a, number) => `${number.format(a.x)} mil`, label: 'Seguidores en X.' },
       { value: (a, number) => `+${number.format(a.discord)}`, label: 'Personas en Discord.' },
     ],
@@ -297,7 +299,8 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     },
     stats: [
       { value: (a) => `${a.instagram}K`, label: 'Followers on Instagram.' },
-      { value: (a) => `${a.tiktok}K`, label: 'Followers on TikTok.' },
+      { value: (a, number) => number.format(a.tiktok), label: 'Followers on TikTok.' },
+      { value: (a, number) => number.format(a.facebook), label: 'Followers on Facebook.' },
       { value: (a, number) => `${number.format(a.x)}K`, label: 'Followers on X.' },
       { value: (a, number) => `+${number.format(a.discord)}`, label: 'People on Discord.' },
     ],
