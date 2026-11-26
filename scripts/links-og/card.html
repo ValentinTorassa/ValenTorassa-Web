@@ -19,13 +19,18 @@
       .topbar { position: absolute; left: 0; right: 0; top: 0; background: none; }
       .chip { height: 40px; font-size: 1.15rem; }
       .card .desk { position: absolute; left: 48px; top: 96px; width: 1104px; max-width: none; margin: 0; padding: 44px 24px 24px; box-sizing: border-box; }
-      .card .desk-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-      .card .desk-grid > .w-featured, .card .desk-grid > .w-podcast { grid-column: span 2; }
-      .card .w-featured .win-body, .card .w-podcast .win-body { flex-direction: row; align-items: center; gap: 16px; padding: 14px 16px; }
-      .card .book-cover { width: 92px; flex: none; }
-      .card .pod-cover { width: 122px; flex: none; }
+      .card .desk-grid { grid-template-columns: 270px minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+      .card .desk-grid > .w-featured, .card .desk-grid > .w-podcast { grid-column: auto; }
+      .card .w-featured .win-body, .card .w-podcast .win-body { height: 100%; box-sizing: border-box; }
+      .card .w-me { grid-row: span 2; }
+      .card .w-me .win-body { padding: 12px; gap: 10px; height: 100%; box-sizing: border-box; }
+      .card .w-me img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: 50% 30%; border: 1px solid var(--ink); }
+      .card .w-me .win-name { font-size: 1.45rem; }
+            .card .w-featured .win-body, .card .w-podcast .win-body { flex-direction: row; align-items: center; gap: 16px; padding: 14px 16px; }
+      .card .book-cover { width: 84px; flex: none; }
+      .card .pod-cover { width: 112px; flex: none; }
       .card .book-copy { gap: 8px; }
-      .card .w-featured .win-name { font-size: 1.5rem; line-height: 1.1; }
+      .card .w-featured .win-name { font-size: 1.3rem; line-height: 1.1; }
       .card .w-podcast .win-name { font-size: 2rem; }
       .card .win-text { font-size: 1.05rem; line-height: 1.3; }
       .card .small .win-body { padding: 14px 16px; gap: 8px; min-height: 96px; box-sizing: border-box; }
@@ -53,6 +58,14 @@
       <section class="desk">
         <span class="desk-label pixel-text">PROD 1.2</span>
         <div class="desk-grid">
+          <div class="win w-me">
+            <span class="win-bar"><span>valen.jpg</span><span class="win-bar-dots">▪▪▪</span></span>
+            <span class="win-body">
+              <img src="../../public/valentin-torassa-colombero.jpg" alt="" />
+              <span class="win-name">Valentín Torassa</span>
+              <span class="win-text">Ciberseguridad + backend</span>
+            </span>
+          </div>
           <div class="win w-book w-featured">
             <span class="win-bar"><span>libro.pdf</span><span class="win-bar-dots">▪▪▪</span></span>
             <span class="win-body">
@@ -87,20 +100,6 @@
                 <span class="tile tile-hit">c</span><span class="tile tile-near">h</span><span class="tile">m</span><span class="tile tile-hit">o</span><span class="tile tile-hit">d</span>
               </span>
               <span class="win-text">El comando del día</span>
-            </span>
-          </div>
-          <div class="win small w-labs">
-            <span class="win-bar"><span>labs/</span></span>
-            <span class="win-body">
-              <span class="win-name">Open Security Labs</span>
-              <span class="win-text">Practicá como en producción</span>
-            </span>
-          </div>
-          <div class="win small w-blog">
-            <span class="win-bar"><span>notas.md</span></span>
-            <span class="win-body">
-              <span class="win-name">Blog</span>
-              <span class="win-text">Fallas reales y sus comandos</span>
             </span>
           </div>
         </div>

@@ -105,7 +105,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     seo: {
       description:
         'Todo lo de Valentín Torassa en un solo lugar: el canal VT Security, su libro, comandle, la próxima charla, Open Security Labs, el blog y sus redes.',
-      imageAlt: 'Ventanas del libro, el podcast whoami, el canal, comandle, los labs y el blog sobre un tablero amarillo: links.vtsecurity.com.ar.',
+      imageAlt: 'Retrato de Valentín Torassa junto a ventanas del libro, el podcast whoami, el canal y comandle sobre un tablero amarillo: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'EN', languageLabel: 'Ver en inglés' },
     desktopLabel: 'PROD 1.2',
@@ -207,7 +207,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
     seo: {
       description:
         'Everything from Valentín Torassa in one place: the VT Security channel, his book, comandle, the next talk, Open Security Labs, the blog and his profiles.',
-      imageAlt: 'Windows for the book, the whoami podcast, the channel, comandle, the labs and the blog on a yellow board: links.vtsecurity.com.ar.',
+      imageAlt: 'A portrait of Valentín Torassa beside windows for the book, the whoami podcast, the channel and comandle on a yellow board: links.vtsecurity.com.ar.',
     },
     topBar: { home: 'Valentín Torassa', language: 'ES', languageLabel: 'Ver en español' },
     desktopLabel: 'PROD 1.2',
