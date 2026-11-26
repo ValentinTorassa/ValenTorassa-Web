@@ -8,44 +8,40 @@
     <link rel="stylesheet" href="../../src/links.css" />
     <style>
       html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
-      .card { position: relative; width: 1200px; height: 630px; overflow: hidden; }
-      .card .sky {
-        position: absolute; inset: 0; padding: 0; display: block;
+      .card { position: relative; width: 1200px; height: 630px; overflow: hidden; background: var(--paper); }
+      .card::before {
+        content: ''; position: absolute; inset: 0;
         background:
-          radial-gradient(60% 55% at 6% 6%, color-mix(in srgb, var(--cloud-a) 95%, transparent), transparent 70%),
-          radial-gradient(45% 50% at 96% 8%, color-mix(in srgb, var(--cloud-b) 95%, transparent), transparent 70%),
-          radial-gradient(50% 40% at 50% 0%, color-mix(in srgb, var(--cloud-c) 95%, transparent), transparent 75%),
-          radial-gradient(35% 35% at 30% 45%, color-mix(in srgb, var(--cloud-c) 70%, transparent), transparent 70%),
-          radial-gradient(40% 40% at 80% 60%, color-mix(in srgb, var(--cloud-a) 45%, transparent), transparent 70%),
-          linear-gradient(180deg, transparent 0 55%, var(--paper) 100%);
+          radial-gradient(60% 55% at 6% 0%, color-mix(in srgb, var(--cloud-a) 90%, transparent), transparent 70%),
+          radial-gradient(45% 50% at 96% 4%, color-mix(in srgb, var(--cloud-b) 95%, transparent), transparent 70%),
+          radial-gradient(50% 40% at 50% 0%, color-mix(in srgb, var(--cloud-c) 95%, transparent), transparent 75%);
       }
-      .card .sky::before { -webkit-mask-image: none; mask-image: none; opacity: 0.3; }
-      .topbar { position: absolute; }
+      .topbar { position: absolute; left: 0; right: 0; top: 0; background: none; }
       .chip { height: 40px; font-size: 1.15rem; }
-      .term-line, .term-cursor { opacity: 1; animation: none; }
-      .card-term { position: absolute; left: 48px; top: 92px; width: 600px; }
-      .card-term .term { font-size: 17px; line-height: 1.6; }
-      .card-term .neofetch { gap: 8px 26px; margin: 6px 0 2px; }
-      .card .desk { position: absolute; left: 688px; top: 92px; width: 466px; height: 404px; margin: 0; padding: 40px 18px 18px; }
-      .desk-stack { position: relative; display: flex; flex-direction: column; gap: 16px; }
-      .desk-stack .win-body { padding: 10px 12px; gap: 6px; }
-      .desk-stack .win-name { font-size: 1.45rem; }
-      .card .w-book .win-body { flex-direction: row; gap: 12px; }
-      .card .book-cover { width: 62px; }
-      .card .w-book .win-name { font-size: 1.1rem; }
-      .card .tile { width: 32px; height: 32px; font-size: 1rem; }
+      .card .desk { position: absolute; left: 48px; top: 96px; width: 1104px; max-width: none; margin: 0; padding: 44px 24px 24px; box-sizing: border-box; }
+      .card .desk-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+      .card .desk-grid > .w-featured, .card .desk-grid > .w-podcast { grid-column: span 2; }
+      .card .w-featured .win-body, .card .w-podcast .win-body { flex-direction: row; align-items: center; gap: 16px; padding: 14px 16px; }
+      .card .book-cover { width: 92px; flex: none; }
+      .card .pod-cover { width: 122px; flex: none; }
+      .card .book-copy { gap: 8px; }
+      .card .w-featured .win-name { font-size: 1.5rem; line-height: 1.1; }
+      .card .w-podcast .win-name { font-size: 2rem; }
+      .card .win-text { font-size: 1.05rem; line-height: 1.3; }
+      .card .small .win-body { padding: 14px 16px; gap: 8px; min-height: 96px; box-sizing: border-box; }
+      .card .small .win-name { font-size: 1.55rem; }
+      .card .small .tag, .card .small .win-text { font-size: 1rem; }
+      .card .tile { width: 34px; height: 34px; font-size: 1.05rem; }
       .card-foot {
-        position: absolute; left: 48px; right: 48px; bottom: 34px;
-        display: flex; align-items: baseline; gap: 10px;
-        font-size: 1.15rem; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap;
+        position: absolute; left: 48px; right: 48px; bottom: 30px; margin: 0;
+        display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+        font-size: 1.2rem; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap;
       }
       .card-foot b { font-size: 2.6rem; font-weight: 600; letter-spacing: -0.05em; }
     </style>
   </head>
   <body>
     <div class="links-page card">
-      <div class="sky"></div>
-
       <header class="topbar">
         <span class="chip">Valentín Torassa</span>
         <span class="topbar-right">
@@ -54,47 +50,10 @@
         </span>
       </header>
 
-      <div class="win hero-terminal card-term">
-        <span class="win-bar"><span>valen@vt: ~</span><span class="win-bar-dots">▪▪▪</span></span>
-        <span class="win-body">
-          <span class="term">
-            <span class="term-line"><b>$</b> neofetch</span>
-            <span class="term-line neofetch">
-              <pre class="neofetch-art">    .--.
-   |o_o |
-   |:_/ |
-  //   \ \
- (|     | )
-/'\_   _/'\
-\___)=(___/</pre>
-              <span class="neofetch-info">
-                <span class="neofetch-head">valen@vt</span>
-                <span>--------</span>
-                <span><b>Rol:</b> ciberseguridad + backend</span>
-                <span><b>Base:</b> Rosario, AR</span>
-                <span><b>Canal:</b> 42 mil suscriptores · 579 videos</span>
-                <span><b>Libro:</b> en beta · cap. 1 gratis</span>
-                <span><b>comandle:</b> el comando del día</span>
-                <span><b>Comunidad:</b> +2.200 en Discord</span>
-                <span class="neofetch-swatches"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-              </span>
-            </span>
-            <span class="term-line"><b>$</b> <i class="term-cursor">▌</i></span>
-          </span>
-        </span>
-      </div>
-
       <section class="desk">
-        <span class="desk-label pixel-text">PROD 1.1</span>
-        <div class="desk-stack">
-          <div class="win w-youtube">
-            <span class="win-bar"><span>canal.mp4</span><span class="win-bar-dots">▪▪▪</span></span>
-            <span class="win-body">
-              <span class="win-name">VT Security</span>
-              <span class="tag">42 mil suscriptores · 579 videos</span>
-            </span>
-          </div>
-          <div class="win w-book">
+        <span class="desk-label pixel-text">PROD 1.2</span>
+        <div class="desk-grid">
+          <div class="win w-book w-featured">
             <span class="win-bar"><span>libro.pdf</span><span class="win-bar-dots">▪▪▪</span></span>
             <span class="win-body">
               <span class="book-cover"><img src="../../src/assets/libro-cover-360.webp" alt="" /></span>
@@ -104,12 +63,44 @@
               </span>
             </span>
           </div>
-          <div class="win w-comandle">
-            <span class="win-bar"><span>comandle.sh</span><span class="win-bar-dots">▪▪▪</span></span>
+          <div class="win w-podcast">
+            <span class="win-bar"><span>whoami.mp3</span><span class="win-bar-dots">▪▪▪</span></span>
+            <span class="win-body">
+              <span class="pod-cover"><img src="../../src/assets/whoami-cover-360.webp" alt="" /></span>
+              <span class="book-copy">
+                <span class="win-name">whoami</span>
+                <span class="win-text">El podcast: la gente detrás de la seguridad.</span>
+              </span>
+            </span>
+          </div>
+          <div class="win small w-youtube">
+            <span class="win-bar"><span>canal.mp4</span></span>
+            <span class="win-body">
+              <span class="win-name">VT Security</span>
+              <span class="tag">44 mil · 620 videos</span>
+            </span>
+          </div>
+          <div class="win small w-comandle">
+            <span class="win-bar"><span>comandle.sh</span></span>
             <span class="win-body">
               <span class="tiles">
                 <span class="tile tile-hit">c</span><span class="tile tile-near">h</span><span class="tile">m</span><span class="tile tile-hit">o</span><span class="tile tile-hit">d</span>
               </span>
+              <span class="win-text">El comando del día</span>
+            </span>
+          </div>
+          <div class="win small w-labs">
+            <span class="win-bar"><span>labs/</span></span>
+            <span class="win-body">
+              <span class="win-name">Open Security Labs</span>
+              <span class="win-text">Practicá como en producción</span>
+            </span>
+          </div>
+          <div class="win small w-blog">
+            <span class="win-bar"><span>notas.md</span></span>
+            <span class="win-body">
+              <span class="win-name">Blog</span>
+              <span class="win-text">Fallas reales y sus comandos</span>
             </span>
           </div>
         </div>
@@ -117,7 +108,6 @@
 
       <p class="card-foot">
         <b>links.vtsecurity.com.ar</b>
-        <span class="leader-dots"></span>
         <span>del código a producción</span>
       </p>
     </div>

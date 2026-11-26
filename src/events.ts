@@ -70,6 +70,7 @@ export const talks: Talk[] = [
   {
     id: 'convergente-2026',
     date: '2026-11-26',
+    slidesReleaseDate: '2026-11-25',
     event: 'Convergente 2026',
     track: 'Congreso de Ciencia de Datos e IA',
     title: {

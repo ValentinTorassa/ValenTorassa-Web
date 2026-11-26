@@ -104,8 +104,8 @@ test.describe('links page', () => {
     await page.goto('/en/links');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://links.vtsecurity.com.ar/en');
     await expect(page.locator('link[rel="alternate"][hreflang="es"]')).toHaveAttribute('href', 'https://links.vtsecurity.com.ar/');
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://valentorassa.com/og-links-2026-10.jpg');
-    const card = await page.request.get('/og-links-2026-10.jpg');
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://valentorassa.com/og-links-2026-11.jpg');
+    const card = await page.request.get('/og-links-2026-11.jpg');
     expect(card.ok()).toBe(true);
   });
 
