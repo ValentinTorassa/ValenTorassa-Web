@@ -725,8 +725,13 @@ a:focus-visible {
   }
 }
 
-/* ── computers: the two big windows carry their full text; the small ones stay short,
-      so the desk reads as a few labels on yellow and not as a wall of paragraphs ── */
+/* Keep the short captions while the four-column windows are still narrow. */
+@media (1100px <= width < 1600px) {
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-text.t-long,
+  .desk-grid > .win:not(.w-featured, .w-podcast) .tag.t-long {
+    display: none;
+  }
+}
 
 @media (min-width: 1100px) {
   .w-featured .t-short,
@@ -735,14 +740,8 @@ a:focus-visible {
     display: none;
   }
 
-  /* In a small window the one line stands in for the paragraph and the tag. */
-  .desk-grid > .win:not(.w-featured, .w-podcast) .win-text.t-long,
-  .desk-grid > .win:not(.w-featured, .w-podcast) .tag.t-long {
-    display: none;
-  }
-
   .desk {
-    max-width: 1200px;
+    max-width: clamp(1200px, calc(100% - 10.5rem), 120rem);
     margin-inline: auto;
     padding: 60px 48px 52px;
   }
@@ -757,7 +756,7 @@ a:focus-visible {
   }
 
   .desk-grid > .win:not(.w-featured, .w-podcast) .win-name {
-    font-size: 1.35rem;
+    font-size: clamp(1.35rem, 1.55vw, 1.85rem);
   }
 
   .desk-grid > .win:not(.w-featured, .w-podcast) .win-bar-dots {
@@ -781,12 +780,17 @@ a:focus-visible {
 
   .book-cover,
   .pod-cover {
-    width: 150px;
+    width: clamp(150px, min(10.5vw, 20vh), 210px);
   }
 
   .w-featured .win-name,
   .w-podcast .win-name {
-    font-size: 1.9rem;
+    font-size: clamp(1.9rem, 2.15vw, 2.65rem);
+  }
+
+  .w-featured .win-text,
+  .w-podcast .win-text {
+    font-size: clamp(1rem, 1.15vw, 1.375rem);
   }
 
   .numbers {
@@ -812,6 +816,30 @@ a:focus-visible {
     margin-top: 0;
   }
 
+}
+
+@media (min-width: 1600px) {
+  .w-featured .win-name {
+    text-wrap: balance;
+  }
+
+  .desk-grid .t-short {
+    display: none;
+  }
+
+  .desk-grid .win-cta {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1600px) and (max-height: 900px) {
+  .desk {
+    padding-block: 34px 28px;
+  }
+
+  .desk-grid {
+    row-gap: 16px;
+  }
 }
 
 @media (max-width: 420px) {

@@ -241,7 +241,7 @@ function LinksPage({ language }: { language: Language }) {
             {/* The featured window: the one thing to open this week. */}
             <Window title={copy.book.title} href={bookHref} external={false} className="w-book w-featured">
               <picture className="book-cover">
-                <source type="image/webp" srcSet={`${coverWebp360} 360w, ${coverWebp540} 540w`} sizes="(min-width: 1100px) 150px, 84px" />
+                <source type="image/webp" srcSet={`${coverWebp360} 360w, ${coverWebp540} 540w`} sizes="(min-width: 1100px) clamp(150px, min(10.5vw, 20vh), 210px), 84px" />
                 <img src={coverFallback} alt={copy.book.coverAlt} width={540} height={720} decoding="async" />
               </picture>
               <span className="book-copy">

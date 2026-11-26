@@ -27,6 +27,24 @@ test.describe('links page', () => {
     }
   });
 
+  test('uses the width of a full-HD monitor and fits all ten links above the fold', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'Desktop monitor sizes');
+    await page.setViewportSize({ width: 1366, height: 648 });
+    await page.goto('/links');
+    const board = page.locator('.desk');
+    await expect(board).toHaveCSS('width', '1200px');
+
+    await page.setViewportSize({ width: 1920, height: 955 });
+    const bounds = await board.boundingBox();
+    expect(bounds!.width).toBeGreaterThan(1920 * 0.85);
+    const windows = board.locator('.win-link');
+    await expect(windows).toHaveCount(10);
+    for (const bottom of await windows.evaluateAll((cards) => cards.map((card) => card.getBoundingClientRect().bottom))) {
+      expect(bottom).toBeLessThanOrEqual(955);
+    }
+    await expect(board.locator('.w-labs .t-long.win-text')).toBeVisible();
+  });
+
   test('carries the bio tag to comandle and the book', async ({ page }) => {
     await page.goto('/links?ref=ig');
     await expect(page.locator('h1')).toHaveText('Links de Valentín Torassa');
