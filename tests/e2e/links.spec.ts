@@ -96,8 +96,14 @@ test.describe('links page', () => {
     await page.goto('/links');
     await expect(page.locator('main > section').last()).toHaveClass('numbers');
     await expect(page.locator('.numbers')).toContainText('44 mil suscriptores.');
-    await expect(page.locator('.numbers')).toContainText('620 videos.');
+    await expect(page.locator('.numbers')).toContainText('623 videos.');
     await expect(page.locator('.numbers')).toContainText('Seguidores en X.');
+    const stats = page.locator('.numbers li');
+    await expect(stats.filter({ hasText: 'Seguidores en TikTok.' }).locator('.stat-value')).toHaveText('12.317');
+    await expect(stats.filter({ hasText: 'Seguidores en Facebook.' }).locator('.stat-value')).toHaveText('9.116');
+    await page.goto('/en/links');
+    await expect(stats.filter({ hasText: 'Followers on TikTok.' }).locator('.stat-value')).toHaveText('12,317');
+    await expect(stats.filter({ hasText: 'Followers on Facebook.' }).locator('.stat-value')).toHaveText('9,116');
   });
 
   test('points search engines at its own host', async ({ page }) => {
