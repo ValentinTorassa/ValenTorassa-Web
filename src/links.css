@@ -96,9 +96,9 @@ a:focus-visible {
 
 /* ── sky: cobalt at the top edge, lighter behind the board ──────────────────
    The top row is one solid color, the canvas color above the page, so pulling
-   the page down shows more sky instead of a cut. It fades out behind the
-   board, where the margins show a pale cloud on the left and a yellow glow on
-   the right, low enough to stay clear of the cobalt. */
+   the page down shows more sky instead of a cut. The blue is short: it fades
+   out within about 150px, behind the top of the board, and leaves the margins
+   to a small pale cloud on the left and a yellow glow on the right. */
 .links-page::before {
   content: '';
   position: absolute;
@@ -108,8 +108,8 @@ a:focus-visible {
   pointer-events: none;
   background:
     radial-gradient(42% 46% at 100% 40%, color-mix(in srgb, var(--cloud-b) 92%, transparent), transparent 72%),
-    radial-gradient(38% 40% at 0% 36%, color-mix(in srgb, var(--cloud-c) 85%, transparent), transparent 72%),
-    linear-gradient(to bottom, var(--sky) 0, color-mix(in oklab, var(--sky) 40%, var(--paper)) 13%, transparent 44%);
+    radial-gradient(38% 30% at 0% 20%, color-mix(in srgb, var(--cloud-c) 85%, transparent), transparent 72%),
+    linear-gradient(to bottom, var(--sky) 0, color-mix(in oklab, var(--sky) 40%, var(--paper)) 8%, transparent 28%);
 }
 
 .pixel-text {
@@ -876,56 +876,13 @@ a:focus-visible {
   }
 }
 
-/* Full HD (1920x955 in Chrome) and other wide screens up to 959px tall. */
-@media (min-width: 1600px) and (max-height: 959px) {
+@media (min-width: 1600px) and (max-height: 900px) {
   .desk {
     padding-block: 34px 28px;
   }
 
   .desk-grid {
     row-gap: 16px;
-  }
-}
-
-/* Laptops (a 13" MacBook Air shows 1470x762): the whole yellow board fits the
-   first screen, so its padding, row gaps, covers and window padding shrink with
-   the height. Taller screens keep the roomier layout above. */
-@media (min-width: 1100px) and (max-height: 879px) {
-  .topbar {
-    padding-bottom: 12px;
-  }
-
-  .desk {
-    padding-block: 34px 24px;
-  }
-
-  .desk-grid {
-    row-gap: 16px;
-  }
-
-  .w-featured .win-body,
-  .w-podcast .win-body {
-    gap: 16px;
-    padding: 14px 16px;
-  }
-
-  .book-cover,
-  .pod-cover {
-    width: clamp(96px, 16vh, 180px);
-  }
-
-  .desk-grid > .win:not(.w-featured, .w-podcast) .win-body {
-    gap: 6px;
-    padding: 12px 14px;
-  }
-}
-
-/* Short laptop screens (1366x768 shows about 1366x648): the windows keep their
-   name and their link, and drop the line in between, so the board still fits. */
-@media (min-width: 1100px) and (max-height: 720px) {
-  .w-featured .win-text,
-  .desk-grid > .win:not(.w-featured, .w-podcast) .t-short {
-    display: none;
   }
 }
 
