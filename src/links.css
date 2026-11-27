@@ -15,8 +15,9 @@
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --pixel: 'VT323', 'JetBrains Mono', ui-monospace, monospace;
   --gutter: clamp(16px, 4vw, 48px);
-  /* The top edge of the sky, the same cobalt as the theme-color in links.html. */
-  --sky: #2f4bff;
+  /* The top edge of the sky: a lighter tint of the cobalt ink, the same color as
+     the theme-color in links.html. */
+  --sky: #5078ff;
   color: var(--ink);
   /* The canvas is what a browser shows past the page's edges when it is pulled
      (rubber-band scrolling on a trackpad or an iPhone): sky above the page, and
@@ -95,9 +96,9 @@ a:focus-visible {
 
 /* ── sky: cobalt at the top edge, lighter behind the board ──────────────────
    The top row is one solid color, the canvas color above the page, so pulling
-   the page down shows more sky instead of a cut. It fades out behind the
-   board, where the margins show a pale cloud on the left and a yellow glow on
-   the right, low enough to stay clear of the cobalt. */
+   the page down shows more sky instead of a cut. The blue is short: it fades
+   out within about 150px, behind the top of the board, and leaves the margins
+   to a small pale cloud on the left and a yellow glow on the right. */
 .links-page::before {
   content: '';
   position: absolute;
@@ -106,9 +107,9 @@ a:focus-visible {
   height: 560px;
   pointer-events: none;
   background:
-    radial-gradient(42% 46% at 100% 42%, color-mix(in srgb, var(--cloud-b) 92%, transparent), transparent 72%),
-    radial-gradient(38% 40% at 0% 38%, color-mix(in srgb, var(--cloud-c) 85%, transparent), transparent 72%),
-    linear-gradient(to bottom, var(--sky) 0, color-mix(in oklab, var(--sky) 40%, var(--paper)) 26%, transparent 72%);
+    radial-gradient(42% 46% at 100% 40%, color-mix(in srgb, var(--cloud-b) 92%, transparent), transparent 72%),
+    radial-gradient(38% 30% at 0% 20%, color-mix(in srgb, var(--cloud-c) 85%, transparent), transparent 72%),
+    linear-gradient(to bottom, var(--sky) 0, color-mix(in oklab, var(--sky) 40%, var(--paper)) 8%, transparent 28%);
 }
 
 .pixel-text {
@@ -882,6 +883,34 @@ a:focus-visible {
 
   .desk-grid {
     row-gap: 16px;
+  }
+}
+
+/* Laptop screens (a 13" MacBook Air shows 1470x762): the board gets just short
+   enough to fit the first screen. Each space shrinks with the window's height,
+   from its usual size at 880px tall to its smallest at 720px. */
+@media (1100px <= width < 1600px) and (height < 880px) {
+  .topbar {
+    padding-bottom: clamp(12px, calc(20px - (880px - 100vh) * 0.05), 20px);
+  }
+
+  .desk {
+    padding-block:
+      clamp(34px, calc(60px - (880px - 100vh) * 0.1625), 60px)
+      clamp(24px, calc(52px - (880px - 100vh) * 0.175), 52px);
+  }
+
+  .desk-grid {
+    row-gap: clamp(16px, calc(32px - (880px - 100vh) * 0.1), 32px);
+  }
+
+  .book-cover,
+  .pod-cover {
+    width: clamp(120px, min(10.5vw, 20vh, calc(20vh - (880px - 100vh) * 0.1875)), 210px);
+  }
+
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-body {
+    padding: clamp(12px, calc(16px - (880px - 100vh) * 0.025), 16px);
   }
 }
 
