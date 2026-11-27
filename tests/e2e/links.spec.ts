@@ -45,6 +45,18 @@ test.describe('links page', () => {
     await expect(board.locator('.w-labs .t-long.win-text')).toBeVisible();
   });
 
+  test('shows the whole yellow board in the first screen of laptops and monitors', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'Computer screen sizes');
+    // Chrome's window on a 13" MacBook Air is 1470x762; on a 1366x768 laptop, 1366x648.
+    const screens = [[1470, 762], [1512, 860], [1536, 730], [1280, 720], [1366, 648], [1440, 900], [1728, 995], [1920, 955]];
+    for (const [width, height] of screens) {
+      await page.setViewportSize({ width, height });
+      await page.goto('/links');
+      const bottom = await page.locator('.desk').evaluate((board) => board.getBoundingClientRect().bottom);
+      expect(bottom, `${width}x${height}`).toBeLessThanOrEqual(height);
+    }
+  });
+
   test('carries the bio tag to comandle and the book', async ({ page }) => {
     await page.goto('/links?ref=ig');
     await expect(page.locator('h1')).toHaveText('Links de Valentín Torassa');
@@ -94,7 +106,7 @@ test.describe('links page', () => {
     await page.goto('/links');
     // A browser paints the root's background color past the page's edges (rubber-band scrolling).
     const canvas = () => page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
-    expect(await canvas()).toBe('rgb(47, 75, 255)');
+    expect(await canvas()).toBe('rgb(80, 120, 255)');
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await expect.poll(canvas).toBe('rgb(30, 30, 30)');
   });
