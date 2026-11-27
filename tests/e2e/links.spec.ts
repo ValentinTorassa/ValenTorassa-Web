@@ -45,6 +45,17 @@ test.describe('links page', () => {
     await expect(board.locator('.w-labs .t-long.win-text')).toBeVisible();
   });
 
+  test('shows the whole yellow board in the first screen of a laptop', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'Computer screen sizes');
+    // Chrome's window on a 13" MacBook Air is 1470x762; the board shrinks only as much as that needs.
+    for (const [width, height] of [[1470, 762], [1440, 900]]) {
+      await page.setViewportSize({ width, height });
+      await page.goto('/links');
+      const bottom = await page.locator('.desk').evaluate((board) => board.getBoundingClientRect().bottom);
+      expect(bottom, `${width}x${height}`).toBeLessThanOrEqual(height);
+    }
+  });
+
   test('carries the bio tag to comandle and the book', async ({ page }) => {
     await page.goto('/links?ref=ig');
     await expect(page.locator('h1')).toHaveText('Links de Valentín Torassa');

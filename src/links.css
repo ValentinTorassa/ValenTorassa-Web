@@ -886,6 +886,34 @@ a:focus-visible {
   }
 }
 
+/* Laptop screens (a 13" MacBook Air shows 1470x762): the board gets just short
+   enough to fit the first screen. Each space shrinks with the window's height,
+   from its usual size at 880px tall to its smallest at 720px. */
+@media (1100px <= width < 1600px) and (height < 880px) {
+  .topbar {
+    padding-bottom: clamp(12px, calc(20px - (880px - 100vh) * 0.05), 20px);
+  }
+
+  .desk {
+    padding-block:
+      clamp(34px, calc(60px - (880px - 100vh) * 0.1625), 60px)
+      clamp(24px, calc(52px - (880px - 100vh) * 0.175), 52px);
+  }
+
+  .desk-grid {
+    row-gap: clamp(16px, calc(32px - (880px - 100vh) * 0.1), 32px);
+  }
+
+  .book-cover,
+  .pod-cover {
+    width: clamp(120px, min(10.5vw, 20vh, calc(20vh - (880px - 100vh) * 0.1875)), 210px);
+  }
+
+  .desk-grid > .win:not(.w-featured, .w-podcast) .win-body {
+    padding: clamp(12px, calc(16px - (880px - 100vh) * 0.025), 16px);
+  }
+}
+
 @media (max-width: 420px) {
   .chip {
     height: 32px;
