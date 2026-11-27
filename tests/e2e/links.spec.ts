@@ -51,8 +51,9 @@ test.describe('links page', () => {
     for (const [width, height] of [[1470, 762], [1440, 900]]) {
       await page.setViewportSize({ width, height });
       await page.goto('/links');
-      const bottom = await page.locator('.desk').evaluate((board) => board.getBoundingClientRect().bottom);
-      expect(bottom, `${width}x${height}`).toBeLessThanOrEqual(height);
+      // Until the web fonts arrive the fallback text wraps more and the board is taller.
+      const bottom = () => page.locator('.desk').evaluate((board) => board.getBoundingClientRect().bottom);
+      await expect.poll(bottom, { message: `${width}x${height}`, timeout: 10_000 }).toBeLessThanOrEqual(height);
     }
   });
 
