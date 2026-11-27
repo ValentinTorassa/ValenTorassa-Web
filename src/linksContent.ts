@@ -82,7 +82,8 @@ export type LinksCopy = {
   book: { title: string; name: string; body: string; meta: string; cta: string; coverAlt: string };
   podcast: { title: string; name: string; short: string; body: string; cta: string; coverAlt: string };
   comandle: { title: string; body: string; played: (total: string) => string; today: string; yesterday: string; total: string; cta: string; offline: string };
-  talk: { title: string; at: (place: string) => string; cta: string; closed: string };
+  /** `signUp` replaces `cta` while the talk takes registrations, and shows on phones too. */
+  talk: { title: string; at: (place: string) => string; cta: string; signUp: string; closed: string };
   /** In the talk's place when no talk is coming: the speaker kit, for organizers. */
   invite: { title: string; name: string; body: string; cta: string };
   labs: { title: string; name: string; short: string; body: string; cta: string };
@@ -148,6 +149,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       title: 'charla.ics',
       at: (place) => `Doy esta charla en ${place}.`,
       cta: 'Ver la charla',
+      signUp: 'Pedí tu lugar',
       closed: 'Es cerrada.',
     },
     invite: {
@@ -251,6 +253,7 @@ export const linksByLanguage: Record<Language, LinksCopy> = {
       title: 'talk.ics',
       at: (place) => `I'm giving this talk at ${place}.`,
       cta: 'See the talk',
+      signUp: 'Save your spot',
       closed: 'Closed to the public.',
     },
     invite: {
