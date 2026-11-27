@@ -73,9 +73,18 @@ const locale = (language: Language) => (language === 'es' ? 'es-AR' : 'en-US');
 
 const formatDay = (day: string, language: Language) => formatShortDay(day, language, true);
 
-function formatTalkDay(talk: Talk, language: Language) {
-  const day = formatShortDay(talk.date, language);
-  return talk.time ? `${day} · ${talk.time}` : day;
+/** "mié, 16 dic · 16:00". Phones and tablets drop the weekday, so the date fits one line of a small window. */
+function TalkDay({ talk, language }: { talk: Talk; language: Language }) {
+  const full = formatShortDay(talk.date, language);
+  const comma = full.indexOf(', ');
+  const afterWeekday = comma < 0 ? 0 : comma + 2;
+  return (
+    <span className="pixel-text talk-when">
+      <span className="t-long">{full.slice(0, afterWeekday)}</span>
+      {full.slice(afterWeekday)}
+      {talk.time ? ` · ${talk.time}` : ''}
+    </span>
+  );
 }
 
 /** Next public talk; a closed one only when nothing else is coming. */
@@ -206,7 +215,9 @@ function LinksPage({ language }: { language: Language }) {
 
   const comandleHref = withRef(comandleUrl, ref);
   const bookHref = withRef(absoluteUrl(language, '/libro'), ref);
-  const talkHref = absoluteUrl(language, talk ? `/charlas/${talk.id}` : '/eventos');
+  // While a talk takes registrations, its window goes straight to the sign-up page.
+  const signUpHref = talk?.registrationUrl;
+  const talkHref = signUpHref ?? absoluteUrl(language, talk ? `/charlas/${talk.id}` : '/eventos');
   const speakerKitHref = absoluteUrl(language, '/speaker-kit');
   const apuntesHref = withRef(apuntesUrl, ref);
   const homeHref = absoluteUrl(language, '/');
@@ -311,15 +322,20 @@ function LinksPage({ language }: { language: Language }) {
 
             {/* With no talk coming, the slot invites organizers instead of showing an empty date. */}
             {talk ? (
-              <Window title={copy.talk.title} href={talkHref} external={false} className="w-talk">
-                <span className="pixel-text talk-when">{formatTalkDay(talk, language)}</span>
+              <Window title={copy.talk.title} href={talkHref} external={Boolean(signUpHref)} className="w-talk">
+                <TalkDay talk={talk} language={language} />
                 <span className="win-text t-short">{talk.event}</span>
                 <span className="win-name t-long">{talk.title[language]}</span>
                 <span className="win-text t-long">
                   {copy.talk.at([talk.event, talk.city].filter(Boolean).join(', '))}
                   {talk.status === 'closed' ? ` ${copy.talk.closed}` : ''}
                 </span>
-                <span className="win-cta t-long">{copy.talk.cta} →</span>
+                {/* Signing up is the one thing to do here, so a phone shows it too. */}
+                {signUpHref ? (
+                  <span className="win-cta">{copy.talk.signUp} →</span>
+                ) : (
+                  <span className="win-cta t-long">{copy.talk.cta} →</span>
+                )}
               </Window>
             ) : (
               <Window title={copy.invite.title} href={speakerKitHref} external={false} className="w-talk w-invite">

@@ -50,6 +50,12 @@ export type Talk = {
   status: TalkStatus;
   /** Official event or talk page. */
   url?: string;
+  /**
+   * Sign-up page while places are open, e.g. Luma. The links page sends
+   * visitors straight there ("Pedí tu lugar") instead of to the talk's page.
+   * Remove it when registration closes.
+   */
+  registrationUrl?: string;
   /** Public recording (a YouTube video or live), when there is one. */
   recordingUrl?: string;
   /** Public PDF, when available. Hosted decks are configured in talkMedia. */
@@ -82,6 +88,7 @@ export const talks: Talk[] = [
     mode: 'presencial',
     status: 'confirmed',
     url: 'https://luma.com/qvbvetbz',
+    registrationUrl: 'https://luma.com/qvbvetbz',
     note: {
       es: 'Cómo una charla en la conferencia de Debian terminó en un libro, con un ejemplo técnico explicado para cualquiera y preguntas al final. Entrada gratuita, 60 lugares con inscripción.',
       en: 'How a talk at the Debian conference became a book, with one technical example explained for anyone and questions at the end. Free entry, 60 places, registration required.',

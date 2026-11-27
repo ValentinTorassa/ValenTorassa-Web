@@ -74,6 +74,31 @@ test.describe('links page', () => {
     await expect(page.locator('.w-invite')).toHaveCount(0);
   });
 
+  test('sends a talk that takes registrations straight to its sign-up page, on a phone too', async ({ page }) => {
+    const open = talks.find((talk) => talk.registrationUrl);
+    test.skip(!open, 'No talk takes registrations in src/events.ts');
+    const dayBefore = new Date(`${open!.date}T15:00:00Z`);
+    dayBefore.setUTCDate(dayBefore.getUTCDate() - 1);
+    await page.clock.setFixedTime(dayBefore);
+    await page.goto('/links');
+    const talk = page.locator('.w-talk');
+    await expect(talk).toHaveAttribute('href', open!.registrationUrl!);
+    await expect(talk).toHaveAttribute('target', '_blank');
+    await expect(talk.locator('.win-cta')).toBeVisible();
+    await expect(talk.locator('.win-cta')).toHaveText('Pedí tu lugar →');
+    await page.goto('/en/links');
+    await expect(page.locator('.w-talk .win-cta')).toHaveText('Save your spot →');
+  });
+
+  test('shows sky past the top edge and ink past the footer when the page is pulled', async ({ page }) => {
+    await page.goto('/links');
+    // A browser paints the root's background color past the page's edges (rubber-band scrolling).
+    const canvas = () => page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
+    expect(await canvas()).toBe('rgb(47, 75, 255)');
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect.poll(canvas).toBe('rgb(30, 30, 30)');
+  });
+
   test('invites organizers to the speaker kit once no talk is coming', async ({ page }) => {
     await page.clock.setFixedTime(afterTheLastTalk());
     await page.goto('/links');
