@@ -76,8 +76,9 @@ const apuntesUrl = (id: string) => `https://vtsecurity.com.ar/apuntes?ref=charla
 /** Index of the first entry of each year: the cuts in the selector row, and where ↑ ↓ jump. */
 const yearStarts = roster.flatMap((entry, index) => (index === 0 || yearOf(roster[index - 1]) !== yearOf(entry) ? [index] : []));
 
+/** A talk's Tux; research of its own shows its hosted deck when talkMedia has one, else its first page. */
 const mediaOf = (entry: Entry): TalkMedia =>
-  entry.kind === 'talk' ? talkMedia[entry.id] ?? {} : entry.paper ? paperMedia(entry.paper) : {};
+  talkMedia[entry.id] ?? (entry.kind !== 'talk' && entry.paper ? paperMedia(entry.paper) : {});
 
 const iconOf = (entry: Entry): TalkIcon => mediaOf(entry).icon ?? 'layers';
 
@@ -456,7 +457,9 @@ function CharlasPage({ language, talkId }: CharlasPageProps) {
           </p>
           <div className="hub-count">
             <i aria-hidden="true" />
-            {pad(selected + 1)} / {pad(roster.length)}
+            <span className="hub-index">
+              {pad(selected + 1)} / {pad(roster.length)}
+            </span>
             {talk.kind !== 'talk' ? (
               <span className="hub-soon is-paper">{copy.kinds[talk.kind]}</span>
             ) : !isPastTalk(talk, today) ? (
@@ -508,13 +511,14 @@ function CharlasPage({ language, talkId }: CharlasPageProps) {
                 PDF
               </a>
             ) : null}
-            {deckUrl && talk.paper ? (
+            {deckUrl && talk.paper?.url ? (
               <a className="hub-link" href={talk.paper.url} target="_blank" rel="noopener noreferrer">
                 <BookOpen aria-hidden="true" />
                 {copy.kinds[talk.paper.kind]}
               </a>
             ) : null}
-            {talk.paper ? (
+            {/* The .bib lists the works with a public page. */}
+            {talk.paper?.url ? (
               <a className="hub-link" href="/research-publications.bib" download>
                 <FileDown aria-hidden="true" />
                 {copy.citationsLabel}

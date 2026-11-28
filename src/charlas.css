@@ -78,6 +78,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The count stays on one line; a long kind label («Resumen extendido») wraps instead. */
+.hub-index {
+  white-space: nowrap;
+}
+
 .hub-count i {
   width: 10px;
   height: 10px;

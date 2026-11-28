@@ -28,7 +28,8 @@ import {
 
 const locales: Record<Language, string> = { es: 'es-AR', en: 'en-US' };
 const talkById = new Map(talks.map((talk) => [talk.id, talk]));
-const publishedPapers = papers.length;
+/** The kit says "papers and posters": an extended abstract is neither. */
+const publishedPapers = papers.filter((paper) => paper.kind !== 'abstract').length;
 const programProfiles = socialLinks.filter((link) => link.name !== 'Email');
 const headshotAvif = `${headshotAvif256} 256w, ${headshotAvif384} 384w, ${headshotAvif512} 512w`;
 const headshotWebp = `${headshotWebp256} 256w, ${headshotWebp384} 384w, ${headshotWebp512} 512w`;
