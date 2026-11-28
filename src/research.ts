@@ -2,21 +2,27 @@ import type { Localized, Talk } from './events';
 import type { TalkMedia } from './talkMedia';
 
 /**
- * Published research, for /charlas: papers in proceedings and WICC posters.
+ * Published research, for /charlas: papers in proceedings, WICC posters and
+ * extended abstracts.
  *
  * Each one links its public page: the JAIIO journal or SEDICI, the UNLP
  * repository. A paper presented in a talk of events.ts hangs from that talk
  * (`talk`): the talk keeps its Tux and its card, and shows the paper's first
  * page and a "Read the paper" button. The rest get their own card in the hub,
  * with the first page of the paper as the picture (public/charlas/<id>/still.webp
- * and thumb.webp, email lines painted over).
+ * and thumb.webp, email lines painted over), or its hosted deck when talkMedia
+ * has one under the same id.
  *
- * Titles are copied as published. Only works with a public page go here.
+ * Titles are copied as published. Only works with a public page go here, except
+ * an extended abstract accepted for proceedings that are not out yet: it goes
+ * without `url` until they are. An abstract whose talk was never given is not a
+ * talk, so it lives here and not in events.ts.
  */
 export type Paper = {
   /** Stable slug, also the hub URL: /charlas/<id>. */
   id: string;
-  kind: 'paper' | 'poster';
+  /** abstract: an extended abstract in an event's proceedings. */
+  kind: 'paper' | 'poster' | 'abstract';
   /** ISO `YYYY-MM-DD`: the first day of the event, or of its month with `datePrecision`. */
   date: string;
   datePrecision?: Talk['datePrecision'];
@@ -27,8 +33,8 @@ export type Paper = {
   title: Localized;
   /** As published, the author first. */
   authors: string[];
-  /** Public page of the paper. */
-  url: string;
+  /** Public page of the paper. Missing only while an abstract's proceedings are not public. */
+  url?: string;
   /** The talk in events.ts where it was presented. */
   talk?: string;
 };
@@ -120,6 +126,16 @@ export const papers: Paper[] = [
     title: same('Go como lenguaje de diseño: reducción de complejidad accidental en sistemas concurrentes'),
     authors: ['Valentín Torassa Colombero', 'Santiago Roatta', 'María Eugenia Casco'],
     url: 'https://sedici.unlp.edu.ar/handle/10915/195946',
+  },
+  {
+    // Accepted for the proceedings; the talk stayed on the waiting list and was not given.
+    id: 'convergente-2026',
+    kind: 'abstract',
+    date: '2026-11-26',
+    venue: 'Convergente 2026',
+    track: 'Congreso de Ciencia de Datos e IA',
+    title: same('La pregunta elige el modelo: cuándo un LLM y cuándo un modelo de sí o no'),
+    authors: ['Valentín Torassa Colombero'],
   },
 ];
 

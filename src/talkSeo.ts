@@ -17,10 +17,16 @@ export const talkPages = [
   ...papers.filter((paper) => !paper.talk).map((paper) => ({
     id: paper.id,
     title: paper.title,
-    description: {
-      es: `${paper.kind === 'poster' ? 'Póster' : 'Paper'} presentado en ${paper.venue}. Investigación de Valentín Torassa Colombero y coautores.`,
-      en: `${paper.kind === 'poster' ? 'Poster' : 'Paper'} presented at ${paper.venue}. Research by Valentín Torassa Colombero and coauthors.`,
-    },
+    description:
+      paper.kind === 'abstract'
+        ? {
+            es: `Resumen extendido para el libro de actas de ${paper.venue}, de Valentín Torassa Colombero.`,
+            en: `Extended abstract for the proceedings of ${paper.venue}, by Valentín Torassa Colombero.`,
+          }
+        : {
+            es: `${paper.kind === 'poster' ? 'Póster' : 'Paper'} presentado en ${paper.venue}. Investigación de Valentín Torassa Colombero y coautores.`,
+            en: `${paper.kind === 'poster' ? 'Poster' : 'Paper'} presented at ${paper.venue}. Research by Valentín Torassa Colombero and coauthors.`,
+          },
     event: paper.venue,
     date: paper.date,
   })),

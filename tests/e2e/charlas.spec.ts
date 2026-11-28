@@ -226,6 +226,17 @@ test.describe('/charlas', () => {
     await expect(page.locator('.hub-screen img')).toHaveAttribute('src', '/charlas/wicc-2025-scada/still.webp');
   });
 
+  test('an extended abstract has its own card with its deck, and the agenda leaves it out', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-11-27T15:00:00Z'));
+    await page.goto('/charlas/convergente-2026');
+    await expect(page.locator('.hub-name')).toContainText('La pregunta elige el modelo');
+    await expect(page.locator('.hub-soon.is-paper')).toHaveText('Resumen extendido');
+    await expect(page.locator('a.hub-open')).toHaveAttribute('href', '/charlas/convergente-2026/slides');
+    await expect(page.locator('.hub-link', { hasText: 'Citas' })).toHaveCount(0);
+    await page.goto('/eventos');
+    await expect(page.locator('#convergente-2026')).toHaveCount(0);
+  });
+
   test('Instituto San Pablo photos show from the talk day and open full size', async ({ page }) => {
     await page.clock.setFixedTime(SAN_PABLO_EVE);
     await page.goto('/charlas/instituto-san-pablo-2026');
